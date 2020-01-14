@@ -1,18 +1,34 @@
-[TOC]
-
 ## General notes
 
 ### Builtin  functions
 
 ```go
-len(collection)				# elements in a collection; String -> number of bytes
+len(collection)                // elements in a collection; String -> number of bytes
+```
+
+### Arrays, slices
+
+```go
+slice := array[[<start>]:[<end>]]
+```
+
+### Data types
+
+Data types:
+
+- `float64`
+
+Casting:
+
+```go
+toType(fromType)
 ```
 
 ### I/O
 
 ```go
-import "os"; f, err := os.OpenFile(LOGFILE, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)	// create a file
-import "path/filepath"; filepath.Base(string)		# file basename
+import "os"; f, err := os.OpenFile(LOGFILE, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)    // create a file
+import "path/filepath"; filepath.Base(string)        // file basename
 ```
 
 ### Loops
@@ -21,6 +37,7 @@ import "path/filepath"; filepath.Base(string)		# file basename
 
 ```go
 for <boolean> {}
+for a, b := range <collection> {}         // index/entry for Arrays, key/value for Maps
 for <start_assignment>; <condition>; <increment_statement> {}
 ```
 
@@ -42,6 +59,14 @@ Configuration is stored in a `go.mod` file.
 ### Shared libraries (invoke from other languages)
 
 See https://github.com/vladimirvivien/go-cshared-examples.
+
+### String operations
+
+String formatting:
+
+```go
+fmt.Sprintf("%s,%s", date, time)    // printf in Golang
+```
 
 ### Variables
 
@@ -85,8 +110,8 @@ Printing:
 ```go
 import "fmt"
 
-fmt.Println(v1, v2)
-fmt.Print(v1, " ", v2, "\n")
+fmt.Println(v1, v2)            // a space is inserted between the variables
+fmt.Print(v1, v2, "\n")
 fmt.Printf("%s%d\n", v1, v2)
 ```
 
@@ -96,8 +121,8 @@ Conversion:
 import "strconv"
 
 b, err := strconv.ParseBool("true")
-f, err := strconv.ParseFloat("3.1415", 64)			// (..., bitSize int (32/64))
-i, err := strconv.ParseInt("-42", 10, 64)
+f, err := strconv.ParseFloat("3.1415", 64)           // (..., bitSize int (32/64))
+i, err := strconv.ParseInt("-42", 10, 64)            // (..., base int, ...)
 u, err := strconv.ParseUint("42", 10, 64)
 ```
 
@@ -106,21 +131,27 @@ u, err := strconv.ParseUint("42", 10, 64)
 ```go
 import "log/syslog"
 
-sysLog, err := syslog.New(syslog.LOG_INFO | syslog.LOG_LOCAL7, programName)		// (priority|facility)
+sysLog, err := syslog.New(syslog.LOG_INFO | syslog.LOG_LOCAL7, programName)        // (priority|facility)
 
-log.Fatal(v ...interface{})		// terminates the Go program, after logging
-log.Panic(v ...interface{})		// also terminates, but prints more information
+log.Fatal(v ...interface{})        // terminates the Go program, after logging
+log.Panic(v ...interface{})        // also terminates, but prints more information
 
 // Log levels: composition of: (Print|Fatal|Panic)(|f|ln)
 // Standard log facilities: auth, authpriv, cron, daemon, kern, lpr, mail, mark, news, syslog, user, UUCP, local(0..7)
 
-myLog := log.New(f, ogLinePrefix, log.LstdFlags | log.Lshortfile)	// Custom logger; LstdFlags prints the timestamp, Lshortfile filename+line num
+myLog := log.New(f, ogLinePrefix, log.LstdFlags | log.Lshortfile)    // Custom logger; LstdFlags prints the timestamp, Lshortfile filename+line num
 ```
 
 #### Custom errors
 
 ```go
 err := errors.New("Error in returnError() function!")
-err.Error()						// get the message
-panic(err)						// panic throwing the given error
+err.Error()                        // get the message
+panic(err)                        // panic throwing the given error
 ```
+
+
+
+
+
+
