@@ -56,6 +56,12 @@ There are many other aspects, including:
 
 Configuration is stored in a `go.mod` file.
 
+### O/S
+
+```go
+os.Exit(<exit_status>)              /// exit to the O/S
+```
+
 ### Shared libraries (invoke from other languages)
 
 See https://github.com/vladimirvivien/go-cshared-examples.
@@ -149,9 +155,3 @@ err := errors.New("Error in returnError() function!")
 err.Error()                        // get the message
 panic(err)                        // panic throwing the given error
 ```
-
-
-
-
-
-
