@@ -56,6 +56,18 @@ Import a pool existing in the given path.
 zpool import -d <path> <pool>
 ```
 
+Import pool using \<alt_root\> as temporary root.
+
+```sh
+zpool import -R <alt_root> <pool>
+```
+
+Rename a pool (permanently).
+
+```sh
+zpool import <pool> <new_name>
+```
+
 Create a mirrored pool.
 
 ```sh
@@ -115,7 +127,7 @@ Unmount datasets (don't use export!, or it won't be automatically autoimported).
 zpool export <device_or_mountpoint>
 ```
 
-Detach a device from a pool.
+Detach a device from a pool (/mirror).
 
 ```sh
 zpool detach <pool> <device>
