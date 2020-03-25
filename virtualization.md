@@ -1,3 +1,7 @@
+## Table of contents
+
+- [Virtual disks](#virtual-disks)
+
 ## Virtual disks
 
 Compact a VDI (manual clearing):
