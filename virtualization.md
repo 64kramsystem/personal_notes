@@ -1,7 +1,3 @@
-## Table of contents
-
-- [Virtual disks](#virtual-disks)
-
 ## Virtual disks
 
 Compact a VDI (manual clearing):
@@ -32,8 +28,16 @@ Convert a VMDK disk to VDI:
 vboxmanage clonehd original.vmdk new.vdi --format VDI
 ```
 
+Create a qcow image (with NTFS filesystem) from a directory:
+
+```sh
+virt-make-fs --verbose --format=qcow2 --type=ntfs input_dir output_image.qcow2
+```
+
+### VirtualBox-specific
+
 Change a disk UUID:
 
 ```sh
-VBoxManage internalcommands sethduuid /path/to/disk.vdi
+vboxmanage internalcommands sethduuid /path/to/disk.vdi
 ```
