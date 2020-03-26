@@ -1,3 +1,25 @@
+## Table of contents
+
+- [General notes](#general-notes)
+  - [Builtin  functions](#builtin--functions)
+  - [Arrays, slices](#arrays-slices)
+  - [Data types](#data-types)
+  - [I/O](#io)
+  - [Loops](#loops)
+    - [For](#for)
+  - [Modules](#modules)
+  - [O/S](#os)
+  - [Shared libraries (invoke from other languages)](#shared-libraries-invoke-from-other-languages)
+  - [String operations](#string-operations)
+  - [Variables](#variables)
+- [Mastering Go (2nd ed.)](#mastering-go-2nd-ed)
+  - [01. Go and the Operating system](#01-go-and-the-operating-system)
+    - [Command line arguments](#command-line-arguments)
+    - [Standard file descriptors/IO, and useful I/O operations](#standard-file-descriptorsio-and-useful-io-operations)
+    - [String handling: printing and conversion](#string-handling-printing-and-conversion)
+    - [Logging](#logging)
+    - [Custom errors](#custom-errors)
+
 ## General notes
 
 ### Builtin  functions

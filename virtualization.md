@@ -1,3 +1,8 @@
+## Table of contents
+
+- [Virtual disks](#virtual-disks)
+  - [VirtualBox-specific](#virtualbox-specific)
+
 ## Virtual disks
 
 Compact a VDI (manual clearing):

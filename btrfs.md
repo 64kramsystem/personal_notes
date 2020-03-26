@@ -1,3 +1,9 @@
+## Table of contents
+
+- [Basic usage](#basic-usage)
+- [Corruption](#corruption)
+- [Other stuff](#other-stuff)
+
 ## Basic usage
 
 Create the filesystem;

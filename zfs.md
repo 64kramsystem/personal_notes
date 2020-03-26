@@ -1,3 +1,9 @@
+## Table of contents
+
+- [Basic usage](#basic-usage)
+- [Snapshotting](#snapshotting)
+- [Cool diffing functions](#cool-diffing-functions)
+
 ## Basic usage
 
 For more advanced concepts, see http://j.mp/18tSgvx.

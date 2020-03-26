@@ -7,6 +7,17 @@
   - [(Some) Metadata](#some-metadata)
   - [Define site-wide collections](#define-site-wide-collections)
 
+## Table of contents
+
+- [Liquid](#liquid)
+  - [Syntax](#syntax)
+  - [Filters](#filters)
+  - [Collections](#collections)
+  - [General functions](#general-functions)
+- [Jekyll](#jekyll)
+  - [(Some) Metadata](#some-metadata)
+  - [Define site-wide collections](#define-site-wide-collections)
+
 ## Liquid
 
 ### Syntax

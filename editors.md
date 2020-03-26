@@ -21,6 +21,31 @@
   - [plugins](#plugins)
   - [Peepcode notes](#peepcode-notes)
 
+## Table of contents
+
+- [Notes](#notes)
+- [Visual Studio Code](#visual-studio-code)
+  - [bindings](#bindings)
+    - [custom](#custom)
+- [Sublime Text](#sublime-text)
+  - [bindings](#bindings)
+    - [search/replace](#searchreplace)
+- [Meld](#meld)
+- [Less](#less)
+  - [bindings](#bindings)
+- [Vim](#vim)
+  - [Misc](#misc)
+  - [settings](#settings)
+  - [multi-files](#multi-files)
+  - [selection/search/sort](#selectionsearchsort)
+    - [multi-line selection](#multi-line-selection)
+  - [examples](#examples)
+  - [history](#history)
+  - [vimdiff](#vimdiff)
+  - [modeline](#modeline)
+  - [plugins](#plugins)
+  - [Peepcode notes](#peepcode-notes)
+
 ## Notes
 
 The VIM section requires some cleanup.

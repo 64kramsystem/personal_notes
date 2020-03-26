@@ -1,3 +1,8 @@
+## Table of contents
+
+- [Boxes](#boxes)
+- [VirtualBox Guest tools issues](#virtualbox-guest-tools-issues)
+
 ## Boxes
 
 Create (and import) a box from a virtual machine.  

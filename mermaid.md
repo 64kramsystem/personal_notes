@@ -1,6 +1,11 @@
 - [Flowchart and basics](#flowchart-and-basics)
 - [Styling](#styling)
  
+## Table of contents
+
+- [Flowchart and basics](#flowchart-and-basics)
+- [Styling](#styling)
+
 ## Flowchart and basics
 
 The orientation is where the edges point
