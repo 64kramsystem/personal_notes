@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+if [[ ! -x "$(command -v update_markdown_toc)" ]]; then
+  echo '`update_markdown_toc` is required!'
+  exit 1
+fi
+
+# For simplicity:
+#
+# - in case of rename, we assume that filenames don't contain `-> `;
+# - we strip always the first and the last double quotes;
+# - we assume that filenames don't contain newlines.
+#
+filenames=$(git status --porcelain | perl -lne '/^([AM]  |R.*-> )"?(.*\.md)"?$/ && print $2')
+
+if [[ ! -z "$filenames" ]]; then
+  while read -r filename; do
+    echo "Updating TOC: $filename"
+    update_markdown_toc "$filename"
+    git add "$filename"
+  done <<< "$filenames"
+fi
