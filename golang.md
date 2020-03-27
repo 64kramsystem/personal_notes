@@ -24,13 +24,13 @@
 
 ### Builtin  functions
 
-```go
+```golang
 len(collection)                // elements in a collection; String -> number of bytes
 ```
 
 ### Arrays, slices
 
-```go
+```golang
 slice := array[[<start>]:[<end>]]
 ```
 
@@ -42,22 +42,27 @@ Data types:
 
 Casting:
 
-```go
+```golang
 toType(fromType)
 ```
 
 ### I/O
 
-```go
-import "os"; f, err := os.OpenFile(LOGFILE, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)    // create a file
-import "path/filepath"; filepath.Base(string)        // file basename
+```golang
+import "os"
+
+f, err := os.OpenFile(LOGFILE, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)    // create a file
+
+import "path/filepath"
+
+filepath.Base(string)        // file basename
 ```
 
 ### Loops
 
 #### For
 
-```go
+```golang
 for <boolean> {}
 for a, b := range <collection> {}         // index/entry for Arrays, key/value for Maps
 for <start_assignment>; <condition>; <increment_statement> {}
@@ -80,7 +85,7 @@ Configuration is stored in a `go.mod` file.
 
 ### O/S
 
-```go
+```golang
 os.Exit(<exit_status>)              /// exit to the O/S
 ```
 
@@ -92,13 +97,13 @@ See https://github.com/vladimirvivien/go-cshared-examples.
 
 String formatting:
 
-```go
-fmt.Sprintf("%s,%s", date, time)    // printf in Golang
+```golang
+str := fmt.Sprintf("%s, %s", date, time)    // printf (to string) in Golang
 ```
 
 ### Variables
 
-```go
+```golang
 a, b := 3, 4
 ```
 
@@ -108,21 +113,25 @@ a, b := 3, 4
 
 #### Command line arguments
 
-```go
-import "os"; arguments := os.Args
+```golang
+import "os"
+
+arguments := os.Args
 ```
 
 #### Standard file descriptors/IO, and useful I/O operations
 
 Standard FDs are represented by `os.Stdin`, `os.stdOut`, `os.Stderr`.
 
-```go
-import "io"; io.WriteString(os.Stdout, s)     // allows to write to any IO stream (`w Writer`, ...)
+```golang
+import "io"
+
+io.WriteString(os.Stdout, s)     // allows to write to any IO stream (`w Writer`, ...)
 ```
 
 Read line by line:
 
-```go
+```golang
 import "bufio"
 
 scanner := bufio.NewScanner(f)
@@ -135,7 +144,7 @@ for scanner.Scan() {
 
 Printing:
 
-```go
+```golang
 import "fmt"
 
 fmt.Println(v1, v2)            // a space is inserted between the variables
@@ -145,7 +154,7 @@ fmt.Printf("%s%d\n", v1, v2)
 
 Conversion:
 
-```go
+```golang
 import "strconv"
 
 b, err := strconv.ParseBool("true")
@@ -156,7 +165,7 @@ u, err := strconv.ParseUint("42", 10, 64)
 
 #### Logging
 
-```go
+```golang
 import "log/syslog"
 
 sysLog, err := syslog.New(syslog.LOG_INFO | syslog.LOG_LOCAL7, programName)        // (priority|facility)
@@ -172,7 +181,7 @@ myLog := log.New(f, ogLinePrefix, log.LstdFlags | log.Lshortfile)    // Custom l
 
 #### Custom errors
 
-```go
+```golang
 err := errors.New("Error in returnError() function!")
 err.Error()                        // get the message
 panic(err)                        // panic throwing the given error
