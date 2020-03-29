@@ -1,17 +1,21 @@
+# Golang
+
 ## Table of contents
 
-- [General notes](#general-notes)
-  - [Builtin  functions](#builtin--functions)
+- [Syntax](#syntax)
+  - [Variables](#variables)
   - [Arrays, slices](#arrays-slices)
   - [Data types](#data-types)
-  - [I/O](#io)
   - [Loops](#loops)
     - [For](#for)
-  - [Modules](#modules)
+  - [Builtin  functions](#builtin--functions)
+- [APIs](#apis)
+  - [Strings](#strings)
+  - [I/O](#io)
   - [O/S](#os)
+- [Management](#management)
+  - [Modules](#modules)
   - [Shared libraries (invoke from other languages)](#shared-libraries-invoke-from-other-languages)
-  - [String operations](#string-operations)
-  - [Variables](#variables)
 - [Mastering Go (2nd ed.)](#mastering-go-2nd-ed)
   - [01. Go and the Operating system](#01-go-and-the-operating-system)
     - [Command line arguments](#command-line-arguments)
@@ -20,12 +24,12 @@
     - [Logging](#logging)
     - [Custom errors](#custom-errors)
 
-## General notes
+## Syntax
 
-### Builtin  functions
+### Variables
 
 ```golang
-len(collection)                // elements in a collection; String -> number of bytes
+a, b := 3, 4
 ```
 
 ### Arrays, slices
@@ -46,6 +50,32 @@ Casting:
 toType(fromType)
 ```
 
+### Loops
+
+#### For
+
+```golang
+for <boolean> {}
+for a, b := range <collection> {}         // index/entry for Arrays, key/value for Maps
+for <start_assignment>; <condition>; <increment_statement> {}
+```
+
+### Builtin  functions
+
+```golang
+len(collection)                // elements in a collection; String -> number of bytes
+```
+
+## APIs
+
+### Strings
+
+String formatting:
+
+```golang
+str := fmt.Sprintf("%s, %s", date, time)    // printf (to string) in Golang
+```
+
 ### I/O
 
 ```golang
@@ -58,15 +88,13 @@ import "path/filepath"
 filepath.Base(string)        // file basename
 ```
 
-### Loops
-
-#### For
+### O/S
 
 ```golang
-for <boolean> {}
-for a, b := range <collection> {}         // index/entry for Arrays, key/value for Maps
-for <start_assignment>; <condition>; <increment_statement> {}
+os.Exit(<exit_status>)              /// exit to the O/S
 ```
+
+## Management
 
 ### Modules
 
@@ -83,29 +111,9 @@ There are many other aspects, including:
 
 Configuration is stored in a `go.mod` file.
 
-### O/S
-
-```golang
-os.Exit(<exit_status>)              /// exit to the O/S
-```
-
 ### Shared libraries (invoke from other languages)
 
 See https://github.com/vladimirvivien/go-cshared-examples.
-
-### String operations
-
-String formatting:
-
-```golang
-str := fmt.Sprintf("%s, %s", date, time)    // printf (to string) in Golang
-```
-
-### Variables
-
-```golang
-a, b := 3, 4
-```
 
 ## Mastering Go (2nd ed.)
 
