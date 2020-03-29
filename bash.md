@@ -2,8 +2,10 @@
 
 - [Shellopts](#shellopts)
 - [Test conditions](#test-conditions)
+  - [Regular expressions](#regular-expressions)
   - [Applications](#applications)
 - [String operations](#string-operations)
+- [Arithmetic operations](#arithmetic-operations)
 - [Redirections](#redirections)
 - [Trapping errors](#trapping-errors)
 
@@ -29,6 +31,29 @@ shopt -s nocasematch      # case insensitive matches
 -L <filename>							file/directory is a symlink
 -b <filename>             file is a block device
 ! -s <filename>						file is empty
+```
+
+### Regular expressions
+
+**Watch out!!**
+
+1. They're not entirely perl-compatible (see http://tldp.org/LDP/abs/html/x17129.html)
+2. The expressions are not quoted
+3. Use a temporary variable (or cmd subsitution) when using slashed metacharacters (see https://stackoverflow.com/a/12696899)
+4. `^` and `$` refer to the *whole string*, not the line
+5. DON'T WRAP with ruby regex slashes!!!
+
+Metacharacters:
+
+- `\w`  -> `[[:alnum:]]`
+- `\b`  -> `\b`
+
+Examples:
+
+```sh
+[[ 192.168.1.2 =~ ^[0-9]{1,3}(\.[0-9]{1,3}){3}$ ]] && echo MATCHES
+re='\bword\b'; [[ ' word ' =~ $re ]] && echo MATCHES
+[[ ' word ' =~ $(echo '\bword\b') ]] && echo MATCHES
 ```
 
 ### Applications
