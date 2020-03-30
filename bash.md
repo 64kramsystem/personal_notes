@@ -1,10 +1,12 @@
 ## Table of contents
 
+- [Table of contents](#table-of-contents)
 - [Shellopts](#shellopts)
 - [Test conditions](#test-conditions)
   - [Regular expressions](#regular-expressions)
   - [Applications](#applications)
 - [String operations](#string-operations)
+  - [Examples](#examples)
 - [Arithmetic operations](#arithmetic-operations)
 - [Redirections](#redirections)
 - [Trapping errors](#trapping-errors)
@@ -74,10 +76,28 @@ if [[ -z "$(pgrep -fa mysqld)" ]]; then mysqld & fi
 ## String operations
 
 ```sh
-${param:-<expr>}                                       # default a parameter: set if undefined or blank
-${param:+<expr>}                                       # if the var is set, replace with <expr> (which can include the $param itself!)
+${str:-<expr>}                    # default a parameter: set if undefined or blank
+${str:+<expr>}                    # if the var is set, replace with <expr> (which can include the $param itself!)
 
-${param:<start>[:<end>]}                               # substring (0-based); end is included
+${str:[<start>][:<end_expr>]}     # substring (0-based)
+                                  # `start`: blank: first char
+                                  # `end_expr`: positive: length; negative: position referring to last (!! -1 = beforelast !!); blank: until end
+```
+
+(g)sub (applied to filenames):
+
+```sh
+${filename%<.ext>}                # strip specific <ext>ension; `*` can be used
+${filename%%.*}                   # strip any extension (anything after the first dot)
+${filename##*.}                   # extract extension
+${filename##*/}                   # extract basename, eg. `"${PWD##*/}"`
+```
+
+### Examples
+
+```sh
+${str:1}                          # substring: remove the first charater
+${str::-1}                        # substring: remove the last character
 ```
 
 ## Arithmetic operations
