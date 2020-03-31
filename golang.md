@@ -1,9 +1,13 @@
 # Golang
 
 - [Golang](#golang)
+  - [General program structure](#general-program-structure)
   - [Syntax](#syntax)
     - [Variables/Constants](#variablesconstants)
+    - [Functions](#functions)
     - [Data types](#data-types)
+    - [Pointers](#pointers)
+    - [Operators](#operators)
     - [Arrays, slices](#arrays-slices)
     - [Maps](#maps)
     - [Loops](#loops)
@@ -13,7 +17,9 @@
     - [Strings](#strings)
       - [General concepts](#general-concepts)
       - [Formatting](#formatting)
+      - [Utils](#utils)
     - [Math](#math)
+    - [Random](#random)
     - [I/O](#io)
     - [O/S](#os)
   - [Management](#management)
@@ -27,14 +33,34 @@
       - [Logging](#logging)
       - [Custom errors](#custom-errors)
 
+## General program structure
+
+```golang
+package main
+
+// Can also be one import per line, without round brackets.
+import (
+	"fmt"
+)
+
+func main() {
+	fmt.Println("Hello world!")
+}
+```
+
+then execute `go run main.go` (compile and run).
+
 ## Syntax
 
 ### Variables/Constants
 
 ```golang
 var v <type>
-a, b := 3, 4              // Multiple assignment
-const c = 1               // Type is optional
+var v [<type>] = <value>
+
+const c [<type>] = 1
+
+a, b := 3, 4              // Multiple assignment, also valid for 
 ```
 
 Constants, with `iota` and (optional) custom type:
@@ -46,6 +72,18 @@ const (
   First Position = iota // 0, automatic
   Second                // 1
 )
+```
+
+### Functions
+
+```golang
+func myFunc(myVar int) bool {
+  return true
+}
+
+func myFunc2(myVar int) (int, bool) {
+  return 1, true
+}
 ```
 
 ### Data types
@@ -66,13 +104,46 @@ Typedef:
 type Kind int
 ```
 
+### Pointers
+
+Passing by value:
+
+- can be less efficient;
+- uses the stack, which is simple to manage.
+
+Passign by reference:
+
+- use the heap, which is managed by the garbage collector.
+
+Basic usage:
+
+```golang
+// Alternative instantiations
+var ptr *int
+ptr := new(int)
+
+val := 123
+ptr = &val
+*ptr = 456
+
+fmt.Printf("%v\n", val)  // 456
+fmt.Printf("%v\n", *ptr) // 456
+```
+
+### Operators
+
+```golang
+var++
+var--
+```
+
 ### Arrays, slices
 
 Arrays:
 
 ```golang
-var arr[<size>]<data_type>        // instantiate an array
-arr := [...]string{"a", "b"}      // inline array declaration
+var arr [10]int                // instantiate an array
+arr := []string{"a", "b"}      // array literal
 ```
 
 Slices:
@@ -157,6 +228,12 @@ Formatters:
 
 Using `%#`  increases the verbosity for some: at least `%v`, `%U`.
 
+#### Utils
+
+```golang
+strings.Repeat("*", n)    // repeat a string
+```
+
 ### Math
 
 ```golang
@@ -168,6 +245,14 @@ math.IsNaN
 ```
 
 Note that infinity _is_ a number.
+
+### Random
+
+```golang
+// imports: "math/rand", "time"
+rand.Seed(time.Now().UnixNano())
+index := rand.Intn(<int>)
+```
 
 ### I/O
 
