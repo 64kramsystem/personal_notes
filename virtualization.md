@@ -46,3 +46,15 @@ Change a disk UUID:
 ```sh
 vboxmanage internalcommands sethduuid /path/to/disk.vdi
 ```
+
+Clone a disk:
+
+```sh
+vboxmanage clonehd source.vdi dest.vdi
+```
+
+Create VMDK disk pointing to a physical disk!:
+
+```sh
+vboxmanage internalcommands createrawvmdk -filename disk/vdi -rawdisk /dev/disk
+```
