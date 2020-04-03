@@ -13,11 +13,14 @@
     - [Loops](#loops)
       - [For](#for)
     - [Builtin  functions](#builtin-functions)
+    - [Errors](#errors)
   - [APIs](#apis)
     - [Strings](#strings)
       - [General concepts](#general-concepts)
       - [Formatting](#formatting)
+      - [Parsing/Numerical conversion](#parsingnumerical-conversion)
       - [Utils](#utils)
+    - [Regular expressions](#regular-expressions)
     - [Math](#math)
     - [Random](#random)
     - [I/O](#io)
@@ -29,9 +32,7 @@
     - [01. Go and the Operating system](#01-go-and-the-operating-system)
       - [Command line arguments](#command-line-arguments)
       - [Standard file descriptors/IO, and useful I/O operations](#standard-file-descriptorsio-and-useful-io-operations)
-      - [String handling: printing and conversion](#string-handling-printing-and-conversion)
       - [Logging](#logging)
-      - [Custom errors](#custom-errors)
 
 ## General program structure
 
@@ -144,6 +145,10 @@ Arrays:
 ```golang
 var arr [10]int                // instantiate an array
 arr := []string{"a", "b"}      // array literal
+
+var sl []int                   // instantiate slice
+make([]rune, len(str))         // (other way)
+sl = append(sl, 64)            // append to a slice (can't append to an array)
 ```
 
 Slices:
@@ -160,12 +165,16 @@ Accessing:
 
 ### Maps
 
-Map literal:
-
 ```golang
-OrbitalPeriods := map[Planet]float64{
+// Map literal
+
+var OrbitalPeriods = map[Planet]float64{
   "Mercury": 0.2408467,
 }
+
+// Check if map contains an element
+
+value, found := myMap["key"]
 ```
 
 ### Loops
@@ -174,7 +183,8 @@ OrbitalPeriods := map[Planet]float64{
 
 ```golang
 for <boolean_expr> {}
-for a, b := range <collection> {}                   // index/entry for Arrays, key/value for Maps
+for a, b := range <collection> {}                   // Array: index/entry, Map: key/value
+for i := range <array> {}                           // Array: index (!!), Map: key
 for <start_expr>; <condition>; <increment_expr> {}
 ```
 
@@ -182,6 +192,16 @@ for <start_expr>; <condition>; <increment_expr> {}
 
 ```golang
 len(collection)                // elements in a collection; String -> number of bytes
+```
+
+### Errors
+
+```golang
+err := fmt.Errorf("Unexpected string: %v", str)        // preferred
+err := errors.New("Error in returnError() function!")  // alternative
+
+err.Error()                        // get the message
+panic(err)                         // panic throwing the given error
 ```
 
 ## APIs
@@ -212,6 +232,10 @@ for index, runeValue := range str {
 String formatting:
 
 ```golang
+fmt.Println(v1, v2)                         // a space is inserted between the variables
+fmt.Print(v1, v2, "\n")
+fmt.Printf("%s%d\n", v1, v2)
+
 str := fmt.Sprintf("%s, %s", date, time)    // printf (to string) in Golang
 ```
 
@@ -228,15 +252,54 @@ Formatters:
 
 Using `%#`  increases the verbosity for some: at least `%v`, `%U`.
 
+#### Parsing/Numerical conversion
+
+```golang
+b, err := strconv.ParseBool("true")
+f, err := strconv.ParseFloat(str, bitsize)           // excessive numbers cause an Inf log, but not an error
+i, err := strconv.ParseInt(str, base, bitsize)
+u, err := strconv.ParseUint(str, base, bitsize)
+
+str := strconv.Itoa(97)                              // integer to string
+string(intVar); string(byteVar)                      // alternative
+```
+
 #### Utils
 
 ```golang
+strings.Split(str, separator)  // split a string
 strings.Repeat("*", n)    // repeat a string
 ```
+
+### Regular expressions
+
+```golang
+matches, err := regexp.MatchString("<pattern>", "<string>")
+
+// Panics in case of compilation error.
+//
+r := regexp.MustCompile(`^(-?\d+(.\d+)?), (-?\d+(.\d+)?)$`)
+
+// Same as the basic regexp.MatchString.
+//
+matches := r.MatchString
+
+// Use capturing groups.
+//
+// If there is a match, `len(g)` == 1.
+// In this case, there are 5 capturing groups (array `g[0]`)
+//
+g := r.FindAllStringSubmatch(coordinatesStr, -1) // -1: find all matches
+```
+
+Modifiers:
+
+- `(?i)`: case insensitive
 
 ### Math
 
 ```golang
+math.Abs(f float)
 math.Inf(sign int)              // positive/negative sign = positive/negative infinity
 math.IsInf(sign int)            // positive/negative, or 0 for indifferent
 
@@ -326,29 +389,6 @@ for scanner.Scan() {
 }
 ```
 
-#### String handling: printing and conversion
-
-Printing:
-
-```golang
-import "fmt"
-
-fmt.Println(v1, v2)            // a space is inserted between the variables
-fmt.Print(v1, v2, "\n")
-fmt.Printf("%s%d\n", v1, v2)
-```
-
-Conversion:
-
-```golang
-import "strconv"
-
-b, err := strconv.ParseBool("true")
-f, err := strconv.ParseFloat("3.1415", 64)           // (..., bitSize int (32/64))
-i, err := strconv.ParseInt("-42", 10, 64)            // (..., base int, ...)
-u, err := strconv.ParseUint("42", 10, 64)
-```
-
 #### Logging
 
 ```golang
@@ -363,12 +403,4 @@ log.Panic(v ...interface{})        // also terminates, but prints more informati
 // Standard log facilities: auth, authpriv, cron, daemon, kern, lpr, mail, mark, news, syslog, user, UUCP, local(0..7)
 
 myLog := log.New(f, ogLinePrefix, log.LstdFlags | log.Lshortfile)    // Custom logger; LstdFlags prints the timestamp, Lshortfile filename+line num
-```
-
-#### Custom errors
-
-```golang
-err := errors.New("Error in returnError() function!")
-err.Error()                        // get the message
-panic(err)                        // panic throwing the given error
 ```
