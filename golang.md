@@ -3,7 +3,7 @@
 - [Golang](#golang)
   - [General program structure](#general-program-structure)
   - [Syntax](#syntax)
-    - [Variables/Constants](#variablesconstants)
+    - [Variables/Constants/Literals](#variablesconstantsliterals)
     - [Functions](#functions)
     - [Data types](#data-types)
     - [Pointers](#pointers)
@@ -12,7 +12,7 @@
     - [Maps](#maps)
     - [Loops](#loops)
       - [For](#for)
-    - [Builtin  functions](#builtin-functions)
+    - [Builtin functions](#builtin-functions)
     - [Errors](#errors)
   - [APIs](#apis)
     - [Strings](#strings)
@@ -21,6 +21,7 @@
       - [Parsing/Numerical conversion](#parsingnumerical-conversion)
       - [Utils](#utils)
     - [Regular expressions](#regular-expressions)
+    - [Time](#time)
     - [Math](#math)
     - [Random](#random)
     - [I/O](#io)
@@ -53,7 +54,7 @@ then execute `go run main.go` (compile and run).
 
 ## Syntax
 
-### Variables/Constants
+### Variables/Constants/Literals
 
 ```golang
 var v <type>
@@ -62,6 +63,8 @@ var v [<type>] = <value>
 const c [<type>] = 1
 
 a, b := 3, 4              // Multiple assignment, also valid for 
+
+largeNum := 1_000_000_000 // Cosmetic underscores
 ```
 
 Constants, with `iota` and (optional) custom type:
@@ -78,13 +81,18 @@ const (
 ### Functions
 
 ```golang
-func myFunc(myVar int) bool {
-  return true
-}
+func myFunc(myVar int) bool { return true }
 
-func myFunc2(myVar int) (int, bool) {
-  return 1, true
-}
+// Implicit return variables declaration!
+func myFunc(myVar int) (myRetVal bool) { return myRetVal }
+
+func myFunc(myVar int) (int, bool) { return 1, true }
+
+// Function variable
+myFunc := func(phrase string) bool { return phrase == "" }
+
+// Anonymous function
+result := func(phrase string) bool { return phrase == "" }("abc")
 ```
 
 ### Data types
@@ -148,7 +156,9 @@ arr := []string{"a", "b"}      // array literal
 
 var sl []int                   // instantiate slice
 make([]rune, len(str))         // (other way)
+
 sl = append(sl, 64)            // append to a slice (can't append to an array)
+copy(dest[z:a], source[x:y])   // copy slices (indexing is optional)
 ```
 
 Slices:
@@ -183,12 +193,18 @@ value, found := myMap["key"]
 
 ```golang
 for <boolean_expr> {}
-for a, b := range <collection> {}                   // Array: index/entry, Map: key/value
-for i := range <array> {}                           // Array: index (!!), Map: key
+
+// Multiple variables can be initialized (and also incremented) at once, via multiple assignment
+//
 for <start_expr>; <condition>; <increment_expr> {}
+
+// For strings, `i` is the index of the byte in the string.
+//
+for i, e := range <collection> {}                   // Array: index/entry, Map: key/value
+for i := range <array> {}                           // Array: index (!!), Map: key
 ```
 
-### Builtin  functions
+### Builtin functions
 
 ```golang
 len(collection)                // elements in a collection; String -> number of bytes
@@ -215,8 +231,10 @@ Strings are seen both as a collection of bytes, and a collection of "Runes" (ind
 Accessing a string via index, or using `len`, will access the individual bytes.
 
 ```golang
-str_runes := []rune(str);
-fmt.Printf("String chars len: %v\n", len(str_runes))
+runes := []rune(str);
+fmt.Printf("String chars len: %v\n", len(runes))
+
+fmt.Printf("String chars len: %v\n", utf8.RuneCountInString(str)
 ```
 
 Iterate runes:
@@ -267,8 +285,13 @@ string(intVar); string(byteVar)                      // alternative
 #### Utils
 
 ```golang
-strings.Split(str, separator)  // split a string
-strings.Repeat("*", n)    // repeat a string
+strings.HasSuffix(str, suffix)
+strings.ToUpper(str)
+strings.Join(str, separator)
+strings.ReplaceAll(str, search, replace)
+strings.Split(str, separator)
+strings.TrimSpace(str)
+strings.Repeat("*", n)o
 ```
 
 ### Regular expressions
@@ -280,21 +303,54 @@ matches, err := regexp.MatchString("<pattern>", "<string>")
 //
 r := regexp.MustCompile(`^(-?\d+(.\d+)?), (-?\d+(.\d+)?)$`)
 
-// Same as the basic regexp.MatchString.
+// Same as the basic regexp.MatchString, but doesn't return err.
 //
-matches := r.MatchString
+m := r.MatchString
 
-// Use capturing groups.
+// Finds all matching substrings. Non-capturing groups are included!
+// -1: find all matches
 //
-// If there is a match, `len(g)` == 1.
-// In this case, there are 5 capturing groups (array `g[0]`)
+s := r.FindAllString(coordinatesStr, -1)
+
+// Finds capturing groups, as arrays of []string.
+// -1: find all matches
 //
-g := r.FindAllStringSubmatch(coordinatesStr, -1) // -1: find all matches
+g := r.FindAllStringSubmatch(coordinatesStr, -1)
+
+// Search/replace
+s := r.ReplaceAllString(s, replace)
 ```
 
 Modifiers:
 
 - `(?i)`: case insensitive
+
+### Time
+
+Instantiation:
+
+```golang
+now = Time.now()
+t = Time.Date(2009, 11, 17, 20, 34, 58, 651387237, time.UTC))
+```
+
+Operations/Comparisons:
+
+```golang
+t2 := t.Add(25 * time.Second)
+t3 := t.Sub(1 * time.Minute)
+
+t2.Before(t)
+t2.After(t)
+t2.Equal(t)
+```
+
+Conversions:
+
+```golang
+t.Weekday()
+t.Nanoseconds()
+```
 
 ### Math
 
