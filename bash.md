@@ -84,6 +84,7 @@ ${str:-<expr>}                    # default a parameter: set if undefined or bla
 ${str:+<expr>}                    # if the var is set, replace with <expr> (which can include the $param itself!)
 
 ${str//search/replace}	          # substitution (** NOT REGEX **)
+${str//[a-e]/ }                   # supports at least character classes!!
 
 ${str:[<start>][:<end_expr>]}     # substring (0-based)
                                   # `start`: blank: first char
