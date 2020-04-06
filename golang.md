@@ -10,6 +10,7 @@
     - [Operators](#operators)
     - [Arrays, slices](#arrays-slices)
     - [Maps](#maps)
+    - [If/then/else, switch/case](#ifthenelse-switchcase)
     - [Loops](#loops)
       - [For](#for)
     - [Builtin functions](#builtin-functions)
@@ -62,7 +63,7 @@ var v [<type>] = <value>
 
 const c [<type>] = 1
 
-a, b := 3, 4              // Multiple assignment, also valid for 
+a, b := 3, 4              // Multiple assignment; useful also for swapping.
 
 largeNum := 1_000_000_000 // Cosmetic underscores
 ```
@@ -187,6 +188,31 @@ var OrbitalPeriods = map[Planet]float64{
 value, found := myMap["key"]
 ```
 
+### If/then/else, switch/case
+
+The `<initialization_expr>` can be an assignment (e.g. `err`).
+
+```golang
+if [<init_expr>]; <boolean_expr> {
+} else if {
+} else {
+}
+```
+
+If `value_expr` is present, the `case` expressions are matching values; if not, then they're expressions.
+
+```golang
+switch [<init_expr>;] [<value_expr>] {
+case <expr>[, <expr>]:
+  <statements>
+  [fallthrough]
+default:
+  <statements>
+}
+```
+
+Note how in order to only have the `init_expr`, it must be terminated with a semicolon.
+
 ### Loops
 
 #### For
@@ -194,9 +220,10 @@ value, found := myMap["key"]
 ```golang
 for <boolean_expr> {}
 
-// Multiple variables can be initialized (and also incremented) at once, via multiple assignment
+// Multiple variables can be initialized (and also incremented) at once, via multiple assignment.
+// Without any expression, it's a while true.
 //
-for <start_expr>; <condition>; <increment_expr> {}
+for [[<start_expr>]; [<condition>]; [<increment_expr>]] {}
 
 // For strings, `i` is the index of the byte in the string.
 //
@@ -330,8 +357,9 @@ Modifiers:
 Instantiation:
 
 ```golang
-now = Time.now()
-t = Time.Date(2009, 11, 17, 20, 34, 58, 651387237, time.UTC))
+now = time.now()
+t = time.Date(2009, 11, 17, 20, 34, 58, 651387237, time.UTC))
+monday = time.Monday
 ```
 
 Operations/Comparisons:
@@ -370,7 +398,7 @@ Note that infinity _is_ a number.
 ```golang
 // imports: "math/rand", "time"
 rand.Seed(time.Now().UnixNano())
-index := rand.Intn(<int>)
+index := rand.Intn(int)
 ```
 
 ### I/O
