@@ -21,6 +21,9 @@ Base operations:
 ```sh
 cargo (new <project_name>|run|check)
 cargo build [--release]              # defaults to debug version
+cargo test
+cargo fmt
+cargo clippy                         # linter
 ```
 
 Configuration file example:
