@@ -1,12 +1,14 @@
-## Table of contents
+# Text processing
 
-- [Perl](#perl)
-  - [General concepts](#general-concepts)
-    - [Priority](#priority)
-  - [Useful examples](#useful-examples)
-- [Sed](#sed)
-  - [Useful examples](#useful-examples)
-  - [Special characters](#special-characters)
+- [Text processing](#text-processing)
+  - [Perl](#perl)
+    - [General concepts](#general-concepts)
+      - [Priority](#priority)
+    - [Regex extra backslash sequences](#regex-extra-backslash-sequences)
+    - [Useful examples](#useful-examples)
+  - [Sed](#sed)
+    - [Useful examples](#useful-examples-1)
+    - [Special characters](#special-characters)
 
 ## Perl
 
@@ -23,6 +25,16 @@ printf 'Line 1\nLine 2' | perl -lne 'print $_; $line = readline && print $line'
 # Prints "Line 1" and "Line 2"
 printf 'Line 1\nLine 2' | perl -lne 'print $_; $line = readline and print $line'
 printf 'Line 1\nLine 2' | perl -lne 'print $_; ($line = readline) && print $line'
+```
+
+### Regex extra backslash sequences
+
+Apply operations inside regexes (see https://perldoc.perl.org/perlrebackslash.html)!!:
+
+```sh
+# Convert next character: `\u`: upper case, `\l`: lower case
+#
+perl -i -pe 's/- (\w)/- \u$1/'
 ```
 
 ### Useful examples
