@@ -11,6 +11,7 @@
   - [Dates](#dates)
     - [Formatting](#formatting)
     - [Operations](#operations)
+  - [Imagemagick](#imagemagick)
 
 ## Find
 
@@ -173,4 +174,27 @@ data_start_secs=`date -d "$data_start" +"%s"`
 highlight_start_secs=`date -d "$highlight_start" +"%s"`
 
 rel_highlight_start=`expr $highlight_start_secs - $data_start_secs`
+```
+
+## Imagemagick
+
+Resample to 200 DPI (resample+units)
+
+- Darken midtones (level)
+- Converts format (.ext2)
+- Uses a compression quality of 85% (quality); JPEG default is 92%
+
+The used values are good for resizing, contrasting and compressing a scanned letter.
+See how to execute an operation on multiple files, while changing the extension, for batch conversion.
+
+```sh
+convert -resample 200 -units PixelsPerInch -level 0%,100%,0.5 -quality 85% "$input.ext1" "$output.ext2"
+```
+
+Other operations:
+
+```sh
+convert "$input" -flip -flop "$output"            # Rotate 180°
+convert "$input" -resize 50% "$output"            # Resize 50%
+convert -size 1920x1080 xc:white "$output.pdf"    # Create blank pdf page, with given resolution (size)
 ```
