@@ -12,6 +12,8 @@
     - [Formatting](#formatting)
     - [Operations](#operations)
   - [Imagemagick](#imagemagick)
+  - [Formatting tools](#formatting-tools)
+- [`-t`: automatically determine columns based on whitespace](#-t-automatically-determine-columns-based-on-whitespace)
 
 ## Find
 
@@ -198,3 +200,12 @@ convert "$input" -flip -flop "$output"            # Rotate 180°
 convert "$input" -resize 50% "$output"            # Resize 50%
 convert -size 1920x1080 xc:white "$output.pdf"    # Create blank pdf page, with given resolution (size)
 ```
+
+## Formatting tools
+
+Table (columns) formatting:
+
+```sh
+# `-t`: automatically determine columns based on whitespace
+#
+column [-s "$separators"] -t
