@@ -20,6 +20,7 @@
     - [Check if a script is `source`d](#check-if-a-script-is-sourced)
     - [Workaround sudo expiry during a long-running script](#workaround-sudo-expiry-during-a-long-running-script)
     - [Interesting/useful time-related functionalities](#interestinguseful-time-related-functionalities)
+  - [Shell colors](#shell-colors)
 
 ## Shellopts
 
@@ -53,16 +54,26 @@ shopt -s nocasematch      # case insensitive matches
 
 !! WATCH OUT !!
 
-1. They're not entirely perl-compatible (see http://tldp.org/LDP/abs/html/x17129.html)
-2. The expressions are not quoted
-3. Use a temporary variable (or cmd subsitution) when using slashed metacharacters (see https://stackoverflow.com/a/12696899)
-4. `^` and `$` refer to the *whole string*, not the line
+1. They're not PCRE;
+2. The expressions don't need to be quoted;
+3. Use a temporary variable (or cmd subsitution) when using slashed metacharacters;
+4. `^` and `$` refer to the *whole string*, not the line;
 5. DON'T WRAP with ruby regex slashes!!!
 
 Metacharacters:
 
-- `\w`  -> `[[:alnum:]]`
-- `\b`  -> `\b`
+- `\w`: not supported; use `[:alnum:]`, but *doesn't match underscore*
+- `\b`: supported
+- `\s`: `[:space:]`
+- `[:xdigit:]`: hexadecimal!
+
+References:
+
+- Overview: http://tldp.org/LDP/abs/html/x17129.html
+- Chacter classes: https://www.gnu.org/software/grep/manual/html_node/Character-Classes-and-Bracket-Expressions.html
+- Limitations: https://stackoverflow.com/a/12696899
+
+The captured groups are available in the `$BASH_REMATCH` array (with entry 0 being the full match).
 
 Examples:
 
@@ -281,4 +292,77 @@ SECONDS=0; while [[ $SECONDS -lt 10 ]]; do sleep 1; done
 
 # Wait until next beginning of second
 sleep 0.$(printf '%04d' $((10000 - 10#$(date +%4N))))
+```
+
+## Shell colors
+
+See https://www.lihaoyi.com/post/BuildyourownCommandLinewithANSIescapecodes.html.
+
+Ruby convenience script:
+
+```ruby
+STANDARD_FOREGROUND_COLORS = [
+  BLACK_FG = "\u001b[30m",
+  RED_FG = "\u001b[31m",
+  GREEN_FG = "\u001b[32m",
+  YELLOW_FG = "\u001b[33m",
+  BLUE_FG = "\u001b[34m",
+  MAGENTA_FG = "\u001b[35m",
+  CYAN_FG = "\u001b[36m",
+  WHITE_FG = "\u001b[37m",
+]
+
+BRIGHT_FOREGROUND_COLORS = [
+  BRIGHT_BLACK_FG = "\u001b[30;1m",
+  BRIGHT_RED_FG = "\u001b[31;1m",
+  BRIGHT_GREEN_FG = "\u001b[32;1m",
+  BRIGHT_YELLOW_FG = "\u001b[33;1m",
+  BRIGHT_BLUE_FG = "\u001b[34;1m",
+  BRIGHT_MAGENTA_FG = "\u001b[35;1m",
+  BRIGHT_CYAN_FG = "\u001b[36;1m",
+  BRIGHT_WHITE_FG = "\u001b[37;1m",
+]
+
+# The bright background versions make the foreground color bright (!).
+#
+BACKGROUND_COLORS = [
+  BLACK_BG = "\u001b[40m", # good with BRIGHT_WHITE_FG
+  RED_BG = "\u001b[41m",
+  GREEN_BG = "\u001b[42m",
+  YELLOW_BG = "\u001b[43m",  # good with [BRIGHT_]BLACK_FG
+  BLUE_BG = "\u001b[44m",
+  MAGENTA_BG = "\u001b[45m",
+  CYAN_BG = "\u001b[46m",
+  WHITE_BG = "\u001b[47m",
+]
+
+RESET_COLOR = "\e[0m"
+
+def colorize_warning_thresholds(value, red_threshold, yellow_threshold)
+  if value < red_threshold
+    prefix, suffix = "#{BRIGHT_WHITE_FG}#{RED_BG}", RESET_COLOR
+  elsif value < yellow_threshold
+    prefix, suffix = "#{BRIGHT_BLACK_FG}#{YELLOW_BG}", RESET_COLOR
+  end
+
+  "#{prefix}#{value}#{suffix}"
+end
+
+def print_color_combinations
+  BACKGROUND_COLORS.each do |bg_color|
+    STANDARD_FOREGROUND_COLORS.each do |fg_color|
+      print "#{bg_color}#{fg_color} 90 #{RESET_COLOR}"
+    end
+
+    print "   "
+
+    BRIGHT_FOREGROUND_COLORS.each do |fg_color|
+      print "#{bg_color}#{fg_color} 90 #{RESET_COLOR}"
+    end
+
+    puts "", ""
+  end
+
+  nil
+end
 ```
