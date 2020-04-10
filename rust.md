@@ -8,7 +8,7 @@
     - [For loop](#for-loop)
     - [If/then/else](#ifthenelse)
   - [APIs](#apis)
-    - [Strings conversions](#strings-conversions)
+    - [Strings conversions/formatting](#strings-conversionsformatting)
     - [Random](#random)
 
 ## Cargo
@@ -97,7 +97,8 @@ let guess: u32 = guess.parse().E;
 ### For loop
 
 ```rust
-for x in 0..10 { }
+for x in 0..10 { }              // [0, 10)
+for x in (0..100).rev() {}      // reverse iteration
 ```
 
 ### If/then/else
@@ -110,15 +111,26 @@ if x > 5 {
 } else {
   println!("{}", x);
 }
+
+// If with (multiple) assignment.
+//
+let (a, b) =
+  if true {
+    (1, 2)
+  } else {
+    (3, 4)
+  };
 ```
 
 ## APIs
 
-### Strings conversions
+### Strings conversions/formatting
 
 ```rust
 integer.to_string();                // integer to string
 let guess: u32 = string.parse().E;  // string to numeric type
+
+format!("The number is {}", 1);     // the template *must* be a literal (!)
 ```
 
 ### Random
