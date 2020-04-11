@@ -5,8 +5,10 @@
   - [Syntax/basics](#syntaxbasics)
     - [Basic structure/Printing/Input](#basic-structureprintinginput)
     - [Variables/Data types](#variablesdata-types)
+    - [Lists (arrays)](#lists-arrays)
     - [For loop](#for-loop)
     - [If/then/else](#ifthenelse)
+    - [Pattern](#pattern)
   - [APIs](#apis)
     - [Strings conversions/formatting](#strings-conversionsformatting)
     - [Random](#random)
@@ -62,7 +64,11 @@ use std::io::Write; // bring flush() into scope
 // "attributes": metadata with different purposes.
 //
 #[allow(dead_code)]
-fn testing() { }
+fn testing() -> String {
+  // In order to return a value without using `return`, omit the semicolon.
+  //
+  "abc"
+}
 
 fn main() {
   println!("Enter guess:");
@@ -94,11 +100,29 @@ fn main() {
 let guess: u32 = guess.parse().E;
 ```
 
+### Lists (arrays)
+
+```rust
+let my_list = [1, 2, 3];
+```
+
 ### For loop
 
 ```rust
-for x in 0..10 { }              // [0, 10)
-for x in (0..100).rev() {}      // reverse iteration
+for x in 0..10 { }  // [0, 10)
+for x in 0..=10 { } // [0, 10] - inclusive
+
+// Reverse iteration. WATCH OUT, UNINTUITIVE: since it's not inclusive, it goes from 99 to 0.
+//
+for x in (0..100).rev() {}
+
+// Custom increment/decrement. See previous comment; goes from 98 to 0.
+//
+for x in (0..100).step_by(2).rev() {}
+
+// Iterate a list.
+//
+for i in list.iter() { }
 ```
 
 ### If/then/else
@@ -122,6 +146,19 @@ let (a, b) =
   };
 ```
 
+### Pattern
+
+```rust
+// Example with multiple assignment.
+//
+let xxx = match val {
+  1 | 2 => "1 or 2".to_string(),
+  _     => {
+    format!("other")
+  },
+};
+```
+
 ## APIs
 
 ### Strings conversions/formatting
@@ -130,7 +167,8 @@ let (a, b) =
 integer.to_string();                // integer to string
 let guess: u32 = string.parse().E;  // string to numeric type
 
-format!("The number is {}", 1);     // the template *must* be a literal (!)
+format!("The number is {}", 1);                          // the template *must* be a literal (!)
+format!("The number is {0}, again {0}, not {1}!", 1, 2); // numbered placeholders!
 ```
 
 ### Random
