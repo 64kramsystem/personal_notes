@@ -2,6 +2,7 @@
 
 - [Linux system](#linux-system)
   - [Environment](#environment)
+  - [Terminal](#terminal)
   - [Desktop Environment: windows](#desktop-environment-windows)
   - [MIME (extensions) (file associations) handling](#mime-extensions-file-associations-handling)
     - [Adding and associating a new application](#adding-and-associating-a-new-application)
@@ -13,6 +14,14 @@ Current user run dir:
 
 ```sh
 $XDG_RUNTIME_DIR
+```
+
+## Terminal
+
+Open a new tab, execute a command, and leave the tab open:
+
+```sh
+mate-terminal --tab --command 'sh -c "echo abc; zsh"'
 ```
 
 ## Desktop Environment: windows
@@ -92,6 +101,9 @@ xdg-mime default "browser.desktop" "x-scheme-handler/https"
 
 ### Split MAFF association
 
+Associate an extension based on the filename rather than the MIME type:
+
+```sh
 cat > /usr/share/mime/packages/maff.xml << 'XML'
 <?xml version="1.0" encoding="UTF-8"?>
 <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
@@ -103,3 +115,4 @@ cat > /usr/share/mime/packages/maff.xml << 'XML'
 XML
 
 update-mime-database /usr/share/mime
+```
