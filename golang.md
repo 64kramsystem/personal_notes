@@ -6,6 +6,7 @@
     - [Variables/Constants/Literals](#variablesconstantsliterals)
     - [Functions](#functions)
     - [Data types](#data-types)
+      - [Big numbers](#big-numbers)
     - [Pointers](#pointers)
     - [Operators](#operators)
     - [Arrays, slices](#arrays-slices)
@@ -25,16 +26,14 @@
     - [Time](#time)
     - [Math](#math)
     - [Random](#random)
-    - [I/O](#io)
-    - [O/S](#os)
+    - [Streams read/write](#streams-readwrite)
+    - [Files/descriptors](#filesdescriptors)
+    - [O/S, Command line arguments](#os-command-line-arguments)
+    - [Logging](#logging)
+    - [Memory allocation](#memory-allocation)
   - [Management](#management)
     - [Modules](#modules)
     - [Shared libraries (invoke from other languages)](#shared-libraries-invoke-from-other-languages)
-  - [Mastering Go (2nd ed.)](#mastering-go-2nd-ed)
-    - [01. Go and the Operating system](#01-go-and-the-operating-system)
-      - [Command line arguments](#command-line-arguments)
-      - [Standard file descriptors/IO, and useful I/O operations](#standard-file-descriptorsio-and-useful-io-operations)
-      - [Logging](#logging)
 
 ## General program structure
 
@@ -100,7 +99,11 @@ result := func(phrase string) bool { return phrase == "" }("abc")
 
 Data types:
 
-- `float64`
+- `float(32|64)`
+- `[u]int(8|16|32|64)`
+- `[u]int`: depends on the architecture
+- `byte`: alias of `uint8`
+- `rune`: alias of `int32`
 
 Casting:
 
@@ -112,6 +115,13 @@ Typedef:
 
 ```golang
 type Kind int
+```
+
+#### Big numbers
+
+```golang
+bigA := big.NewInt(123)
+bigA.Add(bigA, big.NewInt(1))
 ```
 
 ### Pointers
@@ -149,25 +159,25 @@ var--
 
 ### Arrays, slices
 
+Arrays can be compared (via `==`), if they have the same type and length. Slices can't be compared (via `==`).
+
 Arrays:
 
 ```golang
-var arr [10]int                // instantiate an array
-arr := []string{"a", "b"}      // array literal
-
-var sl []int                   // instantiate slice
-make([]rune, len(str))         // (other way)
-
-sl = append(sl, 64)            // append to a slice (can't append to an array)
-copy(dest[z:a], source[x:y])   // copy slices (indexing is optional)
+var arr [10]int                // instantiate with a size and default values
+arr := [...]string{"a", "b"}   // literal form
 ```
 
 Slices:
 
 ```golang
-slice := []string{"a", "b"}
-slice := make([]string, <size>[, <capacity>])
-slice := array[[<start>]:[<end>]] // make from an array; **end element is not included**
+var sl []int                               // instantiate without size
+sl := make([]string, <size>[, <capacity>]) // with a size
+sl := []string{"a", "b"}                   // literal form
+sl := array[[<start>]:[<end>]]             // make from an array; **end element is not included**
+
+sl = append(sl, 64)                        // append to a slice (can't append to an array)
+copy(dest[z:a], source[x:y])               // copy slices (indexing is optional)
 ```
 
 Accessing:
@@ -223,12 +233,20 @@ for <boolean_expr> {}
 // Multiple variables can be initialized (and also incremented) at once, via multiple assignment.
 // Without any expression, it's a while true.
 //
-for [[<start_expr>]; [<condition>]; [<increment_expr>]] {}
+for [[<start_expr>]; [<condition>]; [<increment_expr>]] {
+  if true {
+    break
+  } else {
+    continue
+  }
+}
 
 // For strings, `i` is the index of the byte in the string.
 //
 for i, e := range <collection> {}                   // Array: index/entry, Map: key/value
 for i := range <array> {}                           // Array: index (!!), Map: key
+
+// There is no easy way to iterate a range in reverse; the index-based for loop needs to be used.
 ```
 
 ### Builtin functions
@@ -251,9 +269,20 @@ panic(err)                         // panic throwing the given error
 
 ### Strings
 
+```golang
+// The `\n` is not interpreted. there's no way to include a single quote.
+//
+raw_string := 'foo
+bar\nbaz'                             
+
+// Can't be on separate lines.
+//
+interpreted_string := "foo\nbar\nbaz"
+```
+
 #### General concepts
 
-Strings are seen both as a collection of bytes, and a collection of "Runes" (individual characters, stored as `int32`).
+Strings are seen both as a collection of bytes, and a collection of `rune`.
 
 Accessing a string via index, or using `len`, will access the individual bytes.
 
@@ -274,7 +303,7 @@ for index, runeValue := range str {
 
 #### Formatting
 
-String formatting:
+Striong formatting:
 
 ```golang
 fmt.Println(v1, v2)                         // a space is inserted between the variables
@@ -312,6 +341,8 @@ string(intVar); string(byteVar)                      // alternative
 #### Utils
 
 ```golang
+// `strings` package
+
 strings.HasSuffix(str, suffix)
 strings.ToUpper(str)
 strings.Join(str, separator)
@@ -319,6 +350,14 @@ strings.ReplaceAll(str, search, replace)
 strings.Split(str, separator)
 strings.TrimSpace(str)
 strings.Repeat("*", n)o
+
+// `unicode` package
+
+unicode.IsUpper(char)
+unicode.IsLower(char)
+unicode.IsNumber(char)
+unicode.IsPunct(char)
+unicode.IsSymbol(char)
 ```
 
 ### Regular expressions
@@ -396,27 +435,81 @@ Note that infinity _is_ a number.
 ### Random
 
 ```golang
-// imports: "math/rand", "time"
+import "math/rand"
+
 rand.Seed(time.Now().UnixNano())
 index := rand.Intn(int)
 ```
 
-### I/O
+### Streams read/write
+
+Reading line by line:
 
 ```golang
-import "os"
+scanner := bufio.NewScanner(f)
 
-f, err := os.OpenFile(LOGFILE, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)    // create a file
+for scanner.Scan() {
+  fmt.Println(">", scanner.Text())
+}
+```
 
+Writing to a stream:
+
+```golang
+io.WriteString(os.Stdout, s)     // allows to write to any IO stream (`w Writer`, ...)
+```
+
+### Files/descriptors
+
+Create a file:
+
+```golang
+f, err := os.OpenFile(LOGFILE, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+```
+
+Standard FDs:
+
+- `os.Stdin`
+- `os.stdOut`
+- `os.Stderr`
+
+File(name) operations:
+
+```golang
 import "path/filepath"
 
 filepath.Base(string)        // file basename
 ```
 
-### O/S
+### O/S, Command line arguments
 
 ```golang
-os.Exit(<exit_status>)              /// exit to the O/S
+os.Exit(<exit_status>)              // exit to the O/S
+os.Args                             // commandline arguments
+```
+
+### Logging
+
+```golang
+import "log/syslog"
+
+sysLog, err := syslog.New(syslog.LOG_INFO | syslog.LOG_LOCAL7, programName)        // (priority|facility)
+
+log.Fatal(v ...interface{})        // terminates the Go program, after logging
+log.Panic(v ...interface{})        // also terminates, but prints more information
+
+// Log levels: composition of: (Print|Fatal|Panic)(|f|ln)
+// Standard log facilities: auth, authpriv, cron, daemon, kern, lpr, mail, mark, news, syslog, user, UUCP, local(0..7)
+
+myLog := log.New(f, ogLinePrefix, log.LstdFlags | log.Lshortfile)    // Custom logger; LstdFlags prints the timestamp, Lshortfile filename+line num
+```
+
+### Memory allocation
+
+```golang
+var m runtime.MemStats
+runtime.ReadMemStats(&m)
+fmt.Printf("TotalAlloc (Heap) = %v MiB\n", m.TotalAlloc/1048576)
 ```
 
 ## Management
@@ -439,52 +532,3 @@ Configuration is stored in a `go.mod` file.
 ### Shared libraries (invoke from other languages)
 
 See https://github.com/vladimirvivien/go-cshared-examples.
-
-## Mastering Go (2nd ed.)
-
-### 01. Go and the Operating system
-
-#### Command line arguments
-
-```golang
-import "os"
-
-arguments := os.Args
-```
-
-#### Standard file descriptors/IO, and useful I/O operations
-
-Standard FDs are represented by `os.Stdin`, `os.stdOut`, `os.Stderr`.
-
-```golang
-import "io"
-
-io.WriteString(os.Stdout, s)     // allows to write to any IO stream (`w Writer`, ...)
-```
-
-Read line by line:
-
-```golang
-import "bufio"
-
-scanner := bufio.NewScanner(f)
-for scanner.Scan() {
-  fmt.Println(">", scanner.Text())
-}
-```
-
-#### Logging
-
-```golang
-import "log/syslog"
-
-sysLog, err := syslog.New(syslog.LOG_INFO | syslog.LOG_LOCAL7, programName)        // (priority|facility)
-
-log.Fatal(v ...interface{})        // terminates the Go program, after logging
-log.Panic(v ...interface{})        // also terminates, but prints more information
-
-// Log levels: composition of: (Print|Fatal|Panic)(|f|ln)
-// Standard log facilities: auth, authpriv, cron, daemon, kern, lpr, mail, mark, news, syslog, user, UUCP, local(0..7)
-
-myLog := log.New(f, ogLinePrefix, log.LstdFlags | log.Lshortfile)    // Custom logger; LstdFlags prints the timestamp, Lshortfile filename+line num
-```
