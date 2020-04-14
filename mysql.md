@@ -1,9 +1,11 @@
-## Table of contents
+# MySQL
 
-- [Built-in functions](#built-in-functions)
-  - [String functions](#string-functions)
-    - [Character conversions](#character-conversions)
-- [Window functions](#window-functions)
+- [MySQL](#mysql)
+  - [Built-in functions](#built-in-functions)
+    - [String functions](#string-functions)
+      - [Character conversions](#character-conversions)
+    - [Regular expressions (regexes)](#regular-expressions-regexes)
+  - [Window functions](#window-functions)
 
 ## Built-in functions
 
@@ -34,6 +36,70 @@ SELECT HEX(ORD('👸'));
 -- +---------------+
 -- | F09F91B8      |
 -- +---------------+
+```
+
+### Regular expressions (regexes)
+
+Metacharacters supported:
+
+- `^ $ . * + {} []`,
+- `()` but not with groups capturing,
+- `[:digit:]` and so on.
+
+`LIKE`-style operator:
+
+```sql
+-- Supports `match_type` as second argument (see `REGEXP_SUBSTR`).
+--
+SELECT 'abcd' RLIKE 'b.' `match`;
+-- +-------+
+-- | match |
+-- +-------+
+-- |     1 |
+-- +-------+
+```
+
+Matching a substring:
+
+```sql
+-- - `position` (optional): 1-based, default=1;
+-- - `occurrence` (optional): 1-based, default=1;
+-- - `match_type` (optional): `c`ase sensitive, `m`ulti-line match, `n`ewlines matched by dot;
+--
+SET @position = 1, @occurrence = 2, @match_type = NULL;
+
+SELECT REGEXP_SUBSTR('ab0b1', 'b[[:digit:]]', @position, @occurrence, @match_type) `match`;
+-- +-------+
+-- | match |
+-- +-------+
+-- |    b1 |
+-- +-------+
+
+SELECT
+  REGEXP_SUBSTR('a\nb', 'a$', 1, 1, 'm') `match_m`,
+  REPLACE(
+    REGEXP_SUBSTR('a\nb', 'a.b', 1, 1, 'n'),
+    '\n', '<\\n>'
+  ) `match_n`
+;
++---------+---------+
+| match_m | match_n |
++---------+---------+
+| a       | a<\n>b  |
++---------+---------+
+```
+
+Search/replace:
+
+```sql
+-- Supports the same options as `REGEXP_SUBSTR`.
+--
+SELECT REGEXP_REPLACE('a b c', 'b', 'X') `replace`;
+-- +---------+
+-- | replace |
+-- +---------+
+-- | a X c   |
+-- +---------+
 ```
 
 ## Window functions
