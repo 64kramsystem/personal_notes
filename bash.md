@@ -5,6 +5,7 @@
   - [Test conditions](#test-conditions)
     - [Regular expressions](#regular-expressions)
     - [Applications](#applications)
+  - [Cycle a string tokens based on separator (IFS)](#cycle-a-string-tokens-based-on-separator-ifs)
   - [String operations](#string-operations)
     - [Examples](#examples)
   - [Arithmetic operations](#arithmetic-operations)
@@ -97,6 +98,30 @@ Execute a command if a process is not running:
 ! pgrep -fa mysqld && (mysqld &)                       # Zsh doesn't need brackets for this semantics
 if [[ -z "$(pgrep -fa mysqld)" ]]; then mysqld & fi
 ```
+
+## Cycle a string tokens based on separator (IFS)
+
+Use IFS to tokenize a string with alternative characters (they're considered a set of **single** chars); **must** unset after:
+
+```sh
+input="a,b c;d"
+
+IFS=",;"
+for token in $input; do echo "<$token>"; done
+# <a>
+# <b c>
+# <d>
+
+unset IFS
+```
+
+While the `while` loop has scoping:
+
+```sh
+while IFS= read -r token ... done <<< "$input"
+```
+
+it doesn't work as intended for this purpose.
 
 ## String operations
 
