@@ -13,7 +13,7 @@
     - [Operations](#operations)
   - [Imagemagick](#imagemagick)
   - [Formatting tools](#formatting-tools)
-- [`-t`: automatically determine columns based on whitespace](#-t-automatically-determine-columns-based-on-whitespace)
+  - [htop](#htop)
 
 ## Find
 
@@ -209,3 +209,9 @@ Table (columns) formatting:
 # `-t`: automatically determine columns based on whitespace
 #
 column [-s "$separators"] -t
+```
+
+## htop
+
+- `h`: help
+- `H`: show/hide process threads

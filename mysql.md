@@ -46,6 +46,8 @@ Metacharacters supported:
 - `()` but not with groups capturing,
 - `[:digit:]` and so on.
 
+!! The backslash needs to be doubled, e.g. `\\.` !!
+
 `LIKE`-style operator:
 
 ```sql

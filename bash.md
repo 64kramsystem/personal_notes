@@ -35,6 +35,8 @@ shopt -s nocasematch      # case insensitive matches
 
 ## Test conditions
 
+Operators:
+
 ```
 -z string                 string is empty
 -n string                 string is not empty
@@ -49,6 +51,16 @@ shopt -s nocasematch      # case insensitive matches
 ! -s <filename>           file is empty
 
 -t 0                      input is terminal (false if stdin)
+```
+
+Note that functions can return a condition result!!:
+
+```sh
+function myTest {
+  [[ "$1" == "foo" ]]
+}
+
+myTest "foo" && echo "bar"      # prints `bar`!
 ```
 
 ### Regular expressions

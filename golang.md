@@ -10,7 +10,11 @@
     - [Pointers](#pointers)
     - [Operators](#operators)
     - [Arrays, slices](#arrays-slices)
+      - [Slice behind-the-scenes concepts](#slice-behind-the-scenes-concepts)
     - [Maps](#maps)
+    - [Structs](#structs)
+      - [Composition](#composition)
+    - [Type casting/assertion/switch](#type-castingassertionswitch)
     - [If/then/else, switch/case](#ifthenelse-switchcase)
     - [Loops](#loops)
       - [For](#for)
@@ -175,14 +179,26 @@ var sl []int                               // instantiate without size
 sl := make([]string, <size>[, <capacity>]) // with a size
 sl := []string{"a", "b"}                   // literal form
 sl := array[[<start>]:[<end>]]             // make from an array; **end element is not included**
+                                           // omitting start/end indexes indicate first/last indexes
 
-sl = append(sl, 64)                        // append to a slice (can't append to an array)
-copy(dest[z:a], source[x:y])               // copy slices (indexing is optional)
+sl = append(sl, 64)                        // append to a slice (can't append to/from an array)
+sl2 := append(sl, sl...)                   // append a slice to another slice (variadic notation)
+
+copy(dest[z:a], source[x:y])               // copy slices (indexing is optional); !! the destination capacity is equal to the source length !!
+cap(sl)                                    // capacity of a slice
 ```
 
 Accessing:
 
 - Golang doesn't have negative indexing! Use `len() - 1`.
+
+#### Slice behind-the-scenes concepts
+
+Slices are **views on arrays**!! If the underlying array data changes, the slice contents will change as well.
+
+One needs to be aware of **which/when slice operations cause an underlying array to be copied**, since different slices will then point to different arrays!
+
+**Underlying arrays are copied when the capacity is not enough**
 
 ### Maps
 
@@ -193,9 +209,116 @@ var OrbitalPeriods = map[Planet]float64{
   "Mercury": 0.2408467,
 }
 
-// Check if map contains an element
 
-value, found := myMap["key"]
+value, found := myMap["key"]              // Check if map contains an element
+delete(myMap, "key")                      // Deletion; returns nothing!
+```
+
+### Structs
+
+```golang
+type mytype struct {
+  field1  []int
+  field2  byte
+}
+
+// Instantiation
+
+// 1: fields are optional.
+mt := mytype{
+  field1: []int{1, 2, 3},
+}
+
+// 2: all fields must be specified.
+mt := mytype{
+  []int{1, 2, 3},
+  1,
+}
+
+// 3: all fields are initialized with zero value
+var mt mytype
+
+// Anonymous structs
+
+as := struct {
+  field1 []int
+  field2 byte
+}{}
+as.field1 = []int{1, 2, 3}
+as.field2 = 3
+```
+
+Structs can be compared, as long as the types are the same, and they're comparable (so, no slices!).
+
+#### Composition
+
+```golang
+type myints struct {
+	i  int
+	i2 int
+}
+
+type mycomposed struct {
+	myints
+
+	i2 int
+	f  float64
+}
+
+mt := mycomposed{
+  myints: myints{ // member/struct names must be the same!
+    i:  1,
+    i2: 2,
+  },
+  i2: 3,
+  f:  4.4,
+}
+
+mt.i = 10         // "promoted" -> can be accessed as member of the parent struct
+mt.myints.i = 10  // other way of accessing the member
+mt.myints.i2 = 20 // not "promoted", as there is overlapping
+mt.i2 = 30
+mt.f = 44.0
+```
+
+### Type casting/assertion/switch
+
+Simple typecast:
+
+```golang
+i := 333
+f := float64(i)
+```
+
+Type assertion. Types must have the expected interface; it's not a casting:
+
+```golang
+func test(v interface{}) {
+	f, ok := v.(string)
+
+	if !ok {
+		fmt.Println("casted!:", f)
+	} else {
+		fmt.Println("not casted!")
+	}
+}
+
+test(123) // not casted!
+```
+
+Type switch:
+
+```golang
+func test(v interface{}) {
+	switch t := v.(type) {
+	case bool:
+		fmt.Println(t, "is a bool!")
+	case float32, float64:
+		fmt.Println(t, "is a float!")
+	default:
+		fmt.Println(t, "is something else!")
+	}
+}
 ```
 
 ### If/then/else, switch/case
@@ -243,8 +366,8 @@ for [[<start_expr>]; [<condition>]; [<increment_expr>]] {
 
 // For strings, `i` is the index of the byte in the string.
 //
-for i, e := range <collection> {}                   // Array: index/entry, Map: key/value
 for i := range <array> {}                           // Array: index (!!), Map: key
+for i, e := range <collection> {}                   // Array: index/entry, Map: key/value. !! the iteration order is randomized !!
 
 // There is no easy way to iterate a range in reverse; the index-based for loop needs to be used.
 ```
