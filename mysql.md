@@ -40,13 +40,15 @@ SELECT HEX(ORD('👸'));
 
 ### Regular expressions (regexes)
 
-Metacharacters supported:
+Metacharacters/functionalities supported:
 
-- `^ $ . * + {} []`,
-- `()` but not with groups capturing,
-- `[:digit:]` and so on.
+- `^ $ . * + {} []`;
+- `()` but not with groups capturing;
+- `[:digit:]` and so on;
+- backreferences is not supported;
+- lookahead is not supported.
 
-!! The backslash needs to be doubled, e.g. `\\.` !!
+!! The backslash needs to be doubled where it's literal, e.g. `\\.` !!
 
 `LIKE`-style operator:
 

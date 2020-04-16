@@ -32,15 +32,16 @@ The VIM section requires some cleanup.
 
 ### bindings
 
-`Ctrl+B`				            Show/hide sidebar
-`Ctrl+J`				            Show/hide console
+- `Ctrl+B`				            Show/hide sidebar
+- `Ctrl+J`				            Show/hide console
+- ``Ctrl+` ``                 Show/hide terminal
 
-`Ctrl+K, M`                 Select language
+- `Ctrl+K, M`                 Select language
 
-`Ctrl+Shift+O`	            Go to symbol in current file (includes Markdown headers)
-`Alt+←`/`Alt+→`            Navigate through history
+- `Ctrl+Shift+O`	            Go to symbol in current file (includes Markdown headers)
+- `Alt+←`/`Alt+→`            Navigate through history
 
-`Ctrl+K, Ctrl+L/U`		      Change case to Upper/Lower
+- `Ctrl+K, Ctrl+L/U`		      Change case to Upper/Lower
 
 #### custom
 

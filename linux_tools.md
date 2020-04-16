@@ -79,6 +79,36 @@ Note that the -path must be relative to the same path as the search path, and it
 find . -name 1.txt -not -path ./skipdir/* -not -path ./skipdir2/*
 ```
 
+Cycle filenames, with whitespace support.
+
+```sh
+# !! "<<<" won't work, because Bash parameter substitution doesn't support null bytes !!
+#
+find . -name "*.txt" -print0 | while read -rd $'\0' filename; do
+  echo "<$filename>"
+done
+
+# If the cycle needs to break on the first find, ie. in case of particular conditions, and it's in
+# a function, then it needs special handling, as `return` won't work, because it's in a subshell:
+#
+function myfunc() {
+  local result
+
+  result=$(
+    find . -name "*.txt" -print0 | while read -rd $'\0' filename; do
+      if [[ $filename == "matching.txt" ]]; then
+        echo "$filename"
+        break
+      fi
+    done
+  )
+
+  if [[ $result != "" ]]; then
+    return
+  # etc.etc.
+}
+```
+
 #### Search text inside multiple PDFs
 
 ```sh

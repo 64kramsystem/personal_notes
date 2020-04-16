@@ -5,6 +5,7 @@
   - [Syntax](#syntax)
     - [Variables/Constants/Literals](#variablesconstantsliterals)
     - [Functions](#functions)
+      - [Defer](#defer)
     - [Data types](#data-types)
       - [Big numbers](#big-numbers)
     - [Pointers](#pointers)
@@ -24,7 +25,7 @@
     - [Strings](#strings)
       - [General concepts](#general-concepts)
       - [Formatting](#formatting)
-      - [Parsing/Numerical conversion](#parsingnumerical-conversion)
+      - [Parsing/Numerical/Character conversion](#parsingnumericalcharacter-conversion)
       - [Utils](#utils)
     - [Regular expressions](#regular-expressions)
     - [Time](#time)
@@ -84,19 +85,101 @@ const (
 
 ### Functions
 
+General definition:
+
 ```golang
-func myFunc(myVar int) bool { return true }
+// Example signature, with multiple return values.
+// If returning only one variable, the round brackets are not required.
+//
+func myFunc(myVar, myVar2 int) (bool, int) {
+  return true, 1
+}
 
-// Implicit return variables declaration!
-func myFunc(myVar int) (myRetVal bool) { return myRetVal }
+// Variadic arguments.
+// The `...` operator is called "Pack operator".
+//
+// In order to pass a slice, unpack it:
+//
+//   myFunc(mySlice...)
+//
+func myFunc(myVars ...string) { }
 
-func myFunc(myVar int) (int, bool) { return 1, true }
+// "Named returns": variables declared in the function definition!
+//
+func myFunc() (myRetVal int) {
+  // If no variables are specified ("Naked return"), the named returns are returned. Watch out
+  // because this can be confusing.
+  //
+  return myRetVal
+}
+```
 
+```golang
 // Function variable
+//
 myFunc := func(phrase string) bool { return phrase == "" }
 
 // Anonymous function
+//
 result := func(phrase string) bool { return phrase == "" }("abc")
+```
+
+Type function:
+
+```golang
+type MyFuncType func(int) bool
+
+func AcceptsFunctions(myFunc MyFuncType, myVal int) {
+	funcIsTrue := myFunc(myVal)
+	fmt.Println("Func is true?:", funcIsTrue)
+}
+
+func main() {
+	AcceptsFunctions(func(i int) bool { return i%2 == 0 }, 1) // false
+	AcceptsFunctions(func(i int) bool { return i*2 == 4 }, 2) // true
+}
+```
+
+```golang
+
+// Closure! Has access to variables in scope. If the closure is invoked (from the caller), the `i`
+// variable is updated!
+//
+func incrementI() func() int {
+	var i int
+
+	return func() int {
+		i++
+		return i
+	}
+}
+
+incrementFx := incrementI()
+
+fmt.Println(incrementFx()) // 1
+fmt.Println(incrementFx()) // 2
+```
+
+#### Defer
+
+Execution is in LIFO order, so the first deferred is invoked after the second defined.
+
+```golang
+func myFunc() {
+	i := 0
+
+  // The parameter is copied at `defer` time! So the `i` value is before the increment.
+  //
+	defer func(i2 int) { fmt.Println("Invoked after; value:", i2) }(i) // 0 !!
+
+  // In case of closure, the variable values are the ones at execution time.
+  //
+	defer func() { fmt.Println("Invoked before; value:", i) }() // 1 !!
+
+	i++
+
+	fmt.Println("zero!")
+}
 ```
 
 ### Data types
@@ -259,7 +342,7 @@ type myints struct {
 }
 
 type mycomposed struct {
-	myints
+	myints          // "Embedded" field
 
 	i2 int
 	f  float64
@@ -442,14 +525,16 @@ Formatters:
   - `%v`: the value in a default format; when printing structs, the plus flag (%+v) adds field names
   - `%T`: Go-syntax representation of the type of the value
 - Integer
+  - `%[<n>]d`: Decimal, optionally padded with `<n>` zeros
   - `%b`: base 2
+  - `%[<n>]X`: base 16, with upper-case letters, with optional zero padding
+- Characters
   - `%c`: the character represented by the corresponding Unicode code point
-  - `%X`: base 16, with upper-case letters
-  - `%U`: Unicode format: U+1234; same as "U+%04X"
+  - `%U`: Unicode format: U+1234; same as `U+%04X`
 
 Using `%#`  increases the verbosity for some: at least `%v`, `%U`.
 
-#### Parsing/Numerical conversion
+#### Parsing/Numerical/Character conversion
 
 ```golang
 b, err := strconv.ParseBool("true")
@@ -459,6 +544,7 @@ u, err := strconv.ParseUint(str, base, bitsize)
 
 str := strconv.Itoa(97)                              // integer to string
 string(intVar); string(byteVar)                      // alternative
+// also see fmt.Sprintf
 ```
 
 #### Utils
@@ -548,6 +634,7 @@ t.Nanoseconds()
 math.Abs(f float)
 math.Inf(sign int)              // positive/negative sign = positive/negative infinity
 math.IsInf(sign int)            // positive/negative, or 0 for indifferent
+Pow(x, y float64)               // power (exponentiation)
 
 math.NaN
 math.IsNaN
