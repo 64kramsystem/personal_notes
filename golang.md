@@ -15,6 +15,8 @@
     - [Maps](#maps)
     - [Structs](#structs)
       - [Composition](#composition)
+      - [Methods](#methods)
+      - [Interfaces](#interfaces)
     - [Type casting/assertion/switch](#type-castingassertionswitch)
     - [If/then/else, switch/case](#ifthenelse-switchcase)
     - [Loops](#loops)
@@ -364,6 +366,52 @@ mt.i2 = 30
 mt.f = 44.0
 ```
 
+#### Methods
+
+Methods are declared separately from the struct:
+
+```golang
+type Embedded struct {}
+
+func (e *Embedded) method() {
+	fmt.Println("Embedded!")
+}
+```
+
+Methods of embeDynamic dispatching:
+
+```golang
+type Embedding struct{
+	Embedded
+}
+
+func (e *Embedding) method() {
+	fmt.Println("Embedding!")
+}
+
+val := Embedded{}
+val.method() // "Embedded!"
+
+val := Embedding{}
+val.method() // "Embedding!"
+```
+
+#### Interfaces
+
+Golang uses duck typing: interface implementation is not declared, instead, it's implicit through the implementation of the interface methods (which constitute the _Method set_).
+
+Interface names idiomatically end with `-er`, and if there is only one method, they are named after the method.
+
+```golang
+type Speaker interface {
+  void Speak()
+}
+```
+
+The _Empty interface_ has no methods, and can represent any type (including the simple ones): `interface{}`.
+
+General guidelines: APIs should accept interfaces and return concrete types.
+
 ### Type casting/assertion/switch
 
 Simple typecast:
@@ -479,7 +527,7 @@ panic(err)                         // panic throwing the given error
 // The `\n` is not interpreted. there's no way to include a single quote.
 //
 raw_string := 'foo
-bar\nbaz'                             
+bar\nbaz'
 
 // Can't be on separate lines.
 //
@@ -519,15 +567,17 @@ fmt.Printf("%s%d\n", v1, v2)
 str := fmt.Sprintf("%s, %s", date, time)    // printf (to string) in Golang
 ```
 
-Formatters:
+Formatters (with support):
 
 - Generic
   - `%v`: the value in a default format; when printing structs, the plus flag (%+v) adds field names
-  - `%T`: Go-syntax representation of the type of the value
-- Integer
-  - `%[<n>]d`: Decimal, optionally padded with `<n>` zeros
-  - `%b`: base 2
-  - `%[<n>]X`: base 16, with upper-case letters, with optional zero padding
+  - `%T`: variable type
+- Numeric
+  - `-`: left aligned; (w)idth; `0`-padding
+  - `%d`: decimal: `-w0`
+  - `%f`: float: `-w0` + `.p`recision (don't depend on width); width includes dot and decimals;
+  - `%b`: base 2: `-w0`
+  - `%x`/`%X`: base 16 (lower/upper case letters): `-w0`
 - Characters
   - `%c`: the character represented by the corresponding Unicode code point
   - `%U`: Unicode format: U+1234; same as `U+%04X`
@@ -699,6 +749,30 @@ os.Args                             // commandline arguments
 ```
 
 ### Logging
+
+Basic logging:
+
+```golang
+// Like `fmt`, but they prefix entries with a timestamp.
+//
+log.Println(); log.Printf(); log.Print()
+
+// Log and exit!
+//
+log.Fatalln(); log.Fatalf(); log.Fatal()
+
+// Log and panic!
+//
+log.Panicln(); log.Panicf(); log.Panic()
+
+// Customize prefix. Sample output:
+//
+//    2020/04/17 23:34:41.008270 /path/to/play.go:8: Entry!
+//
+log.SetFlags(log.Ldate | log.Lmicroseconds | log.Llongfile)
+```
+
+Syslog logging:
 
 ```golang
 import "log/syslog"
