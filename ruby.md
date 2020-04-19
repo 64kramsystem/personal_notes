@@ -4,8 +4,9 @@
   - [General syntax](#general-syntax)
     - [Array literals](#array-literals)
     - [Heredoc](#heredoc)
-  - [APIs](#apis)
+  - [APIs/Stdlib](#apisstdlib)
     - [Array](#array)
+    - [CGI/URI (encoding)](#cgiuri-encoding)
   - [Handling processes](#handling-processes)
     - [Basic handling, via `IO.popen`](#basic-handling-via-iopopen)
     - [Using `IO.popen3`](#using-iopopen3)
@@ -43,7 +44,7 @@ With tilde, also allows delimiter to be anywhere:
   EOF
 ```
 
-## APIs
+## APIs/Stdlib
 
 ### Array
 
@@ -52,6 +53,18 @@ arr = [0, 1, 2]
 
 arr.fill(nil, arr.size...5)             # resize/extend (destructive) in arguably expressive form; returns the array; !!! watch out the `...` syntax !!!
 arr[5] ||= nil                          # other resize/extend, in arguably less expressive form
+```
+
+### CGI/URI (encoding)
+
+URI is already in scope.
+
+```ruby
+CGI::escape("&&&")                            # URL-encode a string: "%26%26%26"
+URI.encode_www_form(p1: "&&&", "p2" => "!!!") # URL-encode params: "p1=%26%26%26&p2=%21%21%21"
+
+CGI.unescapeHTML("html")	      # decode HTML entities; use only for basic cases, as it' not 100% complete (gem: https://github.com/threedaymonk/htmlentities)
+HTMLEntities.new.decode("html")	# htmlentities gem
 ```
 
 ## Handling processes

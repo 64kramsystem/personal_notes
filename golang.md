@@ -23,6 +23,8 @@
       - [For](#for)
     - [Builtin functions](#builtin-functions)
     - [Errors](#errors)
+    - [Goroutines](#goroutines)
+    - [Channels](#channels)
   - [APIs](#apis)
     - [Strings](#strings)
       - [General concepts](#general-concepts)
@@ -37,8 +39,13 @@
     - [Files/descriptors](#filesdescriptors)
     - [O/S, Command line arguments](#os-command-line-arguments)
     - [Logging](#logging)
+    - [Atomic](#atomic)
+    - [Sleep](#sleep)
     - [Memory allocation](#memory-allocation)
   - [Management](#management)
+    - [Packages/naming](#packagesnaming)
+      - [init() function](#init-function)
+    - [Tools](#tools)
     - [Modules](#modules)
     - [Shared libraries (invoke from other languages)](#shared-libraries-invoke-from-other-languages)
 
@@ -519,6 +526,45 @@ err.Error()                        // get the message
 panic(err)                         // panic throwing the given error
 ```
 
+### Goroutines
+
+Goroutines don't share memory (differently from threads).
+
+```golang
+var cnt int
+
+func updateCounter(wg *sync.WaitGroup, mtx *sync.Mutex) {
+	mtx.Lock()
+
+	cnt++
+
+	mtx.Unlock()
+
+	// Important!!
+	wg.Done()
+}
+
+func main() {
+	// The wait system is typically based on `WaitGroup`s
+	wg := &sync.WaitGroup{}
+
+	mtx := &sync.Mutex{}
+
+	// Number of goroutines in the group
+	wg.Add(2)
+
+	// Goroutine(s)
+	go updateCounter(wg, mtx)
+	go updateCounter(wg, mtx)
+
+	wg.Wait()
+}
+```
+
+See the [Atomic](#atomic) section for the atomic operations support package.
+
+### Channels
+
 ## APIs
 
 ### Strings
@@ -719,6 +765,13 @@ Writing to a stream:
 io.WriteString(os.Stdout, s)     // allows to write to any IO stream (`w Writer`, ...)
 ```
 
+Bytes buffer:
+
+```golang
+var s bytes.Buffer
+log.SetOutput(&s)
+```
+
 ### Files/descriptors
 
 Create a file:
@@ -769,6 +822,8 @@ log.Panicln(); log.Panicf(); log.Panic()
 //
 //    2020/04/17 23:34:41.008270 /path/to/play.go:8: Entry!
 //
+// Use log.SetFlags(0) for no additions.
+//
 log.SetFlags(log.Ldate | log.Lmicroseconds | log.Llongfile)
 ```
 
@@ -788,6 +843,20 @@ log.Panic(v ...interface{})        // also terminates, but prints more informati
 myLog := log.New(f, ogLinePrefix, log.LstdFlags | log.Lshortfile)    // Custom logger; LstdFlags prints the timestamp, Lshortfile filename+line num
 ```
 
+### Atomic
+
+Atomic operations package; supports operations on `[u]int(32|64)`:
+
+```golang
+atomic.AddInt32(myvar, int32(myint))
+```
+
+### Sleep
+
+```golang
+time.Sleep(time.Second)   // Sleep one second
+```
+
 ### Memory allocation
 
 ```golang
@@ -797,6 +866,58 @@ fmt.Printf("TotalAlloc (Heap) = %v MiB\n", m.TotalAlloc/1048576)
 ```
 
 ## Management
+
+### Packages/naming
+
+A package is a directory with files; files in each package are generally divided by scope, e.g.:
+
+- `strings`
+  - `builder.go`
+  - `compare.go`
+  - `reader.go`
+  - `replace.go`
+  - `search.go`
+  - `strings.go`
+
+Package names are typically simple nouns (abbreviation is encouraged), without underscores, singular or plural, specific (non generic), e.g.:
+
+- `strconv`
+- `sync`
+- `time`
+
+"_Exported_" entities are accessible from outside the package, and start with a capital letter; "_Imported_" is the opposite.
+
+Relevant env vars:
+
+- `$GOROOT`: stdlib search path
+- `$GOPATH`: user/imported libraries search path
+  - `bin`: binaries
+  - `pkg`: object files
+  - `src`: source files
+    - `src/github.com/Sav/Go/Chapter1` -> `import "github.com/Sav/Go/Chapter1"`
+
+Using aliases for shared package names:
+
+```golang
+import f "fmt"
+```
+
+#### init() function
+
+The `func main()` function are executed for each file in a package, before `main()`.
+
+Each file can have multiple `init()` functions; the package order is the same of the [files passed to the compiler](https://stackoverflow.com/a/32829593).
+
+### Tools
+
+```sh
+go build -o "$binary" "$sourcefile"
+gofmt -w "$sourcefile"                # `w`rite changes
+goimports -w "$sourcefile"            # add imports; `w`rite changes
+go vet "$sourcefile"                  # !! static analysis !!
+go run --race "$sourcefile"           # run with race detector
+go get github.com/sav/project         # download a library
+```
 
 ### Modules
 

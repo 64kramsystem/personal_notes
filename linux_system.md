@@ -45,7 +45,9 @@ desktop_id=$(xdotool get_desktop)
 #
 # `--all` is important, otherwise, each token of the `--name` parameter is an independent match!
 #
-window_id=$(xdotool search --all --desktop "$desktop_id" --name 'Mozilla Firefox \(Private Browsing\)$')
+# The windows are listed is reverse access order (last accessed is at the bottom)
+#
+window_id=$(xdotool search --all --desktop "$desktop_id" --name 'Mozilla Firefox \(Private Browsing\)$' | tail -n 1)
 
 # Bring to front.
 #
