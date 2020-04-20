@@ -1,19 +1,20 @@
-## Table of contents
+# FFmpeg/Avconv
 
-- [Conversion](#conversion)
-  - [Audio file](#audio-file)
-  - [Video+audio](#videoaudio)
-  - [Video to animated GIF](#video-to-animated-gif)
-- [Stream operations](#stream-operations)
-  - [Copy/demux](#copydemux)
-  - [Lossless split (trim) m4a](#lossless-split-trim-m4a)
-  - [Split by duration, starting on a keyframe](#split-by-duration-starting-on-a-keyframe)
-- [Scaling](#scaling)
-  - [Downscale audio file](#downscale-audio-file)
-  - [Video scaling](#video-scaling)
-- [Other operations](#other-operations)
-  - [Record desktop](#record-desktop)
-  - [Build FFmpeg with libfdk-aac support](#build-ffmpeg-with-libfdk-aac-support)
+- [FFmpeg/Avconv](#ffmpegavconv)
+  - [Conversion](#conversion)
+    - [Audio file](#audio-file)
+    - [Video+audio](#videoaudio)
+    - [Video to animated GIF](#video-to-animated-gif)
+  - [Stream operations](#stream-operations)
+    - [Copy/demux](#copydemux)
+    - [Lossless split (trim) m4a](#lossless-split-trim-m4a)
+    - [Split by duration, starting on a keyframe](#split-by-duration-starting-on-a-keyframe)
+  - [Scaling](#scaling)
+    - [Downscale audio file](#downscale-audio-file)
+    - [Video scaling](#video-scaling)
+  - [Other operations](#other-operations)
+    - [Record desktop](#record-desktop)
+    - [Build FFmpeg with libfdk-aac support](#build-ffmpeg-with-libfdk-aac-support)
 
 ## Conversion
 
@@ -141,4 +142,10 @@ sudo apt install libfdk-aac-dev
 make -j $(nproc)
 
 ls -lh ffmpeg
+```
+
+Check ffmpeg binary linked libraries:
+
+```sh
+ldd `which ffmpeg`
 ```

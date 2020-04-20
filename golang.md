@@ -25,6 +25,7 @@
     - [Errors](#errors)
     - [Goroutines](#goroutines)
     - [Channels](#channels)
+      - [Non-blocking reads (select) + Interruptible threads (Context)](#non-blocking-reads-select--interruptible-threads-context)
   - [APIs](#apis)
     - [Strings](#strings)
       - [General concepts](#general-concepts)
@@ -37,7 +38,7 @@
     - [Random](#random)
     - [Streams read/write](#streams-readwrite)
     - [Files/descriptors](#filesdescriptors)
-    - [O/S, Command line arguments](#os-command-line-arguments)
+    - [O/S, Environment variables, Command line arguments](#os-environment-variables-command-line-arguments)
     - [Logging](#logging)
     - [Atomic](#atomic)
     - [Sleep](#sleep)
@@ -565,19 +566,139 @@ See the [Atomic](#atomic) section for the atomic operations support package.
 
 ### Channels
 
+Instantiation and data transfer:
+
+```golang
+var ch chan int
+ch = make(chan int)
+
+// Unbuffered
+ch := make(chan int)
+
+// Buffered
+ch := make(chan int, 10)
+
+// Data transfer; must close when not needed anymore.
+defer close(ch)
+ch <- 2
+i := <- ch
+
+// Iteration; stops only when the channel is closed!
+for i := range ch { ... }
+```
+
+No more data than the buffer can be read/written in the main thread, *without* a thread writing/reading on the other end, as operations are blocking.
+
+```golang
+// Error ("fatal error: all goroutines are asleep - deadlock!")
+ch := make(chan int)
+ch <- 1
+
+// Error again (on second send)
+ch := make(chan int, 1)
+ch <- 1
+ch <- 1
+
+// No errors (but WaitGroup *must* be added)
+ch := make(chan int)
+go func() {
+  time.Sleep(1 * time.Second) // no problem!
+  fmt.Println(<-ch)
+}()
+ch <- 1
+```
+
+Channels can be passed to functions; they can also be used as simple `WaitGroup`s:
+
+```golang
+func worker(c chan int, w chan bool) {
+	for i := range c {
+		fmt.Println(i)
+	}
+
+	w <- true
+}
+
+func main() {
+	c, w := make(chan int), make(chan bool)
+
+	go worker(c, w)
+
+	for i := 0; i < 10; i++ {
+		c <- i
+	}
+
+  // If this is not closed, the workers waits in the range, and since nothing is reading from `w`,
+  // an error happens on the `w` write!
+	close(c)
+
+  <-w
+}
+```
+
+Typical concurrency patterns:
+
+- pipeline: serial process, from one "_source_" to a "_sink_" (final stage)
+- fan out/fan in: parallel processing, via workers workers reading from the same channel
+
+#### Non-blocking reads (select) + Interruptible threads (Context)
+
+This shows also `select`, which doesn't block:
+
+```golang
+func longRunning(c context.Context, r chan string) {
+exit:
+	for {
+		select {
+		case <-c.Done():
+			// !! Must use label (or return) !!
+			break exit
+		default:
+			// crunch...
+		}
+
+		time.Sleep(10 * time.Millisecond)
+	}
+
+	fmt.Println("Cleanup")
+
+	r <- "Completed"
+}
+
+func main() {
+	c := context.TODO()
+	cl, stop := context.WithCancel(c)
+
+	r := make(chan string)
+
+	go longRunning(cl, r)
+
+	time.Sleep(100 * time.Millisecond)
+
+	stop()
+
+	// Without this, the goroutine cleanup may not execute
+	fmt.Println(<-r)
+}
+```
+
 ## APIs
 
 ### Strings
 
 ```golang
-// The `\n` is not interpreted. there's no way to include a single quote.
-//
-raw_string := 'foo
-bar\nbaz'
+// Raw string; the prefix spaces are not trimmed!
+val := `foo
+bar\nbaz`
 
-// Can't be on separate lines.
-//
-interpreted_string := "foo\nbar\nbaz"
+// Interpreted string; can't be on separate lines.
+val := "foo\nbar\nbaz"
+
+// Rune
+val := '🤯'
+
+// Byte (the type must be specified)
+var val byte = 'b'
 ```
 
 #### General concepts
@@ -734,6 +855,8 @@ Pow(x, y float64)               // power (exponentiation)
 
 math.NaN
 math.IsNaN
+
+math.Round(f * math.Pow10(precision)) / math.Pow10(precision) // round number to precision (Golang doesn't have a `round(f, p)` API)
 ```
 
 Note that infinity _is_ a number.
@@ -791,14 +914,22 @@ File(name) operations:
 ```golang
 import "path/filepath"
 
-filepath.Base(string)        // file basename
+filepath.Base(string)               // file basename
+filepath.Join(elem ...string)       // Filename.join()
+
+filepath.Abs(string)                // absolute representation of the path (File.expand_path)
+
+_, err := os.Stat(gobyRoot)         // check if a file exists
 ```
 
-### O/S, Command line arguments
+### O/S, Environment variables, Command line arguments
 
 ```golang
 os.Exit(<exit_status>)              // exit to the O/S
+
 os.Args                             // commandline arguments
+
+os.Getenv("GOBY_ROOT")              // environment variables
 ```
 
 ### Logging
