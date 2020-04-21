@@ -3,6 +3,7 @@
 - [Ruby](#ruby)
   - [General syntax](#general-syntax)
     - [Array literals](#array-literals)
+    - [Block-oriented processing methods](#block-oriented-processing-methods)
     - [Heredoc](#heredoc)
   - [APIs/Stdlib](#apisstdlib)
     - [Array](#array)
@@ -22,6 +23,28 @@
 
 ```ruby
 %i(foo bar)           # array of symbols
+```
+
+### Block-oriented processing methods
+
+```ruby
+# `#tap` allows modifying the object while returning the object
+#
+Customer.new.tap { |c| c.attribute = value; c.save! }
+
+# `#then` (or `#yield_self`) returns instead the result of the block.
+# Arguably, it's preferrable for a  pipeline - see https://zverok.github.io/blog/2018-01-24-yield_self.html:
+#
+url
+  .then { |url| Faraday.get(url) }.body
+  .then { |response| JSON.parse(response) }
+  .dig('object', 'id')
+  .then { |id| id || '<undefined>' }
+  .then { |id| "server:#{id}" }
+
+# opposed to:
+
+"server:" + (JSON.parse(Faraday.get(construct_url)).dig('object', 'id') || '<undefined>')
 ```
 
 ### Heredoc
@@ -73,7 +96,7 @@ The sections assume `require 'English'`, which aliases `$?` (`Process::Status`) 
 
 ### Basic handling, via `IO.popen`
 
-The stdout content is captured, so this is not appropriate for long operations.  
+The stdout content is captured, so this is not appropriate for long operations.
 Stderr content is instead printed immediately, unless `err: [:child, :out]` is passed, which causes it to be mixed with the stdout.
 
 Invalid commands cause an error (`Errno::ENOENT`), while valid ones with failure exit status need to be detected (see below).
