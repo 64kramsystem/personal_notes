@@ -1,12 +1,161 @@
 # Linux system
 
 - [Linux system](#linux-system)
+  - [Packages](#packages)
+  - [Debconf](#debconf)
+  - [Debian alternatives](#debian-alternatives)
   - [Environment](#environment)
+  - [Systemctl](#systemctl)
   - [Terminal](#terminal)
   - [Desktop Environment: windows](#desktop-environment-windows)
   - [MIME (extensions) (file associations) handling](#mime-extensions-file-associations-handling)
     - [Adding and associating a new application](#adding-and-associating-a-new-application)
     - [Split MAFF association](#split-maff-association)
+
+## Packages
+
+Informations:
+
+```sh
+# Show package info; `apt` is considered not stable, and shows a warning
+#
+apt-cache show $package
+
+# Check if a package is installed (**with pipefail**), in the most standard way possible
+#
+if grep -qP "^trash-cli\s+install$" <<< $(dpkg --get-selections); then echo installed; fi
+
+# Advanced filtering with aptitude.
+#
+# Aptitude uses regexes by default, but it doesn't support all the patterns.
+# In order to filter out i386 packages, use the suffix `~rnative`.
+# The option `-F %p` prints only the package name.
+#
+aptitude search -F %p 'suld-driver2-[0-9.]+$~rnative'
+
+# Show dependencies of a package
+#
+aptitude why -v $package
+
+# Display the sources of given package
+#
+apt-cache policy $package
+
+# Find the repository of a package
+#
+apt-cache showpkg $package
+
+# (Extra tool) Check dependencies of installed package.
+#
+apt-rdepends $package
+```
+
+Package/file operations:
+
+```sh
+# Downgrade to previous version of a package
+#
+apt-get install $package=$version
+
+# Install/remove package ignoring dependencies, via dpkg
+#
+dpkg (-i|-r) --ignore-depends=libdbd-mysql-perl libmysqlclient18
+
+# Download the packages without installing (dependencies are not downloaded).
+#
+aptitude download ($packages)
+
+# Download source code for package
+#
+apt-get source $package
+
+# List the contents of a deb file
+#
+dpkg-deb -c $package.deb
+
+# Unpack deb file
+#
+ar -vx $package.deb
+tar xvf data.tar.gz
+
+# Find which package a file belongs to
+#
+dpkg -S $file
+```
+
+Useful generic snippets:
+
+```sh
+# Remove linux kernels other than the current one
+# Note that if there is a version newer than the current (uname -r), it will be deleted.
+#
+dpkg -l 'linux-*' | sed '/^ii/!d;/'"$(uname -r | sed "s/\(.*\)-\([^0-9]\+\)/\1/")"'/d;s/^[^ ]* [^ ]* \([^ ]*\).*/\1/;/[0-9]/!d' | xargs sudo apt-get -y purge
+
+# Purge packages matching a pattern, only if they're installed.
+# apt can't search for a pattern and an installation status in one pass
+#
+aptitude purge '~i ruby1.9'
+apt list --installed | perl -ne 'print "$1\n" if /^(<pattern>)\//' | xargs apt purge
+```
+
+## Debconf
+
+```sh
+debconf-show packagename                      # show properties of an installed package
+debconf-get-selections | grep packagename/    # more detailed, but requires `debconf-utils package`
+```
+
+Example of seeding:
+
+```sh
+echo "zfs-dkms zfs-dkms/note-incompatible-licenses note true" | debconf-set-selections
+```
+
+## Debian alternatives
+
+Display the current info (for machine parsing).
+
+```sh
+# Sample:
+#
+#   Name: ruby
+#   Link: /usr/bin/ruby
+#   Status: auto
+#   Best: /usr/bin/ruby2.6
+#   Value: /usr/bin/ruby2.6
+#   
+#   Alternative: /usr/bin/ruby2.5
+#   Priority: 9999
+#   
+#   Alternative: /usr/bin/ruby2.6
+#   Priority: 9999
+#
+update-alternatives --query <program>
+```
+
+Install an alternative:
+
+```sh
+# - format: <file path> <alternative name> <alternative path> <priority>
+# - 9999 is high priority, and will (likely) set the alternative as default.
+# - If the specified alternative exists, it will be updated.
+# - "Slaves" are alternatives that depend on the "master" (e.g. irb -> ruby)
+#
+update-alternatives --install /etc/mysql/my.cnf my.cnf "$(pwd)/config/my.travis.cnf" 9999 \
+                    --slave   /path/to/slave    slave  /path/to/slave_file
+```
+
+Clear the alternatives:
+
+```sh
+update-alternatives --remove-all ruby
+```
+
+Example: set `/etc/alternatives/editor` to vim (requires the alternative to be installed):
+
+```sh
+update-alternatives --set editor /usr/bin/vim
+```
 
 ## Environment
 
@@ -14,6 +163,14 @@ Current user run dir:
 
 ```sh
 $XDG_RUNTIME_DIR
+```
+
+## Systemctl
+
+List everything (with their states), including timers:
+
+```sh
+systemctl -a
 ```
 
 ## Terminal
