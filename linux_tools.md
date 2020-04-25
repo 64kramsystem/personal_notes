@@ -1,9 +1,10 @@
 # Linux tools
 
 - [Linux tools](#linux-tools)
-  - [Find](#find)
+  - [find](#find)
     - [Examples](#examples)
       - [Search text inside multiple PDFs](#search-text-inside-multiple-pdfs)
+  - [xargs](#xargs)
   - [Processes](#processes)
     - [Parallel execution](#parallel-execution)
       - [Using GNU Parallle](#using-gnu-parallle)
@@ -15,7 +16,7 @@
   - [Formatting tools](#formatting-tools)
   - [htop](#htop)
 
-## Find
+## find
 
 ```sh
 ! (condition)                     # negates a condition
@@ -113,6 +114,19 @@ function myfunc() {
 
 ```sh
 find . -name '*.pdf' -exec sh -c 'pdftotext "{}" - | grep -i --with-filename --label="{}" --color "<pattern>"' \;
+```
+
+## xargs
+
+```sh
+-0                                    # specify null-char separator
+-L $lines                             # max $lines for each invocation
+```
+
+Examples:
+
+```sh
+cat /proc/self/environ | xargs -0 -L 1        # print the env vars (null-terminated), one per line
 ```
 
 ## Processes
