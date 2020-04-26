@@ -1,8 +1,9 @@
-## Table of contents
+# ZFS
 
-- [Basic usage](#basic-usage)
-- [Snapshotting](#snapshotting)
-- [Cool diffing functions](#cool-diffing-functions)
+- [ZFS](#zfs)
+  - [Basic usage](#basic-usage)
+  - [Snapshotting](#snapshotting)
+  - [Cool diffing functions](#cool-diffing-functions)
 
 ## Basic usage
 
@@ -109,10 +110,11 @@ Add a new top level mirror.
 zpool add <pool> mirror <device1> <device2>
 ```
 
-Expand a pool to the entire partition.
+Expand a pool to the entire partition. If performed on a mirror, the operation must be performed on each device.
 
 ```sh
-zpool zpool online -e <pool> <device>
+parted -s $disk_device resizepart $part_number_1_based 100%
+zpool online -e $pool $part_device
 ```
 
 Scrub a pool. Results are displayed both in :list and :status.

@@ -1,6 +1,7 @@
 # Linux system
 
 - [Linux system](#linux-system)
+  - [Filesystems/partitions](#filesystemspartitions)
   - [Packages](#packages)
   - [Debconf](#debconf)
   - [Debian alternatives](#debian-alternatives)
@@ -12,14 +13,46 @@
     - [Adding and associating a new application](#adding-and-associating-a-new-application)
     - [Split MAFF association](#split-maff-association)
 
+## Filesystems/partitions
+
+```sh
+fdisk -l                        # list the partitions
+
+cfdisk -z $disk_device          # GUI: create an empty partition
+
+mkfs.ext4 $part_device          # create the FS
+
+# Via sgdisk (more modern approach).
+#
+# - `-t<partnum>:type` is the partition type (see https://askubuntu.com/q/703443 and https://en.wikipedia.org/wiki/Partition_type).
+# - `n<partnum>:start_pos:end_pos`
+#   - `partnum`: if 0, the first available partition is chosen
+#   - `+start_pos` is relative to the previous partition
+#   - `+end_pos` is relative to `start_pos`
+#
+sgdisk -n1:1M:+512M -t1:EF00 "$selected_disk" # start at absolute 1M, ends at absolute (1+512)M
+sgdisk -n2:0:-2G    -t2:BF01 "$selected_disk" # start after last partion, end 2G before end of available space
+sgdisk -n3:0:0      -t3:BF01 "$selected_disk" # start after last partion, ends at end of available space
+
+# Resize to given size/expand to fill empty space.
+# Watch out the `--` required when passing a negative reference (e.g. `-18G`).
+#
+parted -s $disk_device unit s resizepart $part_number_1_based -- -18G
+parted -s $disk_device resizepart $part_number_1_based 100%
+
+# Remove a partition
+
+parted -s $disk_device rm $part_number_1_based
+```
+
 ## Packages
 
 Informations:
 
 ```sh
-# Show package info; `apt` is considered not stable, and shows a warning
+# Show package info; for this operation, `apt` is stable [enough].
 #
-apt-cache show $package
+apt show $package
 
 # Check if a package is installed (**with pipefail**), in the most standard way possible
 #

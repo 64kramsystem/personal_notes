@@ -35,11 +35,15 @@ shopt -s nocasematch      # case insensitive matches
 
 ## Test conditions
 
+Note that the left side of a condition (or the only one on prefix operators) doesn't need to be escaped.
+
 Operators:
 
 ```
 -z string                 string is empty
 -n string                 string is not empty
+
+-v var_no_dollar          for scalars: test if variable has been declared; WATCH OUT: don't prefix the dollar!
 
 -e <filename>             file/directory/symlink exists; symlink is followed before checking!
 -f <filename>             file exists
@@ -69,7 +73,7 @@ myTest "foo" && echo "bar"      # prints `bar`!
 
 1. They're not PCRE;
 2. The expressions don't need to be quoted;
-3. Use a temporary variable (or cmd subsitution) when using slashed metacharacters;
+3. Use a temporary variable (or cmd subsitution) when using metacharacters with backslash;
 4. `^` and `$` refer to the *whole string*, not the line;
 5. DON'T WRAP with ruby regex slashes!!!
 
@@ -149,8 +153,8 @@ ${str//search/replace}            # substitution (!! NOT REGEX !!) ->
 ${str//[a-e]/ }                   # -> but supports at least character classes!
 
 ${str:[<start>][:<end_expr>]}     # substring (0-based)
-                                  # `start`: blank: first char
-                                  # `end_expr`: positive: length; negative: position referring to last (!! -1 = BEFORELAST !!); blank: until end
+                                  # `start`: inclusive; blank: first char
+                                  # `end_expr`: not inclusive; positive: length; negative: !! -1 = beforelast !!; blank: until end
 
 ${str^^}                          # upper case (single `^` applies only once)
 ${str,,}                          # down case (single `^` applies only once)

@@ -5,6 +5,7 @@
     - [Examples](#examples)
       - [Search text inside multiple PDFs](#search-text-inside-multiple-pdfs)
   - [xargs](#xargs)
+  - [rsync](#rsync)
   - [Processes](#processes)
     - [Parallel execution](#parallel-execution)
       - [Using GNU Parallle](#using-gnu-parallle)
@@ -127,6 +128,14 @@ Examples:
 
 ```sh
 cat /proc/self/environ | xargs -0 -L 1        # print the env vars (null-terminated), one per line
+```
+
+## rsync
+
+Copy the the structure of a relative path. Use `--relative`, and place a dot path `./`:
+
+```sh
+rsync -av --relative "/target/run/./systemd/resolve" "/mnt/run"
 ```
 
 ## Processes

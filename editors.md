@@ -38,10 +38,13 @@ The VIM section requires some cleanup.
 
 - `Ctrl+K, M`                 Select language
 
-- `Ctrl+Shift+O`	            Go to symbol in current file (includes Markdown headers)
-- `Alt+←`/`Alt+→`            Navigate through history
+- `Ctrl+Shift+O`              Go to symbol in current file (includes Markdown headers)
+- `Alt+←`/`Alt+→`             Navigate through history
+- `Ctrl+↓`/`Ctrl+↑`           Scroll the viewport without moving the cursor
 
 - `Ctrl+K, Ctrl+L/U`		      Change case to Upper/Lower
+
+- `Ctrl+Space`                Variables autocompletion (at least in Shell script syntax)
 
 #### custom
 
