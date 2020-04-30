@@ -45,7 +45,11 @@ Strip trailing file spaces: `chomp if eof`
 
 ### Useful examples
 
-Delete numbered line: `1d`.
+Operations on numbered lines (1-based):
+
+- insert : `<n>i<content>`
+- delete : `<n>d`.
+- replace : `<n>c<content>`.
 
 ### Special characters
 

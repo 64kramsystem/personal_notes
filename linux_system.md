@@ -129,6 +129,15 @@ dpkg -l 'linux-*' | sed '/^ii/!d;/'"$(uname -r | sed "s/\(.*\)-\([^0-9]\+\)/\1/"
 #
 aptitude purge '~i ruby1.9'
 apt list --installed | perl -ne 'print "$1\n" if /^(<pattern>)\//' | xargs apt purge
+
+# Find packages installed via PPA
+#
+apt-cache policy $(dpkg --get-selections | grep -v deinstall$ | awk '{ print $1 }') | perl -e '@a = <>; $a=join("", @a); $a =~ s/\n(\S)/\n\n$1/g;  @packages = split("\n\n", $a); foreach $p (@packages) {print "$1: $2\n" if $p =~ /^(.*?):.*?500 http:\/\/ppa\.launchpad\.net\/(.*?)\s/s}'
+
+# Remove PPA versions of packages: use `ppa-purge` utility.
+# Comments out the PPA file content after purging.
+#
+ppa-purge ppa:oibaf/graphics-drivers
 ```
 
 ## Debconf
