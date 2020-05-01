@@ -3,9 +3,13 @@
 - [Linux system](#linux-system)
   - [Filesystems/partitions](#filesystemspartitions)
   - [Packages](#packages)
+  - [Repositories](#repositories)
+    - [Keys handling](#keys-handling)
   - [Debconf](#debconf)
   - [Debian alternatives](#debian-alternatives)
   - [Environment](#environment)
+    - [Available variables](#available-variables)
+    - [Setting system/shell variables in scripts](#setting-systemshell-variables-in-scripts)
   - [Systemctl](#systemctl)
   - [Terminal](#terminal)
   - [Desktop Environment: windows](#desktop-environment-windows)
@@ -140,6 +144,42 @@ apt-cache policy $(dpkg --get-selections | grep -v deinstall$ | awk '{ print $1 
 ppa-purge ppa:oibaf/graphics-drivers
 ```
 
+## Repositories
+
+### Keys handling
+
+List keys:
+
+```sh
+apt-key list
+
+# /etc/apt/trusted.gpg
+# --------------------
+# pub   rsa4096 2014-11-17 [SC]
+#       7053 72CB 1DF3 976C 44B7  B8A6 BBE4 75EB A386 83E4
+# uid           [ unknown] Scout Packages (archive.scoutapp.com) <support@scoutapp.com>
+# uid           [ unknown] Scout (scoutapp.com) <support@scoutapp.com>
+# sub   dsa2048 2014-11-17 [S]
+# sub   rsa4096 2014-11-17 [E]
+#
+# pub   rsa4096 2019-07-05 [SC]
+#       394F 883E 0C43 5694 50FD  FB92 A9AF 1C7C 2ED6 5CC0
+# uid           [ unknown] Fullstaq Ruby <info@fullstaq.com>
+# sub   rsa4096 2019-07-05 [E]
+```
+
+Remove key:
+
+```sh
+# WATCH OUT: Returns OK!
+#
+apt-key del NOTPRESENT
+
+# Deletes the Fullstaq Ruby key; use the last 8 digits of the displayed key.
+#
+apt-key del 2ED65CC0
+```
+
 ## Debconf
 
 ```sh
@@ -201,11 +241,36 @@ update-alternatives --set editor /usr/bin/vim
 
 ## Environment
 
+### Available variables
+
 Current user run dir:
 
 ```sh
 $XDG_RUNTIME_DIR
 ```
+
+### Setting system/shell variables in scripts
+
+On non interactive shells, `/etc/profile` and `/etc/bash.bashrc` (and the corresponding per-user files) are executed, so vars can be set there.
+
+On non-interactive shells, bash rc files are the only executed ones.
+
+`/etc/profile` supports `*.sh` scripts under `/etc/profile.d`, while `/etc/bash.bashrc` doesn't. A nice addition to the latter is:
+
+```sh
+if [ -z "$PS1" ]; then
+  if [[ -d /etc/bash.bashrc.d ]]; then
+    for f in /etc/bash.bashrc.d/*.sh; do
+      source "$f"
+    done
+    unset f
+  fi
+
+  return
+fi
+```
+
+System services don't run either of the two. In the case of Systemd, use `Environment=...` for this purpose.
 
 ## Systemctl
 
@@ -246,7 +311,9 @@ desktop_id=$(xdotool get_desktop)
 #
 # The windows are listed is reverse access order (last accessed is at the bottom)
 #
-window_id=$(xdotool search --all --desktop "$desktop_id" --name 'Mozilla Firefox \(Private Browsing\)$' | tail -n 1)
+# Don't forget the `|| true`!
+#
+window_id=$(xdotool search --all --desktop "$desktop_id" --name 'Mozilla Firefox \(Private Browsing\)$' | tail -n 1 || true)
 
 # Bring to front.
 #

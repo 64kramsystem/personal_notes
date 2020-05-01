@@ -4,6 +4,7 @@
   - [General syntax](#general-syntax)
     - [Array literals](#array-literals)
     - [Block-oriented processing methods](#block-oriented-processing-methods)
+    - [Ampersand prefix operator `&<object>`](#ampersand-prefix-operator-object)
     - [Heredoc](#heredoc)
   - [APIs/Stdlib](#apisstdlib)
     - [Array](#array)
@@ -47,6 +48,34 @@ url
 "server:" + (JSON.parse(Faraday.get(construct_url)).dig('object', 'id') || '<undefined>')
 ```
 
+### Ampersand prefix operator `&<object>`
+
+`&<object>` is turned to  `object.to_proc`.
+
+```ruby
+myblock = ->(i) { 2 * i }
+def mymethod(i); 2 * i; end
+
+# &<block> => intuitive invocation
+#
+[1, 2, 3].map(&myblock)
+[1, 2, 3].map { |i| 2 * i }
+
+# &method(:<method>) => { |arg| <method>(arg) }
+#
+# method(:<method>) doesn't take any arguments, so it can't be turned into a `<method>(arg1, arg2...)` invocation.
+#
+[1, 2, 3].map(&method(:mymethod))
+[1, 2, 3].map { |i| mymethod(i) }
+
+# &:<method> => { |obj, *args| obj.send(<method>, *args) }
+#
+# Fits with :inject, but it's not clear what else could it apply to.
+#
+[1, 2, 3].inject(:+)
+[1, 2, 3].inject { |i, j| i.send(:+), j }
+```
+
 ### Heredoc
 
 The closing token must be the only one on a line; preceding spaces are ignored (and a newline is appended).
@@ -85,6 +114,8 @@ URI is already in scope.
 ```ruby
 CGI::escape("&&&")                            # URL-encode a string: "%26%26%26"
 URI.encode_www_form(p1: "&&&", "p2" => "!!!") # URL-encode params: "p1=%26%26%26&p2=%21%21%21"
+
+CGI::escapeHTML('"html"')       # escape HTML
 
 CGI.unescapeHTML("html")	      # decode HTML entities; use only for basic cases, as it' not 100% complete (gem: https://github.com/threedaymonk/htmlentities)
 HTMLEntities.new.decode("html")	# htmlentities gem

@@ -6,10 +6,13 @@
       - [Search text inside multiple PDFs](#search-text-inside-multiple-pdfs)
   - [xargs](#xargs)
   - [rsync](#rsync)
+  - [mkfifo](#mkfifo)
   - [Processes](#processes)
     - [Parallel execution](#parallel-execution)
-      - [Using GNU Parallle](#using-gnu-parallle)
+      - [Using GNU Parallel](#using-gnu-parallel)
       - [Using xargs](#using-xargs)
+  - [Networking](#networking)
+    - [curl](#curl)
   - [Dates](#dates)
     - [Formatting](#formatting)
     - [Operations](#operations)
@@ -122,6 +125,7 @@ find . -name '*.pdf' -exec sh -c 'pdftotext "{}" - | grep -i --with-filename --l
 ```sh
 -0                                    # specify null-char separator
 -L $lines                             # max $lines for each invocation
+-r || --no-run-if-empty               # don't run if there is no input
 ```
 
 Examples:
@@ -138,11 +142,26 @@ Copy the the structure of a relative path. Use `--relative`, and place a dot pat
 rsync -av --relative "/target/run/./systemd/resolve" "/mnt/run"
 ```
 
+## mkfifo
+
+Messages don't need termination; this is abstracted, so empty messages can be sent:
+
+```sh
+# Reads and writes block until there is a write/read on the other end.
+#
+mkfifo /tmp/fifo
+
+echo -n > /tmp/fifo &
+
+echo "<$(cat /tmp/fifo)>"
+# <>
+```
+
 ## Processes
 
 ### Parallel execution
 
-#### Using GNU Parallle
+#### Using GNU Parallel
 
 The number of jobs is automatically limited to the number of cores.  
 Quoting is not required.
@@ -194,6 +213,31 @@ Ignore failing commands:
 
 ```sh
 seq 4 | xargs -I {} -P 0 sh -c 'aws ec2 delete-snapshot --snapshot-id {} || true'
+```
+
+## Networking
+
+### curl
+
+Options:
+
+- `-d`, `--data`
+- `-X`, `--request <command>`
+- `-H`, `--header <header/@file>`
+- `-i`, `--include`: include headers in the response
+
+```sh
+# Bare form: implies `-X GET`
+#
+curl "$URL"
+
+# `-d` implies `-X POST`
+#
+curl  -d '{ "query": { "query_string": { "query": "kill" } } }' "http://localhost:9200/_search"
+
+# Send an HTTP request for a specific format
+#
+curl -H 'Accept: application/halo+json' "$URL"
 ```
 
 ## Dates

@@ -11,7 +11,7 @@
   - [Arithmetic operations](#arithmetic-operations)
   - [Date operations](#date-operations)
   - [Redirections](#redirections)
-  - [Proces substitution](#proces-substitution)
+  - [Process substitution](#process-substitution)
   - [Ask for input (keypress)](#ask-for-input-keypress)
   - [Script operational concepts](#script-operational-concepts)
     - [Trapping errors](#trapping-errors)
@@ -212,7 +212,7 @@ formatted_result=`date '+%Y-%m-%d %H:%M:%S' --date="@$((timestamp_in_secs – se
 exec 200> "$filename"                                   # associate a file to a file descriptor (create if not existing)
 ```
 
-## Proces substitution
+## Process substitution
 
 Creates a file (descriptor) from the command.
 
@@ -228,6 +228,12 @@ For output file; typically used with tee, to both print to stdout and redirect t
 # If we do `| tee | xsel -ib`, the output is not printed!
 #
 echo "abc" >(xsel -ib)
+```
+
+Extension to input: if the command is just a filename, the command is repliced with the file content:
+
+```sh
+echo $(< "$filename")
 ```
 
 ## Ask for input (keypress)
