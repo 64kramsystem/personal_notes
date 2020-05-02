@@ -81,7 +81,7 @@ Excluding paths in find (see https://stackoverflow.com/questions/4210042/exclude
 Note that the -path must be relative to the same path as the search path, and it also must end with '/*'.
 
 ```sh
-find . -name 1.txt -not -path ./skipdir/* -not -path ./skipdir2/*
+find . -name 1.txt -not -path ./skipdir/* -not -path '*/internal_dir/*'
 ```
 
 Cycle filenames, with whitespace support.

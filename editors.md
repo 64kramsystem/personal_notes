@@ -46,6 +46,9 @@ The VIM section requires some cleanup.
 
 - `Ctrl+Space`                Variables autocompletion (at least in Shell script syntax)
 
+- `Ctrl+Alt+C`                Copy file path
+- `Ctrl+Alt+Shift+C`          Copy file relative path
+
 #### custom
 
 `Ctrl + @`:                 Open link in browser (custom)

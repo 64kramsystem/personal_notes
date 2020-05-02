@@ -2,6 +2,7 @@
 
 - [Bash](#bash)
   - [Shellopts](#shellopts)
+  - [Switch/case](#switchcase)
   - [Test conditions](#test-conditions)
     - [Regular expressions](#regular-expressions)
     - [Applications](#applications)
@@ -32,6 +33,27 @@ shopt -s nocasematch      # case insensitive matches
 ```
 
 **important!** don't forget to set `errtrace` when trapping errors!
+
+## Switch/case
+
+```sh
+# switch/case. Double semicolon is required (can be put at the end of a statement); space before `)` isn't.
+#
+case $env_number in
+*[0-9][0-9][0-9]*r )
+  foo
+  ;;
+[yY] | [yY][Ee][Ss] )
+  bar
+  ;;
+[nN] | [n|N][O|o] )
+  baz
+  ;;
+*)
+  boom
+  ;;
+esac
+```
 
 ## Test conditions
 
