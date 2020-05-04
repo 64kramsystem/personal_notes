@@ -13,6 +13,7 @@
   - [Systemctl](#systemctl)
   - [Terminal](#terminal)
   - [Desktop Environment: windows](#desktop-environment-windows)
+  - [Dconf/Gsettings](#dconfgsettings)
   - [MIME (extensions) (file associations) handling](#mime-extensions-file-associations-handling)
     - [Adding and associating a new application](#adding-and-associating-a-new-application)
     - [Split MAFF association](#split-maff-association)
@@ -318,6 +319,27 @@ window_id=$(xdotool search --all --desktop "$desktop_id" --name 'Mozilla Firefox
 # Bring to front.
 #
 xdotool windowactivate "$window_id"
+```
+
+## Dconf/Gsettings
+
+```sh
+# Dump the whole tree.
+
+dconf dump /
+gsettings list-recursively
+
+# Watch the whole tree.
+#
+# gsettings can't watch the whole tree; only one schema.
+# but the second works fine 🙂
+
+dconf watch /
+
+gsettings monitor org.mate.caja
+
+gsettings list-recursively > /tmp/before.gsettings
+watch -n 1 -x bash -c 'diff /tmp/before.gsettings <(gsettings list-recursively)'
 ```
 
 ## MIME (extensions) (file associations) handling

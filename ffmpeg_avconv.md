@@ -4,11 +4,12 @@
   - [Conversion](#conversion)
     - [Audio file](#audio-file)
     - [Video+audio](#videoaudio)
-    - [Video to animated GIF](#video-to-animated-gif)
-  - [Stream operations](#stream-operations)
+    - [Video to animated GIF/PNG](#video-to-animated-gifpng)
+  - [Stream/file operations](#streamfile-operations)
     - [Copy/demux](#copydemux)
     - [Lossless split (trim) m4a](#lossless-split-trim-m4a)
     - [Split by duration, starting on a keyframe](#split-by-duration-starting-on-a-keyframe)
+    - [Concatenate videos](#concatenate-videos)
   - [Scaling](#scaling)
     - [Downscale audio file](#downscale-audio-file)
     - [Video scaling](#video-scaling)
@@ -41,19 +42,34 @@ ffmpeg -i input.mp4 -c:v mpeg4 -vtag xvid -qscale:v 3 -c:a libmp3lame -qscale:a 
 ffmpeg -i input.mp4 -c:v mpeg4 -vtag xvid -b:v 1000k -c:a libmp3lame -b:a 96k -af 'pan=stereo|c0<c0+c1|c1<c0+c1' output.avi
 ```
 
-### Video to animated GIF
+### Video to animated GIF/PNG
+
+See concatenation section to use multiple input videos as source.
+
+Note that asciinema is nice, however, more complex usages are not supported (eg. switching terminal); in such cases, recording with Virtualbox and converting with ffmpeg is an acceptable strategy.
+
+GIF:
 
 ```sh
 # Source: https://superuser.com/a/556031
 #
-# - 10 FPS (`fps=10`)
+# - `fps=10`: 10 FPS
 # - keep the same resolution
-# - don't loop (`-loop -1`)
+# - `-loop -1`: don't loop
 #
-ffmpeg -i "$1" -vf "fps=10,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop -1 "${1%.*}.gif"
+ffmpeg -i "$input" -vf "fps=10,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop -1 "${input%.*}.gif"
 ```
 
-## Stream operations
+(A)PNG:
+
+```sh
+# `-plays 10`: 10 loops (use `0` for infinite)
+# `-r 1/0.5`: capture 1 frame every 0.5 seconds (keeps the video time the same!)
+#
+ffmpeg -i "$input" -plays 10 -r 1/5 "${input%.*}.apng"
+```
+
+## Stream/file operations
 
 ### Copy/demux
 
@@ -83,6 +99,20 @@ ffmpeg -ss 0:00:42 -i in.m4a -c copy -t 1:00:00 out.m4a
 # Cute but underwhelming results (see https://unix.stackexchange.com/q/1670).
 #
 ffmpeg -i input.mp4 -segment_time 00:10:00 -reset_timestamps 1 -f segment output%02d.avi
+```
+
+### Concatenate videos
+
+Source: https://stackoverflow.com/a/11175851
+
+Concat demuxer (lossless): all files must have the same parameters.
+
+```sh
+ffmpeg -f concat -safe 0 -i /dev/stdin output.apng -y << LIST
+file '$PWD/01.webm'
+file '$PWD/02.webm'
+file '$PWD/03.webm'
+LIST
 ```
 
 ## Scaling
@@ -120,7 +150,7 @@ ffmpeg -i input.mp4 -vf scale=800:600 -aspect 4:3 output.avi
 #
 # source: https://askubuntu.com/questions/227464/record-my-desktop-in-mp4-format
 #
-ffmpeg -f x11grab -s 1920x1200 -r 10 -i :0.0 -vf scale=1280x800 -c:v libx264 -preset slower -crf 32 $HOME/Desktop/desktop_recording.mp4
+ffmpeg -f x11grab -s 1920x1080 -r 10 -i :0.0 -vf scale=1280x800 -c:v libx264 -preset slower -crf 32 $HOME/Desktop/desktop_recording.mp4
 ```
 
 ### Build FFmpeg with libfdk-aac support
