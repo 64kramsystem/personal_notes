@@ -144,7 +144,7 @@ rsync -av --relative "/target/run/./systemd/resolve" "/mnt/run"
 
 ## mkfifo
 
-Messages don't need termination; this is abstracted, so empty messages can be sent:
+Messages don't need termination; this is abstracted, so empty messages and binary files can be sent:
 
 ```sh
 # Reads and writes block until there is a write/read on the other end.

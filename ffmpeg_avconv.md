@@ -48,6 +48,8 @@ See concatenation section to use multiple input videos as source.
 
 Note that asciinema is nice, however, more complex usages are not supported (eg. switching terminal); in such cases, recording with Virtualbox and converting with ffmpeg is an acceptable strategy.
 
+2 FPS are the bare minimum, for resource-restricted animations. For detail-oriented ones, 4+ are probably a starting point.
+
 GIF:
 
 ```sh
@@ -60,13 +62,13 @@ GIF:
 ffmpeg -i "$input" -vf "fps=10,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop -1 "${input%.*}.gif"
 ```
 
-(A)PNG:
+(A)PNG; considerably larger than GIF; may not make a noticeable difference.
 
 ```sh
 # `-plays 10`: 10 loops (use `0` for infinite)
-# `-r 1/0.5`: capture 1 frame every 0.5 seconds (keeps the video time the same!)
+# `-r 1/2`: capture 2 frames every second (keeps the video time the same!)
 #
-ffmpeg -i "$input" -plays 10 -r 1/5 "${input%.*}.apng"
+ffmpeg -i "$input" -plays 10 -r 1/2 "${input%.*}.apng"
 ```
 
 ## Stream/file operations
@@ -108,11 +110,15 @@ Source: https://stackoverflow.com/a/11175851
 Concat demuxer (lossless): all files must have the same parameters.
 
 ```sh
-ffmpeg -f concat -safe 0 -i /dev/stdin output.apng -y << LIST
+ffmpeg -f concat -safe 0 -i /dev/stdin output.apng << LIST
 file '$PWD/01.webm'
 file '$PWD/02.webm'
 file '$PWD/03.webm'
 LIST
+
+# Alternative approach, with wildcard (simplified; doesn't support filenames with single quotes).
+#
+(for f in *.webm; do echo "file '$PWD/$f'"; done) | ffmpeg -f concat -safe 0 -i /dev/stdin output.apng
 ```
 
 ## Scaling

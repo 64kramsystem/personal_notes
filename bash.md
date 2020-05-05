@@ -189,6 +189,8 @@ ${filename%<.ext>}                # strip specific <ext>ension; `*` can be used
 ${filename%%.*}                   # strip any extension (anything after the first dot)
 ${filename##*.}                   # extract (last) extension
 ${filename##*/}                   # extract basename, eg. `"${PWD##*/}"`
+
+${filename%/*/*}                  # parent dir of a file (watch out - requires at least two slashes!)
 ```
 
 ### Examples
