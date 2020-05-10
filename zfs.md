@@ -98,10 +98,10 @@ zpool add <pool> <device>
 Attach a new device to a mirror (convert the pool to a mirror, if it isn't already so)
 
 Resilvering will start immediately.
-Note that <device_in_mirror> is the name of the device as defined in the pool status.
+Note that $device_in_mirror is the name of the device as defined in the pool status.
 
 ```sh
-zpool attach <pool> <device_in_mirror> <new_device>
+zpool attach $pool $device_in_mirror $new_device
 ```
 
 Add a new top level mirror.
@@ -138,7 +138,7 @@ zpool export <device_or_mountpoint>
 Detach a device from a pool (/mirror).
 
 ```sh
-zpool detach <pool> <device>
+zpool detach $pool $device
 ```
 
 Store the mountpoint and mount a dataset/pool.

@@ -179,6 +179,14 @@ success = system(">&2 echo abc; sleep 2; false")
 exit $CHILD_STATUS.exitstatus if !success
 ```
 
+In order to pass env variables:
+
+```ruby
+# The hash key/values must be all strings.
+#
+system({'FOO' => 'BAR'}, 'echo $FOO') # => BAR
+```
+
 ### Backticks
 
 Backticks behave like `IO.popen`: The stdout content is captured, stderr content is instead printed immediately.
