@@ -1,3 +1,25 @@
+## Fri 23/Jul/2021
+
+- Projects
+  - QEMU research paper
+    - [x] Review presentation
+      - [x] Read/fix typos, research topics
+      - [x] Add photo
+  - Fish Game
+    - [x] Cannon refinements
+      - [x] Update assets/explosion
+      - [x] Add bounciness
+    - [x] Curse
+      - [x] Make single-use
+      - [x] Chase enemy instead of going straight towards them
+      - [x] Minor cleanups/one fix
+    - [x] Jellyfish
+      - [x] Find/prepare basic assets
+      - [x] Basic implementation
+      - [x] Think design
+        - [x] Failed attempt
+        - [x] Successful design
+
 ## Thu 22/Jul/2021
 
 - Projects
