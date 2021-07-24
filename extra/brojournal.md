@@ -1,3 +1,15 @@
+## Sat 24/Jul/2021
+
+- Projects
+  - Fish Game
+    - [ ] Jellyfish
+      - [x] Implement FlappyJellyfish control, without jumps and with basic state switch
+        - [x] Brutal fight nodes
+        - [x] Brutal fight input
+          - [x] Fix bug
+        - [x] Fight states
+          - [x] Switch to remote control to simple boolean flag
+
 ## Fri 23/Jul/2021
 
 - Projects
