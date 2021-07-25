@@ -1,3 +1,43 @@
+## Sun 25/Jul/2021
+
+- Projects
+  - Fish Game
+    - [x] Jellyfish
+      - [x] Implement gravity/flapping for FlappyJellyfish (without borders check…
+      - [x] FlappyJellyfish: Terminate when going outside the borders
+      - [x] FlappyJellyfish: Implement full states
+        - [x] Brutal fight with throwing logic
+      - [x] FlappyJellyfish: Don't spawn if colliding with a solid
+      - [x] FlappyJellyfish: Collide with solid tiles (not wood)
+      - [x] Adjust FlappyJellyfish fire tapping detection to new global input logic
+      - [x] Final testing
+
+### Cycle changes
+
+- Swapped
+  - Studies/SWE: Codewars <> Fish Game
+  - Rust/Gamedev: Better Breakout experiments <> Fish Game
+  - Rust/Gamedev: Port Code the Classics <> Fish Game
+- Pushed
+  - FT/Materialization article
+- Unscheduled
+  - Admin/Tools: Test Win 10 to go + Clonezilla backup/restore from Ubuntu
+  - Studies/Bash: Bash: Review different splitting patterns using `IFS`
+  - Projects/Geet
+    - Add support for draft PRs creation
+    - Add upstream support
+  - Projects/Schedule manager
+    - Add support for `work -HH:MM -Nh` (hours in integer format)
+    - Rescue errors, and print message, then exit (+convert one instance)
+    - Minor refactorings
+    - Add time section separators when adding a new date section
+    - Add templating
+  - Studies/Low-level programming: Write Great Code, Volume 1: Understanding the Machine
+  - Rust/Gamedev: Create Arguably Better Breakout separate repository
+  - Rust/Gamedev: Setup Windows Rust env
+  - Writing/Article: Compiling the CVE-2021-22555 exploit Proof of concept
+  - Projects: QEMU research paper
+
 ## Sat 24/Jul/2021
 
 - Projects

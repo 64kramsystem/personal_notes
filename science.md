@@ -10,6 +10,8 @@
     - [Convenient stuff](#convenient-stuff)
       - [Test if a positive number is a power of two](#test-if-a-positive-number-is-a-power-of-two)
       - [Check if a number is close within the two ends of an interval](#check-if-a-number-is-close-within-the-two-ends-of-an-interval)
+  - [Physics](#physics)
+    - [Falling object (gravity)](#falling-object-gravity)
 
 ## Math
 
@@ -81,4 +83,30 @@ $width/2 - x > $width/2 - $interval
 # Make absolute!
 
 |x - $width/2| > $width/2 - $interval
+```
+
+## Physics
+
+### Falling object (gravity)
+
+(`ᵢ` = initial)
+
+Velocity at `t`     : `vₜ = vᵢ + tg`
+Displacement at `t` : `y = gt²/2 + vᵢt`
+
+```rs
+const JUMP_SPEED: f32 = -500.;
+const GRAVITY: f32 = 700.;
+const ABSOLUTE_MAX_SPEED: f32 = 300.;
+
+if input.jump_tap {
+    player.current_speed += JUMP_SPEED;
+}
+
+player.current_speed =
+    (player.current_speed + frame_time * GRAVITY)
+    .clamp(-ABSOLUTE_MAX_SPEED, ABSOLUTE_MAX_SPEED);
+
+let fall_displacement = GRAVITY * frame_time.powi(2) / 2. + player.current_speed * frame_time;
+player.current_pos += vec2(0., fall_displacement);
 ```
