@@ -282,6 +282,11 @@ Firefox:
 - `Ctrl+Shift+O`            Bookmarks editor
 - `Ctrl+., <number>`        Containers extension: display menu, and open new tab with given container
 
+Slack:
+
+- `→`/`T`                  When on a thread message, open the thread panel
+- `Ctrl+.`                  Open/close the right panel
+
 Evince:
 
 - `Ctrl+L`                  Go to page

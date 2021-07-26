@@ -578,7 +578,7 @@ The Instant counter doesn't stop when a sleep is issued.
 let current_time = SystemTime::now();
 current_time.elapsed();
 
-// Get current time in seconds
+// Get current time in seconds; also supports `as_nanos()` etc.
 //
 let current_time_secs = SystemTime::now()
     .duration_since(UNIX_EPOCH)

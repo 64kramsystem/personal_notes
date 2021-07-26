@@ -388,8 +388,12 @@ let tiled_map_json = load_string("assets/map.json").await?;
 ### Random
 
 ```rs
-let r: u32 = rand();           // only for u32 ...
-let r: f32 = gen_range(0., 1.) // ... for the other types, use gen_range()
+// WATCH OUT!! Must seed first
+rand::srand(SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_nanos() as u64);
+
+let r: u32 = rand();                   // only for u32 ...
+let r: f32 = gen_range(0., 1.)         // all numerical types; interval open on the right
+let b: bool = gen_range(0., 1.) < 0.5  // bool
 
 
 // Vector functionalities
