@@ -1,19 +1,46 @@
-# Gem packaging
+# Ruby Gem/Bundler
 
-- [Gem packaging](#gem-packaging)
-  - [Gemfile](#gemfile)
-  - [Gemspec](#gemspec)
-  - [Publish gem](#publish-gem)
+- [Ruby Gem/Bundler](#ruby-gembundler)
+  - [Bundler](#bundler)
+    - [Gemfile](#gemfile)
+    - [Cache directory](#cache-directory)
+    - [Commands](#commands)
+  - [Gem](#gem)
+    - [Gemspec](#gemspec)
+    - [Packaged gems/YAML gemspec](#packaged-gemsyaml-gemspec)
+    - [Gem commands](#gem-commands)
 
-## Gemfile
+## Bundler
+
+### Gemfile
 
 ```ruby
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
+# If there is a gemspec: add here `gemspec`, with rake/rspec as dev dependencies.
+#
 gemspec
 
 gem "json", "2.4.1" if RUBY_VERSION == "2.0.0"
 
+# Local repository.
+#
+gem 'sshkit-sudo', '~> 0.2.0', path: '/path/to/sshkit-sudo'
+
+# Git repository; `branch` is optional; `ref` and `tag` are also supported.
+#
+gem 'sshkit-sudo', git: 'https://github.com/ticketsolve/sshkit-sudo', branch: 'mytest'
+
+# If there isn't a gemspec: add here the `development` group, with rspec.
+# The rake gem can be excluded unless specifically required.
+#
+group :development do
+  # gem "rake"
+  gem 'rspec', '~> 3.10.0'
+end
+
+# The test group should include gems that are not strictly required.
+#
 group :test do
   gem "benchmark-ips", "~> 2.7.2"
   if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("2.5.0")
@@ -21,9 +48,26 @@ group :test do
     gem "simplecov", "~> 0.21.0"
   end
 end
+
+# Multi-group gem.
+# This specific case is a Rails default addition.
+#
+group :development, :test do
+  gem 'byebug'
+end
 ```
 
-## Gemspec
+### Cache directory
+
+It's possible to create a cache directory (`vendor/cache`), but it's all-or-nothing; it's no possible to keep a subset of the gems.
+
+### Commands
+
+- `bundler package`: download gems into `vendor/cache`
+
+## Gem
+
+### Gemspec
 
 ```ruby
 require 'sshkit/sudo/version'
@@ -82,10 +126,22 @@ Gem::Specification.new do |spec|
 end
 ```
 
-## Publish gem
+### Packaged gems/YAML gemspec
+
+Packaged gems (`.gem`) are tarballs. They need to contain a gem specification, which is generally `.gemspec file`.
+
+When the gem spec is not present, it's likely in serialized (YAML) format; in this case, one needs to:
+
+- unpack the package in a destination dir;
+- manually untar the package in a temp dir;
+- gunzip the `metadata.gz` file from the temp dir into a `$gemname.gemspec` file (inside the unpacked directory)
+
+This will yield a valid gem source 😳
+
+### Gem commands
 
 ```sh
-gem build simple_scripting.gemspec
-gem push simple_scripting-*.gem
-rm *.gem					# don't forget :)
+gem unpack $gemfile           # Unpack gem
+gem build $gemname.gemspec    # Build gem
+gem push $gemname-*.gem       # Publish a built gem
 ```

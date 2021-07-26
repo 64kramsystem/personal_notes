@@ -1,3 +1,17 @@
+## Mon 26/Jul/2021
+
+- Projects
+  - Geet
+    - [x] Add upstream support to `pr open`
+      - Final solution
+  - Fish Game
+    - [x] Clean warnings
+    - [x] Galleon
+      - [x] Fight item not falling
+      - [x] Fight thrown logic
+  - ZFS
+    - [x] Investigate issue feedback, and reply (https://github.com/saveriomiroddi/zfs-installer/issues/228)
+
 ## Sun 25/Jul/2021
 
 - Projects
