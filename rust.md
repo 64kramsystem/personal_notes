@@ -546,6 +546,8 @@ std::f64::INFINITY, NEG_INFINITY;
 u32::min(1, 2);                 // minimum between two numbers
 std::cmp::max(x, u);            // maximum between two numbers
 
+x.saturating_sub(y);             // saturating operation (result is within to the data type bounds, e.g. unsigned 1 - 2 = 0)
+
 z, carry = x.overflowing_add(y); // adds and wraps around in case of overflow; <carry> is bool.
 z, carry = x.overflowing_sub(y); // subtracts and wraps around, as above
                                  // WATCH OUT! For other `overflow_` operations, `carry` may not the intuitive value, eg. for bit shift
@@ -672,12 +674,15 @@ collection.into_iter()       // owned values (arrays still return references)
 ```rust
 map(|x| x * 2)               // Ruby :map
 map(|(x, y)| x + y)          // Tuples unpacking: useful for example, on the result of zip()
+max().unwrap()               // Compute max, on types implementing `Ord`
+max_by(|i1, i2| i1.x.cmp(&i2.x)).unwrap() // Customer max (the closure returns `Ordering`; see [Sorting Floats](#sorting-floats))
 flat_map(|x| x)              // Ruby :flat_map. WATCH OUT! flattens only one level.
 fold(a, |a, x| a + x)        // Ruby :inject
 fold_first(|a, x| a + x)     // Like fold(), using the first element as initial value
 filter(|x| x % 2 == 0)       // Ruby :select
 filter_map(|x| Some(x * 2))  // AWESOME!!! Combines filter and map; None values are discarded
 find(|x| x % 2 == 0)         // Ruby :find/:detect
+position(|x| x == 2)         // Ruby :index(&block)
 flatten()                    // Quasi-Ruby :flatten. WATCH OUT! flattens only one level.
 dedup()                      // Ruby :uniq
 rev()                        // reverse. WATCH OUT, UNINTUITIVE: since it's not inclusive, it goes from 99 to 0.

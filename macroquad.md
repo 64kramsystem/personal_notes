@@ -14,6 +14,8 @@
       - [Manually checking sprite <> tile bottom collision](#manually-checking-sprite--tile-bottom-collision)
   - [Input](#input)
   - [Scene management/ECS](#scene-managementecs)
+    - [Node/Collision basics](#nodecollision-basics)
+    - [Entity-Component](#entity-component)
   - [Misc](#misc)
     - [I/O](#io)
     - [Random](#random)
@@ -318,6 +320,8 @@ if is_key_pressed(KeyCode::Right) { /* ... */ }
 
 ## Scene management/ECS
 
+### Node/Collision basics
+
 ```rs
 struct Resources {
     whale: Texture2D,
@@ -351,7 +355,11 @@ impl Node for Player {
         let pos = world.actor_pos(node.collider);
         let on_ground = world.collide_check(node.collider, pos + vec2(0., 1.));
 
-        if on_ground == false {
+        if on_ground {
+          if is_key_pressed(KeyCode::Space) {
+              node.speed.y = Self::JUMP_SPEED;
+          }
+        } else {
             node.speed.y += Self::GRAVITY * get_frame_time();
         }
 
@@ -363,14 +371,50 @@ impl Node for Player {
             node.speed.x = 0.;
         }
 
-        if is_key_pressed(KeyCode::Space) {
-            if on_ground {
-                node.speed.y = Self::JUMP_SPEED;
-            }
-        }
-
         world.move_h(node.collider, node.speed.x * get_frame_time());
         world.move_v(node.collider, node.speed.y * get_frame_time());
+    }
+}
+```
+
+### Entity-Component
+
+Implemented mainly via `Node#provides()`/`scene::find_nodes_with::<T>()`; it's essentially an EC-based implementation of traits. Pure Rust traits won't work, because `Sized` types are required.
+
+```rs
+// Pseudo-trait definition, with the return types of its methods.
+// Lens is used to return variable properties of the entity.
+type Sproingable = (HandleUntyped, Lens<PhysicsBody>, Vec2);
+
+impl scene::Node for Grenades {
+    fn setup(mut grenade: RefMut<Self>) {
+      // Pseudo-trait implementation
+      // A hypothetical pure-trait implementation would fail here, because the types involved must be
+      // Sized, so a trait object can't be returned.
+      grenade.provides::<Sproingable>((
+          grenade.handle().untyped(),
+          grenade.handle().lens(|grenade| &mut grenade.body),
+          GRENADE_SIZE,
+      ));
+    }
+}
+
+impl scene::Node for Sproinger {
+    fn fixed_update(mut node: RefMut<Self>) {
+      /* other logic here */
+
+      for (_handle: HandleUntyped, mut body_lens: Lens<PhysicsBody>, size: Vec2) in scene::find_nodes_with::<Sproingable>() {
+          if let Some(body) = body_lens.get() {
+              if body.speed.length() > Self::STOPPED_THRESHOLD {
+                  let body_hitbox = Rect::new(body.pos.x, body.pos.y, size.x, size.y);
+                  if sproinger_rect.intersect(body_hitbox).is_some() {
+                      body.speed.y = -Self::FORCE;
+                      sproinger.has_sproinged = true;
+                      Sproinger::animate(sproinger.handle());
+                  }
+              }
+          }
+      }
     }
 }
 ```
