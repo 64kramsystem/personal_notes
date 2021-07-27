@@ -5,6 +5,7 @@
     - [URL/HTML encoding](#urlhtml-encoding)
     - [Strings](#strings)
       - [Encoding](#encoding)
+      - [Activesupport/Inflector](#activesupportinflector)
     - [Date/time](#datetime)
       - [Date/time templated parsing](#datetime-templated-parsing)
     - [Maths/Rational](#mathsrational)
@@ -171,6 +172,13 @@ open(file, "w:<external_enc>"
 #
 IO.read(filename, 'bom|utf-8')
 ```
+
+#### Activesupport/Inflector
+
+- `underscore` : `ActiveModel::Errors` => `active_model/errors`
+- `underscore` : `ABC`                 => `abc`                  !! WATCH OUT !!
+- `pluralize`  : `flying_jellyfish`    => `flying_jellyfishes`
+
 
 ### Date/time
 

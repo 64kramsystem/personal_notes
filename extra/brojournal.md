@@ -1,3 +1,25 @@
+## Tue 27/Jul/2021
+
+- Projects
+  - ZFS
+    - [x] Review and reply to new issue
+  - OpenScripts
+    - [x] Add script to rename variables/constants with composite names
+  - Fish Game
+    - [x] Shark Rain
+      - [x] Fight think efficient algorithm for random non-superposing distribution with equal space probability
+- Studies/Rust+Gamedev
+  - Macroquad
+    - [x] Study Entity-Component-oriented APIs
+- Studies/Rust
+  - [x] Review `max`/`max_by` and related
+- Admin/tools
+  - [x] Review GitHub useful permissions for projects
+- Studies/Low-level programming
+  - [ ] Write Great Code, Volume 1: Understanding the Machine
+    - [x] Chapter 9
+    - [x] Chapter 10 (not entirely)
+
 ## Mon 26/Jul/2021
 
 - Projects
