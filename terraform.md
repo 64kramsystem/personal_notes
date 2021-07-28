@@ -3,7 +3,7 @@
 - [Terraform](#terraform)
   - [Base configuration](#base-configuration)
   - [HCL](#hcl)
-    - [Variables](#variables)
+    - [Variables/Data types](#variablesdata-types)
     - [Predefined variables](#predefined-variables)
     - [Strings](#strings)
     - [Lists (arrays)](#lists-arrays)
@@ -113,7 +113,7 @@ See [Variables](#variables) for setting env vars.
 
 ## HCL
 
-### Variables
+### Variables/Data types
 
 The variable data types are:
 

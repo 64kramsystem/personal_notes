@@ -36,6 +36,7 @@
       - [HTTP](#http)
       - [Telnet](#telnet)
       - [SMTP](#smtp)
+    - [Ping (ICMP)](#ping-icmp)
   - [Databases](#databases)
     - [SQLite 3](#sqlite-3)
 
@@ -824,6 +825,29 @@ smtp = Net::SMTP.new 'smtp.gmail.com', 587
 smtp.enable_starttls
 smtp.start("domain", "user", "pwd", :login) do
   smtp.send_message(mail_text, sender_email, [recipient_email])
+end
+```
+
+### Ping (ICMP)
+
+`net/ping` has been removed from the stdlib anymore. Either use a simple TCP connection, or the `ping` unix tool, or:
+
+```rb
+require 'socket'
+
+class Ping
+  # True if ok, false if error
+  def self.pingecho(host, timeout: 5, service: "echo")
+    Timeout.timeout(timeout) do
+      s = TCPSocket.new(host, service)
+      s.close
+      true
+    rescue Errno::ECONNREFUSED
+      true
+    rescue Timeout::Error, StandardError
+      false
+    end
+  end
 end
 ```
 

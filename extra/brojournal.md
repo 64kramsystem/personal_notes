@@ -1,3 +1,17 @@
+## Wed 28/Jul/2021
+
+- Projects
+  - Fish Game
+    - [x] Write environmental weapons document
+    - [x] Review physics docs
+    - [x] Fight broken project Cargo config
+    - [ ] [Volcano env. weapon](https://github.com/fishfight/fish2/issues/48)
+      - [x] Add Volcano (icon, not erupting)
+      - [x] Instantiation, with base spawn data logic
+- Admin/tools
+  - [x] Remote desktop tool
+    - [x] Follow up bug report
+
 ## Tue 27/Jul/2021
 
 - Projects
