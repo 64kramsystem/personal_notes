@@ -16,6 +16,7 @@
   - [Scene management/ECS](#scene-managementecs)
     - [Node/Collision basics](#nodecollision-basics)
     - [Entity-Component](#entity-component)
+  - [State machine](#state-machine)
   - [Misc](#misc)
     - [I/O](#io)
     - [Random](#random)
@@ -416,6 +417,35 @@ impl scene::Node for Sproinger {
           }
       }
     }
+}
+```
+
+## State machine
+
+The state machine API is completely undocumented; these are the basic notions:
+
+```rs
+let mut state_machine = StateMachine::new();
+
+// Can add a state only if the SM is not in use.
+// The state constants must be usize.
+state_machine.add_state(Self::ST_NORMAL, State::new().update(Self::update_normal));
+state_machine.add_state(Self::ST_DEATH, State::new().coroutine(Self::death_coroutine));
+state_machine.add_state(Self::ST_SHOOT, State::new().update(Self::update_shoot).coroutine(Self::shoot_coroutine));
+
+fn update_normal(node: &mut RefMut<Player>, _dt: f32) { /* ... */ }
+
+fn death_coroutine(node: &mut RefMut<Player>) -> Coroutine {
+    start_coroutine(async move { /* ... */ })
+}
+
+// Put this in fixed_update()
+StateMachine::update_detached(&mut node, |node| &mut node.state_machine);
+
+// Check the state
+if self.state_machine.state() != Self::ST_DEATH {
+    // Replace the current state (if ready) or next state (if in use)
+    self.state_machine.set_state(Self::ST_DEATH);
 }
 ```
 

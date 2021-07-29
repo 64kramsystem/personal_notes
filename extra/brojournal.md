@@ -1,3 +1,15 @@
+## Thu 29/Jul/2021
+
+- Studies/Low-level programming
+  - [ ] Write Great Code, Volume 1: Understanding the Machine
+    - [ ] Chapter 11
+- Projects
+  - Fish Game
+    - [ ] [Volcano env. weapon](https://github.com/fishfight/fish2/issues/48)
+      - [x] Implement eruption emersion/submersion
+      - [x] Items throw logic, with stub item
+        - [x] Fight calculations
+
 ## Wed 28/Jul/2021
 
 - Projects

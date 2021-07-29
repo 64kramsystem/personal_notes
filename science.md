@@ -91,8 +91,9 @@ $width/2 - x > $width/2 - $interval
 
 (`ᵢ` = initial)
 
-Velocity at `t`     : `vₜ = vᵢ + tg`
-Displacement at `t` : `y = gt²/2 + vᵢt`
+Velocity(`t`)     : `vₜ = vᵢ + tg`
+Displacement(`t`) : `y = gt²/2 + vᵢt`
+Velocity(`y`)     : `vₜ² = vᵢ² - 2gy`
 
 ```rs
 const JUMP_SPEED: f32 = -500.;
