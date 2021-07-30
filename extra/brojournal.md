@@ -1,3 +1,29 @@
+## Fri 30/Jul/2021
+
+- Studies/Gamedev
+  - [x] Check out CS50's Introduction to Game Development content
+- Projects
+  - QEMU-pinning
+    - [x] [Update patch to v6.1](https://github.com/saveriomiroddi/qemu-pinning/issues/32)
+  - Schedule manager
+    - [x] Fail fast on invalid work lines
+  - ZFS
+    - [x] Follow up with user [issue](https://github.com/saveriomiroddi/zfs-installer/issues/229#issuecomment-887760469)
+    - [x] Request: Add DNS ping test at the beginning
+  - Fish Game
+    - [x] [Volcano env. weapon](https://github.com/fishfight/fish2/issues/48) MVP
+      - [x] Items throw logic, with stub item
+      - [x] Implement erupted item logic
+      - [x] Rebase and update
+  - Awesome Rust
+    - [x] Rebase/Update RG3D game engine addition
+- Admin/Tools
+  - [x] Follow up remote desktop issue investigation
+- Studies/Low-level programming
+  - [ ] Write Great Code, Volume 1: Understanding the Machine
+    - [x] Chapter 11
+    - [ ] Chapter 12
+
 ## Thu 29/Jul/2021
 
 - Studies/Low-level programming

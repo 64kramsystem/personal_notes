@@ -105,20 +105,21 @@ end
 
 See [reference](https://relishapp.com/rspec/rspec-expectations/v/3-10/docs/built-in-matchers).
 
- | Target       | Methods                                              | Notes                |
- | ------------ | ---------------------------------------------------- | -------------------- |
- | Class (type) | `be_a`, `be_an`, `be_a_kind_of`, `be_an_instance_of` |                      |
- |              | `be` `<|<=|==|=>|>` `expected`                       |                      |
- |              | `be_within(span).of(reference)`                      | Time/Floats          |
- |              | `be === expected`                                    |                      |
- |              | `eq(expected)`                                       |                      |
- |              | `change { instance.attribute }.from(start).to(end)`  |                      |
- |              | `change { instance.attribute }.by(amount)`           |                      |
- |              | `match(pattern)`                                     | String also accepted |
- |              | `match_array(array)`                                 |                      |
- |              | `be_false`, `be_true`, `be_falsey`, `be_truthy`      |                      |
- |              | `be_empty`                                           |                      |
- | Include      | `include`                                            |                      |
+ | Target       | Methods                                              | Notes                 |
+ | ------------ | ---------------------------------------------------- | --------------------- |
+ | Class (type) | `be_a`, `be_an`, `be_a_kind_of`, `be_an_instance_of` |                       |
+ |              | `be` `<|<=|==|=>|>` `expected`                       |                       |
+ |              | `be_within(span).of(reference)`                      | Time/Floats           |
+ |              | `be === expected`                                    |                       |
+ |              | `eq(expected)`                                       |                       |
+ |              | `change { instance.attribute }.from(start).to(end)`  |                       |
+ |              | `change { instance.attribute }.by(amount)`           |                       |
+ |              | `match(pattern)`                                     | String also accepted  |
+ |              | `match_array(array)`                                 |                       |
+ |              | `be_false`, `be_true`, `be_falsey`, `be_truthy`      |                       |
+ |              | `be_empty`                                           |                       |
+ | Include      | `include`                                            |                       |
+ | Error        | `raise_error(ErrorClass, "message")`                 | Defaults to Exception |
 
 ### Matching arguments
 
