@@ -192,6 +192,7 @@ Operations/conversions:
 @date.next_month(@months=1), @date.prev_month(@months=1)  # More readable; also supports `day`, `year`
 
 @date_time.to_time.to_i                                   # DateTime to Unix time
+Time.at(time_i)                                           # Unix time to Time
 ```
 
 There is no simple way to subtract an year. leap day should be taken into account, and even when considering this, is an year 365 or 366 days? If an year less is the same date but on the previous yes, a simple solution is to print and reparse the timestamp; alternatively, the more complicated way can be achieved using `Date.new(datetime.year - 1, 1, 1).leap?`, which is not suggested because it's very easy to make a mistake.

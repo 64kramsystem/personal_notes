@@ -51,13 +51,31 @@ hdparm --user-master u --security-erase $phonypwd $device
 
 ## SMART monitoring (values)
 
-Useful values (https://www.backblaze.com/blog/hard-drive-smart-stats/):
+Check:
+
+```sh
+for dev in /dev/sd?; do
+  echo "# $dev"
+  sudo smartctl -a /dev/sda | perl -ne 'print if /^ID#/ .. /^$/' | grep -P '^ *(ID|5|18[12378]|19[5789])\b'
+  echo
+done
+```
+
+Useful values (https://www.backblaze.com/blog/hard-drive-smart-stats):
 
 - `SMART 5`   : Reallocated_Sector_Count
-- `SMART 187` : Reported_Uncorrectable_Errors
+- `SMART 187` : Reported_Uncorrectable_Errors (*important*)
 - `SMART 188` : Command_Timeout
 - `SMART 197` : Current_Pending_Sector_Count
 - `SMART 198` : Offline_Uncorrectable
+
+Other (likely) useful found locally:
+
+- 181: `Program_Fail_Cnt_Total`
+- 182: `Erase_Fail_Count_Total`
+- 183: `Runtime_Bad_Block`
+- 195: `ECC_Error_Rate`
+- 199: `CRC_Error_Count`
 
 ## Disable SMT (hyperthreading)
 

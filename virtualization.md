@@ -241,6 +241,9 @@ Create VMDK disk pointing to a physical disk!:
 
 ```sh
 vboxmanage internalcommands createrawvmdk -filename $image.vdi -rawdisk /dev/$device
+
+# Then give the disk access privileges to the current user (!! remove them after usage !!):
+usermod -a -G disk $(whoami)
 ```
 
 ## QEMU
