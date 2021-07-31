@@ -450,11 +450,7 @@ let rand_byte: u8 = rand::random();
 
 // Ends: [low, high); requires `rand::Rng`.
 //
-let randval = match rand::thread_rng().gen_range(0..2) {
-    0 => "0",
-    1 => "1",
-    _ => unreachable!(),
-};
+let randval: u8 = rand::thread_rng().gen_range(0..2);
 
 // Fetching a random element from an array
 //
@@ -470,6 +466,10 @@ let randval: f64 = rng.gen();
 
 let mut data = [0u8; 32];
 rand::thread_rng().fill_bytes(&mut data);
+
+// Alternative way of creating a series of random values; this allows to set the range.
+let range = Uniform::new(0, 20);
+let values: Vec<u64> = rand::thread_rng().sample_iter(&range).take(100).collect();
 ```
 
 Use a deterministic generator, for testing purposes:
@@ -508,7 +508,7 @@ A convenient one for small projects is [`fastrand`](https://github.com/smol-rs/f
 
 ```rust
 fastrand::bool();
-fastrand::u32(..);
+fastrand::u32(..); // range
 
 // Random array element (Ruby sample())
 let vec_i = fastrand::shuffle(..vec.len());

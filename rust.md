@@ -714,6 +714,11 @@ collect::<Vec<_>>()
 
 // Create an iterator for repeating a value
 std::iter::repeat(x)
+
+// Ruby :times can be emulated via ranges.
+// Range supports only the `into_iter()` iterator, but no iterator invocation is actually needed.
+(0..SHARKS_COUNT).map(|x| 2 * x).collect::<Vec<_>>();
+(0..SHARKS_COUNT).for_each(|x| println!("{}", x)); // for_each() returns no values
 ```
 
 #### Method chaining
@@ -798,6 +803,8 @@ let mut vec: Vec<i32> = Vec::new();     // Basic, if type can't be inferred
 let mut vec = vec![1, 2, 3];            // Macro to initialize a vector from a literal list; allocates exact capacity
 let mut vec = vec![true; n];            // Same, with variable-specified length and initialization; ; allocates exact capacity
 Vec::with_capacity(cap);                // Preallocating version; WATCH OUT! The length is still 0 at start; use `vec![<val>, n]` if required
+vec.fill_with(|| rand::random())        // Set vector values via closure; uses len()
+vec.fill(1);                            // Set vector values via Clone; uses len()
 
 vec[0] = 2;
 

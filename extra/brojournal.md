@@ -1,3 +1,20 @@
+## Sat 31/Jul/2021
+
+- Admin
+  - [x] Handle DNS
+  - Systems
+    - [x] Review disk SMART values
+- Studies/Computer Architecture
+  - [ ] Write Great Code, Volume 1: Understanding the Machine
+    - [x] Chapter 13
+- Projects
+  - Fish Game
+    - [ ] Minor cleanups
+      - [x] Jellyfish: Clean and correct hitbox
+      - [x] Curse: Clean and correct hitbox
+      - [x] Curse: Implement throw
+      - [x] Review alternate approach to shark rain positions
+
 ## Fri 30/Jul/2021
 
 - Studies/Gamedev
@@ -19,14 +36,15 @@
     - [x] Rebase/Update RG3D game engine addition
 - Admin/Tools
   - [x] Follow up remote desktop issue investigation
-- Studies/Low-level programming
+- Studies/Computer Architecture
   - [ ] Write Great Code, Volume 1: Understanding the Machine
     - [x] Chapter 11
-    - [ ] Chapter 12
+    - [x] Chapter 12
+    - [ ] Chapter 13
 
 ## Thu 29/Jul/2021
 
-- Studies/Low-level programming
+- Studies/Computer Architecture
   - [ ] Write Great Code, Volume 1: Understanding the Machine
     - [ ] Chapter 11
 - Projects
@@ -67,7 +85,7 @@
   - [x] Review `max`/`max_by` and related
 - Admin/tools
   - [x] Review GitHub useful permissions for projects
-- Studies/Low-level programming
+- Studies/Computer Architecture
   - [ ] Write Great Code, Volume 1: Understanding the Machine
     - [x] Chapter 9
     - [x] Chapter 10 (not entirely)
@@ -120,7 +138,7 @@
     - Minor refactorings
     - Add time section separators when adding a new date section
     - Add templating
-  - Studies/Low-level programming: Write Great Code, Volume 1: Understanding the Machine
+  - Studies/Computer Architecture: Write Great Code, Volume 1: Understanding the Machine
   - Rust/Gamedev: Create Arguably Better Breakout separate repository
   - Rust/Gamedev: Setup Windows Rust env
   - Writing/Article: Compiling the CVE-2021-22555 exploit Proof of concept
@@ -216,7 +234,8 @@
 
 ## Sat 17/Jul/2021
 
-- Studies/Low-level programming
+- Studies/Computer Architecture
+  - [ ] Write Great Code, Volume 1: Understanding the Machine
     - [x] Chapter 7
     - [x] Chapter 8
     - [ ] Chapter 9
@@ -257,7 +276,7 @@
   - Programming journal headers copy script
     - [x] Try multiple pattern match
     - [x] Add escaping
-- Studies/Low-level programming
+- Studies/Computer Architecture
   - [ ] Write Great Code, Volume 1: Understanding the Machine
     - [ ] Chapter 7
 
@@ -275,7 +294,7 @@
 - Studies/SWE
   - Codewars
     - [x] 1 kata
-- Studies/Low-level programming
+- Studies/Computer Architecture
   - [ ] Write Great Code, Volume 1: Understanding the Machine
     - [x] Chapter 6
 - Projects
@@ -287,7 +306,7 @@
 
 - Admin/tools
   - [x] Write PDF manager support; buy pro version
-- Studies/Low-level programming
+- Studies/Computer Architecture
   - [ ] Write Great Code, Volume 1: Understanding the Machine
     - [x] Chapter 4
     - [x] Chapter 5
@@ -306,7 +325,7 @@
 
 ## Mon 12/Jul/2021
 
-- Studies/Low-level programming
+- Studies/Computer Architecture
   - [ ] Write Great Code, Volume 1: Understanding the Machine
     - [x] Chapter 3
 - Studies/SWE
@@ -332,7 +351,7 @@
 - Studies/SWE
   - Codewars
     - [x] 3 katas
-- Studies/Low-level programming
+- Studies/Computer Architecture
   - [ ] Write Great Code, Volume 1: Understanding the Machine
     - [x] Chapter 2
 
