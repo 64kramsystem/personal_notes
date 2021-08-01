@@ -1,3 +1,30 @@
+## Sun 01/Aug/2021
+
+- Projects
+  - Fish Game
+    - [x] Position discussion
+    - [x] Open contract discussion
+    - [x] Hitbox fixes due to recent changes
+      - [x] Galleon: Clean and correct hitbox
+      - [x] Cannon: Clean and correct hitbox
+      - [x] Shark (rain): Clean and correct hitbox
+    - Volcano: Add other weapons
+      - [x] EruptingVolcano: Generalize item type spawning logic
+    - [x] Prepare section for the Rust Gamedev newsletter
+- Writings
+  - Blog
+    - [x] Article: Speeding up Ruby gems compilation (installation)
+- Studies
+  - Ruby
+    - [x] Find out how to speedup gems installation
+  - Computer Architecture
+    - [x] Write Great Code, Volume 1: Understanding the Machine
+      - [x] Chapter 14
+      - [x] Chapter 15
+  - Gamedev
+    - Game Programming Algorithms and Techniques
+      - [ ] Chapter 01
+
 ## Sat 31/Jul/2021
 
 - Admin

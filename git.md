@@ -533,6 +533,12 @@ git rev-parse --abbrev-ref $remote/HEAD | awk -F/ '{print $NF}'
 git remote show $remote | awk '/^  HEAD branch:/ {print $NF}'
 ```
 
+Convenient configuration:
+
+```sh
+git config custom.development-branch devel
+```
+
 ### Checkout a GitHub PR (of a private repository)
 
 A PR request can be checked out locally (even if the source repo is private):
