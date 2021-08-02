@@ -431,22 +431,33 @@ let mut state_machine = StateMachine::new();
 // The state constants must be usize.
 state_machine.add_state(Self::ST_NORMAL, State::new().update(Self::update_normal));
 state_machine.add_state(Self::ST_DEATH, State::new().coroutine(Self::death_coroutine));
+state_machine.add_state(Self::ST_INCAPACITATED, State::new().update(Self::update_incapacitated).coroutine(Self::incapacitated_coroutine));
 state_machine.add_state(Self::ST_SHOOT, State::new().update(Self::update_shoot).coroutine(Self::shoot_coroutine));
 
-fn update_normal(node: &mut RefMut<Player>, _dt: f32) { /* ... */ }
-
-fn death_coroutine(node: &mut RefMut<Player>) -> Coroutine {
-    start_coroutine(async move { /* ... */ })
+fn update_incapacitated(node: &mut RefMut<Player>, dt: f32) {
+    node.incapacitated_timer += dt;
+    if node.incapacitated_timer >= node.incapacitated_duration {
+        node.incapacitated_timer = 0.0;
+        node.state_machine.set_state(Player::ST_NORMAL);
+    }
 }
 
-// Put this in fixed_update()
-StateMachine::update_detached(&mut node, |node| &mut node.state_machine);
+fn incapacitated_coroutine(node: &mut RefMut<Player>) -> Coroutine {
+    start_coroutine(async move { /* ... */ })
+}
 
 // Check the state
 if self.state_machine.state() != Self::ST_DEATH {
     // Replace the current state (if ready) or next state (if in use)
     self.state_machine.set_state(Self::ST_DEATH);
 }
+
+// Used by Fight Fight in Player#fixed_update(); documented as `A hack to update a state machine being
+// part of an updating struct`.
+StateMachine::update_detached(&mut node, |node| &mut node.state_machine);
+
+// Seems to be the base update API; fails if the machine is in use
+node.state_machine.update(&mut player)
 ```
 
 ## Misc

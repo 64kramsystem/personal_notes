@@ -1,7 +1,22 @@
+## Mon 02/Aug/2021
+
+- Studies/Rust
+  - Programming Rust (2nd ed.)
+    - [x] Chapter 03: Fundamental types
+- Studies/Gamedev
+  - Game Programming Algorithms and Techniques
+    - [x] Chapter 01: Game Programming Overview
+  - Macroquad
+    - [x] Further look at StateMachine
+- Projects
+  - Fish Fight
+    - [x] Add Cannonball to erupted items
+      - [x] Make several refactorings
+
 ## Sun 01/Aug/2021
 
 - Projects
-  - Fish Game
+  - Fish Fight
     - [x] Position discussion
     - [x] Open contract discussion
     - [x] Hitbox fixes due to recent changes
@@ -35,7 +50,7 @@
   - [ ] Write Great Code, Volume 1: Understanding the Machine
     - [x] Chapter 13
 - Projects
-  - Fish Game
+  - Fish Fight
     - [ ] Minor cleanups
       - [x] Jellyfish: Clean and correct hitbox
       - [x] Curse: Clean and correct hitbox
@@ -54,7 +69,7 @@
   - ZFS
     - [x] Follow up with user [issue](https://github.com/saveriomiroddi/zfs-installer/issues/229#issuecomment-887760469)
     - [x] Request: Add DNS ping test at the beginning
-  - Fish Game
+  - Fish Fight
     - [x] [Volcano env. weapon](https://github.com/fishfight/fish2/issues/48) MVP
       - [x] Items throw logic, with stub item
       - [x] Implement erupted item logic
@@ -75,7 +90,7 @@
   - [ ] Write Great Code, Volume 1: Understanding the Machine
     - [ ] Chapter 11
 - Projects
-  - Fish Game
+  - Fish Fight
     - [ ] [Volcano env. weapon](https://github.com/fishfight/fish2/issues/48)
       - [x] Implement eruption emersion/submersion
       - [x] Items throw logic, with stub item
@@ -84,7 +99,7 @@
 ## Wed 28/Jul/2021
 
 - Projects
-  - Fish Game
+  - Fish Fight
     - [x] Write environmental weapons document
     - [x] Review physics docs
     - [x] Fight broken project Cargo config
@@ -102,7 +117,7 @@
     - [x] Review and reply to new issue
   - OpenScripts
     - [x] Add script to rename variables/constants with composite names
-  - Fish Game
+  - Fish Fight
     - [x] Shark Rain
       - [x] Fight think efficient algorithm for random non-superposing distribution with equal space probability
 - Studies/Rust+Gamedev
@@ -123,7 +138,7 @@
   - Geet
     - [x] Add upstream support to `pr open`
       - Final solution
-  - Fish Game
+  - Fish Fight
     - [x] Clean warnings
     - [x] Galleon
       - [x] Fight item not falling
@@ -134,7 +149,7 @@
 ## Sun 25/Jul/2021
 
 - Projects
-  - Fish Game
+  - Fish Fight
     - [x] Jellyfish
       - [x] Implement gravity/flapping for FlappyJellyfish (without borders check…
       - [x] FlappyJellyfish: Terminate when going outside the borders
@@ -148,9 +163,9 @@
 ### Cycle changes
 
 - Swapped
-  - Studies/SWE: Codewars <> Fish Game
-  - Rust/Gamedev: Better Breakout experiments <> Fish Game
-  - Rust/Gamedev: Port Code the Classics <> Fish Game
+  - Studies/SWE: Codewars <> Fish Fight
+  - Rust/Gamedev: Better Breakout experiments <> Fish Fight
+  - Rust/Gamedev: Port Code the Classics <> Fish Fight
 - Pushed
   - FT/Materialization article
 - Unscheduled
@@ -174,7 +189,7 @@
 ## Sat 24/Jul/2021
 
 - Projects
-  - Fish Game
+  - Fish Fight
     - [ ] Jellyfish
       - [x] Implement FlappyJellyfish control, without jumps and with basic state switch
         - [x] Brutal fight nodes
@@ -190,7 +205,7 @@
     - [x] Review presentation
       - [x] Read/fix typos, research topics
       - [x] Add photo
-  - Fish Game
+  - Fish Fight
     - [x] Cannon refinements
       - [x] Update assets/explosion
       - [x] Add bounciness
@@ -226,7 +241,7 @@
 ## Tue 20/Jul/2021
 
 - Projects
-  - Fish Game
+  - Fish Fight
     - [x] Fix master gamepad compilation error
     - [x] Apply review notes Cannon
       - [x] Cannon: Allow self-pwning
@@ -236,7 +251,7 @@
 ## Mon 19/Jul/2021
 
 - Projects
-  - Fish Game
+  - Fish Fight
     - [x] Complete cannon
     - [x] Improve Linux controllers detection
       - [x] Fight find simplest path handling patterns
@@ -246,7 +261,7 @@
 - Admin/tools
   - [x] Report in depth issues with PDF tool
 - Projects
-  - Fish Game
+  - Fish Fight
     - [x] Draw artwork
       - [x] Experiment and buy software
         - [x] Fight registration
@@ -278,7 +293,7 @@
 - Studies/Git
   - [x] Fetching GitHub PRs; write an alias
 - Projects
-  - Fish Game
+  - Fish Fight
     - [x] Review PR
     - [x] Investigate/discuss Macroquad CPU occupation
     - [ ] Study grenade code
@@ -289,7 +304,7 @@
 - Writings
   - [x] Article: Compiling the CVE-2021-22555 exploit Proof of concept
 - Projects
-  - Fish Game
+  - Fish Fight
     - [x] Test animation program(s)
     - [x] Preliminary discussions about the game
     - [x] Study jump code
@@ -311,7 +326,7 @@
 
 - Admin/tools
   - [x] Discord email notification madness
-  - [x] Follow up discussion Fish Game beta testing
+  - [x] Follow up discussion Fish Fight beta testing
 - Rust/Gamedev
   - [ ] Experiment with Better Breakout code
     - [ ] Add states: Intro/Game Over
@@ -325,7 +340,7 @@
   - [ ] Write Great Code, Volume 1: Understanding the Machine
     - [x] Chapter 6
 - Projects
-  - Fish Game
+  - Fish Fight
     - [x] Preliminary source code review
     - [x] Fix bug with error/stack trace printed when a joystick is not connected
 

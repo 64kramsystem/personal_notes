@@ -491,6 +491,8 @@ Number-related casts/operations:
 integer.to_string();                      // integer to string
 String::from_utf8(bytes).unwrap();        // (valid) utf-8 bytes to string
 char.to_digit(RADIX).unwrap();            // (parse) char to numeric
+1_u8 as char;                             // only u8 can be casted to char
+let x: Option<char> = std::char::from_u32(1_u32); // cast u32 to char (not available for other data types)
 
 // parse string to numeric type; with any numeric implementing `FromString`
 // f64 will parse integer strings (e.g. `1`)
@@ -540,21 +542,26 @@ std::mem::size_of_val(v)        // memory occupation of a variable !!
 10_f64.signum();                // sign. float: (>= +0.0 -> 1.0), (<= -0.0 -> -1.0), (NaN -> NaN); int: (0 -> 0), (< 0 -> -1), (> 0 -> 1)
 10_f64.hypot(10_f64);           // hypotenuse (!!)
 
-std::f64::consts::PI;
+std::f64::consts::{PI,E,SQRT_2,FRAC1_PI,FRAC_1_SQRT_2,LN_2,LOG10_2,...};   // some constants
 std::f64::INFINITY, NEG_INFINITY;
 
 u32::min(1, 2);                 // minimum between two numbers
 std::cmp::max(x, u);            // maximum between two numbers
 
-x.saturating_sub(y);             // saturating operation (result is within to the data type bounds, e.g. unsigned 1 - 2 = 0)
-
-z, carry = x.overflowing_add(y); // adds and wraps around in case of overflow; <carry> is bool.
-z, carry = x.overflowing_sub(y); // subtracts and wraps around, as above
-                                 // WATCH OUT! For other `overflow_` operations, `carry` may not the intuitive value, eg. for bit shift
 z = x.rotate_left(y);
 z = x << y;                      // Shift; errors only if y is higher than the number of machine bits.
-(_, _) = x.overflowing_shl(y);   // WATCH OUT! This is not the intuitive 1-bit left shift - Rust doesn't have it predefined; for that,
+
+// Checked, wrapping, saturating and overflowing arithmetic.
+//
+// With standard operators, on overlow, Rust panics in debug, and wraps in release.
+//
+x.checked_add(y);                // returns Option<T>
+x.wrapping_add(y);
+x.saturating_sub(y);             // saturating operation (result is within to the data type bounds, e.g. unsigned 1 - 2 = 0)
+z, carry = x.overflowing_add(y); // adds and wraps around in case of overflow; <carry> is bool.
+x.overflowing_shl(y);            // WATCH OUT! This is not the intuitive 1-bit left shift - Rust doesn't have it predefined; for that,
                                  // manually compute the carry, then execute `wrapping_shl()`. Alternatively, override the shift operator.
+                                 // WATCH OUT! For other `overflow_` operations, `carry` may not the intuitive value, eg. for bit shift
 
 (f * 100.0).round() / 100.0;     // round to specific number of decimals (ugly!!; also see #printing)
 0_u32.to_be_bytes();             // convert big endian u32 to array of bytes
@@ -801,7 +808,8 @@ Vectors (mutable):
 let mut vec = Vec::new();               // Basic (untyped) instantiation (if the type can be inferred)
 let mut vec: Vec<i32> = Vec::new();     // Basic, if type can't be inferred
 let mut vec = vec![1, 2, 3];            // Macro to initialize a vector from a literal list; allocates exact capacity
-let mut vec = vec![true; n];            // Same, with variable-specified length and initialization; ; allocates exact capacity
+let mut vec = vec![true; n];            // Same, with variable-specified length and initialization; allocates exact capacity
+(0..5).collect();                       // Create vector from range
 Vec::with_capacity(cap);                // Preallocating version; WATCH OUT! The length is still 0 at start; use `vec![<val>, n]` if required
 vec.fill_with(|| rand::random())        // Set vector values via closure; uses len()
 vec.fill(1);                            // Set vector values via Clone; uses len()
@@ -1051,6 +1059,7 @@ s.len();
 s.is_empty();                           // must be 0 chars long
 s.contains("pattern");
 s.start_with("pref");
+s1 == s2;                               // String comparison (all comparisons supported); char-based (not graph.cl.!)
 
 s += &s2;                               // concatenate via overloaded operator; can take &str or &String
 s.push_str(&str);                       // concatenate (append) strings
