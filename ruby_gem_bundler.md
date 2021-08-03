@@ -144,4 +144,9 @@ This will yield a valid gem source 😳
 gem unpack $gemfile           # Unpack gem
 gem build $gemname.gemspec    # Build gem
 gem push $gemname-*.gem       # Publish a built gem
+
+# Download gems.
+# `-s` appends a source; --clear-sources clears the preceding sources
+#
+gem fetch [--clear-sources -s $source] $gem1 {$gem2...}
 ```
