@@ -75,7 +75,8 @@ let lines = reader.lines().collect::<Result<Vec<_>, _>>()?;
 //
 let f: File = OpenOptions::new()
                   .create(true)            // use create_new(true) to fail if the file exists
-                  .write(true).read(true)
+                  .write(true)             // append() is also available
+                  .read(true)
                   .open("log.txt");
 
 // Open file for writing; if existing, it's truncated.

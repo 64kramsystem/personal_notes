@@ -12,15 +12,17 @@
       - [Printing/formatting/write!](#printingformattingwrite)
     - [Conditional build (ifdef-like)](#conditional-build-ifdef-like)
     - [Data types](#data-types)
-      - [Numeric operations](#numeric-operations)
-    - [Casting](#casting)
+    - [Casting/conversions](#castingconversions)
+      - [`.` operator](#-operator)
       - [Into<T>](#intot)
-    - [Basic operators/operations/arithmetic/math](#basic-operatorsoperationsarithmeticmath)
+    - [Arithmetic/math APIs](#arithmeticmath-apis)
     - [Closures/Functions](#closuresfunctions)
-    - [Ranges and `std::iter::Iterator` methods](#ranges-and-stditeriterator-methods)
+    - [Iterators](#iterators)
+      - [Ranges and `std::iter::Iterator` methods](#ranges-and-stditeriterator-methods)
       - [Method chaining](#method-chaining)
       - [Iterator trait/Associated types](#iterator-traitassociated-types)
     - [Arrays/Vectors/Slices](#arraysvectorsslices)
+      - [Shared Vec/array methods](#shared-vecarray-methods)
     - [Hash maps](#hash-maps)
     - [Strings](#strings)
       - [String/char-related APIs/conversions](#stringchar-related-apisconversions)
@@ -452,14 +454,15 @@ multiply(&(2, 3));
 
 For strings, see the [Strings chapter](#strings).
 
-#### Numeric operations
+Memory-related operations:
 
 ```rs
-5_u64.wrapping_add(-4_i32 as u64);   // proper way to add signed to unsigned
-5_u64.checked_sub(-(-4_i32) as u64); // otherwise, branch positive/negative, and do checked op for both cases
+std::mem::swap(&mut a, &mut b); // !! swap two variables !!
+std::mem::size_of::(Type)       // memory occupation of a type
+std::mem::size_of_val(v)        // memory occupation of a variable !!
 ```
 
-### Casting
+### Casting/conversions
 
 ```rust
 let int_as_float = (10 as f64);     // type casting
@@ -488,6 +491,12 @@ Number-related casts/operations:
 
 1.to_string();             // numeric to string
 
+0_u32.to_be_bytes();                          // convert big endian u32 to array of bytes
+u32::from_le_bytes([u8; _])                   // convert big endian array of bytes to u32
+u32::from_le_bytes(&[u8].try_into().unwrap()) // same, from slice; requires `std::convert::TryInto`
+f64.to_bits()                                 // transmute to u64 (for bit-wise ops)
+f64::from_bits(u64)                           // transmute from u64 (for bit-wise ops)
+
 integer.to_string();                      // integer to string
 String::from_utf8(bytes).unwrap();        // (valid) utf-8 bytes to string
 char.to_digit(RADIX).unwrap();            // (parse) char to numeric
@@ -506,6 +515,31 @@ Automatic casting, for types supporting the `Deref` trait:
 - `&Vec<T>` -> `&[T]`
 - `&Box<T>` -> `&T`
 
+#### `.` operator
+
+```rs
+// Automatic dereferencing; any number is followed.
+//
+let r = &&&myobj;
+println!("{}", r.field);
+
+// Automatic "referencing" (due to `sort(&mut self)`)
+//
+let v = vec![1, 2];
+v.sort();
+
+// Auto dereferencing on comparison is legal as long as the depth is equivalent
+//
+&&myobj == &&myobj; // valid
+&&myobj == &myobj;  // invalid
+
+// WATCH OUT!! `.` is higher priority than unary operators:
+//
+-1.method(2) // => interpreted as `-(1.method(2))`
+```
+
+On comparsin
+
 #### Into<T>
 
 In order to implement arbitrary casting, implement the `Into<T>` trait:
@@ -520,17 +554,12 @@ impl Into<i32> for GamePiece {
 }
 ```
 
-### Basic operators/operations/arithmetic/math
-
-WATCH OUT!! `-1.operation(2)` is interpreted as `-(1.operation(2))`!!
+### Arithmetic/math APIs
 
 ```rust
 x / y                           // nearest int (-3 / 2 == -1) -> different from Ruby
 val += 1; val -= 1;             // increment/decrement value (no postfix)
 val <<= n; val >>= n;           // overflows are ignored
-std::mem::swap(&mut a, &mut b); // !! swap two variables !!
-std::mem::size_of::(Type)       // memory occupation of a type
-std::mem::size_of_val(v)        // memory occupation of a variable !!
 
 10_f64.clamp(-100., 100.)       // clamp a number (limit value within interval); floats only
 10_u64.pow(2);                  // exponentiation (power), int/int
@@ -563,12 +592,14 @@ x.overflowing_shl(y);            // WATCH OUT! This is not the intuitive 1-bit l
                                  // manually compute the carry, then execute `wrapping_shl()`. Alternatively, override the shift operator.
                                  // WATCH OUT! For other `overflow_` operations, `carry` may not the intuitive value, eg. for bit shift
 
-(f * 100.0).round() / 100.0;     // round to specific number of decimals (ugly!!; also see #printing)
-0_u32.to_be_bytes();             // convert big endian u32 to array of bytes
-u32::from_le_bytes([u8; _])                   // convert big endian array of bytes to u32
-u32::from_le_bytes(&[u8].try_into().unwrap()) // same, from slice; requires `std::convert::TryInto`
-f64.to_bits()                    // transmute to u64 (for bit-wise ops)
-f64::from_bits(u64)              // transmute from u64 (for bit-wise ops)
+// Handling mixed-sign operations
+//
+5_u64.wrapping_add(-4_i32 as u64);   // proper way to add signed to unsigned
+5_u64.checked_sub(-(-4_i32) as u64); // otherwise, branch positive/negative, and do checked op for both cases
+
+// Round to specific number of decimals (ugly!!; also see #printing)
+//
+(f * 100.0).round() / 100.0;
 ```
 
 ### Closures/Functions
@@ -659,7 +690,9 @@ fn my_closure() -> Box<dyn Fn(i32) -> i32> {
 
 `const` closures [can't be defined](https://stackoverflow.com/questions/29191170/is-there-any-way-to-explicitly-write-the-type-of-a-closure).
 
-### Ranges and `std::iter::Iterator` methods
+### Iterators
+
+#### Ranges and `std::iter::Iterator` methods
 
 General form: `[start] .. [[=]end]`.
 
@@ -676,7 +709,7 @@ collection.iter_mut()        // mutable references
 collection.into_iter()       // owned values (arrays still return references)
 ```
 
-`std::iter::Iterator` methods, implemented by Range:
+`std::iter::Iterator` methods (also implemented by Range):
 
 ```rust
 map(|x| x * 2)               // Ruby :map
@@ -699,9 +732,9 @@ nth(n)                       // nth element (0-based)
 skip(n)                      // skip n elements
 take(n)                      // iterator for the first n elements
 enumerate()                  // iterator (index, &value) (Ruby :each_with_index)
-join("str")                  // join using str; doesn't join `char` collections
 zip(iter)                    // zip two arrays (iterators)!!!
 sum()                        // WATCH OUT! Returns the same type, so conversion is needed, e.g. `.map(|&x| x as u32).sum();`
+product()                    // ^^ same as above
 
 // Can't unpack directly in the `for` with these, since they're refutable patterns.
 //
@@ -857,30 +890,6 @@ if let Some(i) = vec.iter().position(|vec_item| *vec_item == remove_item) {
 vec.retain(|vec_item| *vec_item != remove_item);
 ```
 
-Common methods:
-
-```rust
-vec.swap(pos1, pos2);
-vec.resize(new_len, value: T);          // resize (extend/shrink) a vector; T must be Clone
-vec.resize_with(new_len, || expr);      // resize, via function (e.g. when T is not Clone)
-
-// Splitting
-(sl1, sl2) = coll.split_at(split_point);     // immutable
-(sl1, sl2) = coll.split_at_mut(split_point); // mutable: the two arrays are subarrays of the source
-coll2 = coll.split_off(split_point);         // mutable: the returned (sub)array is removed from the source
-
-vec.len();
-vec.iter();                             // iterator
-
-// Sorting (destructive!)
-vec.sort();                             // stable
-vec.sort_by_key(|e| e.abs());           // stable, by key!
-vec.sort_unstable();                    // unstable (typically faster than stable)
-vec.sort_by(|a, b| a.partial_cmp(b).unwrap()); // sort with closure 😍!
-```
-
-In order to pick a random element, see [rand crate](#random-with-and-without-rand).
-
 Arrays implement the `Debug` trait.
 
 Using an Enum to store different data types in an array!!:
@@ -905,6 +914,33 @@ let slice = &array[..];         // type is `&[u32]`
 ```
 
 See the [ownership chapter](#ownership), for the related properties.
+
+#### Shared Vec/array methods
+
+```rust
+vec.swap(pos1, pos2);
+vec.resize(new_len, value: T);          // resize (extend/shrink) a vector; T must be Clone
+vec.resize_with(new_len, || expr);      // resize, via function (e.g. when T is not Clone)
+
+// Splitting/joining
+(sl1, sl2) = coll.split_at(split_point);     // immutable
+(sl1, sl2) = coll.split_at_mut(split_point); // mutable: the two arrays are subarrays of the source
+coll2 = coll.split_off(split_point);         // mutable: the returned (sub)array is removed from the source
+join("str");                                 // join using str; doesn't join `char` collections
+concat();                                    // join without separator
+
+
+vec.len();
+vec.iter();                             // iterator
+
+// Sorting (destructive!)
+vec.sort();                             // stable
+vec.sort_by_key(|e| e.abs());           // stable, by key!
+vec.sort_unstable();                    // unstable (typically faster than stable)
+vec.sort_by(|a, b| a.partial_cmp(b).unwrap()); // sort with closure 😍!
+```
+
+In order to pick a random element, see [rand crate](#random-with-and-without-rand).
 
 ### Hash maps
 

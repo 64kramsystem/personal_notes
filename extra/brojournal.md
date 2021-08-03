@@ -1,8 +1,28 @@
+## Tue 03/Aug/2021
+
+- Admin/Tools
+  - [x] Upgrade system Clang version
+    - [x] Change the symlinks strategy
+- Studies/Rust
+  - Programming Rust (2nd ed.)
+    - [x] Chapter 04: Ownership and moves (quick read)
+    - [x] Chapter 05: References
+  - [x] Investigate published Rust microbenchmark
+- Studies/Gamedev
+  - Game Programming Algorithms and Techniques
+    - [x] Chapter 02: 2D Graphics
+  - [x] Check out Ruby game frameworks for prototyping
+    - [x] Brief test Gosu
+      - Metro adds extra APIs and convenient tools
+    - [x] Check Ruby2D
+
 ## Mon 02/Aug/2021
 
 - Studies/Rust
   - Programming Rust (2nd ed.)
     - [x] Chapter 03: Fundamental types
+    - [ ] Chapter 04: Ownership and moves
+  - [x] Investigate published Rust microbenchmark
 - Studies/Gamedev
   - Game Programming Algorithms and Techniques
     - [x] Chapter 01: Game Programming Overview
