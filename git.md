@@ -467,17 +467,18 @@ Diff/Patching:
 format-patch [--stdout] [$start_commit^[..$end_commit]]
 am $patchfile
 
-# "Transfer" commit between two repositories (use `$sha~..$sha` for single commit):
+# "Transfer" one or more commits between two repositories.
+# Use `$commit~..$commit` to transfer a single commit.
+# $start_commit/$end_commit default to respectively HEAD~/HEAD.
 #
-git -C ~/code/riscv_images format-patch --stdout -1 |
-  sed 's/guest_benchmark_pigz/altscripts\/guest_benchmark_pigz/g' |
+git -C ~/code/riscv_images format-patch --stdout [$start_commit[..$end_commit]] |
+  sed 's| [ab]/ruby||g' |
   git am
 
 # Patch with metadata loss (and no commit)
 #
-# WATCH OUT! One can configure `diff.noprefix true`, however, `format-patch` will need the prefixes
-# to be specified in one way or another (since they're mandatory, and `format-patch` has no configuration
-# entries).
+# WATCH OUT! One can configure `diff.noprefix true`, however, `format-patch` needs the prefixes to be
+# specified in one way or another (they're mandatory, but `format-patch` has no configuration entries).
 #
 # - diff: suitable for standard patch import; with prefix, import using "patch -p1"
 # - apply: [check] instead of apply

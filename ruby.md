@@ -29,7 +29,7 @@
     - [IO.pipe for IPC](#iopipe-for-ipc)
   - [Collections](#collections)
     - [Array](#array)
-      - [Useful operations](#useful-operations)
+    - [Iterable APIs/Useful operations](#iterable-apisuseful-operations)
     - [Hash](#hash)
     - [Enumerable](#enumerable)
   - [Basic I/O](#basic-io)
@@ -583,7 +583,14 @@ arr.delete(obj)                         # delete an object matching via `==`; re
 arr.delete_at(i)                        # delete an object at index `i`; returns the value deleted, or nil if no deletion
 ```
 
-#### Useful operations
+### Iterable APIs/Useful operations
+
+APIs:
+
+```rb
+each_slice(size)                        # divide into slices
+each_cons(size)                         # sliding windows of size
+```
 
 Perform COUNT/GROUP BY on an array; Ruby 2.7 implements #tally:
 

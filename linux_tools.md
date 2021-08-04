@@ -645,10 +645,11 @@ convert -resample 200 -units PixelsPerInch -level 0%,100%,0.5 -quality 85% "$inp
 Other operations:
 
 ```sh
-convert "$input" -flip -flop "$output"            # Rotate 180°
-convert "$input" (-resize|-scale) 50% "$output"   # Resize (with interpolation) or scale (without), 50%
-convert -size 1920x1080 xc:white "$output.pdf"    # Create blank pdf page, with given resolution (size)
-convert -coalesce animation.gif target.png        # Split an animated gif into its frames; `-coalesce` is required for more complex sources.
+convert $input -flip -flop $output                # Rotate 180°
+convert $input (-resize|-scale) 50% $output       # Resize (with interpolation) or scale (without) to 50%
+convert -size 1920x1080 xc:white $output.pdf      # Create blank pdf page, with given resolution (size)
+convert -coalesce animation.gif $output           # Split an animated gif into its frames; `-coalesce` is required for more complex sources.
+convert -crop 3x3@ $input $prefix_%d.ext          # Simplest splitting of an image (3x3); see https://is.gd/cDPUxD
 ```
 
 Use coalesce, then, separately, resize, in order to resize an animated gif.
