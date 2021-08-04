@@ -1,3 +1,14 @@
+## Wed 04/Aug/2021
+
+- Admin/Other
+  - [x] Select and buy books
+- Admin/Tools
+  - [x] Programming journal manager: Add source file check; minor refactoring
+- Studies/Gamedev
+  - [x] Study Gosu for prototyping
+  - [x] Write a simple 1/2D scroller with Gosu
+    - [x] Fight GitHub patch formatting
+
 ## Tue 03/Aug/2021
 
 - Admin/Tools
