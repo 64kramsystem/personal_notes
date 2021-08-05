@@ -425,7 +425,7 @@ impl scene::Node for Sproinger {
 The state machine API is completely undocumented; these are the basic notions:
 
 ```rs
-let mut state_machine = StateMachine::new();
+let mut state_machine: <RefMut<Player>> = StateMachine::new();
 
 // Can add a state only if the SM is not in use.
 // The state constants must be usize.

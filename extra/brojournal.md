@@ -1,3 +1,20 @@
+## Thu 05/Aug/2021
+
+- Projects
+  - Fish Fight
+    - [x] Review and bisect control bug
+- Studies/Rust
+  - [ ] Programming Rust (2nd ed.)
+    - [ ] Chapter 06: Expressions
+- Admin/Tools
+  - [x] Follow up remote desktop issue investigation
+- Studies/Gamedev
+  - [x] First look at Tiled
+  - [ ] Port Code the Classics
+    - [ ] Implement state machine
+      - [ ] Fight MacroQuad's `StateMachine` API
+  - [x] Review state of Rust game engines
+
 ## Wed 04/Aug/2021
 
 - Admin/Other
@@ -8,6 +25,8 @@
   - [x] Study Gosu for prototyping
   - [x] Write a simple 1/2D scroller with Gosu
     - [x] Fight GitHub patch formatting
+  - [ ] Game Programming Algorithms and Techniques
+    - [ ] Chapter 03: Linear Algebra for Games
 
 ## Tue 03/Aug/2021
 
@@ -15,12 +34,12 @@
   - [x] Upgrade system Clang version
     - [x] Change the symlinks strategy
 - Studies/Rust
-  - Programming Rust (2nd ed.)
+  - [ ] Programming Rust (2nd ed.)
     - [x] Chapter 04: Ownership and moves (quick read)
     - [x] Chapter 05: References
   - [x] Investigate published Rust microbenchmark
 - Studies/Gamedev
-  - Game Programming Algorithms and Techniques
+  - [ ] Game Programming Algorithms and Techniques
     - [x] Chapter 02: 2D Graphics
   - [x] Check out Ruby game frameworks for prototyping
     - [x] Brief test Gosu
@@ -30,13 +49,14 @@
 ## Mon 02/Aug/2021
 
 - Studies/Rust
-  - Programming Rust (2nd ed.)
+  - [ ] Programming Rust (2nd ed.)
     - [x] Chapter 03: Fundamental types
     - [ ] Chapter 04: Ownership and moves
   - [x] Investigate published Rust microbenchmark
 - Studies/Gamedev
-  - Game Programming Algorithms and Techniques
+  - [ ] Game Programming Algorithms and Techniques
     - [x] Chapter 01: Game Programming Overview
+    - [ ] Chapter 02: 2D Graphics
   - Macroquad
     - [x] Further look at StateMachine
 - Projects
