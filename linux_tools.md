@@ -721,6 +721,8 @@ The `time` program is built-in in modern shells. For more userful functionality,
 /usr/bin/time -f ">>> WALLTIME:%e"
 ```
 
+If millisecond precision is required, use the [Bash built-in](bash.md#time-related-functionalities-incl-benchmarking).
+
 ## Mounting images
 
 Mount raw dumps:

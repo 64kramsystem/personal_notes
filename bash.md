@@ -38,7 +38,7 @@
     - [Check if there's data in stdin](#check-if-theres-data-in-stdin)
     - [Check if a script is `source`d](#check-if-a-script-is-sourced)
     - [Sudo-related tasks](#sudo-related-tasks)
-    - [Time-related functionalities](#time-related-functionalities)
+    - [Time-related functionalities (incl. benchmarking)](#time-related-functionalities-incl-benchmarking)
     - [Parse commandline options (`getopt`)](#parse-commandline-options-getopt)
     - [Poor man's configfile parser](#poor-mans-configfile-parser)
     - [`bash` command options](#bash-command-options)
@@ -1011,7 +1011,7 @@ if [[ $EUID -eq 0 ]]; then
 fi
 ```
 
-### Time-related functionalities
+### Time-related functionalities (incl. benchmarking)
 
 ```sh
 # Check time passed.
@@ -1019,6 +1019,18 @@ SECONDS=0; while [[ $SECONDS -lt 10 ]]; do sleep 1; done
 
 # Wait until next beginning of second
 sleep 0.$(printf '%04d' $((10000 - 10#$(date +%4N))))
+```
+
+When using `time`, must be careful to what is used (built-in vs. `/usr/bin/time`). The builtin has milliseconds accuracy, but setting it is d*cking confusing.  
+Technically, `time` is a Bash keyword (!). If a variable is set on the same command, instead of the keyword, `/usr/bin/time` is used:
+
+```sh
+# ok
+TIMEFORMAT='Result: %3R'
+time mycommand
+
+# NO!!!!
+TIMEFORMAT='Result: %3R' time mycommand
 ```
 
 ### Parse commandline options (`getopt`)
