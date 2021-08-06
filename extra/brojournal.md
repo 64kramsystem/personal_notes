@@ -1,8 +1,24 @@
+## Fri 06/Aug/2021
+
+- Projects
+  - [ ] Port Code the Classics
+    - [x] Configuation/tooling updates related to project launch configurations
+  - QEMU-pinning
+    - [x] Update patch to v6.1.0-rc2
+- Studies/Rust
+  - [ ] Programming Rust (2nd ed.)
+    - [x] Chapter 06: Expressions
+  - [ ] Experiment with Prechelt phone number Rust benchmark
+    - [x] Fight bash built-in time command
+
 ## Thu 05/Aug/2021
 
 - Projects
   - Fish Fight
     - [x] Review and bisect control bug
+  - [ ] Port Code the Classics
+    - [ ] Implement state machine
+      - [ ] Fight MacroQuad's `StateMachine` API
 - Studies/Rust
   - [ ] Programming Rust (2nd ed.)
     - [ ] Chapter 06: Expressions
@@ -10,9 +26,6 @@
   - [x] Follow up remote desktop issue investigation
 - Studies/Gamedev
   - [x] First look at Tiled
-  - [ ] Port Code the Classics
-    - [ ] Implement state machine
-      - [ ] Fight MacroQuad's `StateMachine` API
   - [x] Review state of Rust game engines
 
 ## Wed 04/Aug/2021
@@ -37,7 +50,7 @@
   - [ ] Programming Rust (2nd ed.)
     - [x] Chapter 04: Ownership and moves (quick read)
     - [x] Chapter 05: References
-  - [x] Investigate published Rust microbenchmark
+  - [x] Experiment with Prechelt phone number Rust benchmark
 - Studies/Gamedev
   - [ ] Game Programming Algorithms and Techniques
     - [x] Chapter 02: 2D Graphics

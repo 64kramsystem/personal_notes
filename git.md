@@ -460,18 +460,17 @@ git status -s | awk '{print $2}' | xargs -I {} scp {} myserver:mypath/{}
 Diff/Patching:
 
 ```sh
-# Patch with metadata retain (and commit)
+# Patch with metadata retain (and commit).
+# $end_commit defaults to HEAD.
+# Use `$commit~..$commit` to transfer a single commit.
+# One patch per commit is created.
 #
-# When specifying $start_commit/$end_commit, several patches will be created.
-#
-format-patch [--stdout] [$start_commit^[..$end_commit]]
+format-patch [--stdout] $start_commit~[..$end_commit]
 am $patchfile
 
 # "Transfer" one or more commits between two repositories.
-# Use `$commit~..$commit` to transfer a single commit.
-# $start_commit/$end_commit default to respectively HEAD~/HEAD.
 #
-git -C ~/code/riscv_images format-patch --stdout [$start_commit[..$end_commit]] |
+git -C ~/code/riscv_images format-patch --stdout $start_commit[..$end_commit] |
   sed 's| [ab]/ruby||g' |
   git am
 

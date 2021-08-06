@@ -559,7 +559,7 @@ impl Into<i32> for GamePiece {
 ```rust
 x / y                           // nearest int (-3 / 2 == -1) -> different from Ruby
 val += 1; val -= 1;             // increment/decrement value (no postfix)
-val <<= n; val >>= n;           // overflows are ignored
+val <<= n; val >>= n;           // unsigned is zero-extending, signed sign-extending; overflows are ignored
 
 10_f64.clamp(-100., 100.)       // clamp a number (limit value within interval); floats only
 10_u64.pow(2);                  // exponentiation (power), int/int
@@ -1193,21 +1193,22 @@ for i in &mut collection { *i *= 2 }
 While:
 
 ```rust
-while n > 0 {
-  n -= 1;
+// Using labels (lifetime) to break at outer positions:
+'external:
+while x > 0 {
+    while y > 1 {
+        break 'external;
+    }
 };
 ```
 
-Loop (infinite):
+Loops, to use instead of `while true` (because it's subject to flow-sensitive analysis) :
 
 ```rust
-// The `external` lifetime is an (optional) example.
-//
-'external
-loop {
-  if true {
-    break 'external;    // can return a value
-  }
+let val = loop {
+    if true {
+        break "foo";    // loops can return a value! (labels go between break and the expr)
+    }
 };
 ```
 

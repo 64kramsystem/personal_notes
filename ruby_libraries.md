@@ -833,26 +833,7 @@ end
 
 ### Ping (ICMP)
 
-`net/ping` has been removed from the stdlib anymore. Either use a simple TCP connection, or the `ping` unix tool, or:
-
-```rb
-require 'socket'
-
-class Ping
-  # True if ok, false if error
-  def self.pingecho(host, timeout: 5, service: "echo")
-    Timeout.timeout(timeout) do
-      s = TCPSocket.new(host, service)
-      s.close
-      true
-    rescue Errno::ECONNREFUSED
-      true
-    rescue Timeout::Error, StandardError
-      false
-    end
-  end
-end
-```
+`net/ping` has been removed from the stdlib anymore. Must use a gem or the `ping` unix tool, since the solution proposed on [StackOverflow](https://stackoverflow.com/a/7520485) has inconsistent results.
 
 ## Databases
 
