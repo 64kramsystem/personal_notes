@@ -1,3 +1,9 @@
+## Sat 07/Aug/2021
+
+- Studies/Rust
+  - [ ] Programming Rust (2nd ed.)
+    - [ ] Chapter 07: Error Handling
+
 ## Fri 06/Aug/2021
 
 - Projects
