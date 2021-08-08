@@ -1,3 +1,11 @@
+## Sun 08/Aug/2021
+
+- Studies/Rust
+  - [x] Enum numerical casts
+  - [ ] Optimization problem
+    - [x] First review of the problem
+    - [x] First review of the int data types and crates
+
 ## Sat 07/Aug/2021
 
 - Studies/Rust
