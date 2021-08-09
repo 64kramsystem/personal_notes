@@ -121,6 +121,7 @@ Snippets:
 ```sh
 chmod -R go-rx .ssh                         # setup SSH permissions
 chage -d $(date +%Y-%m-%d) $user            # set the change date to today!
+chage -d $(date +%Y-%m-%d -d '3 months') $user # set the change date to 3 months from now
 chage -I 0 $user                            # expire password
 ```
 

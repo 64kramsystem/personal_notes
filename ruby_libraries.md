@@ -302,7 +302,8 @@ row.to_hash.merge(row) { |_, value| value.to_s }          # Simple way to conver
 ### JSON
 
 ```ruby
-JSON.parse(string)                                        # Returns the tree; the root object class depends on the input (eg. Array, Hash, ...)
+JSON.parse(string)                                        # Returns the tree (as Ruby objects); the root object class depends on the input (eg. Array, Hash, ...)
+JSON.parse(string, object_class: OpenStruct)              # Parse into OpenStruct; very convenient.
 string = JSON.generate(input)                             # `input` can be a hash
 string = JSON.pretty_generate(input)
 ```

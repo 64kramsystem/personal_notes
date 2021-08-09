@@ -1,3 +1,62 @@
+## Mon 09/Aug/2021
+
+- Admin/tools
+  - [ ] Remote desktop issue
+    - [x] Try suggestion
+  - [x] Write script to dump browser question bookmarks to CSV
+  - [x] Add personal links to github profile
+- Studies/Rust
+  - [ ] Programming Rust (2nd ed.)
+    - [x] Chapter 07: Error Handling
+    - [x] Chapter 08: Crates and Modules
+  - [x] Optimization problem
+    - [x] Read all articles
+      - https://renato.athaydes.com/posts/revisiting-prechelt-paper-comparing-languages.html
+      - https://renato.athaydes.com/posts/how-to-write-slow-rust-code.html
+      - https://renato.athaydes.com/posts/how-to-write-slow-rust-code-part-2.html
+- Projects
+  - [ ] Port Code the Classics
+    - [x] Investigate Cavern music starting late
+    - Engines (Rust)
+      - [x] Review Z-ordering/other engines
+      - [x] Review MacroQuad high-CPU issue and open bug
+    - Engines (Ruby; all abandoned and broken)
+      - [Metro](https://github.com/burtlo/metro)
+      - [Chipmunk](https://github.com/chipmunk-rb/chipmunk): Physics engine
+      - [Chingu](https://github.com/ippa/chingu)
+      - [Rubygame](https://github.com/rubygame/rubygame)
+      - [Gamebox](https://github.com/shawn42/gamebox): Simple Gosu wrapper
+
+## Cycle changes
+
+- Swapped
+  - Projects
+    - Fish fight <> Port Code the Classics (last days)
+- Unscheduled
+  - Projects
+    - QEMU-pinning
+      - Update patch to v6.1
+    - ZFS
+      - User issue discussion
+      - Request: Add DNS ping test at the beginning
+    - Awesome Rust
+      - Rebase/Update RG3D game engine addition
+  - Studies
+    - Gamedev
+      - Check out CS50's Introduction to Game Development content
+      - Game Programming Algorithms and Techniques
+      - Review Ruby 2D libraries
+      - Study Gosu
+    - Linux: Review disk SMART values
+    - Ruby: Find out how to speedup gems installation
+    - Blog: Article: Speeding up Ruby gems compilation (installation)
+    - Rust
+      - Programming Rust (2nd ed.)
+      - Optimization problem
+  - Admin
+    - Tools: Programming journal manager: Add source file check; minor refactoring
+    - Tools: Remote desktop issue investigation
+
 ## Sun 08/Aug/2021
 
 - Studies/Rust

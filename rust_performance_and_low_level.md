@@ -9,6 +9,7 @@
     - [std::num::NonZero*](#stdnumnonzero)
     - [(LLVM) Intrinsics/ASM APIs](#llvm-intrinsicsasm-apis)
     - [Embedded/OS development](#embeddedos-development)
+    - [Count allocations](#count-allocations)
   - [Internal](#internal)
     - [Memory layout](#memory-layout)
     - [References](#references)
@@ -233,6 +234,25 @@ pub extern "C" fn _start() -> ! {
         unsafe { asm!("hlt"); }
     }
 }
+```
+
+### Count allocations
+
+Use the [`alloc-counter`](https://gitlab.com/sio4/code/alloc-counter) crate:
+
+```rs
+use alloc_counter::{count_alloc, AllocCounterSystem};
+#[global_allocator]
+static A: AllocCounterSystem = AllocCounterSystem;
+
+let (counts, v) = count_alloc(|| {
+    let mut v = Vec::new(); // no alloc
+    v.push(0);              // alloc
+    v.push(1);              // realloc
+    v                       // return the vector without deallocating
+});
+
+assert_eq!(counts, (1, 1, 0));
 ```
 
 ## Internal
