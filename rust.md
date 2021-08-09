@@ -6,6 +6,7 @@
     - [Toolchain](#toolchain)
     - [Fast builds](#fast-builds)
     - [Cross-compilation](#cross-compilation)
+    - [Cargo doc](#cargo-doc)
   - [Rustfmt](#rustfmt)
   - [Syntax/basics](#syntaxbasics)
     - [Basic structure/Printing/Input](#basic-structureprintinginput)
@@ -32,7 +33,9 @@
     - [Sorting](#sorting)
       - [Sorting floats](#sorting-floats)
     - [Enums](#enums)
-    - [Option<T>/Result<T, E>](#optiontresultt-e)
+    - [Option](#option)
+    - [Result/Error](#resulterror)
+    - [Common Option/Result](#common-optionresult)
     - [Pattern matching](#pattern-matching)
       - [Error handling](#error-handling)
     - [Structs](#structs)
@@ -80,8 +83,8 @@
     - [Unions](#unions)
     - [Assorted insanity](#assorted-insanity)
   - [Packaging](#packaging)
-    - [Project structure](#project-structure)
-    - [Modules](#modules)
+    - [Project structure (with modules)](#project-structure-with-modules)
+    - [Modules (details)](#modules-details)
   - [Traits](#traits-1)
     - [Default](#default)
     - [Copy, Clone, Drop and their relationships](#copy-clone-drop-and-their-relationships)
@@ -235,6 +238,10 @@ target = "riscv64gc-unknown-linux-gnu"
 linker = "riscv64-unknown-linux-gnu-gcc"
 TOML
 ```
+
+### Cargo doc
+
+See Programming Rust, chapter 8.
 
 ## Rustfmt
 
@@ -1336,7 +1343,7 @@ enum IpAddr {
 }
 
 // Enums can be associated to values.
-// `repr(u8)` forces the compiler to use 8-bits for each variant.
+// `repr(u8)` forces the compiler to use 8-bits for each variant, but it's not necessary for assigning values.
 //
 #[repr(u8)]
 enum Color {
@@ -1362,11 +1369,9 @@ fn route(ip_kind: IpAddrKind) { }
 
 Enums can't be iterated. See `strum` crate for this purpose.
 
-### Option<T>/Result<T, E>
+### Option
 
 Foundation of Rust. In order to use the contained value, we must extract (and test) it.
-
-Many of the methods are common between `Option` and `Result`.
 
 WATCH OUT! unwrap() moves the value out, so trying to do `&mut opt.unwrap()` doesn't work, because it's a reference to the result, rather than the content.  
 In order to solve this case, use `if let` or `as_ref()`/`as_mut()`.
@@ -1381,26 +1386,6 @@ enum Option<T> {
 //
 let some_number = Some(5);
 let absent_number: Option<i32> = None;
-
-
-// !!!!!! WATCH OUT! The Result error enum is `Err`, not `Error` !!!!!!
-
-// Question mark ('?') operator: convenient syntax for returning None/Err from the function, if it's the value of an Option/Result.
-// If the Error type is different and From<T> is implemented, it's invoked.
-//
-fn mine() -> Result<String, io::Error> {
-  let value = errorable_operation()?;
-  result = process(value);
-  Ok(result)
-}
-//
-// Desugared version.
-//
-let result = match Try::into_result(expression) {
-    Ok(v) => v,
-    Err(e) => return Try::from_error(From::from(e)),
-};
-
 
 // Convenient pattern. Companion APIs:
 //
@@ -1422,15 +1407,6 @@ opt.and(value).and_then(|| slow_function());
 let value = opt.expect("it shouldn't be None!");
 let &mut value = opt.as_mut().expect("it shouldn't be None!");
 
-// Convert Result to Option, and discard the error (use this if it's sure that there can't be an error)
-//
-result.ok();
-
-// Convert Option to Result.
-//
-option.ok_or("error!");
-option.ok_or_else(|| slow_function() );
-
 // take(): extract a value and replace with None (no errors raised if invoked on None).
 // This is useful when we want to move out an instance that doesn't implement Copy.
 //
@@ -1449,14 +1425,107 @@ let old = x.replace(5);
 let (with, without) = (Some(2), None::<i32>);
 with.map(|n| 2 * n); // Some(4)
 without.map(|n| 2 * n); // None
-
-// Mappings borrowed <> owned
-//
-Some(12).as_ref()
-Some(&12).cloned()
 ```
 
-See [pattern matching](#pattern-matching).
+### Result/Error
+
+Result:
+
+```rs
+// !!!!!! WATCH OUT! The Result error enum is `Err`, not `Error` !!!!!!
+
+// Return the (Option<>) source that caused the error, when there has been a chain.
+err.source();
+
+// Pattern for ignoring an error, useful in some cases
+//
+let _ = writeln!(stderr(), "error: {}", err);
+
+// Question mark ('?') operator: convenient syntax for returning None/Err from the function, if it's the value of an Option/Result.
+// If the Error type is different and From<T> is implemented, it's invoked.
+//
+fn mine() -> Result<String, io::Error> {
+  let value = errorable_operation()?;
+  result = process(value);
+  Ok(result)
+}
+//
+// Desugared version.
+//
+let result = match Try::into_result(expression) {
+    Ok(v) => v,
+    Err(e) => return Try::from_error(From::from(e)),
+};
+
+// Match only a certain error!
+//
+match compile_project() {
+    Ok(()) => return Ok(()),
+    Err(err) => {
+      if let Some(mse) = err.downcast_ref::<MissingSemicolonError>() {
+       // ...
+    }
+    return Err(err);
+}
+
+// Catch-all version of Error; aliased for convenience.
+//
+type GenericError = Box<dyn std::error::Error + Send + Sync + 'static>;
+type GenericResult<T> = Result<T, GenericError>;
+```
+
+Error:
+
+```rs
+// Conversion between error types
+//
+// Manual:
+//
+Err(GenericError::from(another_error))
+//
+// via From/Into:
+//
+impl From<bincode::Error> for BlobError {
+    fn from(e: bincode::Error) -> Self {
+        Self::Bincode(e)
+    }
+}
+
+// Error type definition:
+//
+#[derive(Debug, Clone)]
+pub struct JsonError {
+    pub message: String,
+    pub line: usize,
+}
+impl fmt::Display for JsonError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
+        write!(f, "{}:{}", self.message, self.line)
+    }
+}
+impl std::error::Error for JsonError { }
+```
+
+### Common Option/Result
+
+Many of the methods are common between `Option` and `Result`.
+
+```rs
+// Convert Result to Option, and discard the error (use this if it's sure that there can't be an error)
+//
+result.ok();
+
+// Convert Option to Result.
+//
+option.ok_or("error!");
+option.ok_or_else(|| slow_function() );
+
+// Mappings borrowed <> owned.
+// Result also supports as_ref()/as_mut().
+//
+instance.as_ref()
+instance.as_mut()
+```
 
 ### Pattern matching
 
@@ -1571,8 +1640,9 @@ let mut user = User {
 user.active = true
 
 // Destructuring a struct (!!)
-let User {username: a, active: b, ..} = user;
+let User {username: mut a, active: b, ..} = user;
 println!("a:{}, b:{}", a, b); // "a:sav, b:false"
+a = 123;
 
 // Hardcore destructuring
 let ((feet, inches), Point {x, y}) = ((3, 10), Point { x: 3, y: -10 });
@@ -3314,7 +3384,7 @@ A proposal for ["unnamed" fields](https://rust-lang.github.io/rfcs/2102-unnamed-
 
 ## Packaging
 
-### Project structure
+### Project structure (with modules)
 
 A package (=set of 1+ crates) can contain at most one library crate.
 
@@ -3323,9 +3393,11 @@ Crate "roots":
 - `src/main.rs` -> binary crate (same name as package)
 - `src/lib.rs` -> library crate (same name as package)
 
-Multiple crates can be put in `src/bin`:
+An option to put small binary crates inside a crate is to puth them in `src/bin`:
 
 - `src/bin/mycrate.rs` -> binary crate (named `mycrate`)
+
+this doesn't require addition to `Cargo.toml`; it's included in the `build`; in order to run, add `--bin mycrate`.
 
 Alternative configuration for multiple crates, via `Cargo.toml`:
 
@@ -3339,7 +3411,26 @@ path = "src/daemon/bin/main.rs"
 
 The relative (to the project root) source file path can be found via `file!()`.
 
-### Modules
+Modules structure (comments are content):
+
+```
+crate_name
+├── Cargo.toml
+└── src
+    ├── main.rs              // pub mod mod1; pub mod mod2
+    ├── main_a.rs
+    ├── mod1
+    │   ├── mod.rs           // pub mod mod1_a; pub mod mod1_b
+    │   ├── mod1_a.rs
+    │   └── mod1_b.rs
+    ├── mod2
+    │   ├── mod2_a.rs
+    └── mod2.rs              // pub mod mod2_a
+```
+
+`mod2` has an alternative structure (modules defined in a corresponding `.rs` file).
+
+### Modules (details)
 
 All items (including modules) and their children are private by default, but:
 
@@ -3372,6 +3463,12 @@ Modifiers (prefixes):
 - `crate`: absolute path
 - `super`: parent module (like current directory)
 - `self`
+
+Security levels:
+
+- `pub`, private, `pub(crate)`
+- `pub(super)`: visible to parents only
+- `pub in <crate>`: visible to to a specific parent module and descendants
 
 Multiple files/directories structure:
 
@@ -3406,6 +3503,10 @@ use std::io; // and reference `io::Result`
 // meaningful for the clients.
 //
 pub use crate::front_of_the_house::hosting;
+
+// Disambiguate; this refers to a `image` crate
+//
+use ::image::Pixels;
 
 // Other use syntaxes
 //

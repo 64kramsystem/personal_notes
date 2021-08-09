@@ -40,7 +40,7 @@
     - [Convenience macros for operator overloading (`auto_ops`)](#convenience-macros-for-operator-overloading-auto_ops)
     - [Indented Heredoc-like strings (`indoc`)](#indented-heredoc-like-strings-indoc)
     - [User directories (`directories`)](#user-directories-directories)
-    - [Convient Error types handling (`failure`)](#convient-error-types-handling-failure)
+    - [Error conveniences (`failure`, `thiserror`)](#error-conveniences-failure-thiserror)
     - [De/serialization](#deserialization)
       - [`serde`/`bincode`](#serdebincode)
       - [Guaranteed endianness storage (`byteorder`)](#guaranteed-endianness-storage-byteorder)
@@ -1204,9 +1204,11 @@ UserDirs::new().home_dir();
 UserDirs::new().desktop_dir();
 ```
 
-### Convient Error types handling (`failure`)
+### Error conveniences (`failure`, `thiserror`)
 
 ```rust
+// Convient Error types handling:
+
 use failure_derive::*;
 
 #[derive(Fail, Debug)]
@@ -1219,12 +1221,16 @@ pub enum BlobError {
     Bincode(bincode::Error),
 }
 
-// Add a variant, and implement From, for each new error type to convert.
-//
-impl From<bincode::Error> for BlobError {
-    fn from(e: bincode::Error) -> Self {
-        Self::Bincode(e)
-    }
+// Easy error messages definition:
+
+use thiserror::Error;
+
+#[derive(Error, Debug)]
+#[error("{message:} ({line:}, {column})")]
+pub struct JsonError {
+    message: String,
+    line: usize,
+    column: usize,
 }
 ```
 
