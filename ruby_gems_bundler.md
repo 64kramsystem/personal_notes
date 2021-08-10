@@ -1,6 +1,6 @@
-# Ruby Gem/Bundler
+# RubyGems/Bundler
 
-- [Ruby Gem/Bundler](#ruby-gembundler)
+- [RubyGems/Bundler](#rubygemsbundler)
   - [Bundler](#bundler)
     - [Gemfile](#gemfile)
     - [Cache directory](#cache-directory)
