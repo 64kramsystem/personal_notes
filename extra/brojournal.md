@@ -1,3 +1,13 @@
+## Tue 10/Aug/2021
+
+- Rust/Gamedev
+  - [x] Discuss z-ordering in Rust engines
+  - [x] Review Tetra/Legion integration
+    - [x] Make an "EC" version
+  - [x] Read Legion/Specs ECS performance article: https://csherratt.github.io/blog/posts/specs-and-legion
+  - [ ] Study Tetra
+    - [x] Pong
+
 ## Mon 09/Aug/2021
 
 - Admin/tools
