@@ -149,4 +149,8 @@ gem push $gemname-*.gem       # Publish a built gem
 # `-s` appends a source; --clear-sources clears the preceding sources
 #
 gem fetch [--clear-sources -s $source] $gem1 {$gem2...}
+#
+# If a source requires authentication, use this format:
+#
+gem fetch --clear-sources -s "https://$user:$password@repo.com" gemname
 ```

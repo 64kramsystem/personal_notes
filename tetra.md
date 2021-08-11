@@ -4,6 +4,9 @@
   - [Hello world](#hello-world)
   - [Drawing](#drawing)
     - [Textures](#textures)
+      - [Animations](#animations)
+      - [Nineslice](#nineslice)
+    - [Text](#text)
     - [Misc](#misc)
   - [Input](#input)
   - [Window](#window)
@@ -38,7 +41,7 @@ impl State for GameState {
 
     fn draw(&mut self, ctx: &mut Context) -> tetra::Result {
         graphics::clear(ctx, Color::rgb(0.3, 0.5, 0.9));
-        self.paddle_texture.draw(ctx, self.paddle_position); // Vec2 -> Into<DrawParams>
+        self.paddle_texture.draw(ctx, self.paddle_position);
     }
 }
 
@@ -52,11 +55,59 @@ fn main() -> tetra::Result {
 
 ## Drawing
 
+`Vec2` implementes `Into<DrawParams>`, so it can be used in place of it.
+
+All the draw-related invocations are implied to be in the `draw()` function.
+
 ### Textures
 
 ```rs
 let texture = Texture::new(ctx, PADDLE_IMAGE_PATH)?;
+
 texture.width(), texture.height();
+
+texture.draw(
+    ctx,
+    DrawParams::new()
+        .position(Vec2::new(32., 32.))
+        .origin(Vec2::new(8., 8.))
+        .scale(Vec2::new(2., 2.))
+        .color(COLOR)
+        .rotation(0.5)
+);
+```
+
+#### Animations
+
+```rs
+Animation::new(
+    texture, // owns the texture!
+    Rectangle::row(x, y, width, height).take(frames).collect(),
+    Duration::from_secs_f32(0.1),
+),
+
+animation.advance(ctx); // Inside draw()
+animation.draw(ctx, DrawParams::new());
+```
+
+#### Nineslice
+
+Seems it has limited support, only stretching:
+
+```rs
+// the rectangle is the full image size
+NineSlice::with_border(Rectangle::new(0.0, 0.0, 32.0, 32.0), 4.0);
+
+texture.draw_nine_slice(ctx, &nineslice, 640.0, 480.0, DrawParams::new());
+```
+
+### Text
+
+```rs
+let vector_text = Text::new("TTF font", Font::vector(ctx, TTF_FILENAME, size)?);
+let bitmap_text = Text::new("FNT font", Font::bmfont(ctx, FNT_FILENAME)?);
+
+text.draw(ctx, DrawParams::new()); // or Vec2
 ```
 
 ### Misc

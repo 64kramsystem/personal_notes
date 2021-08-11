@@ -1,3 +1,9 @@
+## Wed 11/Aug/2021
+
+- Rust/Gamedev
+  - [ ] Study Tetra
+    - [ ] Study [examples](https://tetra.seventeencups.net/examples)
+
 ## Tue 10/Aug/2021
 
 - Rust/Gamedev
@@ -7,6 +13,10 @@
   - [x] Read Legion/Specs ECS performance article: https://csherratt.github.io/blog/posts/specs-and-legion
   - [ ] Study Tetra
     - [x] Pong
+- Projects
+  - [ ] Port Code the Classics
+    - [ ] Port Infinite Bunner
+      - [ ] Read chapter and code
 
 ## Mon 09/Aug/2021
 
