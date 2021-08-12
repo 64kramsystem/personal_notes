@@ -3,6 +3,7 @@
 - [Linux Systemd](#linux-systemd)
   - [Generic commands and notes](#generic-commands-and-notes)
   - [Systemctl](#systemctl)
+    - [Per-user](#per-user)
   - [journalctl](#journalctl)
   - [Configuring a service unit](#configuring-a-service-unit)
     - [Overrides](#overrides)
@@ -53,6 +54,14 @@ WATCH OUT! Even if a service is disabled, if other enabled services depend on it
 systemctl list-dependencies --reverse snapd.socket
 # ... now disable the dependencies ...
 ```
+
+### Per-user
+
+Systemd can be configured on a per-user basis, using the `--user` option (see for example, the above `--list-timers`).
+
+The unit is created under `$HOME/.config/systemd/user`.
+
+IMPORTANT! "Lingering" must be enabled (`loginctl enable-linger`), otherwise, on user logoff, the services are terminated.
 
 ## journalctl
 
