@@ -1,8 +1,18 @@
+## Thu 12/Aug/2021
+
+- Rust
+  - [ ] Programming Rust (2nd ed.)
+    - [ ] Chapter 09: Structs
+
 ## Wed 11/Aug/2021
 
 - Rust/Gamedev
   - [ ] Study Tetra
     - [ ] Study [examples](https://tetra.seventeencups.net/examples)
+- Projects
+  - [ ] Port Code the Classics
+    - [ ] Port Infinite Bunner
+      - [ ] Read chapter and code
 
 ## Tue 10/Aug/2021
 
