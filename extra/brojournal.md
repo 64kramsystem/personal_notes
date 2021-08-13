@@ -1,3 +1,22 @@
+## Fri 13/Aug/2021
+
+- Projects
+  - capistrano-sidekiq
+    - [x] Investigate and open issue with the systemd unit
+  - Fish Fight
+    - [x] Review and discuss fmt/clippy PR, and investigate warning details
+- Rust/Gamedev
+  - Bevy
+    - [x] Review FixedTimeStep source code
+- Admin
+  - Github account+blog move
+    - [x] Gather general information on renaming account
+    - [x] Plan
+- Rust
+  - [ ] Programming Rust (2nd ed.)
+    - [x] Chapter 09: Structs
+    - [x] Chapter 10: Enums and Patterns
+
 ## Thu 12/Aug/2021
 
 - Rust

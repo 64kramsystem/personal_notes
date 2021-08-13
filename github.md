@@ -4,6 +4,7 @@
   - [Ruby CI action](#ruby-ci-action)
     - [Caching](#caching)
     - [Minimal example](#minimal-example)
+  - [Rust CI action](#rust-ci-action)
 
 ## Ruby CI action
 
@@ -105,4 +106,32 @@ jobs:
     - uses: actions/checkout@v2
     - name: Run shellcheck
       run: ci/run_shellcheck.sh
+```
+
+## Rust CI action
+
+Format/Clippy checks:
+
+```yml
+jobs:
+  fmt:
+    runs-on: ubuntu-latest
+    name: Formatting
+    steps:
+      - uses: actions/checkout@v2
+      - name: Check Rust formatting
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --all -- --check
+  # To improve: cache installation
+  clippy:
+    runs-on: ubuntu-latest
+    name: Linting
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Clippy
+        run: rustup component add clippy
+      - name: Run Clippy
+        run: cargo clippy
 ```

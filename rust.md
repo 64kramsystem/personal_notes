@@ -60,7 +60,7 @@
     - [Smart pointers](#smart-pointers)
       - [Box<T>](#boxt)
       - [RC<T>](#rct)
-      - [RefCell<T>/Mutex<T> and interior mutability](#refcelltmutext-and-interior-mutability)
+      - [Cell<T>/RefCell<T>/Mutex<T> and interior mutability](#celltrefcelltmutext-and-interior-mutability)
       - [Modifying Rc/Arc without inner mutable types (and conversion Box -> RC type)](#modifying-rcarc-without-inner-mutable-types-and-conversion-box---rc-type)
       - [Weak<T> and reference cycles](#weakt-and-reference-cycles)
         - [`Rc<RefCell>` or `RefCell<Rc>`](#rcrefcell-or-refcellrc)
@@ -1572,7 +1572,7 @@ match (2, 4, 8, 16, 32) {
 
 // Match (unpack) slices/arrays
 
-if let [r, g, b] = &raw_pixels[..] { /* .. */ } else { panic!() }
+if let [r, g, b] = &raw_pixels[..] { /* ... */ } else { panic!() }
 
 // Match Option<T>
 //
@@ -1607,7 +1607,7 @@ match point {
 
 // Match an enum inside a struct (!!!):
 //
-if let Event::Window { win_event: WindowEvent::SizeChanged(new_width, new_height), .. } = event { /* .. */ }
+if let Event::Window { win_event: WindowEvent::SizeChanged(new_width, new_height), .. } = event { /* ... */ }
 ```
 
 #### Error handling
@@ -1673,6 +1673,7 @@ fn create_user(email: String) -> User {
 }
 
 // "Struct update" syntax to copy part of another instance.
+// The field assigned before `..` are not taken from the instance after.
 let mut user2 = User {
   active: false,
   ..user
@@ -1685,7 +1686,7 @@ In methods, the `self` reference can be also a smart pointer:
 
 ```rust
 struct MyStruct {
-  fn my_method(self: Arc<Self>, param: u32) { /* .. */ }
+  fn my_method(self: Arc<Self>, param: u32) { /* ... */ }
 }
 arc_ref = Arc::new(MyStruct {});
 arc_ref.my_method(123);
@@ -2502,11 +2503,13 @@ let a = Rc::new(Parent(Rc::new(Parent(Rc::new(Nil)))));
 println!("Count: {}", Rc::strong_count(&a)); // 1
 ```
 
-#### RefCell<T>/Mutex<T> and interior mutability
+#### Cell<T>/RefCell<T>/Mutex<T> and interior mutability
 
 `RefCell<T>` allows mutating the contained value, even if the variable itself is immutable, therefore bypassing the compiler; generally speaking, it allows multiple owners while retaining mutability. The rules are enforced at runtime though, so this has an overhead.
 
 `RefCell` is not `Sync`; in multithreaded context, `Mutex`/`RwLock` must be used instead.
+
+`Cell` is like `RefCell`, but works only on `Copy` types, as it copies instead of borrowing.
 
 ```rust
 enum Node {
@@ -2525,6 +2528,7 @@ let _b = Parent(Rc::new(RefCell::new(2)), Rc::clone(&a));
 let _c = Parent(Rc::new(RefCell::new(3)), Rc::clone(&a));
 
 *value.borrow_mut() += 10;
+value2.try_borrow_mut()?.value = 10; // try version
 ```
 
 #### Modifying Rc/Arc without inner mutable types (and conversion Box -> RC type)

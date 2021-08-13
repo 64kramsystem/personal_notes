@@ -261,6 +261,8 @@ assert_eq!(counts, (1, 1, 0));
 
 Structs without fields are "Zero-sized types" (ZST), and don't take any space in the resulting program.
 
+There are no guarantees about the struct underlying memory layout (unless `#[repr(C)]` is used), except that the fields are stored in the struct memory block.
+
 ### References
 
 Reference:
