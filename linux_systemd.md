@@ -28,9 +28,11 @@ systemctl reload $service             # reload; not always functional
 systemctl reload-or-restart $service  # if reload is not defined (or has no effect), restart; WATCH OUT! don't define `ExecReload`
 systemctl status $service
 systemctl cat $service                # print unit file
-systemctl edit --full $service        # create/edit unit file (--full: edit the service, instead of creating an override)
+systemctl edit --full $service        # edit unit file (--full: edit the service, instead of creating an override)
+                                      # in order to create, add `--force`
                                       # in order to programmatically edit, workaround by setting `SYSTEMD_EDITOR=tee [-a]` and piping the content.
 systemctl mask $service               # "mask": disable a service, by symlinking it to /dev/null; WATCH OUT! doesn't fail if the service doesn't exis
+# it seems that deletion must be performed manually
 
 systemctl daemon-reload               # invoke this after updating a unit
 systemctl daemon-reexec               # required to reload Sytemd's own configuration (e.g. changes to `/etc/systemd/system.conf`)
@@ -57,9 +59,7 @@ systemctl list-dependencies --reverse snapd.socket
 
 ### Per-user
 
-Systemd can be configured on a per-user basis, using the `--user` option (see for example, the above `--list-timers`).
-
-The unit is created under `$HOME/.config/systemd/user`.
+Systemd can be configured on a per-user basis, using the `--user` option (see for example, the above `--list-timers`). User units are stored under `$HOME/.config/systemd/user`
 
 IMPORTANT! "Lingering" must be enabled (`loginctl enable-linger`), otherwise, on user logoff, the services are terminated.
 
@@ -123,7 +123,8 @@ After=network.target
 #
 Type=simple
 
-# Convenient.
+# Outputs are overwritten, unless the `append` file mode is used (e.g. `append:/path/to/my-service.log`);
+# this is available from v240, though (Bionic provides v237).
 #
 StandardOutput=syslog
 StandardError=syslog
