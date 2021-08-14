@@ -1,3 +1,12 @@
+## Sat 14/Aug/2021
+
+- Projects
+  - Fish Fight
+    - [x] Review and discuss clippy PR
+- Rust
+  - [ ] Programming Rust (2nd ed.)
+    - [x] Chapter 11: Traits and Generics
+
 ## Fri 13/Aug/2021
 
 - Projects
