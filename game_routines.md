@@ -2,6 +2,7 @@
 - [Game routines](#game-routines)
   - [Notes](#notes)
   - [Bidimensional scrolling](#bidimensional-scrolling)
+  - [Player Animations/Acceleration](#player-animationsacceleration)
 
 ## Notes
 
@@ -78,5 +79,47 @@ def draw_background
   self.tiles.dig(self.reference_tile_row, self.reference_tile_col + 1)&.draw(self.reference_tile_x + SCREEN_WIDTH, self.reference_tile_y, 0)
   self.tiles.dig(self.reference_tile_row + 1, self.reference_tile_col)&.draw(self.reference_tile_x, self.reference_tile_y + SCREEN_HEIGHT, 0)
   self.tiles.dig(self.reference_tile_row + 1, self.reference_tile_col + 1)&.draw(self.reference_tile_x + SCREEN_WIDTH, self.reference_tile_y + SCREEN_HEIGHT, 0)
+end
+```
+
+## Player Animations/Acceleration
+
+Assumes a Tetra-like animation class
+
+```rb
+attr_accessor :velocity
+attr_accessor :state      # IDLE/RUNNING
+attr_accessor :animations # {state => animation}
+
+# Change only if different, and if so, restart!
+def set_state(state)
+  if self.state != state
+    self.state = state
+    self.animations[self.state].restart
+  end
+end
+
+def update
+  if button_down?(KB_A)
+    self.velocity = (self.velocity.x - 0.5).clamp(-5.0, -0.5)
+  elsif ... # opposite for the other direction
+  else
+    # decrease the velocity of a max between ±0.5, and the velocity itself
+    self.velocity.x -= self.velocity.clamp(-0.5, 0.5)
+  end
+
+  # ... handle pos
+
+  if self.velocity.x != 0.0 {
+    self.animations[self.state].set_state(RUNNING)
+  else {
+    self.animations[self.state].set_state(IDLE)
+  end
+end
+
+def draw
+  self.animations[self.state].advance
+  self.animations[self.state].draw
+  # ...
 end
 ```
