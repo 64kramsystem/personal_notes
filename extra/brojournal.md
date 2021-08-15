@@ -1,3 +1,27 @@
+## Cycle changes
+
+Half-length cycle.
+
+- Unscheduled
+  - Rust/Gamedev: Yet another review at game engines, after MQ shortcomings
+  - Admin: Github account+blog move
+  - Projects: `capistrano-sidekiq` issue report
+
+## Sun 15/Aug/2021
+
+- Admin
+  - System
+    - [x] Change hosting provider
+    - [x] Rename Github account, and update projects (blog/zfs-installer)
+  - Tools
+    - Remote desktop issue
+      - [x] Send logs
+- Rust/Gamedev
+  - [x] Study Tetra
+    - [x] Study [examples](https://tetra.seventeencups.net/examples)
+  - [ ] Study Macroquad platformer libraries
+    - [x] First look at crates (source)
+
 ## Sat 14/Aug/2021
 
 - Projects

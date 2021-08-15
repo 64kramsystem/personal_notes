@@ -951,7 +951,7 @@ In order to pick a random element, see [rand crate](#random-with-and-without-ran
 
 ### Hash maps
 
-The default hashing function is cryptographically secure!!. For faster versions, must use a crate (common one: `fxhash`). For a version that can be used as `const`, see [`phf`](rust_ruby_libraries.md#)
+The default hashing function is cryptographically secure!!, and slow(er). See (rust_ruby_libraries.md#faster-hashing-ahash-phf).
 
 WATCH OUT! In order to avoid BCK headaches when getting and setting in the same scope/function, use the [Entry API](https://stackoverflow.com/a/28512504/210029) (see below).
 
@@ -988,9 +988,11 @@ for triangle in triangles {
 // WATCH OUT!: Getters take and return references.
 //
 // There's no function for getting with a default, but `[cloned()].unwrap_or()` works well.
+// There's also no unchecked mutable (see https://stackoverflow.com/a/30414450).
 //
-map["b"];
-map.get("a");                   // Option
+map["b"];                       // Immutable, unchecked
+map.get("a");                   // Immutable, checked
+map.get_mut("a");               // Mutable, checkd
 
 // Invalid! Once a key is inserted, it's owned by the hash map!
 //

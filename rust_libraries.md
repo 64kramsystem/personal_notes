@@ -27,8 +27,8 @@
     - [Date/times (`chrono`)](#datetimes-chrono)
     - [Commandline parsing (`clap`)](#commandline-parsing-clap)
     - [Terminal interaction (`termion`)](#terminal-interaction-termion)
-    - [Map literals (`maplit`)](#map-literals-maplit)
-    - [Perfect hashing maps (usable as const) (`phf`)](#perfect-hashing-maps-usable-as-const-phf)
+    - [HashMap literals (`maplit`)](#hashmap-literals-maplit)
+    - [Faster hashing (`ahash`, `phf`)](#faster-hashing-ahash-phf)
     - [Channels: Single Producer Multiple Consumers (`bus`)](#channels-single-producer-multiple-consumers-bus)
     - [Unit testing](#unit-testing)
       - [RSpec-style testing (`demonstrate`)](#rspec-style-testing-demonstrate)
@@ -812,7 +812,7 @@ let fmt_color = if true {
 writeln!(term, "{}bar", fmt_color)?;
 ```
 
-### Map literals (`maplit`)
+### HashMap literals (`maplit`)
 
 ```rust
 #[macro_use] extern crate maplit;
@@ -823,11 +823,22 @@ let map = hashmap!{
 };
 ```
 
-### Perfect hashing maps (usable as const) (`phf`)
+### Faster hashing (`ahash`, `phf`)
 
-```rust
+Faster hashing (`ahash`):
+
+```rs
+// Convenience; the full instantiation is more verbose
+use ahash::AHashMap;
+let mut map: AHashMap<i32, i32> = AHashMap::new();
+```
+
+Perfect hashing (`const`-compatible):
+
+```rs
 // Requires `macro` feature
-
+// Must be a const; variable (`let`) is not supported.
+// Enums are not supported.
 const HAZZ: phf::Map<&'static str, i32> = phf_map! {
     "loop" => 4,
     "continue" => 2,
