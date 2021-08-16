@@ -1,23 +1,13 @@
 # Rust
 
 - [Rust](#rust)
-  - [Cargo/Rustup](#cargorustup)
-    - [Features](#features)
-    - [Toolchain](#toolchain)
-    - [Fast builds](#fast-builds)
-    - [Cross-compilation](#cross-compilation)
-    - [Cargo doc](#cargo-doc)
-  - [Rustfmt](#rustfmt)
-  - [Syntax/basics](#syntaxbasics)
-    - [Basic structure/Printing/Input](#basic-structureprintinginput)
-      - [Printing/formatting/write!](#printingformattingwrite)
-    - [Conditional build (ifdef-like)](#conditional-build-ifdef-like)
-    - [Data types](#data-types)
+  - [Basic structure/Printing/Input](#basic-structureprintinginput)
+    - [Printing/formatting/write!](#printingformattingwrite)
+  - [Data types](#data-types)
     - [Casting/conversions](#castingconversions)
-      - [`.` operator](#-operator)
-      - [Into<T>](#intot)
-    - [Arithmetic/math APIs](#arithmeticmath-apis)
-    - [Closures/Functions](#closuresfunctions)
+    - [`.` operator](#-operator)
+  - [Closures/Functions](#closuresfunctions)
+  - [Collections](#collections)
     - [Iterators](#iterators)
       - [Ranges and `std::iter::Iterator` methods](#ranges-and-stditeriterator-methods)
       - [Method chaining](#method-chaining)
@@ -25,242 +15,63 @@
     - [Arrays/Vectors/Slices](#arraysvectorsslices)
       - [Shared Vec/array methods](#shared-vecarray-methods)
     - [Hash maps](#hash-maps)
-    - [Strings](#strings)
-      - [String/char-related APIs/conversions](#stringchar-related-apisconversions)
-      - [Internal representation (bytes/chars/graphemes)](#internal-representation-bytescharsgraphemes)
-    - [For/while (/loop) loops](#forwhile-loop-loops)
-    - [If (let)/then/else](#if-letthenelse)
-    - [Sorting](#sorting)
-      - [Sorting floats](#sorting-floats)
-    - [Enums](#enums)
+  - [Arithmetic/math APIs](#arithmeticmath-apis)
+  - [Strings](#strings)
+    - [String/char-related APIs/conversions](#stringchar-related-apisconversions)
+    - [Internal representation (bytes/chars/graphemes)](#internal-representation-bytescharsgraphemes)
+  - [Control flow](#control-flow)
+  - [Enums](#enums)
     - [Option](#option)
     - [Result/Error](#resulterror)
-    - [Common Option/Result](#common-optionresult)
-    - [Pattern matching](#pattern-matching)
-      - [Error handling](#error-handling)
-    - [Structs](#structs)
+    - [Option/Result common APIs](#optionresult-common-apis)
+  - [Pattern matching](#pattern-matching)
+    - [Error handling](#error-handling)
+  - [Unsafe](#unsafe)
+    - [Interoperability with other languages (C)](#interoperability-with-other-languages-c)
+  - [Structs](#structs)
+    - [Associated functions/methods](#associated-functionsmethods)
     - [`self` in methods](#self-in-methods)
-    - [Generics](#generics)
-    - [Traits](#traits)
-      - [Basics (and Generics #2)](#basics-and-generics-2)
-      - [Approaches to collections and static/dynamic dispatching](#approaches-to-collections-and-staticdynamic-dispatching)
-      - [Supertraits and inheritance (object-orientation)](#supertraits-and-inheritance-object-orientation)
-        - [Inheritance: making overridden methods private](#inheritance-making-overridden-methods-private)
-      - [Limitations of returning Self](#limitations-of-returning-self)
-      - [Downcasting/Upcasting](#downcastingupcasting)
     - [Operator overloading](#operator-overloading)
     - [Method overloading (workaround)](#method-overloading-workaround)
-    - [Associated functions/methods](#associated-functionsmethods)
-    - [Ownership](#ownership)
-      - [Move](#move)
-      - [Borrowing](#borrowing)
-      - [Dangling pointers](#dangling-pointers)
-      - [Lifetimes](#lifetimes)
-      - [Slices](#slices)
-    - [Smart pointers](#smart-pointers)
-      - [Box<T>](#boxt)
-      - [RC<T>](#rct)
-      - [Cell<T>/RefCell<T>/Mutex<T> and interior mutability](#celltrefcelltmutext-and-interior-mutability)
-      - [Modifying Rc/Arc without inner mutable types (and conversion Box -> RC type)](#modifying-rcarc-without-inner-mutable-types-and-conversion-box---rc-type)
-      - [Weak<T> and reference cycles](#weakt-and-reference-cycles)
-        - [`Rc<RefCell>` or `RefCell<Rc>`](#rcrefcell-or-refcellrc)
-        - [Real case of modeling a thread-safe tree with trait objects, with children addition](#real-case-of-modeling-a-thread-safe-tree-with-trait-objects-with-children-addition)
-        - [Real complex case of iterating a recursive structure with Rc/RefCell](#real-complex-case-of-iterating-a-recursive-structure-with-rcrefcell)
-    - [Multithreading](#multithreading)
-      - [Channels: Multiple Producers Single Consumer](#channels-multiple-producers-single-consumer)
-      - [Mutex<T>/Arc<T>](#mutextarct)
-      - [Atomic primitive type wrappers](#atomic-primitive-type-wrappers)
-      - [Barrier](#barrier)
-      - [Condvar](#condvar)
-      - [Busy waiting/spin loops (pause)](#busy-waitingspin-loops-pause)
-    - [Unsafe](#unsafe)
-      - [Interoperability with other languages (C)](#interoperability-with-other-languages-c)
-    - [Macros](#macros)
-      - [Function-like](#function-like)
-        - [Rules and details](#rules-and-details)
-        - [Importing](#importing)
-      - [Custom derive macros](#custom-derive-macros)
     - [Unions](#unions)
-    - [Assorted insanity](#assorted-insanity)
-  - [Packaging](#packaging)
-    - [Project structure (with modules)](#project-structure-with-modules)
-    - [Modules (details)](#modules-details)
-  - [Traits](#traits-1)
-    - [Default](#default)
-    - [Copy, Clone, Drop and their relationships](#copy-clone-drop-and-their-relationships)
-    - [Display](#display)
-    - [From (/Into)](#from-into)
-    - [Index[Mut]](#indexmut)
+  - [Generics](#generics)
+  - [Traits](#traits)
+    - [Basics (and Generics #2)](#basics-and-generics-2)
+    - [Approaches to collections and static/dynamic dispatching](#approaches-to-collections-and-staticdynamic-dispatching)
+    - [Supertraits and inheritance (object-orientation)](#supertraits-and-inheritance-object-orientation)
+      - [Inheritance: making overridden methods private](#inheritance-making-overridden-methods-private)
+    - [Limitations of returning Self](#limitations-of-returning-self)
+    - [Downcasting/Upcasting](#downcastingupcasting)
+  - [Ownership](#ownership)
+    - [Move](#move)
+    - [Borrowing](#borrowing)
+    - [Dangling pointers](#dangling-pointers)
+    - [Lifetimes](#lifetimes)
+    - [Slices](#slices)
+  - [Smart pointers](#smart-pointers)
+    - [Box<T>](#boxt)
+    - [RC<T>](#rct)
+    - [Cell<T>/RefCell<T>/Mutex<T> and interior mutability](#celltrefcelltmutext-and-interior-mutability)
+    - [Modifying Rc/Arc without inner mutable types (and conversion Box -> RC type)](#modifying-rcarc-without-inner-mutable-types-and-conversion-box---rc-type)
+    - [Weak<T> and reference cycles](#weakt-and-reference-cycles)
+      - [`Rc<RefCell>` or `RefCell<Rc>`](#rcrefcell-or-refcellrc)
+      - [Real case of modeling a thread-safe tree with trait objects, with children addition](#real-case-of-modeling-a-thread-safe-tree-with-trait-objects-with-children-addition)
+      - [Real complex case of iterating a recursive structure with Rc/RefCell](#real-complex-case-of-iterating-a-recursive-structure-with-rcrefcell)
+  - [Multithreading](#multithreading)
+    - [Channels: Multiple Producers Single Consumer](#channels-multiple-producers-single-consumer)
+    - [Mutex<T>/Arc<T>](#mutextarct)
+    - [Atomic primitive type wrappers](#atomic-primitive-type-wrappers)
+    - [Barrier](#barrier)
+    - [Condvar](#condvar)
+    - [Busy waiting/spin loops (pause)](#busy-waitingspin-loops-pause)
+  - [Macros](#macros)
+    - [Function-like](#function-like)
+      - [Rules and details](#rules-and-details)
+      - [Importing](#importing)
+    - [Custom derive macros](#custom-derive-macros)
+  - [Assorted insanity](#assorted-insanity)
 
-## Cargo/Rustup
-
-Base operations:
-
-```sh
-cargo new "$project_name" [--lib]
-cargo check                          # check for errors
-cargo run
-cargo build [--release]              # builds (default: debug); if necessary, updates the crates index, and installs the dependencies
-cargo update                         # updates the crates index, and the installed dependencies
-cargo test [-- --nocapture]          # pass nocapture in order to output print statements
-cargo fmt
-cargo clippy                         # linter
-cargo doc [--open]                   # builds and optionally opens docs for the installed crates
-
-# Build/run options
-
---features draw_hitboxes
-```
-
-When a project is run via Cargo, the env variable `CARGO_MANIFEST_DIR` is passed to the binary.
-
-Configuration file example:
-
-```toml
-# Enable nightly features; `strip` is on 1.46
-cargo-features = ["strip"]
-
-[package]
-name = "rust"
-version = "0.1.0"
-authors = ["Saverio Miroddi <saverio.etc@etc.com>"]
-edition = "2018"
-
-# Customize the binary target.
-[[bin]]
-name = "play"
-path = "src/play.rs"
-
-[[test]]
-harness = false # Allow Cucumber to print output instead of libtest
-name = "cucumber"
-
-[dev-dependencies]
-cucumber = {package = "cucumber_rust", version = "^0.7.0"}
-
-[dependencies]
-rand = "0.7.3"
-redisish = { path = "../redisish" }                         # Relative dependency
-amethyst = { git = "https://github.com/amethyst/amethyst" } # Repository; options: `branch`/`tag`/`rev` (master branch is the default)
-
-# Another way to declare a dependency
-[dependencies.amethyst]
-features = ["vulkan"]
-version = "0.15"
-
-# There are 4 profiles: `dev`, `release`, `test`, and `bench`
-[profile.release]
-strip = "symbols"
-```
-
-Workspace: manage multiple projects.
-Using cargo from root requires the member name; otherwise, each member can be treated as an individual project.
-
-```toml
-# Some settings must be in the workspace configuration when using a workspace, eg. nightly features.
-# Add the member before creating the crate.
-
-[workspace]
-members = ["playground", "rust_programming_by_example"]
-```
-
-Versioning is pessimistic by default.
-
-See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-At the root, `Cargo.lock`, managed by Cargo, manages the dependency versions.
-
-The cargo configuration file (see custom configs below) `toml` extension is optional; it's search in many locations: https://doc.rust-lang.org/cargo/reference/config.html.
-
-### Features
-
-Define the features of a project.
-
-```toml
-[features]
-default = ["draw_hitboxes"] // features enabled by default
-draw_hitboxes = []          // `[]` is the dependencies
-```
-
-### Toolchain
-
-Set the specified toolchain for the current project:
-
-```sh
-# Using rustup; this is stored in rustup's config.
-#
-rustup override set nightly
-rustup override unset # raise error if none is set
-
-# Explicit alternative
-#
-echo nightly > rust-toolchain
-```
-
-### Fast builds
-
-Bevy hello world: 8.75" -> 1.25" (!!).
-
-```sh
-# If using rust stable, remove the "-Zshare-generics=y" below.
-# Requires lld. Source: git.io/JsfhD (includes other O/Ss).
-
-mkdir .cargo
-cat > .cargo/config.toml << 'TOML'
-[target.x86_64-unknown-linux-gnu]
-linker = "/usr/bin/clang"
-rustflags = ["-Clink-arg=-fuse-ld=lld", "-Zshare-generics=y"]
-TOML
-```
-
-### Cross-compilation
-
-```sh
-# Preparation. Requires Ubuntu package `gcc-mingw-w64-x86-64`
-#
-rustup target add x86_64-pc-windows-gnu
-rustup toolchain install stable-x86_64-pc-windows-gnu
-
-# Cross-compile
-#
-cargo build --release --target x86_64-pc-windows-gnu
-
-# Alternative: Configure Cargo for cross-compilation:
-#
-mkdir .cargo
-cat > .cargo/config.toml <<TOML
-[build]
-
-target = "riscv64gc-unknown-linux-gnu"
-
-[target.riscv64gc-unknown-linux-gnu]
-
-linker = "riscv64-unknown-linux-gnu-gcc"
-TOML
-```
-
-### Cargo doc
-
-See Programming Rust, chapter 8.
-
-## Rustfmt
-
-Use the attribute macro `#[rustfmt::skip]` in order to disable automatic formatting.
-
-Add a `rustfmt.toml` to the project root. See: https://rust-lang.github.io/rustfmt (don't forget to consider the channel).
-
-```toml
-# Unstable features work only on nightly!
-#
-unstable_features = true
-
-blank_lines_upper_bound = 10             # unstable
-preserve_block_start_blank_lines = true  # unstable
-```
-
-## Syntax/basics
-
-### Basic structure/Printing/Input
+## Basic structure/Printing/Input
 
 ```rust
 // "attributes": metadata with different purposes.
@@ -321,7 +132,7 @@ fn cycle_forever() -> ! {
 }
 ```
 
-#### Printing/formatting/write!
+### Printing/formatting/write!
 
 WATCH OUT! Don't forget to bring `std::io::Write` into scope, when using write-related traits.
 
@@ -377,20 +188,7 @@ impl Debug for SortableFloat {
 }
 ```
 
-### Conditional build (ifdef-like)
-
-The `cfg` attribute performs a conditional build:
-
-```rust
-#[cfg(test)]                 // Compile only in test builds
-#[cfg(not(test))]            // ... in non-test builds
-#[cfg(target_os = "linux")]  // ... on linux
-#[cfg(feature = "draw_hitboxes")] // ... with feature enabled
-```
-
-The attribute can be applied to methods, statements, etc.
-
-### Data types
+## Data types
 
 SVs differ from constants:
 
@@ -522,7 +320,9 @@ Automatic casting, for types supporting the `Deref` trait:
 - `&Vec<T>` -> `&[T]`
 - `&Box<T>` -> `&T`
 
-#### `.` operator
+In order to implement arbitrary casting, implement the [`Into<T>` trait](rust_libraries.md#from-into).
+
+### `.` operator
 
 ```rs
 // Automatic dereferencing; any number is followed.
@@ -545,71 +345,7 @@ v.sort();
 -1.method(2) // => interpreted as `-(1.method(2))`
 ```
 
-On comparsin
-
-#### Into<T>
-
-In order to implement arbitrary casting, implement the `Into<T>` trait:
-
-```rust
-// Allows `GamePiece { color: BLACK } as i32`
-//
-impl Into<i32> for GamePiece {
-  fn into(self) -> i32 {
-    if self.color == BLACK { 0 } else { 1 }
-  }
-}
-```
-
-### Arithmetic/math APIs
-
-```rust
-x / y                           // nearest int (-3 / 2 == -1) -> different from Ruby
-val += 1; val -= 1;             // increment/decrement value (no postfix)
-val <<= n; val >>= n;           // unsigned is zero-extending, signed sign-extending; overflows are ignored
-
-10_f64.clamp(-100., 100.)       // clamp a number (limit value within interval); floats only
-10_u64.pow(2);                  // exponentiation (power), int/int
-10_f64.powi(2);                 // exponentiation, float/int
-10_f64.sqrt();                  // square root
-(-1_f64).rem_euclid(20);        // 19 (nonnegative remainder); -1 % 20 == -1; see https://doc.rust-lang.org/std/primitive.i32.html#method.rem_euclid
-10_f64.sin();                   // sine (in rad)
-10_f64.cos();                   // cosine (in rad)
-10_f64.signum();                // sign. float: (>= +0.0 -> 1.0), (<= -0.0 -> -1.0), (NaN -> NaN); int: (0 -> 0), (< 0 -> -1), (> 0 -> 1)
-10_f64.hypot(10_f64);           // hypotenuse (!!)
-
-std::f64::consts::{PI,E,SQRT_2,FRAC1_PI,FRAC_1_SQRT_2,LN_2,LOG10_2,...};   // some constants
-std::f64::INFINITY, NEG_INFINITY;
-
-u32::min(1, 2);                 // minimum between two numbers
-std::cmp::max(x, u);            // maximum between two numbers
-
-z = x.rotate_left(y);
-z = x << y;                      // Shift; errors only if y is higher than the number of machine bits.
-
-// Checked, wrapping, saturating and overflowing arithmetic.
-//
-// With standard operators, on overlow, Rust panics in debug, and wraps in release.
-//
-x.checked_add(y);                // returns Option<T>
-x.wrapping_add(y);
-x.saturating_sub(y);             // saturating operation (result is within to the data type bounds, e.g. unsigned 1 - 2 = 0)
-z, carry = x.overflowing_add(y); // adds and wraps around in case of overflow; <carry> is bool.
-x.overflowing_shl(y);            // WATCH OUT! This is not the intuitive 1-bit left shift - Rust doesn't have it predefined; for that,
-                                 // manually compute the carry, then execute `wrapping_shl()`. Alternatively, override the shift operator.
-                                 // WATCH OUT! For other `overflow_` operations, `carry` may not the intuitive value, eg. for bit shift
-
-// Handling mixed-sign operations
-//
-5_u64.wrapping_add(-4_i32 as u64);   // proper way to add signed to unsigned
-5_u64.checked_sub(-(-4_i32) as u64); // otherwise, branch positive/negative, and do checked op for both cases
-
-// Round to specific number of decimals (ugly!!; also see #printing)
-//
-(f * 100.0).round() / 100.0;
-```
-
-### Closures/Functions
+## Closures/Functions
 
 Equivalent of Ruby blocks!
 
@@ -696,6 +432,8 @@ fn my_closure() -> Box<dyn Fn(i32) -> i32> {
 ```
 
 `const` closures [can't be defined](https://stackoverflow.com/questions/29191170/is-there-any-way-to-explicitly-write-the-type-of-a-closure).
+
+## Collections
 
 ### Iterators
 
@@ -1047,7 +785,55 @@ In order to use enums as keys, annotate them with `#[derive(Eq, PartialEq, Hash)
 
 Map literals are not supported. See the `maplit` crate.
 
-### Strings
+## Arithmetic/math APIs
+
+```rust
+x / y                           // nearest int (-3 / 2 == -1) -> different from Ruby
+val += 1; val -= 1;             // increment/decrement value (no postfix)
+val <<= n; val >>= n;           // unsigned is zero-extending, signed sign-extending; overflows are ignored
+
+10_f64.clamp(-100., 100.)       // clamp a number (limit value within interval); floats only
+10_u64.pow(2);                  // exponentiation (power), int/int
+10_f64.powi(2);                 // exponentiation, float/int
+10_f64.sqrt();                  // square root
+(-1_f64).rem_euclid(20);        // 19 (nonnegative remainder); -1 % 20 == -1; see https://doc.rust-lang.org/std/primitive.i32.html#method.rem_euclid
+10_f64.sin();                   // sine (in rad)
+10_f64.cos();                   // cosine (in rad)
+10_f64.signum();                // sign. float: (>= +0.0 -> 1.0), (<= -0.0 -> -1.0), (NaN -> NaN); int: (0 -> 0), (< 0 -> -1), (> 0 -> 1)
+10_f64.hypot(10_f64);           // hypotenuse (!!)
+
+std::f64::consts::{PI,E,SQRT_2,FRAC1_PI,FRAC_1_SQRT_2,LN_2,LOG10_2,...};   // some constants
+std::f64::INFINITY, NEG_INFINITY;
+
+u32::min(1, 2);                 // minimum between two numbers
+std::cmp::max(x, u);            // maximum between two numbers
+
+z = x.rotate_left(y);
+z = x << y;                      // Shift; errors only if y is higher than the number of machine bits.
+
+// Checked, wrapping, saturating and overflowing arithmetic.
+//
+// With standard operators, on overlow, Rust panics in debug, and wraps in release.
+//
+x.checked_add(y);                // returns Option<T>
+x.wrapping_add(y);
+x.saturating_sub(y);             // saturating operation (result is within to the data type bounds, e.g. unsigned 1 - 2 = 0)
+z, carry = x.overflowing_add(y); // adds and wraps around in case of overflow; <carry> is bool.
+x.overflowing_shl(y);            // WATCH OUT! This is not the intuitive 1-bit left shift - Rust doesn't have it predefined; for that,
+                                 // manually compute the carry, then execute `wrapping_shl()`. Alternatively, override the shift operator.
+                                 // WATCH OUT! For other `overflow_` operations, `carry` may not the intuitive value, eg. for bit shift
+
+// Handling mixed-sign operations
+//
+5_u64.wrapping_add(-4_i32 as u64);   // proper way to add signed to unsigned
+5_u64.checked_sub(-(-4_i32) as u64); // otherwise, branch positive/negative, and do checked op for both cases
+
+// Round to specific number of decimals (ugly!!; also see #printing)
+//
+(f * 100.0).round() / 100.0;
+```
+
+## Strings
 
 There are two types of strings:
 
@@ -1094,7 +880,7 @@ str_method(&literal[..]);
 str_method(literal);
 ```
 
-#### String/char-related APIs/conversions
+### String/char-related APIs/conversions
 
 String APIs:
 
@@ -1149,7 +935,7 @@ use std::char;
 let c = char::from_digit(4, 10);          // (number, radix)
 ```
 
-#### Internal representation (bytes/chars/graphemes)
+### Internal representation (bytes/chars/graphemes)
 
 A `String` is a wrapper over a `Vec<u8>`.
 
@@ -1178,9 +964,9 @@ string.chars();
 string.bytes();
 ```
 
-### For/while (/loop) loops
+## Control flow
 
-For loops iterate over ranges:
+For loops:
 
 ```rust
 // For the reverse iteration, see rev() in the Ranges section, with warning(s).
@@ -1221,7 +1007,7 @@ let val = loop {
 };
 ```
 
-### If (let)/then/else
+If (let)/then/else:
 
 ```rust
 if x > 5 {
@@ -1262,69 +1048,7 @@ if matches!(coin, Coin::Quarter(x) if x > 2) && random_event() {
 }
 ```
 
-### Sorting
-
-Definitions:
-
-- `PartialEq`: the type is a partial equality relation (floats isn't, because NaN != NaN); allows comparison with asserts.
-- `Eq`: the type is an equality relation; good practice to implement if applies.
-
-Watch out! The f64 doesn't support Ord (which is often required); only PartialOrd.
-
-#### Sorting floats
-
-This is the generic solution, supporting NaN. A collection without NaN can rely on `a.partial_cmp(b).unwrap()`.
-
-Required a wrapper class (and a truckload of boilerplate):
-
-```rust
-// Implementation that considers NaN as greater than the other floats, and equal to itself.
-// This doesn't conform to the standard.
-//
-pub struct SortableFloat(pub f64);
-
-// This only informs the compiler that the type supports (full) equivalence.
-//
-impl Eq for SortableFloat {}
-
-impl PartialEq for SortableFloat {
-  fn eq(&self, other: &Self) -> bool {
-    if self.0.is_nan() {
-      other.0.is_nan()
-    } else {
-      self.0 == other.0
-    }
-  }
-}
-
-impl Ord for SortableFloat {
-  fn cmp(&self, other: &Self) -> Ordering {
-    let (lhs, rhs) = (self.0, other.0);
-
-    if let Some(result) = lhs.partial_cmp(&rhs) {
-      result
-    } else {
-      if lhs.is_nan() {
-        if rhs.is_nan() {
-          Ordering::Equal
-        } else {
-          Ordering::Greater
-        }
-      } else {
-        Ordering::Less
-      }
-    }
-  }
-}
-
-impl PartialOrd for SortableFloat {
-  fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-    Some(self.cmp(other))
-  }
-}
-```
-
-### Enums
+## Enums
 
 Definition:
 
@@ -1508,7 +1232,7 @@ impl fmt::Display for JsonError {
 impl std::error::Error for JsonError { }
 ```
 
-### Common Option/Result
+### Option/Result common APIs
 
 Many of the methods are common between `Option` and `Result`.
 
@@ -1529,7 +1253,7 @@ instance.as_ref()
 instance.as_mut()
 ```
 
-### Pattern matching
+## Pattern matching
 
 `let` can be used to destructure (e.g. a struct) even without being an `if let`!
 
@@ -1612,7 +1336,7 @@ match point {
 if let Event::Window { win_event: WindowEvent::SizeChanged(new_width, new_height), .. } = event { /* ... */ }
 ```
 
-#### Error handling
+### Error handling
 
 Handle errors via enum matching:
 
@@ -1623,7 +1347,100 @@ let num: u32 = match num_string.parse() {
 };
 ```
 
-### Structs
+## Unsafe
+
+Raw pointers:
+
+```rust
+fn print_raw_pointers(ref_mut: *mut i32, ref_const: *const i32) {
+  unsafe {
+    println!("r1:{}, r2:{}", *ref_const, *ref_mut);
+  }
+}
+
+let mut num = 5;
+
+// Creating pointers is not unsafe - only dereferencing them.
+//
+let ref_mut = &mut num as *mut i32;
+let ref_const = &num as *const i32;
+
+print_raw_pointers(ref_mut, ref_const);
+
+// Invalid: (currently) this can't be done, in order to work around the BC - the variable needs to be
+// declared (separately).
+//
+mymethod(&mut num, &num as *const i32);
+```
+
+Functions:
+
+```rust
+// Unsafe function; unsafe calls themselves don't require the enclosing function to be marked as such.
+//
+unsafe fn dangerous() {}
+
+// Unsafe funcion call
+//
+unsafe {
+  dangerous();
+}
+```
+
+Example: slicing an array. It can't be done safely, because we can't mutably borrow twice.
+
+```rust
+let slice = &mut [0, 1, 2, 3][..];
+let mid = 2;
+
+let len = slice.len();
+let ptr = slice.as_mut_ptr();
+
+let (slice1, slice2) = unsafe {
+  (
+    std::slice::from_raw_parts_mut(ptr, mid),
+    std::slice::from_raw_parts_mut(ptr.offset(mid as isize), len - mid),
+  )
+};
+```
+
+Referencing raw memory (undefined behavior):
+
+```rust
+let address = 0x012345usize;
+let r = address as *mut i32;
+
+let slice: &[i32] = unsafe {
+  std::slice::from_raw_parts_mut(r, 10000)
+};
+```
+
+### Interoperability with other languages (C)
+
+Invoking C code:
+
+```rust
+// `"C"` defines the ABI, in this case, the C one.
+//
+extern "C" {
+  fn abs(input: i32) -> i32;
+}
+
+unsafe {
+  println!("Absolute value of -3 according to C: {}", abs(-3));
+}
+```
+
+Allow code to be invoked from C:
+
+```rust
+// Requires disabling mangling.
+//
+#[no_mangle]
+pub extern "C" fn call_from_c() { }
+```
+
+## Structs
 
 ```rust
 // Define a struct
@@ -1682,6 +1499,32 @@ let mut user2 = User {
 }
 ```
 
+### Associated functions/methods
+
+```rust
+struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+// Multiple methods can be defined in the same `impl` block (and multiple blocks can be defined).
+impl Rectangle {
+    // When there is `self`, it's called "method".
+    // `self` can also be borrowed mutably.
+    // Methods taking ownership of `self` are rare and specific.
+    fn area(&self) -> u32 {
+        self.width * self.height
+    }
+}
+
+impl Rectangle {
+    // Where there isn't `self`, it's called "associated function" (static method, in other langs).
+    fn square(size: u32) -> Rectangle {
+        Rectangle { width: size, height: size }
+    }
+}
+```
+
 ### `self` in methods
 
 In methods, the `self` reference can be also a smart pointer:
@@ -1696,7 +1539,122 @@ arc_ref.my_method(123);
 
 This is currently limited to `Box`/`Rc`/`Arc`.
 
-### Generics
+### Operator overloading
+
+WATCH OUT! Think carefully about ownership - whether owned values (self/rhs) or references should be used.
+
+```rust
+struct Point(i32);
+struct BigPoint(i32);
+
+impl Add for Point {
+  type Output = Self;
+
+  // `rhs` stays for `Right Hand Side`
+  //
+  fn add(self, rhs: Self) -> Self::Output {
+    Point(self.0 + rhs.0)
+  }
+}
+
+impl Add<&BigPoint> for Point {
+  type Output = Self;
+
+  fn add(self, rhs: &BigPoint) -> Self::Output {
+    Point(self.0 + 1000 * rhs.0)
+  }
+}
+
+Point(10) + Point(20)
+Point(10) + &BigPoint(1)
+```
+
+Some operators:
+
+- `std::ops::Add/Sub/Mul/Div/Rem`: `self.add`, etc -> `Output` (`Rem`=%)
+- `PartialEq`: `&self.eq`
+- `std::ops::Neg`: `self.neg` -> `Output` (unary negation)
+
+In order to overload on a trait, use the following syntax:
+
+```rust
+impl PartialEq for dyn Shape + '_ {
+    fn eq(&self, rhs: &Self) -> bool {
+        self.id() == rhs.id()
+    }
+}
+```
+
+### Method overloading (workaround)
+
+Silly example. For basic data types, `Into<T>` has blanket implementations:
+
+```rust
+struct Foo {
+  value: Monster
+}
+
+impl Foo {
+  fn set<T:Into<Monster>>(&mut self, value: T) {
+    self.value += value.as_uint();
+  }
+}
+
+impl Into<Monster> for Foo {
+  fn into(self) -> Monster {
+    self.monster
+  }
+}
+
+impl Into<Monster> for Bar {
+  fn into(self) -> Monster {
+    self.monster
+  }
+}
+```
+
+### Unions
+
+```rust
+// Watch out, x86 is little endian!
+//
+#[derive(Copy, Clone)]
+struct Register8Pair {
+    l: u8,
+    h: u8,
+}
+
+// `#[repr(C)]` is necessary, to ensure that all the fields start at the same location.
+//
+#[repr(C)]
+union Register16 {
+    r16: u16,
+    r8: Register8Pair,
+}
+
+let mut ax = Register16 { r16: 0xCAFE };
+
+// Access is unsafe, because it's effectively undefined behavior.
+unsafe { println!("AX:{:4X} AH:{:2X} AL:{:2X}", ax.r16, ax.r8.h, ax.r8.l) };
+
+// Unsafe is not required for writes to `Copy` union fields.
+ax.r8.l = 0xFF;
+
+// Borrowing rules still apply: the first invocation is valid, but not the second!
+//
+fn test(_r1: &mut u8, _r2: &mut u8) {}
+fn test2(_r1: &mut u16, _r2: &mut u8) {}
+unsafe { test(&mut ax.r8.h, &mut ax.r8.l) };
+unsafe { test2(&mut ax.r16, &mut ax.r8.l) };
+```
+
+Pattern matching works as usual, but exactly one field must be specified.
+
+See [reference](https://doc.rust-lang.org/reference/items/unions.html#pattern-matching-on-unions) for the so-called "tagged" unions.
+
+A proposal for ["unnamed" fields](https://rust-lang.github.io/rfcs/2102-unnamed-fields.html) has been approved, but not yet implemented.
+
+## Generics
 
 "Monomorphization": turn generic types into concrete ones at compile time.
 
@@ -1722,9 +1680,9 @@ impl<T, U> Point<T, U> {
 }
 ```
 
-### Traits
+## Traits
 
-#### Basics (and Generics #2)
+### Basics (and Generics #2)
 
 ```rust
 pub trait Summary {
@@ -1830,7 +1788,7 @@ impl<T: Display + Ord, U> Point<T, U> {
 }
 ```
 
-#### Approaches to collections and static/dynamic dispatching
+### Approaches to collections and static/dynamic dispatching
 
 Let's say we have the following trait + concrete types:
 
@@ -1881,7 +1839,7 @@ Box::new(NullLogger {});                    // type = Box<NullLogger>
 Box::new(NullLogger {}) as Box<dyn Logger>; // type = Box<dyn Logger>
 ```
 
-#### Supertraits and inheritance (object-orientation)
+### Supertraits and inheritance (object-orientation)
 
 Supertraits are traits depending on other traits. `X` is a supertrait of `Y` means that `Y` must implement `X` (this "super" as higher in a tree).
 
@@ -1961,7 +1919,7 @@ Node::type_();            // AF:node
 Root::type_();            // Invalid!               - must invoke on an `Impl` type; traits alone are not objects!
 ```
 
-##### Inheritance: making overridden methods private
+#### Inheritance: making overridden methods private
 
 The simplest way to make overridden methods private is to use private trait methods:
 
@@ -2012,7 +1970,7 @@ impl BaseClass {
 
 The other strategy is embedding; in order to avoid forwarding boilerplate, there is the [`delegate` crate](#inheritance-emulation-via-delegate-crate), or the [`Deref\[Mut\]` antipattern](https://github.com/rust-unofficial/patterns/blob/master/anti_patterns/deref.md)).
 
-#### Limitations of returning Self
+### Limitations of returning Self
 
 See https://stackoverflow.com/q/30938499.
 
@@ -2032,7 +1990,7 @@ trait MyTrait {
 }
 ```
 
-#### Downcasting/Upcasting
+### Downcasting/Upcasting
 
 Downcasting from trait object to the concrete class (reference); useful to enable it only in testing:
 
@@ -2078,109 +2036,9 @@ let super_ref = &my_better_display as &fmt::Display;
 let super_ref = &(my_better_display as fmt::Display);
 ```
 
-### Operator overloading
+## Ownership
 
-WATCH OUT! Think carefully about ownership - whether owned values (self/rhs) or references should be used.
-
-```rust
-struct Point(i32);
-struct BigPoint(i32);
-
-impl Add for Point {
-  type Output = Self;
-
-  // `rhs` stays for `Right Hand Side`
-  //
-  fn add(self, rhs: Self) -> Self::Output {
-    Point(self.0 + rhs.0)
-  }
-}
-
-impl Add<&BigPoint> for Point {
-  type Output = Self;
-
-  fn add(self, rhs: &BigPoint) -> Self::Output {
-    Point(self.0 + 1000 * rhs.0)
-  }
-}
-
-Point(10) + Point(20)
-Point(10) + &BigPoint(1)
-```
-
-Some operators:
-
-- `std::ops::Add/Sub/Mul/Div/Rem`: `self.add`, etc -> `Output` (`Rem`=%)
-- `PartialEq`: `&self.eq`
-- `std::ops::Neg`: `self.neg` -> `Output` (unary negation)
-
-In order to overload on a trait, use the following syntax:
-
-```rust
-impl PartialEq for dyn Shape + '_ {
-    fn eq(&self, rhs: &Self) -> bool {
-        self.id() == rhs.id()
-    }
-}
-```
-
-### Method overloading (workaround)
-
-Silly example. For basic data types, `Into<T>` has blanket implementations
-
-```rust
-struct Foo {
-  value: Monster
-}
-
-impl Foo {
-  fn set<T:Into<Monster>>(&mut self, value: T) {
-    self.value += value.as_uint();
-  }
-}
-
-impl Into<Monster> for Foo {
-  fn into(self) -> Monster {
-    self.monster
-  }
-}
-
-impl Into<Monster> for Bar {
-  fn into(self) -> Monster {
-    self.monster
-  }
-}
-```
-
-### Associated functions/methods
-
-```rust
-struct Rectangle {
-    width: u32,
-    height: u32,
-}
-
-// Multiple methods can be defined in the same `impl` block (and multiple blocks can be defined).
-impl Rectangle {
-    // When there is `self`, it's called "method".
-    // `self` can also be borrowed mutably.
-    // Methods taking ownership of `self` are rare and specific.
-    fn area(&self) -> u32 {
-        self.width * self.height
-    }
-}
-
-impl Rectangle {
-    // Where there isn't `self`, it's called "associated function" (static method, in other langs).
-    fn square(size: u32) -> Rectangle {
-        Rectangle { width: size, height: size }
-    }
-}
-```
-
-### Ownership
-
-#### Move
+### Move
 
 Variables can be simple (eg. integers) or complex (eg. strings); by default Rust copies the "simple" part (shallow copying).
 
@@ -2231,7 +2089,7 @@ but complex ones are _moved_; ownership is transferred when assigning or passing
 }
 ```
 
-#### Borrowing
+### Borrowing
 
 Passing references doesn't transfer ownership; this is called _borrowing_:
 
@@ -2288,7 +2146,7 @@ Borrowing mutable references has restrictions:
 }
 ```
 
-#### Dangling pointers
+### Dangling pointers
 
 In Rust, it's not possible to have dangling pointers:
 
@@ -2308,7 +2166,7 @@ fn not_dangling() -> String {
 }
 ```
 
-#### Lifetimes
+### Lifetimes
 
 Functions may need to know the lifetime of an object, in order to make sure that the resource is not freed prematurely.
 
@@ -2404,7 +2262,7 @@ fn parse_context<'a>(context: &'a Context) -> &'a str {
 }
 ```
 
-#### Slices
+### Slices
 
 Slices can refer to arrays and strings. They are immutable references, so the ownership needs to be considered:
 
@@ -2423,7 +2281,7 @@ String slices are at *byte* points!
 
 Using string slices as arguments is preferrable to string references, as they're more generic (they can also take strings).
 
-### Smart pointers
+## Smart pointers
 
 Smart pointers implement the traits:
 
@@ -2432,7 +2290,7 @@ Smart pointers implement the traits:
 
 In order to manually drop an instance, use `std::mem::drop`.
 
-#### Box<T>
+### Box<T>
 
 Allow storing data on the heap rather than on the stack; useful for:
 
@@ -2473,7 +2331,7 @@ use self::Node::{Nil, Parent};
 let parent_a = Parent(Box::new(Parent(Box::new(Nil))));
 ```
 
-#### RC<T>
+### RC<T>
 
 "Reference Counting"; use when there are multiple owners, e.g. graphs, that is, when the compiler can't know who will use the reference last.
 
@@ -2505,7 +2363,7 @@ let a = Rc::new(Parent(Rc::new(Parent(Rc::new(Nil)))));
 println!("Count: {}", Rc::strong_count(&a)); // 1
 ```
 
-#### Cell<T>/RefCell<T>/Mutex<T> and interior mutability
+### Cell<T>/RefCell<T>/Mutex<T> and interior mutability
 
 `RefCell<T>` allows mutating the contained value, even if the variable itself is immutable, therefore bypassing the compiler; generally speaking, it allows multiple owners while retaining mutability. The rules are enforced at runtime though, so this has an overhead.
 
@@ -2533,7 +2391,7 @@ let _c = Parent(Rc::new(RefCell::new(3)), Rc::clone(&a));
 value2.try_borrow_mut()?.value = 10; // try version
 ```
 
-#### Modifying Rc/Arc without inner mutable types (and conversion Box -> RC type)
+### Modifying Rc/Arc without inner mutable types (and conversion Box -> RC type)
 
 If one wants to modify an RC type before sharing it, without inner mutable types, there is `get_mut()` (and unsafe/nightly `get_mut_unchecked()`). Example using the unchecked version and `Arc`:
 
@@ -2566,7 +2424,7 @@ let pizza = Into::<Arc<MyType>>::into(boxed);
 let pizza: Arc<MyType> = boxed.into();
 ```
 
-#### Weak<T> and reference cycles
+### Weak<T> and reference cycles
 
 Example with a tree data structure, with nodes pointing both to children and parents. The problem is that if we don't use weak references, there will be circular references (therefore leaks) because of parents pointing to children, and viceversa.
 
@@ -2644,7 +2502,7 @@ Rc::strong_count(&branch);
 Rc::weak_count(&branch);
 ```
 
-##### `Rc<RefCell>` or `RefCell<Rc>`
+#### `Rc<RefCell>` or `RefCell<Rc>`
 
 This is not trivial. See:
 
@@ -2680,7 +2538,7 @@ Rc<Vec<RefCell<Node>>>
 
 A way to look at this is that what is between `Rc` and `RefCell` _can't_ be modified.
 
-##### Real case of modeling a thread-safe tree with trait objects, with children addition
+#### Real case of modeling a thread-safe tree with trait objects, with children addition
 
 Example, with Tree implementing the Node trait. This is a **slow** implementation, since it will cause locking on the vector.
 
@@ -2707,7 +2565,7 @@ impl Tree {
 }
 ```
 
-##### Real complex case of iterating a recursive structure with Rc/RefCell
+#### Real complex case of iterating a recursive structure with Rc/RefCell
 
 See https://stackoverflow.com/questions/36597987/cyclic-reference-of-refcell-borrows-in-traversal.
 
@@ -2757,7 +2615,7 @@ impl<T: Copy> LinkedList<T> {
 }
 ```
 
-### Multithreading
+## Multithreading
 
 Base usage:
 
@@ -2782,7 +2640,7 @@ handle.join().unwrap();
 
 If there are serious problems with lifetimes (eg. recursively passing references), use concurrent toolkits (see concurrency tools section).
 
-#### Channels: Multiple Producers Single Consumer
+### Channels: Multiple Producers Single Consumer
 
 For SPMC, see crate [bus](#channels-single-producer-multiple-consumers-bus), although it can be emulated with multiple channels.
 
@@ -2817,7 +2675,7 @@ for received in rx {
 }
 ```
 
-#### Mutex<T>/Arc<T>
+### Mutex<T>/Arc<T>
 
 WATCH OUT! Mutex is not reentrant, so multiple calls by the same thread (unless in the same function) will deadlock.
 
@@ -2845,7 +2703,7 @@ Note that `Arc<Mutex<T>>` can be cloned and move around, but must be extremely c
 
 The ownership of an instance in a mutex can be released, if there are no other threads holding the lock: `mutex_instance.into_inner().unwrap()`.
 
-#### Atomic primitive type wrappers
+### Atomic primitive type wrappers
 
 Primitive types have special atomic structs that are very efficient, e.g. (simplified):
 
@@ -2889,7 +2747,7 @@ Some APIs (return the previous value):
 
 **WATCH OUT**: Check out the [CPP reference](https://en.cppreference.com/w/cpp/atomic/memory_order) to understand memory orderings. The most conservative ordering, `Ordering::SeqCst` has still performance good enough to be used as default, according to Programming Rust 1st ed.
 
-#### Barrier
+### Barrier
 
 Enable multiple threads to start synchronized; `wait()` will block on each thread until the number has been reached.  
 A random thread is the elected leader (`is_leader() == true`).  
@@ -2910,7 +2768,7 @@ After the barrier is released, it can be reused.
   }
 ```
 
-#### Condvar
+### Condvar
 
 A [condvar](https://doc.rust-lang.org/beta/std/sync/struct.Condvar.html) allows threads to wait, and then be notified when a condition is met.
 
@@ -2950,7 +2808,7 @@ Watch out! This can't be used for as a pseudo-channel, because the mutex value c
   handle.join();
 ```
 
-#### Busy waiting/spin loops (pause)
+### Busy waiting/spin loops (pause)
 
 Intrinsic to use in busy waiting:
 
@@ -2958,102 +2816,9 @@ Intrinsic to use in busy waiting:
 std::hint::spin_loop();
 ```
 
-### Unsafe
+## Macros
 
-Raw pointers:
-
-```rust
-fn print_raw_pointers(ref_mut: *mut i32, ref_const: *const i32) {
-  unsafe {
-    println!("r1:{}, r2:{}", *ref_const, *ref_mut);
-  }
-}
-
-let mut num = 5;
-
-// Creating pointers is not unsafe - only dereferencing them.
-//
-let ref_mut = &mut num as *mut i32;
-let ref_const = &num as *const i32;
-
-print_raw_pointers(ref_mut, ref_const);
-
-// Invalid: (currently) this can't be done, in order to work around the BC - the variable needs to be
-// declared (separately).
-//
-mymethod(&mut num, &num as *const i32);
-```
-
-Functions:
-
-```rust
-// Unsafe function; unsafe calls themselves don't require the enclosing function to be marked as such.
-//
-unsafe fn dangerous() {}
-
-// Unsafe funcion call
-//
-unsafe {
-  dangerous();
-}
-```
-
-Example: slicing an array. It can't be done safely, because we can't mutably borrow twice.
-
-```rust
-let slice = &mut [0, 1, 2, 3][..];
-let mid = 2;
-
-let len = slice.len();
-let ptr = slice.as_mut_ptr();
-
-let (slice1, slice2) = unsafe {
-  (
-    std::slice::from_raw_parts_mut(ptr, mid),
-    std::slice::from_raw_parts_mut(ptr.offset(mid as isize), len - mid),
-  )
-};
-```
-
-Referencing raw memory (undefined behavior):
-
-```rust
-let address = 0x012345usize;
-let r = address as *mut i32;
-
-let slice: &[i32] = unsafe {
-  std::slice::from_raw_parts_mut(r, 10000)
-};
-```
-
-#### Interoperability with other languages (C)
-
-Invoking C code:
-
-```rust
-// `"C"` defines the ABI, in this case, the C one.
-//
-extern "C" {
-  fn abs(input: i32) -> i32;
-}
-
-unsafe {
-  println!("Absolute value of -3 according to C: {}", abs(-3));
-}
-```
-
-Allow code to be invoked from C:
-
-```rust
-// Requires disabling mangling.
-//
-#[no_mangle]
-pub extern "C" fn call_from_c() { }
-```
-
-### Macros
-
-#### Function-like
+### Function-like
 
 Simple, fixed expressions:
 
@@ -3220,7 +2985,7 @@ macro_rules! test_sort {
 test_sort!(collection, bubble_sort(collection));
 ```
 
-##### Rules and details
+#### Rules and details
 
 There are some rules:
 
@@ -3246,7 +3011,7 @@ Interesting articles:
 - Tutorial: https://hub.packtpub.com/creating-macros-in-rust-tutorial
 - Case study: https://notes.iveselov.info/programming/time_it-a-case-study-in-rust-macros
 
-##### Importing
+#### Importing
 
 Sample of importing macros across files:
 
@@ -3268,7 +3033,7 @@ test_sort!(collection, bubble_sort(collection));
 
 Macros are pulled in the main scope, so the `use` must not be followed by the macro enclosing module (`helpers`).
 
-#### Custom derive macros
+### Custom derive macros
 
 Procedural macros must be defined in a crate with the crate type of proc-macro.
 
@@ -3343,275 +3108,6 @@ extern crate macros; // name of the crate
 
 then use!
 
-### Unions
-
-```rust
-// Watch out, x86 is little endian!
-//
-#[derive(Copy, Clone)]
-struct Register8Pair {
-    l: u8,
-    h: u8,
-}
-
-// `#[repr(C)]` is necessary, to ensure that all the fields start at the same location.
-//
-#[repr(C)]
-union Register16 {
-    r16: u16,
-    r8: Register8Pair,
-}
-
-let mut ax = Register16 { r16: 0xCAFE };
-
-// Access is unsafe, because it's effectively undefined behavior.
-unsafe { println!("AX:{:4X} AH:{:2X} AL:{:2X}", ax.r16, ax.r8.h, ax.r8.l) };
-
-// Unsafe is not required for writes to `Copy` union fields.
-ax.r8.l = 0xFF;
-
-// Borrowing rules still apply: the first invocation is valid, but not the second!
-//
-fn test(_r1: &mut u8, _r2: &mut u8) {}
-fn test2(_r1: &mut u16, _r2: &mut u8) {}
-unsafe { test(&mut ax.r8.h, &mut ax.r8.l) };
-unsafe { test2(&mut ax.r16, &mut ax.r8.l) };
-```
-
-Pattern matching works as usual, but exactly one field must be specified.
-
-See [reference](https://doc.rust-lang.org/reference/items/unions.html#pattern-matching-on-unions) for the so-called "tagged" unions.
-
-A proposal for ["unnamed" fields](https://rust-lang.github.io/rfcs/2102-unnamed-fields.html) has been approved, but not yet implemented.
-
-### Assorted insanity
+## Assorted insanity
 
 - Complex behavior of traits <> lifetimes (now obsolete; using `&Self` as argument is enough): https://stackoverflow.com/questions/54329200/mysterious-lifetime-issue-while-implementing-trait-for-dyn-object.
-
-## Packaging
-
-### Project structure (with modules)
-
-A package (=set of 1+ crates) can contain at most one library crate.
-
-Crate "roots":
-
-- `src/main.rs` -> binary crate (same name as package)
-- `src/lib.rs` -> library crate (same name as package)
-
-An option to put small binary crates inside a crate is to puth them in `src/bin`:
-
-- `src/bin/mycrate.rs` -> binary crate (named `mycrate`)
-
-this doesn't require addition to `Cargo.toml`; it's included in the `build`; in order to run, add `--bin mycrate`.
-
-Alternative configuration for multiple crates, via `Cargo.toml`:
-
-```toml
-# Array of tables -> there can be multiple.
-#
-[[bin]]
-name = "daemon"
-path = "src/daemon/bin/main.rs"
-```
-
-The relative (to the project root) source file path can be found via `file!()`.
-
-Modules structure (comments are content):
-
-```
-crate_name
-├── Cargo.toml
-└── src
-    ├── main.rs              // pub mod mod1; pub mod mod2
-    ├── main_a.rs
-    ├── mod1
-    │   ├── mod.rs           // pub mod mod1_a; pub mod mod1_b
-    │   ├── mod1_a.rs
-    │   └── mod1_b.rs
-    ├── mod2
-    │   ├── mod2_a.rs
-    └── mod2.rs              // pub mod mod2_a
-```
-
-`mod2` has an alternative structure (modules defined in a corresponding `.rs` file).
-
-### Modules (details)
-
-All items (including modules) and their children are private by default, but:
-
-- children can access their parents' items;
-- public enums' items are public.
-
-```rust
-mod front_of_house {
-  // Public module; doesn't make the *contents* public.
-  //
-  pub mod hosting {
-    // Can see stuff in `front_of_house`.
-    //
-    pub fn add_to_waitlist() {}
-  }
-}
-
-pub fn eat_at_restaurant() {
-  // Relative path.
-  // With this tree, the function invoked must be public.
-  //
-  front_of_house::hosting::add_to_waitlist();
-
-  hosting::add_to_waitlist();
-}
-```
-
-Modifiers (prefixes):
-
-- `crate`: absolute path
-- `super`: parent module (like current directory)
-- `self`
-
-Security levels:
-
-- `pub`, private, `pub(crate)`
-- `pub(super)`: visible to parents only
-- `pub in <crate>`: visible to to a specific parent module and descendants
-
-Multiple files/directories structure:
-
-```rust
-// This loads either `module.rs` or `module/mod.rs`.
-//
-mod <module>;
-```
-
-Importing:
-
-```rust
-// The item imported must be public. Using doesn't make the item public!
-// In order to import relatively, must (currently) use `self`.
-//
-// It's unidiomatic to import functions, while it's idiomatic to import enums, structs, etc.
-//
-use crate::front_of_house::hosting;
-
-// Import sibling modules in sibling files (shape.rs). The first assumes no reexport; the second assumes
-// a flattening reexport.
-//
-use super::shape::Shape;
-use super::Shape;
-
-// Solutions to clashing; both iditiomatic.
-//
-use std::io::Result as Ioresult;
-use std::io; // and reference `io::Result`
-
-// "Re-exporting"; allows referencing `hosting::add_to_waitlist`. Useful when the whole path is not
-// meaningful for the clients.
-//
-pub use crate::front_of_the_house::hosting;
-
-// Disambiguate; this refers to a `image` crate
-//
-use ::image::Pixels;
-
-// Other use syntaxes
-//
-use std::io::{self, Write}
-use std::collections::*; // useful for testing; unidiomatic for the rest
-```
-
-## Traits
-
-### Default
-
-```rust
-// Generates a `::default()` method that fills the fields with the default values (0 for numeric, false for bool).
-//
-#[derive(Default)]
-struct SomeOptions {
-  foo: i32,
-  bar: bool,
-}
-
-// Override the defaults.
-//
-SomeOptions { bar: true, ..Default::default() };
-```
-
-See [smart-default crate](#partialmore-flexible-defaults-smart-default) for partial/more flexible defaults.
-
-### Copy, Clone, Drop and their relationships
-
-See:
-
-- https://stackoverflow.com/questions/51704063/why-does-rust-not-allow-the-copy-and-drop-traits-on-one-type
-  - copy of `Copy` data is done via trivial `memcpy`; if drop was performed on a `Copy`+`Drop` copy, the original instance could include reference to invalid (not cleaned up) data
-- https://www.reddit.com/r/rust/comments/8laxam/why_does_copy_require_clone
-  - `Clone` is a supertrait of `Copy`
-
-### Display
-
-Simple implementation of Display:
-
-```rust
-impl std::fmt::Display for MyType {
-  fn fmt(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-    write!(formatter, "value: {}", self.value)
-  }
-}
-```
-
-### From (/Into)
-
-Implement when representing conversions from a type; the `Into` (`into()`) trait will be automatically handled.
-
-```rust
-struct Number {
-  value: i32,
-}
-
-impl From<i32> for Number {
-  fn from(item: i32) -> Self {
-    Number { value: item }
-  }
-}
-
-let num = Number::from(30);
-let num: Number = int.into();
-```
-
-### Index[Mut]
-
-Allow convenient map-like access to a struct.
-
-```rust
-struct Registers {
-    SP: u16,
-    PC: u16,
-}
-
-impl std::ops::Index<Register> for Registers {
-    type Output = u16;
-
-    fn index(&self, register: Register) -> &Self::Output {
-        match register {
-            Register::SP => &self.SP,
-            Register::PC => &self.PC,
-        }
-    }
-}
-
-impl IndexMut<Register> for Registers {
-    fn index_mut(&mut self, register: Register) -> &mut Self::Output {
-        match register {
-            Register::SP => &mut self.SP,
-            Register::PC => &mut self.PC,
-        }
-    }
-}
-
-// Access
-//
-let addr = self.registers[src_register] as usize;
-self.registers[dst_register] = 0x21;
-```

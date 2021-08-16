@@ -38,6 +38,8 @@
     - [Profiling](#profiling)
     - [Dirty pages](#dirty-pages)
     - [Dynamic SQL](#dynamic-sql)
+  - [Fulltext indexes](#fulltext-indexes)
+    - [Manipulate search relevance for multiple columns (boosting)](#manipulate-search-relevance-for-multiple-columns-boosting)
   - [Administration](#administration)
     - [Non-blocking schema changes](#non-blocking-schema-changes)
     - [Observe ALTER TABLE progress](#observe-alter-table-progress)
@@ -921,6 +923,20 @@ SELECT
 PREPARE pst_count FROM @SQL_STRING;
 EXECUTE pst_count;
 DEALLOCATE PREPARE pst_count;
+```
+
+## Fulltext indexes
+
+### Manipulate search relevance for multiple columns (boosting)
+
+Create three indexes: on the two individual columns, and on both.
+
+```sql
+SELECT id
+FROM mytable
+WHERE MATCH (col1, col2) AGAINST (@keyword)
+ORDER BY
+  5 * MATCH (col1) AGAINST (@keyword) + MATCH (col2) AGAINST (@keyword) DESC;
 ```
 
 ## Administration

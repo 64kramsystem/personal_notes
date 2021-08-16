@@ -2,6 +2,14 @@
 
 - [Rust libraries](#rust-libraries)
   - [Standard library](#standard-library)
+    - [Traits](#traits)
+      - [Default](#default)
+      - [Copy, Clone, Drop and their relationships](#copy-clone-drop-and-their-relationships)
+      - [Display](#display)
+      - [From (/Into)](#from-into)
+      - [Index[Mut]](#indexmut)
+    - [Sorting](#sorting)
+      - [Sorting floats](#sorting-floats)
     - [Files read/write/create](#files-readwritecreate)
       - [Read/Write traits](#readwrite-traits)
     - [Paths handling/Directories](#paths-handlingdirectories)
@@ -46,6 +54,164 @@
       - [Guaranteed endianness storage (`byteorder`)](#guaranteed-endianness-storage-byteorder)
 
 ## Standard library
+
+### Traits
+
+#### Default
+
+```rust
+// Generates a `::default()` method that fills the fields with the default values (0 for numeric, false for bool).
+//
+#[derive(Default)]
+struct SomeOptions {
+  foo: i32,
+  bar: bool,
+}
+
+// Override the defaults.
+//
+SomeOptions { bar: true, ..Default::default() };
+```
+
+See [smart-default crate](#partialmore-flexible-defaults-smart-default) for partial/more flexible defaults.
+
+#### Copy, Clone, Drop and their relationships
+
+See:
+
+- https://stackoverflow.com/questions/51704063/why-does-rust-not-allow-the-copy-and-drop-traits-on-one-type
+  - copy of `Copy` data is done via trivial `memcpy`; if drop was performed on a `Copy`+`Drop` copy, the original instance could include reference to invalid (not cleaned up) data
+- https://www.reddit.com/r/rust/comments/8laxam/why_does_copy_require_clone
+  - `Clone` is a supertrait of `Copy`
+
+#### Display
+
+Simple implementation of Display:
+
+```rust
+impl std::fmt::Display for MyType {
+  fn fmt(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+    write!(formatter, "value: {}", self.value)
+  }
+}
+```
+
+#### From (/Into)
+
+Implement when representing conversions from a type; the `Into` (`into()`) trait will be automatically handled.
+
+```rust
+struct Number {
+  value: i32,
+}
+
+impl From<i32> for Number {
+  fn from(item: i32) -> Self {
+    Number { value: item }
+  }
+}
+
+let num = Number::from(30);
+let num: Number = int.into();
+```
+
+#### Index[Mut]
+
+Allow convenient map-like access to a struct.
+
+```rust
+struct Registers {
+    SP: u16,
+    PC: u16,
+}
+
+impl std::ops::Index<Register> for Registers {
+    type Output = u16;
+
+    fn index(&self, register: Register) -> &Self::Output {
+        match register {
+            Register::SP => &self.SP,
+            Register::PC => &self.PC,
+        }
+    }
+}
+
+impl IndexMut<Register> for Registers {
+    fn index_mut(&mut self, register: Register) -> &mut Self::Output {
+        match register {
+            Register::SP => &mut self.SP,
+            Register::PC => &mut self.PC,
+        }
+    }
+}
+
+// Access
+//
+let addr = self.registers[src_register] as usize;
+self.registers[dst_register] = 0x21;
+```
+
+### Sorting
+
+Definitions:
+
+- `PartialEq`: the type is a partial equality relation (floats isn't, because NaN != NaN); allows comparison with asserts.
+- `Eq`: the type is an equality relation; good practice to implement if applies.
+
+Watch out! The f64 doesn't support Ord (which is often required); only PartialOrd.
+
+#### Sorting floats
+
+This is the generic solution, supporting NaN. A collection without NaN can rely on `a.partial_cmp(b).unwrap()`.
+
+Required a wrapper class (and a truckload of boilerplate):
+
+```rust
+// Implementation that considers NaN as greater than the other floats, and equal to itself.
+// This doesn't conform to the standard.
+//
+pub struct SortableFloat(pub f64);
+
+// This only informs the compiler that the type supports (full) equivalence.
+//
+impl Eq for SortableFloat {}
+
+impl PartialEq for SortableFloat {
+  fn eq(&self, other: &Self) -> bool {
+    if self.0.is_nan() {
+      other.0.is_nan()
+    } else {
+      self.0 == other.0
+    }
+  }
+}
+
+impl Ord for SortableFloat {
+  fn cmp(&self, other: &Self) -> Ordering {
+    let (lhs, rhs) = (self.0, other.0);
+
+    if let Some(result) = lhs.partial_cmp(&rhs) {
+      result
+    } else {
+      if lhs.is_nan() {
+        if rhs.is_nan() {
+          Ordering::Equal
+        } else {
+          Ordering::Greater
+        }
+      } else {
+        Ordering::Less
+      }
+    }
+  }
+}
+
+impl PartialOrd for SortableFloat {
+  fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+    Some(self.cmp(other))
+  }
+}
+```
 
 ### Files read/write/create
 
