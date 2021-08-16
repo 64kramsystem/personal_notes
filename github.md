@@ -5,6 +5,7 @@
     - [Caching](#caching)
     - [Minimal example](#minimal-example)
   - [Rust CI action](#rust-ci-action)
+  - [README.md](#readmemd)
 
 ## Ruby CI action
 
@@ -135,3 +136,7 @@ jobs:
       - name: Run Clippy
         run: cargo clippy
 ```
+
+## README.md
+
+In order to refer to the project root, prefix the path with `/../../` (see [Stack Overflow](https://stackoverflow.com/a/40440270/210029))

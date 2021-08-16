@@ -1,3 +1,16 @@
+## Mon 16/Aug/2021
+
+- Rust/Gamedev
+  - [ ] Study Macroquad platformer libraries
+    - [x] Reorganize notes
+    - [x] Study `tiled`
+- Rust
+  - [x] Reorganize Rust notes
+- Projects
+  - capistrano-sidekiq
+    - [x] Add systemd version findings to README
+    - [x] Add wiki page with Syslog-NG example
+
 ## Cycle changes
 
 Half-length cycle.
