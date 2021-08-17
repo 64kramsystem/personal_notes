@@ -11,7 +11,6 @@
     - [Iterators](#iterators)
       - [Ranges and `std::iter::Iterator` methods](#ranges-and-stditeriterator-methods)
       - [Method chaining](#method-chaining)
-      - [Iterator trait/Associated types](#iterator-traitassociated-types)
     - [Arrays/Vectors/Slices](#arraysvectorsslices)
       - [Shared Vec/array methods](#shared-vecarray-methods)
     - [Hash maps](#hash-maps)
@@ -40,8 +39,9 @@
     - [Approaches to collections and static/dynamic dispatching](#approaches-to-collections-and-staticdynamic-dispatching)
     - [Supertraits and inheritance (object-orientation)](#supertraits-and-inheritance-object-orientation)
       - [Inheritance: making overridden methods private](#inheritance-making-overridden-methods-private)
-    - [Limitations of returning Self](#limitations-of-returning-self)
+    - [Trait limitations/workarounds](#trait-limitationsworkarounds)
     - [Downcasting/Upcasting](#downcastingupcasting)
+    - [Iterator trait/Associated types/impl trait](#iterator-traitassociated-typesimpl-trait)
   - [Ownership](#ownership)
     - [Move](#move)
     - [Borrowing](#borrowing)
@@ -69,6 +69,8 @@
       - [Rules and details](#rules-and-details)
       - [Importing](#importing)
     - [Custom derive macros](#custom-derive-macros)
+  - [Project structure](#project-structure)
+    - [Modules (details)](#modules-details)
   - [Assorted insanity](#assorted-insanity)
 
 ## Basic structure/Printing/Input
@@ -527,24 +529,6 @@ pub fn compose_iterator<T>(elements: &Vec<T>, reverse: bool) {
 ```
 
 Additional iterators can be added following the same `rev_iter` pattern.
-
-#### Iterator trait/Associated types
-
-```rust
-// Basic Iterator implementation.
-//
-impl Iterator for PhonyCounter {
-  // Associated type. Similar to generics, however, doesn't require the type to be specified every
-  // time the related methods (in this case, `next()`) are invoked.
-  // In this case, a default is specified, which is optional.
-  //
-  type Item = u32;
-
-  fn next(&mut self) -> Option<Self::Item> {
-    Some(0)
-  }
-}
-```
 
 ### Arrays/Vectors/Slices
 
@@ -1260,14 +1244,12 @@ instance.as_mut()
 (for testing a value directly, one can use `value.is_none()`/`value.is_some()`).
 
 ```rust
-// Generic match
+// Generic match. Can also match char intervals!!
 //
 let xxx = match val {
   1 | 2 => "1 or 2",
-  3..5  => "between 3 and 5", // chars also allowed
-  _     => {
-    "other"
-  }
+  3..=5 => "between 3 and 5", // chars also allowed; exclusive ranges are (as of 8/2021) not supported!!
+  n     => format("{}!", n),  // catch-all; use the unnamed var (`_`) to discard the value
 };
 
 // Convenient macro.
@@ -1326,10 +1308,26 @@ match point {
     Point { x, y }    => println!("On neither axis: ({}, {})", x, y),
     Point { x, .. }   => {} // ignore rest of the struct
 
-    // "Binding": assign a value while testing, via `@`.
+    // "Binding": assign a value while testing, via `@`. This can avoid a copy!
     //
     Point { x: x_val @ 3..=7 } => println!("Found an x in range: {}", id_variable),
 };
+
+// Borrowing matcher. Also mut!
+//
+match account {
+  Account { ref name, ref mut surname, .. } => {
+    println!("{}", name);
+    *surname = "abc"
+  };
+}
+
+// Match a reference (different from the previous).
+// WATCH OUT! If not borrowing a reference, the value is copied (below, `x`).
+//
+match center {
+  &Point { x, ref y } => /* ... */
+}
 
 // Match an enum inside a struct (!!!):
 //
@@ -1475,10 +1473,12 @@ Tuple structs:
 
 ```rust
 struct Color(i32, i32, i32);
-let black = Color(0, 0, 0);
+let black = Color(0, 0, 0); // the constructor is actually a function (!)
 ```
 
 tuple structs with same definition cannot share instances.
+
+Tuple struct with a single field can be used as "newtype" pattern - a wrapper to get stricter type checking, e.g. (`Ascii(Vec<u8>)` for ascii strings, rather than a simple `Vec<u8>`).
 
 Odd functionality:
 
@@ -1686,18 +1686,19 @@ impl<T, U> Point<T, U> {
 
 ```rust
 pub trait Summary {
-  // Trait constants are not constants in a strict sense - they're defaults. They must be accessed from the implementing type (in this
-  // case, Article::MAX_LENGTH or <Article as Summary>::MAX_LENGTH).
-  //
-  const MAX_LENGTH: u16 = 4096;
+    // Trait constants are not constants in a strict sense - they're defaults. They must be accessed
+    // from the implementing type (in this case, Article::MAX_LENGTH or <Article as Summary>::MAX_LENGTH).
+    // WATCH OUT! This implies that they can't used with trait objects, since the type must be known!
+    //
+    const MAX_LENGTH: usize = 4096;
 
-  fn summarize(&self) -> String;
+    fn summarize(&self) -> String;
 
-  // Default method. Overriding doesn't require special syntax.
-  //
-  fn default_placeholder(&self) -> String {
-    "Filomegna donde estas"
-  }
+    // Default method. Overriding doesn't require special syntax.
+    //
+    fn default_placeholder(&self) -> String {
+        "Filomegna donde estas".to_string()
+    }
 }
 
 pub struct Article {
@@ -1708,15 +1709,15 @@ pub struct Article {
 // This way, one doesn't find "surprises" from other crates.
 //
 impl Summary for Article {
-  fn summarize(&self) -> String {
-    // See note above on trait constants.
-    //
-    if text.len() > Self::MAX_LENGTH {
-      panic!();
-    }
+    fn summarize(&self) -> String {
+      // See note above on trait constants.
+      //
+      if self.text.len() > Self::MAX_LENGTH {
+          panic!();
+      }
 
-    "Summary of an article!".to_string()
-  }
+      "Summary of an article!".to_string()
+    }
 }
 
 // Specify trait as type. Can specify more (e.g. <T: Summary + Display>).
@@ -1970,23 +1971,45 @@ impl BaseClass {
 
 The other strategy is embedding; in order to avoid forwarding boilerplate, there is the [`delegate` crate](#inheritance-emulation-via-delegate-crate), or the [`Deref\[Mut\]` antipattern](https://github.com/rust-unofficial/patterns/blob/master/anti_patterns/deref.md)).
 
-### Limitations of returning Self
+### Trait limitations/workarounds
 
 See https://stackoverflow.com/q/30938499.
 
 ```rust
 trait MyTrait {
-  // This can return Self, which is ?Sized (not necessarily sized), because the Sized responsibility
-  // is down to the implementor.
-  //
-  fn new() -> Self;
+    // This can return Self, which is ?Sized (not necessarily sized), because the Sized responsibility
+    // is down to the implementor.
+    //
+    fn new() -> Self;
 
-  // In this case, the responsibility in the trait, therefore, Self needs to be Sized.
-  // either add `where Self: Sized` to the method, or add the `Sized` bound to the trait.
-  //
-  fn default_new() -> Self {
-    Self::new()
-  }
+    // In this case, the responsibility in the trait, therefore, Self needs to be Sized.
+    // As alternative to the `where` bound, add the `Sized` bound to the trait.
+    //
+    fn default_new() -> Self
+    where
+        Self: Sized,
+    {
+        Self::new()
+    }
+
+    // These methods have limitations (see below).
+    //
+    fn mix(&self, other: &Self) -> Self;                    // #1
+    fn mix(&self, other: &dyn MyTrait) -> dyn MyTrait;      // #2
+
+    // This works, however, it can be incompatible with the presence of other trait methods/functions,
+    // so generally, the solution is to move it to an adhoc trait.
+    //
+    fn mix(&self, other: &dyn MyTrait) -> Box<dyn MyTrait>; // #3 (Self not allowed)
+}
+
+// This doesn't work with #1, because the compiler can't verify that `right` is the same type as
+// `left`.
+//
+fn mix_trait_objs(left: &dyn MyTrait, right: &dyn MyTrait) {
+    // This doesn't work with #2, because the result is not Sized.
+    //
+    let mixed = left.mix(right);
 }
 ```
 
@@ -2034,6 +2057,40 @@ let super_ref = &my_better_display as &fmt::Display;
 // Basic workaround; for a more elaborate solution, see https://stackoverflow.com/a/28664881.
 //
 let super_ref = &(my_better_display as fmt::Display);
+```
+
+### Iterator trait/Associated types/impl trait
+
+```rust
+// Basic Iterator implementation.
+//
+impl Iterator for PhonyCounter {
+  // Associated type. Similar to generics, however, doesn't require the type to be specified every
+  // time the related methods (in this case, `next()`) are invoked.
+  // In this case, a default is specified, which is optional.
+  //
+  type Item = u32;
+
+  fn next(&mut self) -> Option<Self::Item> {
+    Some(0)
+  }
+}
+```
+
+`impl <Trait>` is a convenience that:
+
+1. simplifies complex generics
+2. avoids the overhead of using Box
+
+```rs
+fn cyclical_zip(v: Vec<u8>, u: Vec<u8>) -> iter::Cycle<iter::Chain<IntoIter<u8>, IntoIter<u8>>> {
+    v.into_iter().chain(u.into_iter()).cycle()
+}
+
+fn cyclical_zip(v: Vec<u8>, u: Vec<u8>) -> impl Iterator<Item=u8> { /* ... */ }
+
+// WATCH OUT! This doesn't work for trait objects, since it's static dispatching, and the return type
+// must be known!
 ```
 
 ## Ownership
@@ -3107,6 +3164,137 @@ extern crate macros; // name of the crate
 ```
 
 then use!
+
+## Project structure
+
+A package (=set of 1+ crates) can contain at most one library crate.
+
+Crate "roots":
+
+- `src/main.rs` -> binary crate (same name as package)
+- `src/lib.rs` -> library crate (same name as package)
+
+An option to put small binary crates inside a crate is to puth them in `src/bin`:
+
+- `src/bin/mycrate.rs` -> binary crate (named `mycrate`)
+
+this doesn't require addition to `Cargo.toml`; it's included in the `build`; in order to run, add `--bin mycrate`.
+
+Alternative configuration for multiple crates, via `Cargo.toml`:
+
+```toml
+# Array of tables -> there can be multiple.
+#
+[[bin]]
+name = "daemon"
+path = "src/daemon/bin/main.rs"
+```
+
+The relative (to the project root) source file path can be found via `file!()`.
+
+Modules structure (comments are content):
+
+```
+crate_name
+├── Cargo.toml
+└── src
+    ├── main.rs              // pub mod mod1; pub mod mod2
+    ├── main_a.rs
+    ├── mod1
+    │   ├── mod.rs           // pub mod mod1_a; pub mod mod1_b
+    │   ├── mod1_a.rs
+    │   └── mod1_b.rs
+    ├── mod2
+    │   ├── mod2_a.rs
+    └── mod2.rs              // pub mod mod2_a
+```
+
+`mod2` has an alternative structure (modules defined in a corresponding `.rs` file).
+
+### Modules (details)
+
+All items (including modules) and their children are private by default, but:
+
+- children can access their parents' items;
+- public enums' items are public.
+
+```rust
+mod front_of_house {
+  // Public module; doesn't make the *contents* public.
+  //
+  pub mod hosting {
+    // Can see stuff in `front_of_house`.
+    //
+    pub fn add_to_waitlist() {}
+  }
+}
+
+pub fn eat_at_restaurant() {
+  // Relative path.
+  // With this tree, the function invoked must be public.
+  //
+  front_of_house::hosting::add_to_waitlist();
+
+  hosting::add_to_waitlist();
+}
+```
+
+Modifiers (prefixes):
+
+- `crate`: absolute path
+- `super`: parent module (like current directory)
+- `self`
+
+Security levels:
+
+- `pub`, private
+- `pub(crate)`
+- `pub(super)`: visible to parents only
+- `pub in <crate>`: visible to to a specific parent module and descendants
+
+Multiple files/directories structure:
+
+```rust
+// This loads either `module.rs` or `module/mod.rs`.
+//
+mod <module>;
+```
+
+Importing:
+
+```rust
+// The item imported must be public. Using doesn't make the item public!
+// In order to import relatively, must (currently) use `self`.
+//
+// It's unidiomatic to import functions, while it's idiomatic to import enums, structs, etc.
+//
+use crate::front_of_house::hosting;
+
+// Import sibling modules in sibling files (shape.rs). The first assumes no reexport; the second assumes
+// a flattening reexport.
+//
+use super::shape::Shape;
+use super::Shape;
+
+// Solutions to clashing; both iditiomatic.
+//
+use std::io::Result as Ioresult;
+use std::io; // and reference `io::Result`
+
+// "Re-exporting"; allows referencing `hosting::add_to_waitlist`. Useful when the whole path is not
+// meaningful for the clients.
+//
+pub use crate::front_of_the_house::hosting;
+
+// Disambiguate; this refers to a `image` crate
+//
+use ::image::Pixels;
+
+// Other use syntaxes
+//
+use std::io::{self, Write}
+use std::collections::*; // useful for testing; unidiomatic for the rest
+```
 
 ## Assorted insanity
 

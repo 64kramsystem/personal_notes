@@ -9,9 +9,6 @@
     - [Cross-compilation](#cross-compilation)
     - [Cargo doc](#cargo-doc)
   - [Rustfmt](#rustfmt)
-  - [Packaging](#packaging)
-    - [Project structure (with modules)](#project-structure-with-modules)
-    - [Modules (details)](#modules-details)
 
 ## Cargo/Rustup
 
@@ -63,6 +60,11 @@ cucumber = {package = "cucumber_rust", version = "^0.7.0"}
 rand = "0.7.3"
 redisish = { path = "../redisish" }                         # Relative dependency
 amethyst = { git = "https://github.com/amethyst/amethyst" } # Repository; options: `branch`/`tag`/`rev` (master branch is the default)
+image = { path = "vendor/image", version = "0.13.0" }       # When both `path` and `version` are specified, `path` is used locally, and `version` publicly
+
+# Patch (modify) crates; see https://doc.rust-lang.org/cargo/reference/overriding-dependencies.html
+[patch.crates-io]
+uuid = { path = "../path/to/uuid" }
 
 # Another way to declare a dependency
 [dependencies.amethyst]
@@ -181,7 +183,7 @@ See Programming Rust, chapter 8.
 
 Use the attribute macro `#[rustfmt::skip]` in order to disable automatic formatting.
 
-Add a `rustfmt.toml` to the project root. See: https://rust-lang.github.io/rustfmt (don't forget to consider the channel).
+Add a `rustfmt.toml` to the project/workspace root. See: https://rust-lang.github.io/rustfmt (don't forget to consider the channel).
 
 ```toml
 # Unstable features work only on nightly!
@@ -189,137 +191,5 @@ Add a `rustfmt.toml` to the project root. See: https://rust-lang.github.io/rustf
 unstable_features = true
 
 blank_lines_upper_bound = 10             # unstable
-preserve_block_start_blank_lines = true  # unstable
-```
-
-## Packaging
-
-### Project structure (with modules)
-
-A package (=set of 1+ crates) can contain at most one library crate.
-
-Crate "roots":
-
-- `src/main.rs` -> binary crate (same name as package)
-- `src/lib.rs` -> library crate (same name as package)
-
-An option to put small binary crates inside a crate is to puth them in `src/bin`:
-
-- `src/bin/mycrate.rs` -> binary crate (named `mycrate`)
-
-this doesn't require addition to `Cargo.toml`; it's included in the `build`; in order to run, add `--bin mycrate`.
-
-Alternative configuration for multiple crates, via `Cargo.toml`:
-
-```toml
-# Array of tables -> there can be multiple.
-#
-[[bin]]
-name = "daemon"
-path = "src/daemon/bin/main.rs"
-```
-
-The relative (to the project root) source file path can be found via `file!()`.
-
-Modules structure (comments are content):
-
-```
-crate_name
-├── Cargo.toml
-└── src
-    ├── main.rs              // pub mod mod1; pub mod mod2
-    ├── main_a.rs
-    ├── mod1
-    │   ├── mod.rs           // pub mod mod1_a; pub mod mod1_b
-    │   ├── mod1_a.rs
-    │   └── mod1_b.rs
-    ├── mod2
-    │   ├── mod2_a.rs
-    └── mod2.rs              // pub mod mod2_a
-```
-
-`mod2` has an alternative structure (modules defined in a corresponding `.rs` file).
-
-### Modules (details)
-
-All items (including modules) and their children are private by default, but:
-
-- children can access their parents' items;
-- public enums' items are public.
-
-```rust
-mod front_of_house {
-  // Public module; doesn't make the *contents* public.
-  //
-  pub mod hosting {
-    // Can see stuff in `front_of_house`.
-    //
-    pub fn add_to_waitlist() {}
-  }
-}
-
-pub fn eat_at_restaurant() {
-  // Relative path.
-  // With this tree, the function invoked must be public.
-  //
-  front_of_house::hosting::add_to_waitlist();
-
-  hosting::add_to_waitlist();
-}
-```
-
-Modifiers (prefixes):
-
-- `crate`: absolute path
-- `super`: parent module (like current directory)
-- `self`
-
-Security levels:
-
-- `pub`, private, `pub(crate)`
-- `pub(super)`: visible to parents only
-- `pub in <crate>`: visible to to a specific parent module and descendants
-
-Multiple files/directories structure:
-
-```rust
-// This loads either `module.rs` or `module/mod.rs`.
-//
-mod <module>;
-```
-
-Importing:
-
-```rust
-// The item imported must be public. Using doesn't make the item public!
-// In order to import relatively, must (currently) use `self`.
-//
-// It's unidiomatic to import functions, while it's idiomatic to import enums, structs, etc.
-//
-use crate::front_of_house::hosting;
-
-// Import sibling modules in sibling files (shape.rs). The first assumes no reexport; the second assumes
-// a flattening reexport.
-//
-use super::shape::Shape;
-use super::Shape;
-
-// Solutions to clashing; both iditiomatic.
-//
-use std::io::Result as Ioresult;
-use std::io; // and reference `io::Result`
-
-// "Re-exporting"; allows referencing `hosting::add_to_waitlist`. Useful when the whole path is not
-// meaningful for the clients.
-//
-pub use crate::front_of_the_house::hosting;
-
-// Disambiguate; this refers to a `image` crate
-//
-use ::image::Pixels;
-
-// Other use syntaxes
-//
-use std::io::{self, Write}
-use std::collections::*; // useful for testing; unidiomatic for the rest
+preserve_block_start_blank_lines = true  # unstable; seems to have disappeared (put a comment at the beginning to workaround)
 ```

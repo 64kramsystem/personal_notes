@@ -1,3 +1,23 @@
+## Tue 17/Aug/2021
+
+- Admin
+  - [x] Check licensing MIT, GPL, BSD
+  - [x] Create placeholder for former `qemu-pinning` repo
+- Tools
+  - [x] Fight bug with PDF reader
+- Projects
+  - Schedule manager
+    - [x] Failed attempt to simplify the codec
+- Ruby/CS
+  - [x] Review RACC
+- Rust
+  - [ ] Programming Rust (2nd ed.)
+    - [x] Copy notes; review traits
+    - [x] Fight rustfmt VSC swallowed error
+- Rust/Gamedev
+  - Macroquad
+    - [x] Study `physics-platformer` (todo: example)
+
 ## Mon 16/Aug/2021
 
 - Rust/Gamedev

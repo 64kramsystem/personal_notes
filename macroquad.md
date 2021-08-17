@@ -1,7 +1,6 @@
 # Macroquad
 
 - [Macroquad](#macroquad)
-  - [Concepts to review, from Fish Game](#concepts-to-review-from-fish-game)
   - [Hello world](#hello-world)
   - [Draw](#draw)
     - [Text](#text)
@@ -14,37 +13,6 @@
   - [Misc](#misc)
     - [I/O](#io)
     - [Random](#random)
-
-## Concepts to review, from Fish Game
-
-- `macroquad-tiled`
-  - `Map`
-- `macroquad-platformer`
-  - `World`
-    - `set_actor_position`
-  - `StaticTiledLayer`
-  - `Solid`
-  - `Collider`
-  - `Actor`
-- `scene`
-  - `get_node(<Handle<T>>)`
-  - `find_node_by_type(<T>)`
-  - `add_node`
-  - `node.handle`
-- `ui::root_ui` -> seems GUI stuff; convenient for mid-screens, credits etc.
-- `StateMachine`
-  - `add_state(Self::ST_SHOOT, State::new().update(Self::update_shoot).coroutine(Self::shoot_coroutine)`
-  - `set_state`
-  - `update_detached(&mut node, |node| &mut node.state_machine);`
-- `AnimatedSprite`
-  - `set_animation`
-  - `set_frame`
-- `DrawTextureParams` has a `flip_<axis>`
-
-- [`nakama`](https://github.com/heroiclabs/nakama-rs): networking (Nakama protocol)
-- `nanoserde`: dependency-free serde
-
-- `EmittersCache` -> particles
 
 ## Hello world
 
@@ -67,7 +35,7 @@ fn window_conf() -> Conf {
 }
 
 #[macroquad::main("BasicShapes")]
-async fn main() -> Result<(), Box<dyn error::Error>> {
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
     loop {
         // blah...
         next_frame().await
