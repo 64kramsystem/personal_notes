@@ -8,24 +8,23 @@
     - [Ignore commands/Gitignore](#ignore-commandsgitignore)
   - [Commit](#commit)
   - [Index operations](#index-operations)
-  - [Repository](#repository)
   - [Log/Blame/Tree comparison](#logblametree-comparison)
     - [Formatting/Prettifications](#formattingprettifications)
     - [Pretty formats](#pretty-formats)
     - [Finding](#finding)
+  - [Diffing/Patching/Status](#diffingpatchingstatus)
   - [Metadata](#metadata)
   - [Merging](#merging)
   - [Rebase](#rebase)
-    - [Preserve merges when rebasing](#preserve-merges-when-rebasing)
-  - [History rewrite](#history-rewrite)
-    - [Remove a file](#remove-a-file)
-    - [Remove a merge](#remove-a-merge)
   - [Remotes](#remotes)
+  - [Submodules](#submodules)
   - [Stash](#stash)
   - [Bisect](#bisect)
   - [Export (`archive`)](#export-archive)
-  - [Batch operations (message/tree filtering, files removal)](#batch-operations-messagetree-filtering-files-removal)
-  - [Diffing/Patching/Status](#diffingpatchingstatus)
+  - [History rewrite](#history-rewrite)
+    - [Remove a file](#remove-a-file)
+    - [Remove a merge](#remove-a-merge)
+    - [Batch operations (message/tree filtering, files removal)](#batch-operations-messagetree-filtering-files-removal)
   - [Useful operations](#useful-operations)
     - [Aggressive garbage collection](#aggressive-garbage-collection)
     - [Shell prompt](#shell-prompt)
@@ -65,16 +64,19 @@ config --remove-section $section       # delete a section, with all the keys
 help -c                                # list all possible configuration keys
 ```
 
-| Parameter                 |    Value    | Comment                                            |
-| ------------------------- | :---------: | -------------------------------------------------- |
-| `user.name`               |    name     |                                                    |
-| `user.email`              |    email    |                                                    |
-| `core.editor`             |   editor    |                                                    |
-| `diff.tool`               | merge_tool  |                                                    |
-| `difftool.merge_tool.cmd` |   cmdline   | example: "winmerge.sh \"$LOCAL\" \"$REMOTE\""      |
-| `difftool.prompt`         |    false    |                                                    |
-| `alias.alias`             | 'arguments' | if arguments is only one, quotes can be omitted    |
-| `branch.autosetuprebase`  |   always    | automatically rebase instead of merge when pulling |
+| Parameter                 | Value (Suggested) | Comment                                            |
+| ------------------------- | :---------------: | -------------------------------------------------- |
+| `user.name`               |       name        |                                                    |
+| `user.email`              |       email       |                                                    |
+| `core.editor`             |      editor       |                                                    |
+| `diff.tool`               |    merge tool     |                                                    |
+| `difftool.merge_tool.cmd` |      cmdline      | example: "winmerge.sh \"$LOCAL\" \"$REMOTE\""      |
+| `difftool.prompt`         |      `false`      |                                                    |
+| `alias.alias`             |    'arguments'    | if arguments is only one, quotes can be omitted    |
+| `branch.autosetuprebase`  |     `always`      | automatically rebase instead of merge when pulling |
+| `diff.submodule`          |       `log`       | convenient submodules log display                  |
+| `status.submodulesummary` |        `1`        | add module changes summary to `status`             |
+| `push.recurseSubmodules`  |    `on-demand`    | automatically push submodules, if required         |
 
 ### Aliases
 
@@ -161,13 +163,6 @@ checkout HEAD -- $path
 checkout -b $name $commit         # create branch from commit
 ```
 
-## Repository
-
-```sh
-init       # init a repository
-clone $url # clone a remote repos
-```
-
 ## Log/Blame/Tree comparison
 
 ```sh
@@ -242,6 +237,56 @@ log --merges v0.1.8...v0.1.9                           # search merges between t
 [[ $(git cat-file -t $object 2> /dev/null) ]] && echo exists # check if a branch/commit/etc exists
 ```
 
+## Diffing/Patching/Status
+
+```sh
+# `--color` applies to diff/show, and forces coloring (if `color.ui` != `always`); this may be undesirable for processing.
+# `--ws-error-highlight=new,old` colors the removed trailing whitespace (which is not displayed by default (!!))
+
+show --name-[only|status] rev[:file]            # diff rev^..rev; show name only [--name-only] or status only [--name-status]
+show -m $merge                                  # show the full diff of the parents of a merge
+
+diff [--cached]                                 # non committed files; [--cached] files in the index
+diff --stat                                     # only filenames
+difftool                                        # GUI version of diff
+git difftool --extcmd='vim -d -c "windo set wrap" $5'    # Convenient vimdiff usage; requires `diffchar` plugin, otherwise, it's ugly
+
+status -sb                                      # more compact version of the status (show [b]ranch; first column: in index
+
+# Run a certain operation for each modified file.
+#
+git status -s | awk '{print $2}' | xargs -I {} scp {} myserver:mypath/{}
+```
+
+Diff/Patching:
+
+```sh
+# Patch with metadata retain (and commit).
+# $end_commit defaults to HEAD.
+# Use `$commit~..$commit` to transfer a single commit.
+# One patch per commit is created.
+#
+format-patch [--stdout] $start_commit~[..$end_commit]
+am $patchfile
+
+# "Transfer" one or more commits between two repositories.
+#
+git -C ~/code/riscv_images format-patch --stdout $start_commit[..$end_commit] |
+  sed 's| [ab]/ruby||g' |
+  git am
+
+# Patch with metadata loss (and no commit)
+#
+# WATCH OUT! One can configure `diff.noprefix true`, however, `format-patch` needs the prefixes to be
+# specified in one way or another (they're mandatory, but `format-patch` has no configuration entries).
+#
+# - diff: suitable for standard patch import; with prefix, import using "patch -p1"
+# - apply: [check] instead of apply
+#
+diff --no-prefix
+apply [--check] $patchfile
+```
+
 ## Metadata
 
 ```sh
@@ -310,9 +355,100 @@ git rebase -i --root
 GIT_SEQUENCE_EDITOR="sed -i -re 's/^pick /e /'" git rebase -i "$(git merge-base HEAD master)"
 ```
 
-### Preserve merges when rebasing
-
 It's possible to preserve merges using `--rebase-merges`, although it's not entirely clear how to do funky manipulations of history.
+
+## Remotes
+
+```sh
+fetch [--all]                                            # fetch remote changes; [all] remotes
+pull [--rebase]                                          # fetch+merge; do [rebase] instead of merging
+
+remote                                                   # list the remotes; a remote is a label for a remote repos url
+remote add $name $remote_url                             # add a remote (eg. for forks (upstream))
+push [-u] [$remote [$branch[$rem_branch]]]               # push changes; optionally only for a [branch] - if it's a branch, a remote branch is created; push
+                                                         # set [u]pstream; set [rem_branch] if name differs from local
+push --tags [--force]                                    # push [tags] information; this will *not* push the branch, unless also the branch data is specified ($remote $branch...)
+
+push $remote :$branch                                    # delete a remote branch
+push $remote :heads/$branch                              # delete a remote branch
+push $remote :refs/tags/$tag                             # delete a remote tag
+```
+
+Examples:
+
+```sh
+# List status of all the local branches.
+#
+for-each-ref --format="%(refname:short) %(upstream:track)" refs/heads
+```
+
+## Submodules
+
+Submodules are tracked in a `.gitmodules` file.
+
+```sh
+# This takes care of adding the module, cloning and updating it, which otherwise must be done in steps.
+clone --recurse-submodules $url
+
+# Track a specific branch of the submodule!
+config -f .gitmodules submodule.$sub_name.branch $branch_name
+
+# Update all submodules (and init them, if empty).
+submodule update --init --recursive
+
+# Make pull recursively pull the submodules. As of v2.32, there is not config entry.
+# WATCH OUT! `pull` alone won't update the submodules!
+pull --recurse-submodules
+
+# Update a single submodule
+submodule update --remote $repo_name
+
+# WATCH OUT! Must recurse the submodules (there is a config for this), otherwise, it's possible that
+# the remote repo may refer to a submodule version that it doesn't hold!
+push --recurse-subdmodules
+```
+
+Git treats the subdomule directory as special file (with special perm `160000`); its contents are not considered from outside it.
+
+See [configuration](#configuration) for useful config entries.
+
+## Stash
+
+```sh
+stash                         # save current changes to the stash
+stash save [--patch]          # !! `--patch` = interactive stashing (can choose what to save) !!
+stash (pop|apply)             # restore with/out clearing the entry
+stash list
+stash clear
+stash show -p $stash_entry    # shows a stash entry content
+```
+
+Examples:
+
+```sh
+# Recover dropped stashes
+#
+gitk --all $(git fsck --no-reflog | awk '/dangling commit/ {print $3}')
+```
+
+## Bisect
+
+```sh
+bisect good $rev      # Mark an old enough rev as good: git automatically checks out the middle revision
+bisect run $command   # Bisect using command exit code to find failures; if the command has aliases/etc, use `bash -c '<commands>'` as command.
+```
+
+## Export (`archive`)
+
+```sh
+fast-export --all      # export repo
+fast-import            # import repo
+archive $rev           # export a rev to stdout (defaults to tar format)
+
+# Example export->import into another directory.
+#
+archive master Gemfile Gemfile.lock gems_dir | tar x -f - -C /export
+```
 
 ## History rewrite
 
@@ -354,70 +490,7 @@ pick f92c47a setup_system: Increase timeout when connecting to the VM
 label increase-start-vm-timeout
 ```
 
-## Remotes
-
-```sh
-fetch [--all]                                            # fetch remote changes; [all] remotes
-pull [--rebase]                                          # fetch+merge; do [rebase] instead of merging
-
-remote                                                   # list the remotes; a remote is a label for a remote repos url
-remote add $name $remote_url                             # add a remote (eg. for forks (upstream))
-push [-u] [$remote [$branch[$rem_branch]]]               # push changes; optionally only for a [branch] - if it's a branch, a remote branch is created; push
-                                                         # set [u]pstream; set [rem_branch] if name differs from local
-push --tags [--force]                                    # push [tags] information; this will *not* push the branch, unless also the branch data is specified ($remote $branch...)
-
-push $remote :$branch                                    # delete a remote branch
-push $remote :heads/$branch                              # delete a remote branch
-push $remote :refs/tags/$tag                             # delete a remote tag
-```
-
-Examples:
-
-```sh
-# List status of all the local branches.
-#
-for-each-ref --format="%(refname:short) %(upstream:track)" refs/heads
-```
-
-## Stash
-
-```sh
-stash                         # save current changes to the stash
-stash save [--patch]          # !! `--patch` = interactive stashing (can choose what to save) !!
-stash (pop|apply)             # restore with/out clearing the entry
-stash list
-stash clear
-stash show -p $stash_entry    # shows a stash entry content
-```
-
-Examples:
-
-```sh
-# Recover dropped stashes
-#
-gitk --all $(git fsck --no-reflog | awk '/dangling commit/ {print $3}')
-```
-
-## Bisect
-
-```sh
-bisect good $rev      # Mark an old enough rev as good: git automatically checks out the middle revision
-bisect run $command   # Bisect using command exit code to find failures; if the command has aliases/etc, use `bash -c '<commands>'` as command.
-```
-
-## Export (`archive`)
-
-```sh
-fast-export --all      # export repo
-fast-import            # import repo
-archive $rev           # export a rev to stdout (defaults to tar format)
-
-# Example export->import into another directory.
-#
-archive master Gemfile Gemfile.lock gems_dir | tar x -f - -C /export
-```
-
-## Batch operations (message/tree filtering, files removal)
+### Batch operations (message/tree filtering, files removal)
 
 Mass-change all the messages in the current branch.
 
@@ -434,56 +507,6 @@ git filter-branch --force --tree-filter 'rm -f terraform/terraform.tfstate' mast
 
 # Delete a Ruby method.
 git filter-branch --force --tree-filter 'ag "def mymethod" -l | xargs -r perl -0777 -i -pe "s/^(\s+)def mymethod.*?^\g1end\n\n//sm"' master..HEAD
-```
-
-## Diffing/Patching/Status
-
-```sh
-# `--color` applies to diff/show, and forces coloring (if `color.ui` != `always`); this may be undesirable for processing.
-# `--ws-error-highlight=new,old` colors the removed trailing whitespace (which is not displayed by default (!!))
-
-show --name-[only|status] rev[:file]            # diff rev^..rev; show name only [--name-only] or status only [--name-status]
-show -m $merge                                  # show the full diff of the parents of a merge
-
-diff [--cached]                                 # non committed files; [--cached] files in the index
-diff --stat                                     # only filenames
-difftool                                        # GUI version of diff
-git difftool --extcmd='vim -d -c "windo set wrap" $5'    # Convenient vimdiff usage; requires `diffchar` plugin, otherwise, it's ugly
-
-status -sb                                      # more compact version of the status (show [b]ranch; first column: in index
-
-# Run a certain operation for each modified file.
-#
-git status -s | awk '{print $2}' | xargs -I {} scp {} myserver:mypath/{}
-```
-
-Diff/Patching:
-
-```sh
-# Patch with metadata retain (and commit).
-# $end_commit defaults to HEAD.
-# Use `$commit~..$commit` to transfer a single commit.
-# One patch per commit is created.
-#
-format-patch [--stdout] $start_commit~[..$end_commit]
-am $patchfile
-
-# "Transfer" one or more commits between two repositories.
-#
-git -C ~/code/riscv_images format-patch --stdout $start_commit[..$end_commit] |
-  sed 's| [ab]/ruby||g' |
-  git am
-
-# Patch with metadata loss (and no commit)
-#
-# WATCH OUT! One can configure `diff.noprefix true`, however, `format-patch` needs the prefixes to be
-# specified in one way or another (they're mandatory, but `format-patch` has no configuration entries).
-#
-# - diff: suitable for standard patch import; with prefix, import using "patch -p1"
-# - apply: [check] instead of apply
-#
-diff --no-prefix
-apply [--check] $patchfile
 ```
 
 ## Useful operations

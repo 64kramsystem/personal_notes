@@ -263,6 +263,8 @@ Structs without fields are "Zero-sized types" (ZST), and don't take any space in
 
 There are no guarantees about the struct underlying memory layout (unless `#[repr(C)]` is used), except that the fields are stored in the struct memory block.
 
+Enums also don't have a guaranteed layout, except that the first byte is the tag.
+
 ### References
 
 Reference:

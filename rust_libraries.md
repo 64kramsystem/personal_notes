@@ -280,6 +280,8 @@ BufWriter::new(vec);
 
 for more complex operations (ie. involving seek), can use [io::Cursor](https://doc.rust-lang.org/std/io/struct.Cursor.html).
 
+A convenient type is `std::io::Sink`, which discards all the data sent.
+
 #### Read/Write traits
 
 `std::io::Read`:

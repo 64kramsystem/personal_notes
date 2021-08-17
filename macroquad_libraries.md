@@ -2,7 +2,7 @@
 
 - [Macroquad Libraries](#macroquad-libraries)
   - [Tiled (`tiled`)](#tiled-tiled)
-  - [Physics (`physic-platformer`)](#physics-physic-platformer)
+  - [Physics (`physics-platformer`)](#physics-physics-platformer)
   - [Entities management](#entities-management)
     - [Storage](#storage)
     - [Scene/Node graph](#scenenode-graph)
@@ -42,7 +42,7 @@ let macroquad_tiled::Object { world_x, world_y, .. } = objects[0];
 tiled_map.draw_tiles("main layer", Rect::new(0.0, 0.0, map_w, map_h), None);
 ```
 
-## Physics (`physic-platformer`)
+## Physics (`physics-platformer`)
 
 Types:
 
@@ -53,6 +53,11 @@ Types:
 - `Solid`            : only id
 - `Tile`             : tyle type (enum)
 
+Concepts not covered:
+
+- descent/wood: involved with jump through (both up and down)
+- squished
+
 ```rs
 const JUMP_SPEED: f32 = -700.0;
 const GRAVITY: f32 = 2000.0;
@@ -60,13 +65,8 @@ const MOVE_SPEED: f32 = 300.0;
 
 // The actor position is owned/managed by the world (see move_*() calls in the game loop).
 struct Player {
-    collider: Actor,
+    actor: Actor, // this is informally referred to as collider
     speed: Vec2,
-}
-
-struct Resources {
-    whale: Texture2D,
-    physics: World,
 }
 
 impl Resources {
@@ -96,16 +96,25 @@ impl Player {
     fn new() {
       // When a new actor is added, create a collider for it, and add it to the world.
       // Use the collsion box dimensions here (which can be different from the sprite ones)
-      let collider: Actor = world.add_actor(
+      // 
+      // There is also an `add_solid()` method.
+      //
+      let actor: Actor = world.add_actor(
           vec2(200., 100.), // pos
           36, 66,           // w/h
       );
+
+      // Collider rectangle
+      //
+      println!("Collider rect: {}", actor.rect);
     }
 
     fn update() {
         // Get the player position; the Actor is just an id wrapper.
-        let player_pos: Vec2 = world.actor_pos(player.collider);
-        let on_ground: bool = world.collide_check(player.collider, player_pos + vec2(0., 1.));
+        let player_pos: Vec2 = world.actor_pos(player.actor);
+
+        // Collision check
+        let on_ground: bool = world.collide_check(player.actor, player_pos + vec2(0., 1.));
 
         if !on_ground {
             player.speed.y += GRAVITY * get_frame_time();
@@ -124,11 +133,37 @@ impl Player {
             }
         }
 
-        world.move_h(player.collider, player.speed.x * get_frame_time());
-        world.move_v(player.collider, player.speed.y * get_frame_time());
+        // Initiate a descent; the library performs the necessary checks
+        if player.on_ground && player.input.down && player.input.jump {
+            world.descent(player.actor);
+        }
+
+        // Moves, per-pixel, taking into account the tiles (eg. stops before a solid)
+        world.move_h(player.actor, player.speed.x * get_frame_time());
+        world.move_v(player.actor, player.speed.y * get_frame_time());
+
+        // Set the collider unconditionally
+        world.set_actor_position(player.actor, player.pos);
+
+        world.collide_check
     }
 }
 ```
+
+Solid-related methods (similar to Actor):
+
+- `add_solid(&mut self, pos: Vec2, width: i32, height: i32) -> Solid`
+- `solid_move(&mut self, solid: Solid, dx: f32, dy: f32)`
+- `solid_at(&self, pos: Vec2) -> bool`
+- `collide_solids(&self, pos: Vec2, width: i32, height: i32) -> Tile`
+- `solid_pos(&self, solid: Solid) -> Vec2`
+
+Other methods:
+
+- `tag_at(&self, pos: Vec2, tag: u8) -> bool`: true if the pos matches: a non-empty tile on that layer, or a collidable solid
+- `collide_tag(&self, tag: u8, pos: Vec2, width: i32, height: i32) -> Tile`
+- `squished(&self, actor: Actor) -> bool`: true if the actor is squished
+
 
 ## Entities management
 

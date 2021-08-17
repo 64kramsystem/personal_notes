@@ -13,6 +13,7 @@
     - [Collections destructuring in blocks](#collections-destructuring-in-blocks)
     - [Modules](#modules)
     - [Refinements](#refinements)
+  - [Metadata (constants etc.) modifiers](#metadata-constants-etc-modifiers)
     - [Regular expression APIs/notes](#regular-expression-apisnotes)
     - [Weak references](#weak-references)
   - [Special variables/Built-in constants](#special-variablesbuilt-in-constants)
@@ -304,9 +305,21 @@ describe NilEmptyHelper do
 end
 ```
 
+## Metadata (constants etc.) modifiers
+
+```ruby
+class Klazz
+  CONST = 123; CONST2 = 234
+  private_constant :CONST, :CONST2 # can't be inlined or put before the const definition
+end
+```
+
 ### Regular expression APIs/notes
 
-- the `/s` flag is not needed; additionally, it has a different meaning (just don't use it).
+Flags:
+
+- `/x` : ignore whitespace and comments
+- `/s` : don't use it - not needed, and it has a different meaning
 
 ```ruby
 Regexp.union(*strings_or_regexes)         # Generates a `/a|b|.../` Regexp instance; String expressions are escaped
