@@ -27,11 +27,14 @@
     - [Applications/examples](#applicationsexamples)
       - [Replace spaced coordinates with monotonically increasing values](#replace-spaced-coordinates-with-monotonically-increasing-values)
   - [Stored procedures](#stored-procedures)
+    - [Metadata](#metadata)
+    - [Base structure](#base-structure)
     - [Variables](#variables)
     - [Control flow syntax](#control-flow-syntax)
     - [Statements output and SLEEP](#statements-output-and-sleep)
     - [Exceptions handling](#exceptions-handling)
     - [Cursors (with example procedure)](#cursors-with-example-procedure)
+  - [Events](#events)
   - [Performance/Optimization](#performanceoptimization)
     - [General optimization topics](#general-optimization-topics)
     - [Query hints](#query-hints)
@@ -40,12 +43,13 @@
     - [Dynamic SQL](#dynamic-sql)
   - [Fulltext indexes](#fulltext-indexes)
     - [Manipulate search relevance for multiple columns (boosting)](#manipulate-search-relevance-for-multiple-columns-boosting)
+  - [Replication](#replication)
   - [Administration](#administration)
     - [Non-blocking schema changes](#non-blocking-schema-changes)
     - [Observe ALTER TABLE progress](#observe-alter-table-progress)
   - [Client/server](#clientserver)
     - [Find configuration files used](#find-configuration-files-used)
-  - [Metadata](#metadata)
+  - [Database metadata](#database-metadata)
   - [Convenient operations](#convenient-operations)
     - [Skip the indexes on mysqldump dumps](#skip-the-indexes-on-mysqldump-dumps)
 
@@ -657,6 +661,8 @@ WHERE {parent_fk} = ?
 
 ## Stored procedures
 
+### Metadata
+
 List stored procedures (via information schema):
 
 ```sql
@@ -665,6 +671,33 @@ FROM information_schema.routines
 WHERE routine_type = 'PROCEDURE'
       -- AND routine_schema = @database_name
       AND routine_name LIKE 'rds\_%';
+```
+
+### Base structure
+
+```sql
+-- The options set are the default.
+
+DELIMITER $$
+
+CREATE
+-- Optional.
+DEFINER = CURRENT_USER
+PROCEDURE MY_PROC()
+-- Affects the optimizer.
+-- Option: DETERMINISTIC
+NOT DETERMINISTIC
+-- This is only advisory; doesn't constraint what the SP can do.
+-- Options: CONTAINS SQL (def.) | NO SQL | READS SQL DATA
+MODIFIES SQL DATA
+-- The security context the SP runs in.
+-- Option: INVOKER
+SQL SECURITY DEFINER
+BEGIN
+  -- ...
+END$$
+
+DELIMITER ;
 ```
 
 ### Variables
@@ -680,7 +713,7 @@ DELETE FROM mytable LIMIT deletion_limit;
 
 ### Control flow syntax
 
-Control flow (there is no for loop!):
+There is no for loop; the closest is probably WHILE.
 
 ```sql
 IF @condition THEN
@@ -691,7 +724,7 @@ ELSE
   # block
 END IF;
 
-# Exit from a cycle.
+# Exit from a cycle; the label is mandatory.
 LEAVE label;
 
 WHILE condition DO
@@ -802,6 +835,22 @@ DELIMITER ;
 ###################################################
 
 CALL ALL_TENANTS_OPERATION(); DROP PROCEDURE ALL_TENANTS_OPERATION;
+```
+
+## Events
+
+```sql
+-- The options set are the default.
+
+CREATE EVENT my_event
+ON SCHEDULE
+EVERY 15 MINUTE
+-- Optional; options: DISABLE | DISABLE ON SLAVE
+ENABLE
+-- Optional.
+COMMENT 'My event comment'
+DO
+CALL mydb.my_stored_procedure;
 ```
 
 ## Performance/Optimization
@@ -939,6 +988,24 @@ ORDER BY
   5 * MATCH (col1) AGAINST (@keyword) + MATCH (col2) AGAINST (@keyword) DESC;
 ```
 
+## Replication
+
+```sql
+-- The `SLAVE` definiton has been deprecated.
+--
+SHOW REPLICA STATUS\G
+```
+
+Gather the replication status via SELECT:
+
+```sql
+-- `ON`/`OFF` (enum).
+--
+SELECT SERVICE_STATE FROM performance_schema.replication_applier_status;
+
+-- Another replication metadata table is `performance_schema.replication_connection_status`.
+```
+
 ## Administration
 
 ### Non-blocking schema changes
@@ -998,7 +1065,7 @@ Only the last stage `log apply table` causes contention; on the longest occurren
 ls -l $(mysqld --verbose --help | awk "/Default options/ { getline; gsub(\"~\", \"$HOME\", \$0); print }") 2> /dev/null
 ```
 
-## Metadata
+## Database metadata
 
 Space occupation of InnoDB indexes (data):
 
