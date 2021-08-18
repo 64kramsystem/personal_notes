@@ -1,3 +1,12 @@
+## Wed 18/Aug/2021
+
+- System
+  - Improve VFIO card consumption
+    - [x] Brutal fight with investigation
+- Rust
+  - [ ] Programming Rust (2nd ed.)
+    - [x] Chapter 12: Operator Overloading
+
 ## Tue 17/Aug/2021
 
 - Admin
