@@ -1,3 +1,15 @@
+## Thu 19/Aug/2021
+
+- Gamedev
+  - [ ] Game Programming Algorithms and Techniques
+    - [ ] Chapter 03: Linear Algebra for Games
+- System
+  - Improve VFIO card consumption
+    - [x] Verify if any process runs on the second card, with `AutoAddGPU = false`
+    - [x] Try `nvidia-smi` with different scenarios
+    - [x] Try persistence mode
+      - Found possible solution
+
 ## Wed 18/Aug/2021
 
 - System
