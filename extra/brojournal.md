@@ -1,3 +1,10 @@
+## Fri 20/Aug/2021
+
+- System
+  - Improve VFIO card consumption
+    - [x] Verify unbinding without `nvidia-persistenced` running
+    - [x] Study `nvidia-smi`
+
 ## Thu 19/Aug/2021
 
 - Gamedev
