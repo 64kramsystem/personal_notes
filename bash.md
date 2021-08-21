@@ -34,7 +34,6 @@
     - [Ask for input (keypress)](#ask-for-input-keypress)
     - [Trapping errors (hooks)](#trapping-errors-hooks)
     - [Log a script output/Enable debugging [log]](#log-a-script-outputenable-debugging-log)
-    - [Switching to root user inside a script](#switching-to-root-user-inside-a-script)
     - [Check if there's data in stdin](#check-if-theres-data-in-stdin)
     - [Check if a script is `source`d](#check-if-a-script-is-sourced)
     - [Sudo-related tasks](#sudo-related-tasks)
@@ -560,6 +559,8 @@ Substitutions generally have the single (single operator) or global (double oper
 
 Parameter expansion supports internal expansion, and escape chars: `line=${line//$'\t'/ }`
 
+WATCH OUT! Replacements are greedy.
+
 ```sh
 ${str:-<expr>}                    # default a parameter: set if undefined or blank
 ${str:+<expr>}                    # if the var is set, replace with <expr> (which can include the $param itself!)
@@ -831,7 +832,7 @@ declare -p MYHASH                    # print the AA (in declaration form)
 # Iterate.
 # in order to iterate the sorted keys, use `mapfile` as in the Arrays section
 #
-for key in ${!MYHASH[@]}; do echo "$key => ${MYHASH[$key]}"; done
+for key in "${!MYHASH[@]}"; do val=${MYHASH[$key]}; echo "$key=$val"; done
 
 # Test if a variable is an associate array (!!)
 # `declare -p` prints the declaration; writes to stderr if the variable doesn't exist
@@ -948,17 +949,6 @@ BASH_XTRACEFD="5"
 set -x
 ```
 
-### Switching to root user inside a script
-
-This is not possible, but there is a workaround:
-
-```sh
-if [[ $(id -u) -ne 0 ]]; then
-  sudo "$0" "$@"
-  exit $?
-fi
-```
-
 ### Check if there's data in stdin
 
 Check if there is data in stdin (can't be done in Bash natively; see https://unix.stackexchange.com/q/33049):
@@ -1011,11 +1001,22 @@ if [[ $EUID -eq 0 ]]; then
 fi
 ```
 
+Switch to root user inside a script; this is not possible, but there is a workaround:
+
+```sh
+if [[ $(id -u) -ne 0 ]]; then
+  sudo "$0" "$@"
+  exit $?
+fi
+```
+
 ### Time-related functionalities (incl. benchmarking)
 
 ```sh
-# Check time passed.
-SECONDS=0; while [[ $SECONDS -lt 10 ]]; do sleep 1; done
+# Check time passed, using for loop!
+# $SECONDS can be used in general, and it will start ticking immediately after set.
+#
+for ((SECONDS=0; SECONDS < 10; )); do sleep 1; done
 
 # Wait until next beginning of second
 sleep 0.$(printf '%04d' $((10000 - 10#$(date +%4N))))

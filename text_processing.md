@@ -9,7 +9,8 @@
       - [Flip-flop, with examples](#flip-flop-with-examples)
     - [Priority](#priority)
     - [Special variables](#special-variables)
-    - [Data types, conversions and contexts](#data-types-conversions-and-contexts)
+    - [Data types/conversions](#data-typesconversions)
+      - [Context](#context)
       - [Arrays](#arrays)
       - [Hashes](#hashes)
     - [Date/times](#datetimes)
@@ -131,6 +132,9 @@ printf 'Line 1\nLine 2' | perl -lne 'print $_; $line = readline && print $line'
 printf 'Line 1\nLine 2' | perl -lne 'print $_; $line = readline and print $line'
 printf 'Line 1\nLine 2' | perl -lne 'print $_; ($line = readline) && print $line'
 
+# Short form of the correct version.
+printf 'Line 1\nLine 2' | perl -lne 'print; print scalar(readline)'
+
 # In cases like flip-flop, either use parenteses, or the low-priority operators `and`/`or`.
 #
 /start/ .. /end/ and print "match!"
@@ -146,7 +150,7 @@ Special variables can be modified, depending on the type, on each cycle, or in t
 - `$ENV`: env variables; don't forget that they need to be exported!!
 - `@ARGV`: arguments (not including command)
 
-### Data types, conversions and contexts
+### Data types/conversions
 
 ```sh
 # Strings can be single- or double-quoted
@@ -166,7 +170,11 @@ $counter += /matching_line/
 $counter += ($match != "1")
 ```
 
+#### Context
+
 Depending on the context, operations return different values. Watch out when using capturing groups!
+
+Reference: https://perldoc.perl.org/perldata#Context
 
 ```sh
 # Prints (unexpectedly) 2, because the regex returns a scalar for the match (0/1)
@@ -176,6 +184,10 @@ printf '1\n2\n3' | perl -ne '$tot += /([23])/; END { print $tot }'
 # Prints (correctly) 6, because the array addressing makes the regex return an array with the matches.
 #
 printf '1\n2\n3' | perl -ne '$tot += (/(.)/)[0]; END { print $tot }'
+
+# Context can be enforced:
+#
+perl -ne 'print; print scalar(readline)'
 ```
 
 #### Arrays
@@ -631,6 +643,16 @@ sort -t, -n -k1
 # `-u/--unique`: distinct
 #
 sort -t, -n -k 1,1 -k 2,2 -k 3,3 -u
+```
+
+Sort doesn't support indexing from the end; in this case, use a different strategy:
+
+```sh
+awk '{print $NF,$0}' | sort | cut -f2- -d' '
+
+# this should work, but doesn't; it's an interesting idea, and could potentially be further simplified
+# by using `-a`
+perl -e 'print sort { (split "/", $a)[-1] <=> (split "/", $b)[-1] } <>'
 ```
 
 ## jq

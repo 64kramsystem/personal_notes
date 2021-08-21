@@ -1,3 +1,15 @@
+## Sat 21/Aug/2021
+
+- System
+  - Improve VFIO card consumption
+    - [x] Write switch script
+      - [x] Verify what `vfio-pci-bind.sh` does
+      - [x] Fight Perl readline
+    - [x] Investigate processes
+    - [x] Investigate/apply permissions change strategy
+      - [x] Attempt udev approach
+      - [x] Brutal fight with card/services misbehavior
+
 ## Fri 20/Aug/2021
 
 - System
