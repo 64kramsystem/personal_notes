@@ -12,6 +12,7 @@
     - [Sparse files](#sparse-files)
     - [ulimit](#ulimit)
       - [Solve "Too many open files"](#solve-too-many-open-files)
+  - [Udev](#udev)
   - [Add swap file](#add-swap-file)
   - [Packages](#packages)
     - [Apt/dpkg installation hooks (`etc/apt/apt.conf.d`)](#aptdpkg-installation-hooks-etcaptaptconfd)
@@ -319,6 +320,18 @@ session required pam_limits.so
 
 # now check again
 sudo -u mysql bash -c "ulimit -n"
+```
+
+## Udev
+
+Write a rule that changes a device permissions:
+
+```sh
+# Matches /dev/sda1. No need for executable permissions on the rules file.
+#
+cat > /etc/udev/rules.d/20-myrule.rules <<UDEV
+KERNEL=="sda1", MODE="0600", GROUP="mygroup"
+UDEV
 ```
 
 ## Add swap file

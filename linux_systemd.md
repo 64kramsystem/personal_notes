@@ -91,6 +91,7 @@ journalctl --vacuum-size=128M
 
 See:
 
+- https://www.man7.org/linux/man-pages/man5/systemd.exec.5.html
 - https://www.freedesktop.org/software/systemd/man/systemd.service.html
 - https://www.freedesktop.org/software/systemd/man/systemd.kill.html
 
@@ -103,13 +104,15 @@ Almost all the entries are optional. Escaping is not standard; in order to escap
 # for example, a space is escaped with a slash, both the slash and the space will be part of the string
 # (!).
 #
-SYSTEMD_EDITOR=tee systemctl edit --full myservice.service << UNIT
+SYSTEMD_EDITOR=tee systemctl edit --force --full myservice << 'UNIT'
 [Unit]
 Description=My Service
 
 # `Requires` states only dependency; `After` mandates ordering.
 #
 Requires=network.target
+# Multiple services are separated by a space.
+#
 After=network.target
 
 # Example of waiting for a network device to be online.
@@ -120,23 +123,29 @@ After=network.target
 [Service]
 # If ExecStart is specified (and `BusName` not specified), `simple` is implicit.
 # Use `forking` when the process forks (e.g. nmon).
+# Generally prefer `oneshot` to `simple` (see https://stackoverflow.com/a/39050387 and https://trstringer.com/simple-vs-oneshot-systemd-service/#summary).
 #
-Type=simple
+Type=oneshot
 
 # Outputs are overwritten, unless the `append` file mode is used (e.g. `append:/path/to/my-service.log`);
 # this is available from v240, though (Bionic provides v237).
 #
-StandardOutput=syslog
-StandardError=syslog
-SyslogIdentifier=my-service
+StandardOutput=syslog        # default: journal
+StandardError=syslog         # ^^
+SyslogIdentifier=my-service  # defaults to the name of the executed process
+SyslogFacility=daemon        # default
 
+# Owner defaults to root, but if user-specific vars like $HOME needs to be set, then set `User=root`.
 User=app
 Group=app
 
 WorkingDirectory=/path/to/base_dir
 
-Environment=BUNDLE_GEMFILE=/path/to/Gemfile
-Environment=RAILS_ENV=my_rail_env
+Environment="BUNDLE_GEMFILE=/path/to/Gemfile" "RAILS_ENV=my_rail_env"
+# This is needed if one wants to interact with the desktop, e.g. use `notify-send`.
+# WATCH OUT!! Desktop notifications are sent asynchronously; if the script exits immediately after executing
+# `notify-send` (or so), the notification won't be displayed!
+Environment="DISPLAY=:0" "XAUTHORITY=/home/myuser/.Xauthority"
 
 # In other to extend $PATH, use something like:
 #
