@@ -1,3 +1,16 @@
+## Sun 22/Aug/2021
+
+- Tools
+  - [x] Test open source alternative file sharing solution
+    - [x] Preliminary investigation on how to command it from a root context
+- Gamedev
+  - [ ] Game Programming Algorithms and Techniques
+    - [x] Chapter 03: Linear Algebra for Games (part)
+    - [x] Chapter 04: 3D Graphics
+- Projects
+  - nv-switch
+    - [x] Create project and publish first version
+
 ## Sat 21/Aug/2021
 
 - System
