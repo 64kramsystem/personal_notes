@@ -1,3 +1,18 @@
+## Mon 23/Aug/2021
+
+- Tools
+  - [x] Investigate and report Libreoffice GTK3 issue
+- Rust/Gamedev
+  - Bevy
+    - [x] Investigate relationship between `FixedTimestep` and states
+  - Macroquad
+    - [x] Experiment tilesets/properties with Tiled
+    - [x] `platformer` example: Implement jumpthrough and descent (+open PR)
+      - Fight existing issue with inconsistent height
+- Projects
+  - Improve VFIO card consumption
+    - [x] Prepare all issues
+
 ## Sun 22/Aug/2021
 
 - Tools
