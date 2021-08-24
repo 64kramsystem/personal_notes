@@ -35,6 +35,7 @@
     - [Exceptions handling](#exceptions-handling)
     - [Cursors (with example procedure)](#cursors-with-example-procedure)
   - [Events](#events)
+  - [ALTER TABLE](#alter-table)
   - [Performance/Optimization](#performanceoptimization)
     - [General optimization topics](#general-optimization-topics)
     - [Query hints](#query-hints)
@@ -852,6 +853,10 @@ COMMENT 'My event comment'
 DO
 CALL mydb.my_stored_procedure;
 ```
+
+## ALTER TABLE
+
+As of 8.0.25, the `INSTANT` algorithm doesn't work if there are MVI indexes on the table.
 
 ## Performance/Optimization
 

@@ -1,3 +1,17 @@
+## Tue 24/Aug/2021
+
+- Rust/Gamedev
+  - Macroquad
+    - [x] Refactor `platformer` example in order to better understand APIs (no functional changes)
+      - [x] Investigate solid <> solid collision (study source)
+- Gamedev
+  - [ ] Game Programming Algorithms and Techniques
+    - [x] Chapter 05: Input
+    - [ ] Chapter 06: Sound
+- Tools
+  - [x] Follow up Libreoffice GTK3 issue
+    - Reference: https://ask.libreoffice.org/t/calc-and-writer-ver-7-0-are-extremely-slow/58522
+
 ## Mon 23/Aug/2021
 
 - Tools

@@ -40,6 +40,13 @@ let macroquad_tiled::Object { world_x, world_y, .. } = objects[0];
 
 // Draw the map
 tiled_map.draw_tiles("main layer", Rect::new(0.0, 0.0, map_w, map_h), None);
+
+// Tile dimension properties
+tiled_map.raw_tiled_map.width;      // in tiles
+tiled_map.raw_tiled_map.tilewidth;
+
+// Layer-related
+tiled_map.layers["layer_name"].width // in tiles
 ```
 
 ## Physics (`physics-platformer`)
@@ -49,8 +56,8 @@ Types:
 - `World`            : layers, (solids+colliders) + (actors+colliders)
 - `StaticTiledLayer` : tiles
 - `Collider`
-- `Actor`            : only id
-- `Solid`            : only id
+- `Actor`            : (only id)
+- `Solid`            : (only id) this is a MQ concept, not Tiled
 - `Tile`             : tyle type (enum)
 
 Concepts not covered:

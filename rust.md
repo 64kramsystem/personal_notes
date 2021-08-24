@@ -303,6 +303,7 @@ u32::from_le_bytes([u8; _])                   // convert big endian array of byt
 u32::from_le_bytes(&[u8].try_into().unwrap()) // same, from slice; requires `std::convert::TryInto`
 f64.to_bits()                                 // transmute to u64 (for bit-wise ops)
 f64::from_bits(u64)                           // transmute from u64 (for bit-wise ops)
+f64::is_sign_positive()                       // important! we can't use `-0.0 >= 0.0` for comparison (if sign is important)
 
 integer.to_string();                      // integer to string
 String::from_utf8(bytes).unwrap();        // (valid) utf-8 bytes to string

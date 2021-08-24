@@ -78,6 +78,19 @@ help -c                                # list all possible configuration keys
 | `status.submodulesummary` |        `1`        | add module changes summary to `status`             |
 | `push.recurseSubmodules`  |    `on-demand`    | automatically push submodules, if required         |
 
+A section may be conditional, although this can also be accomplished per-project:
+
+```
+[includeIf "gitdir:~/work/"]
+  path = ~/.work.gitconfig
+```
+
+The gitconfig search order is:
+
+1. `/etc/gitconfig`
+2. `~/.gitconfig` / `~/.config/git/config`
+3. `$project/.git/config`
+
 ### Aliases
 
 General notes:
