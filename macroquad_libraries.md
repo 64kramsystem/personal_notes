@@ -2,7 +2,7 @@
 
 - [Macroquad Libraries](#macroquad-libraries)
   - [Tiled (`tiled`)](#tiled-tiled)
-  - [Physics (`physics-platformer`)](#physics-physics-platformer)
+  - [Tiles (`tiles`) + physics (`physics-platformer`), with example](#tiles-tiles--physics-physics-platformer-with-example)
   - [Entities management](#entities-management)
     - [Storage](#storage)
     - [Scene/Node graph](#scenenode-graph)
@@ -21,35 +21,21 @@ Types:
 
 WATCH OUT! There is an internal `Map`, whose fields can reached via `Map#raw_tiled_map`; it includes properties like width/height.
 
-```rs
-let tiled_map: tiled::Map = tiled::load_map(
-    &tiled_map_json,
-    &[("tileset.png", tileset), ("decorations1.png", decorations)], // textures
-    &[],                                                            // external tilesets
-).unwrap();
+APIs not covered in the example:
 
+```rs
 // Get tile at x/y (tile units, not pixels)
 let tile: Option<&Tile> = tiled_map.get_tile(LAYER_NAME, x, y)
-
-// Get tiles inside a rectangle
-let tiles: TilesIterator = tiled_map.tiles(LAYER_NAME, rect);
 
 // Get an object world coordinates; objects are inside layers.
 let objects = tiled_map.layers["logic"].objects;
 let macroquad_tiled::Object { world_x, world_y, .. } = objects[0];
 
-// Draw the map
-tiled_map.draw_tiles("main layer", Rect::new(0.0, 0.0, map_w, map_h), None);
-
-// Tile dimension properties
-tiled_map.raw_tiled_map.width;      // in tiles
-tiled_map.raw_tiled_map.tilewidth;
-
 // Layer-related
 tiled_map.layers["layer_name"].width // in tiles
 ```
 
-## Physics (`physics-platformer`)
+## Tiles (`tiles`) + physics (`physics-platformer`), with example
 
 Types:
 
@@ -62,108 +48,210 @@ Types:
 
 Concepts not covered:
 
-- descent/wood: involved with jump through (both up and down)
 - squished
 
 ```rs
-const JUMP_SPEED: f32 = -700.0;
-const GRAVITY: f32 = 2000.0;
-const MOVE_SPEED: f32 = 300.0;
-
-// The actor position is owned/managed by the world (see move_*() calls in the game loop).
 struct Player {
-    actor: Actor, // this is informally referred to as collider
+    collider: Actor,
     speed: Vec2,
 }
 
-impl Resources {
-    fn new() {
-        // Map Tiled tile types to internal ones.
-        let tile_types = tiled_map
-            .tiles("main layer", None)
-            .map(|(_, _, tile)| match tile {
-                None => crate::Tile::Empty,
-                Some(tile) if tile.attrs.contains("jumpthrough") => crate::Tile::JumpThrough,
-                _ => crate::Tile::Solid,
-            })
-            .collect();
-
-        // Create the world, and add the tile colliders.
-        let mut world = World::new();
-        world.add_static_tiled_layer(
-            tile_types,                         // static colliders
-            32., 32.,                           // tile w/h
-            tiled_map.raw_tiled_map.width as _, // width
-            1,                                  // tag
-        );
-    }
+struct Platform {
+    collider: Solid,
+    speed: f32,
 }
 
-impl Player {
-    fn new() {
-      // When a new actor is added, create a collider for it, and add it to the world.
-      // Use the collsion box dimensions here (which can be different from the sprite ones)
-      // 
-      // There is also an `add_solid()` method.
-      //
-      let actor: Actor = world.add_actor(
-          vec2(200., 100.), // pos
-          36, 66,           // w/h
-      );
+async fn load_tiled_map() -> Map {
+    let tileset = load_texture("resources/tileset.png").await.unwrap();
+    tileset.set_filter(FilterMode::Nearest);
 
-      // Collider rectangle
-      //
-      println!("Collider rect: {}", actor.rect);
+    let map_json = load_string("resources/map.json").await.unwrap();
+    macroquad_tiled::load_map(&map_json, &[("tileset.png", tileset)], &[]).unwrap()
+}
+
+fn add_tile_colliders(map: &Map, world: &mut World) {
+    // Get the tiles within a Rect (or all the tiles, if None).
+    let tiles_itr = map.tiles(LAYER_NAME, None);
+
+    // Map tile types to internal ones.
+    // map.tiles
+    let static_colliders = tiles_itr
+        .map(|(_x, _y, tile)| match tile {
+            None => Tile::Empty,
+            Some(tile) if tile.attrs.contains("jumpthrough") => Tile::JumpThrough,
+            _ => Tile::Solid,
+        })
+        .collect();
+
+    world.add_static_tiled_layer(
+        static_colliders,
+        map.raw_tiled_map.tilewidth as f32,
+        map.raw_tiled_map.tileheight as f32,
+        map.raw_tiled_map.width as usize,
+        LAYER_TAG,
+    );
+}
+
+// Need to avoid collision with prelude::set_camera.
+//
+fn prepare_and_set_camera(map: &Map) {
+    let camera_area = Rect::new(
+        0.,
+        0.,
+        (map.layers[LAYER_NAME].width * map.raw_tiled_map.tilewidth) as f32,
+        (map.layers[LAYER_NAME].height * map.raw_tiled_map.tileheight) as f32,
+    );
+
+    let camera = Camera2D::from_display_rect(camera_area);
+
+    set_camera(&camera);
+}
+
+fn draw_tiles(map: &Map) {
+    let dest_pos = Rect::new(
+        0.,
+        0.,
+        (map.layers[LAYER_NAME].width * map.raw_tiled_map.tilewidth) as f32,
+        (map.layers[LAYER_NAME].height * map.raw_tiled_map.tileheight) as f32,
+    );
+
+    map.draw_tiles(LAYER_NAME, dest_pos, None);
+}
+
+fn draw_platform(platform: &Platform, world: &World, map: &Map) {
+    let width = (PLATFORM_SIZE.0 * map.raw_tiled_map.tilewidth) as f32;
+    let height = (PLATFORM_SIZE.1 * map.raw_tiled_map.tileheight) as f32;
+
+    let source_pos = Rect::new(
+        (PLATFORM_SOURCE_POS.0 * map.raw_tiled_map.tilewidth) as f32,
+        (PLATFORM_SOURCE_POS.1 * map.raw_tiled_map.tilewidth) as f32,
+        width,
+        height,
+    );
+
+    let dest_pos = Rect::new(
+        world.solid_pos(platform.collider).x,
+        world.solid_pos(platform.collider).y,
+        width,
+        height,
+    );
+
+    map.spr_ex(TILESET_NAME, source_pos, dest_pos)
+}
+
+fn draw_player(world: &World, player: &Player, map: &Map) {
+    let world = world.actor_pos(player.collider);
+
+    let width = (PLAYER_SIZE.0 * map.raw_tiled_map.tilewidth) as f32;
+    let height = (PLAYER_SIZE.1 * map.raw_tiled_map.tileheight) as f32;
+
+    // Watch out! `>= 0.0` is not a correct test, since it matches `-0.0`, which means facing left!.
+    //
+    let dest_pos = if player.speed.x.is_sign_positive() {
+        Rect::new(world.x, world.y, width, height)
+    } else {
+        Rect::new(world.x + width, world.y, -width, height)
+    };
+
+    map.spr(TILESET_NAME, PLAYER_SPRITE_ID, dest_pos);
+}
+
+fn move_player(world: &mut World, player: &mut Player) {
+    // Handle X movement
+
+    if is_key_down(KeyCode::Right) {
+        player.speed.x = PLAYER_SPEED;
+    } else if is_key_down(KeyCode::Left) {
+        player.speed.x = -PLAYER_SPEED;
+    } else {
+        // The sign is the facing direction, so we need to preserve it.
+        //
+        player.speed.x = 0. * player.speed.x.signum();
     }
 
-    fn update() {
-        // Get the player position; the Actor is just an id wrapper.
-        let player_pos: Vec2 = world.actor_pos(player.actor);
+    // Handle Y movement
 
-        // Collision check
-        let on_ground: bool = world.collide_check(player.actor, player_pos + vec2(0., 1.));
+    let actor_pos = world.actor_pos(player.collider);
+    let on_ground = world.collide_check(player.collider, actor_pos + vec2(0., 1.));
 
-        if !on_ground {
-            player.speed.y += GRAVITY * get_frame_time();
-        }
-
-        if is_key_down(KeyCode::Right) {
-            player.speed.x = MOVE_SPEED;
-        } ... // handle right
-        } else {
-            player.speed.x = 0.;
-        }
-
+    if on_ground {
         if is_key_pressed(KeyCode::Space) {
-            if on_ground {
+            if is_key_down(KeyCode::Down) {
+                // Descend, if there is a Jumpthough tile.
+                world.descent(player.collider);
+            } else {
                 player.speed.y = JUMP_SPEED;
             }
         }
+    } else {
+        player.speed.y += GRAVITY_SPEED * get_frame_time();
+    }
 
-        // Initiate a descent; the library performs the necessary checks
-        if player.on_ground && player.input.down && player.input.jump {
-            world.descent(player.actor);
-        }
+    // Move actor
 
-        // Moves, per-pixel, taking into account the tiles (eg. stops before a solid)
-        world.move_h(player.actor, player.speed.x * get_frame_time());
-        world.move_v(player.actor, player.speed.y * get_frame_time());
+    world.move_h(player.collider, player.speed.x * get_frame_time());
+    world.move_v(player.collider, player.speed.y * get_frame_time());
+}
 
-        // Set the collider unconditionally
-        world.set_actor_position(player.actor, player.pos);
+fn move_platform(world: &mut World, platform: &mut Platform) {
+    world.solid_move(platform.collider, platform.speed * get_frame_time(), 0.0);
 
-        world.collide_check
+    let solid_pos = world.solid_pos(platform.collider);
+
+    if platform.speed.is_sign_positive() && solid_pos.x >= 220. {
+        platform.speed *= -1.;
+    }
+    if platform.speed.is_sign_negative() && solid_pos.x <= 150. {
+        platform.speed *= -1.;
+    }
+}
+
+#[macroquad::main("Platformer")]
+async fn main() {
+    let mut world = World::new();
+
+    let map = load_tiled_map().await;
+
+    // When a new actor is added, create a collider for it, and add it to the world.
+    // Use the collsion box dimensions here (which can be different from the sprite ones)
+    //
+    let mut player = Player {
+        collider: world.add_actor(vec2(50.0, 80.0), 8, 8),
+        speed: vec2(0., 0.),
+    };
+
+    // Do the same, but for a solid.
+    let mut platform = Platform {
+        collider: world.add_solid(vec2(170.0, 130.0), 32, 8),
+        speed: PLATFORM_SPEED,
+    };
+
+    add_tile_colliders(&map, &mut world);
+
+    prepare_and_set_camera(&map);
+
+    loop {
+        clear_background(BLACK);
+
+        draw_tiles(&map);
+
+        draw_platform(&platform, &world, &map);
+
+        draw_player(&world, &player, &map);
+
+        move_player(&mut world, &mut player);
+
+        move_platform(&mut world, &mut platform);
+
+        next_frame().await
     }
 }
 ```
 
-Solid-related methods (similar to Actor):
+Other solid-related methods (similar to Actor):
 
-- `add_solid(&mut self, pos: Vec2, width: i32, height: i32) -> Solid`
-- `solid_move(&mut self, solid: Solid, dx: f32, dy: f32)`
 - `solid_at(&self, pos: Vec2) -> bool`
 - `collide_solids(&self, pos: Vec2, width: i32, height: i32) -> Tile`
-- `solid_pos(&self, solid: Solid) -> Vec2`
 
 Other methods:
 

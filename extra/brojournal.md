@@ -1,3 +1,17 @@
+## Wed 25/Aug/2021
+
+- Gamedev
+  - [ ] Game Programming Algorithms and Techniques
+    - [x] Chapter 06: Sound
+- Projects
+  - qemu-pinning
+    - [x] Rebase patch to v6.0 stable, and replace master #34
+      - [x] Think/drop `-changes` branch
+- Rust/Gamedev
+  - Macroquad
+    - [x] Brief check at why `platformer` physics don't work
+    - [x] Replace `physics-platformer` notes with example (`platformer.rs`)
+
 ## Tue 24/Aug/2021
 
 - Rust/Gamedev
