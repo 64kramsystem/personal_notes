@@ -104,7 +104,7 @@ Almost all the entries are optional. Escaping is not standard; in order to escap
 # for example, a space is escaped with a slash, both the slash and the space will be part of the string
 # (!).
 #
-SYSTEMD_EDITOR=tee systemctl edit --force --full myservice << 'UNIT'
+SYSTEMD_EDITOR="tee" systemctl edit --force --full myservice << 'UNIT'
 [Unit]
 Description=My Service
 

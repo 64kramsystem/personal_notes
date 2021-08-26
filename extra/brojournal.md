@@ -1,3 +1,18 @@
+## Thu 26/Aug/2021
+
+- Admin
+  - [x] Fight find and buy 6600 XT
+- System
+  - [x] Cut new card heatsink and swap with old one
+    - [x] Test power draw/speed
+- Projects
+  - nv-switch
+    - [x] Implement install command
+    - [x] Check processes before swapping out the nvidia driver (https://github.com/64kramsystem/nv-switch/issues/3)
+- Tools
+  - [x] Follow up Libreoffice GTK3 issue
+    - [x] Test Libreoffice official packages (https://bugs.documentfoundation.org/show_bug.cgi?id=144033)
+
 ## Wed 25/Aug/2021
 
 - Gamedev
@@ -11,6 +26,8 @@
   - Macroquad
     - [x] Brief check at why `platformer` physics don't work
     - [x] Replace `physics-platformer` notes with example (`platformer.rs`)
+- Admin
+  - [x] Figth find 6600 XT
 
 ## Tue 24/Aug/2021
 

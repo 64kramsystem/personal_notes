@@ -11,16 +11,23 @@
 
 ```sh
 nvidia-smi --help-query-supported-clocks
+nvidia-smi --help-query-gpu
+
 nvidia-smi -i 1 --format=csv --query-supported-clocks=mem
 nvidia-smi -i 1 --format=csv --query-supported-clocks=gr
 
-nvidia-smi --help-query-gpu
 nvidia-smi -i 1 --format=csv,noheader -l 1 --query-gpu=pstate,power.draw,clocks.mem,clocks.gr # P8, 13.54 W, 405 MHz, 300 MHz
 
 # Power state can't be set.
-# Power limits can be set, but the minimum is too high!
+# This is the clocks, but it seems it can't be set.
 #
 nvidia-smi -i 1 -ac 405,300 # mem/gr; not supported!
+
+# Power limits can be set, but the minimum may be too high.
+# Setting an invliad
+#
+nvidia-smi -i 1 --format=csv --query-gpu=power.power.min_limit,power.max_limit
+sudo nvidia-smi -i 1 -pl 16.66
 ```
 
 ## Xorg
