@@ -2,6 +2,7 @@
 
 - [VGA Passthrough](#vga-passthrough)
   - [nvidia-smi](#nvidia-smi)
+  - [Display IOMMU groups](#display-iommu-groups)
   - [Xorg](#xorg)
   - [AMD power profiles](#amd-power-profiles)
 
@@ -28,6 +29,18 @@ nvidia-smi -i 1 -ac 405,300 # mem/gr; not supported!
 #
 nvidia-smi -i 1 --format=csv --query-gpu=power.power.min_limit,power.max_limit
 sudo nvidia-smi -i 1 -pl 16.66
+```
+
+## Display IOMMU groups
+
+```sh
+for iommu_group in $(ls -dv /sys/kernel/iommu_groups/*/); do
+  echo "IOMMU group $(basename "$iommu_group")"
+  for device in $(ls -1 "$iommu_group"/devices/); do
+    echo -n $'\t'
+    lspci -nns "$device"
+  done
+done
 ```
 
 ## Xorg
