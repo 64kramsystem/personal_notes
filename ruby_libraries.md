@@ -179,7 +179,7 @@ IO.read(filename, 'bom|utf-8')
 - `underscore` : `ActiveModel::Errors` => `active_model/errors`
 - `underscore` : `ABC`                 => `abc`                  !! WATCH OUT !!
 - `pluralize`  : `flying_jellyfish`    => `flying_jellyfishes`
-
+- `tableize`   : `Order`               => `orders`
 
 ### Date/time
 

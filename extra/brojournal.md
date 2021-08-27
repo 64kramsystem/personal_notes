@@ -1,3 +1,17 @@
+## Fri 27/Aug/2021
+
+- Projects
+  - nv-switch
+    - [x] Fix switch bug
+    - [x] Add support for partially unbound GPU devices
+    - [x] Don't switch device driver if the new one is the same (https://github.com/64kramsystem/nv-switch/issues/4)
+    - [x] Investigate `drivers_probe` interaction in the reference script (https://github.com/64kramsystem/nv-switch/issues/5)
+- System
+  - [x] Fight 6600 XT passthrough
+    - [x] Study driver [infos](https://wiki.archlinux.org/title/AMDGPU)
+    - [x] Update tools/settings
+  - [x] Fight 6600 XT Linux native (!)
+
 ## Thu 26/Aug/2021
 
 - Admin
@@ -7,7 +21,7 @@
     - [x] Test power draw/speed
 - Projects
   - nv-switch
-    - [x] Implement install command
+    - [x] Implement install command  (https://github.com/64kramsystem/nv-switch/issues/1)
     - [x] Check processes before swapping out the nvidia driver (https://github.com/64kramsystem/nv-switch/issues/3)
 - Tools
   - [x] Follow up Libreoffice GTK3 issue
