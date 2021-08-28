@@ -1,3 +1,15 @@
+## Sat 28/Aug/2021
+
+- Projects
+  - zfs-installer
+    - [x] Update all repository links
+- System
+  - [x] Fight copy files
+  - [x] Reinstall Linux
+  - [x] Multiple fights with Windows installation
+- Tools
+  - [x] Benchmarks zstd
+
 ## Fri 27/Aug/2021
 
 - Projects
