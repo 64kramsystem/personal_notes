@@ -33,7 +33,9 @@
   - [fstab](#fstab)
   - [sysctl](#sysctl)
   - [Modules](#modules)
-  - [Install grub from live cd (or perform chrooted operations)](#install-grub-from-live-cd-or-perform-chrooted-operations)
+  - [Grub](#grub)
+    - [Install from live cd (or perform chrooted operations)](#install-from-live-cd-or-perform-chrooted-operations)
+    - [Add a Windows entry](#add-a-windows-entry)
   - [Logging/syslog/tools](#loggingsyslogtools)
     - [Logrotate](#logrotate)
   - [Terminal emulator](#terminal-emulator)
@@ -797,7 +799,9 @@ if lsmod | grep -qP '^zfs\s'; then echo loaded; fi
 if modinfo zfs > /dev/null 2>&1; then echo installed; fi
 ```
 
-## Install grub from live cd (or perform chrooted operations)
+## Grub
+
+### Install from live cd (or perform chrooted operations)
 
 ```sh
 sudo su
@@ -810,6 +814,24 @@ chroot /mnt
 grub-install /dev/sda
 exit
 umount -R /mnt                    # `R`ecursively
+```
+
+### Add a Windows entry
+
+In some cases, the standard GRUB procedures (`os-probe`, etc.) may not work; in this case, manually add an entry:
+
+```sh
+# This is the second partition of the third disk.
+# The bootloader path can be found by looking into the EFI partition.
+#
+cat >> /etc/grub.d/40_custom <<GRUB
+menuentry "Windows 10" {
+    set root='(hd2,gpt2)'
+    chainloader /EFI/Microsoft/Boot/bootmgfw.efi
+}
+GRUB
+
+update-grub
 ```
 
 ## Logging/syslog/tools

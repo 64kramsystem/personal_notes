@@ -1,3 +1,37 @@
+## Cycle changes
+
+- Unscheduled
+  - Ruby: Review RACC
+  - Projects/Schedule Manager: Convert codec to RACC #1
+  - Admin: Check licensing MIT, GPL, BSD
+  - System+Writings+Projects: Improve VFIO card consumption (madness)
+  - System: Madness 6600 XT + Linux reinstall + Windows install
+  - Tools: Switch file sharing #1
+  - Projects: `nv-switch`
+  - Projects: qemu-pinning: Patch updates
+  - Tools: Benchmark zstd
+- Pushed
+  - Projects/Schedule Manager
+    Projects/Port Code the Classics
+- Not completed
+  - Rust: Programming Rust (2 chapters)
+
+## Sun 29/Aug/2021
+
+- System
+  - [x] Full test 3d game on window
+  - [x] Fight bug `lm-sensors` <> `amdgpu`
+  - [x] Update Windows installation procedure/script
+  - [x] Snapshot
+  - [x] Configure GRUB
+    - [x] Find workaround - adding a manual entry
+- Rust
+  - [ ] Programming Rust (2nd ed.)
+    - [ ] Chapter 13: Utility Traits
+- Writings
+  - [ ] nv-switch article
+    - [x] Find amdgpu counterpart to nvidia's device files `/dev/nvidia*`
+
 ## Sat 28/Aug/2021
 
 - Projects
