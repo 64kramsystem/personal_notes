@@ -488,6 +488,9 @@ ln -s $images_parent_dir /home/partimag
 
 # Backup
 #
+# If snapshotting a Windows live O/S, schedule a disk check via `chkdsk /f` (and reboot) before starting the backup.
+#
+#
 # - `-q2`           : use partclone
 # - `-c`            : ask confirmation
 # - `-j2`           : clone hidden data
@@ -500,6 +503,7 @@ ln -s $images_parent_dir /home/partimag
 # - `$dev_basename` : e.g. `sde`
 #
 ocs-sr -q2 -c -j2 -z9p -i 1000000 -sfsck -scs -senc -p command --rm-win-swap-hib savedisk $image_dir_name $dev_basename
+chown -R $SUDO_USER /home/partimag/$image_dir_name
 
 # Restore
 #
