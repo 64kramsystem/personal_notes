@@ -593,6 +593,25 @@ date --date='@1'                    # epoch time
 
 The option `--debug` shows the logic applied.
 
+WATCH OUT!! The `month` calculations are not intuitive (see https://stackoverflow.com/a/13168625):
+
+```sh
+# Today: Di 31. Aug 12:06:26 CEST 2021
+
+$ date --date='-2 month'
+Do 1. Jul 12:06:37 CEST 2021
+
+$ date --date='next month'
+Fr 1. Okt 12:06:51 CEST 2021
+
+# Workaround, if the month only is meaningful:
+
+$ date --date="$(date +%Y-%m-15) -2 month"
+Di 15. Jun 00:00:00 CEST 2021
+$ date --date="$(date +%Y-%m-15) next month"
+Mi 15. Sep 00:00:00 CEST 2021
+```
+
 WATCH OUT!! When performing operations with a date, the timezone must be specified, otherwise, the '+/- ...' will be interpreted as the time zone:
 
 ```sh

@@ -1,3 +1,49 @@
+## Tue 31/Aug/2021
+
+- Linux
+  - `date`: Study relative months arithmetic handling
+- Tools
+  - Invoicing script: Fix date handling
+- System
+  - [x] Follow up `amdgpu` bug
+- Admin
+  - [x] Update Github account overview
+- Tools
+  - [x] Add libreoffice date macro
+  - Schedule manager
+    - [x] Update replanner ugly message
+    - [x] Remove debug messages
+    - [ ] Add `update` mode (`u`): ask user to update the current line
+      - [x] Fight prefill
+      - [ ] Fight workaround to send a character to the terminal
+
+## Mon 30/Aug/2021
+
+- System
+  - [x] Report amdgpu bug
+  - [x] Report nvidia driver package bug
+- Projects
+  - zfs-installer
+    - [x] Add Debian 11 support (request)
+  - Drunken tomatoes
+    - [x] Investigate new format for genres table
+  - nv-switch
+    - [x] Preliminary work: Make (almost all, as required) the hardcoded values parameters
+      - [x] Large refactoring/extension required
+    - [x] Add configuration management (https://github.com/64kramsystem/nv-switch/issues/2)
+  - vga-passthrough
+    - [x] Measure cards consumption
+      - [x] 1030 (nv) + 6600 (amd)  = 46/48W
+      - [x] 1030 (nv) + 6600 (vfio) = 58/59W
+      - [x] 6600 (amd)              = 62/63W
+    - [x] Try 6600 XT passthrough, with update
+      - [x] Test `nouveau`
+      - [x] Check if `nvidia` supports `/dev/dri/by-path`, which includes bus id (and `/dev/dri/card*` reference)
+      - [x] Test QEMU workarounds, alone and in combination
+      - [x] Benchmark (vfio vs. top rankings)
+- Hardware
+  - Read: https://www.gamersnexus.net/guides/1229-anatomy-of-a-motherboard-what-is-a-vrm-mosfet
+
 ## Cycle changes
 
 - Unscheduled
