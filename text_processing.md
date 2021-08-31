@@ -36,6 +36,7 @@
     - [Concatenate operations](#concatenate-operations)
     - [Special characters](#special-characters)
   - [Snippets](#snippets)
+    - [Print only a particular line number](#print-only-a-particular-line-number)
     - [Extract difference between two files](#extract-difference-between-two-files)
     - [Compute aggregates on a text/log file](#compute-aggregates-on-a-textlog-file)
   - [cut](#cut)
@@ -514,6 +515,7 @@ Not supported (at all):
 
 ### Operators/variables
 
+- `!`            : negate; precedes the operation
 - `$`            : last line
 - `/from/,/to/p` : flip flop
 
@@ -546,7 +548,6 @@ Examples:
 
 ### Special characters
 
-
 ```sh
 # In order to handle tabs (`\t`), either use `$` quoting or parameter substitution:
 #
@@ -559,6 +560,12 @@ sed 's/from/to1\nto2/'
 ```
 
 ## Snippets
+
+### Print only a particular line number
+
+```sh
+sed '2!d'               # don't delete line 2
+```
 
 ### Extract difference between two files
 

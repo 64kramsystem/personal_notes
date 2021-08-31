@@ -773,6 +773,8 @@ class MyClass
 end
 ```
 
+Interrupt can still be regularly caught in some contexts, e.g. on `STDIN.gets`.
+
 ## Misc
 
 ### System

@@ -746,6 +746,7 @@ files=(scripts/*.cnf)                # create from list of files; **must use nul
 Operations; indexes are 0-based:
 
 ```sh
+copy=("${source[@]}")                # copy an array
 coordinates+=("abc")                 # append an entry
 echo ${coordinates[0]}               # access an array; last entry: -1
 unset 'coordinates[1]'               # delete an entry
