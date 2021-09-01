@@ -42,17 +42,20 @@
     - [Backticks](#backticks)
     - [Definitive way of capturing Ctrl+C (trap signals)](#definitive-way-of-capturing-ctrlc-trap-signals)
   - [Misc](#misc)
-    - [System](#system)
+    - [Terminal](#terminal)
     - [Poor man's deep_dup (deep duplicate objects)](#poor-mans-deep_dup-deep-duplicate-objects)
-    - [Convert Hash/Array to recursive openstruct](#convert-hasharray-to-recursive-openstruct)
-    - [Convert curl request to Ruby](#convert-curl-request-to-ruby)
     - [Debug a live process (print current stacktrace)](#debug-a-live-process-print-current-stacktrace)
 
 ## General syntax/concepts
 
 ### Variables
 
+Instance variable metaprogramming:
+
 ```ruby
+instance_variable_set(:my_var, 2)
+instance_variable_get(:my_var)    # 2
+
 # Test and undefine an instance variable; undefine raises an error if the variable is not defined.
 #
 remove_instance_variable :@my_var if instance_variable_defined?(:@my_var)
@@ -283,6 +286,18 @@ module MyModule
 end
 
 class MyClass; include MyModule; end
+
+# This is the solid way of including other modules in the included class.
+# putting the inclusion(s) directly inside the outer module works, however, the modules won't be formally
+# included in the class, which can be expected in a workflow.
+#
+module ModuleIncludingModules
+  def self.included(klass)
+    klass.class_eval do
+      include Bar
+    end
+  end
+end
 ```
 
 ### Refinements
@@ -777,13 +792,7 @@ Interrupt can still be regularly caught in some contexts, e.g. on `STDIN.gets`.
 
 ## Misc
 
-### System
-
-Current user run dir, on Linux:
-
-```ruby
-ENV.fetch('XDG_RUNTIME_DIR')
-```
+### Terminal
 
 Check if I/O is terminal:
 
@@ -809,34 +818,6 @@ def deep_dup(source)
   end
 end
 ```
-
-### Convert Hash/Array to recursive openstruct
-
-Convenient solution for converting a Hash/Array to a recursive openstruct, builder pattern-style:
-
-```ruby
-def to_recursive_ostruct(node)
-  case node
-  when Hash
-    node.each_with_object(OpenStruct.new) { |(key, value), ostruct| ostruct[key] = to_recursive_ostruct(value) }
-  when Array
-    node.map { |item| to_recursive_ostruct(item) }
-  else
-    node
-  end
-end
-
-strk = to_recursive_ostruct({key: [1,2,3], key2: {subkey: 'a'}})
-strk.key           # [1,2,3]
-strk.key2.subkey   # 'a'
-strk.key2.notfound # nil
-```
-
-Original source: https://stackoverflow.com/a/42520668.
-
-### Convert curl request to Ruby
-
-See https://jhawthorn.github.io/curl-to-ruby.
 
 ### Debug a live process (print current stacktrace)
 

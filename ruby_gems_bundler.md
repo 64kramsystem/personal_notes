@@ -9,6 +9,8 @@
     - [Gemspec](#gemspec)
     - [Packaged gems/YAML gemspec](#packaged-gemsyaml-gemspec)
     - [Gem commands](#gem-commands)
+- [Format for operations (`fetch`, `list -r`...) on remote authenticated repositories.](#format-for-operations-fetch-list--r-on-remote-authenticated-repositories)
+- [`-s` appends a source; --clear-sources clears the preceding sources.](#-s-appends-a-source---clear-sources-clears-the-preceding-sources)
 
 ## Bundler
 
@@ -144,13 +146,9 @@ This will yield a valid gem source 😳
 gem unpack $gemfile           # Unpack gem
 gem build $gemname.gemspec    # Build gem
 gem push $gemname-*.gem       # Publish a built gem
+gem fetch $gemname            # Download a gem
 
-# Download gems.
-# `-s` appends a source; --clear-sources clears the preceding sources
+# Format for operations (`fetch`, `list -r`...) on remote authenticated repositories.
+# `-s` appends a source; --clear-sources clears the preceding sources.
 #
-gem fetch [--clear-sources -s $source] $gem1 {$gem2...}
-#
-# If a source requires authentication, use this format:
-#
-gem fetch --clear-sources -s "https://$user:$password@repo.com" gemname
-```
+gem $operation --clear-sources -s $source $gem1 {$gem2...}

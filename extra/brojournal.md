@@ -1,3 +1,25 @@
+## Wed 01/Sep/2021
+
+- Admin
+  - [x] Review current major projects and plans
+- Tools
+  - Schedule manager
+    - [x] Add `update` mode (`u`): ask user to update the current line
+      - [x] Found funny workaround
+- Projects
+  - zfs-installer
+    - [x] Discuss/think feature request: Install ZFS on systems with existing O/Ss
+  - vga-passthrough
+    - [x] Update audio passthrough section, about stability
+    - [x] Create forwarder project for previous GitHub account
+- Writings
+  - [ ] nv-switch article
+- Ruby/CS
+  - RACC parsing
+    - [x] Study RACC parser basics
+    - [x] Build OptionsParser for the schedule manager
+    - [ ] Encode series of optional values
+
 ## Tue 31/Aug/2021
 
 - Linux
