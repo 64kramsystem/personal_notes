@@ -3,9 +3,8 @@
 - [RACC/Parsing](#raccparsing)
   - [References](#references)
   - [Lexer](#lexer)
-    - [Test](#test)
   - [Parser](#parser)
-    - [Test](#test-1)
+    - [More complex example](#more-complex-example)
 
 ## References
 
@@ -25,90 +24,53 @@ fi
 ## Lexer
 
 ```sh
-cat > test_language.rex <<'REX'
+cat > lexer.rex <<'REX'
 class TestLanguage
+// The `macro` section values are regex patterns, so a character doesn't need quotes.
 macro
   BLANK     [\ \t]+
   DIGIT     \d+
   ADD       \+
   SUBTRACT  \-
-  MULTIPLY  \*
-  DIVIDE    \/
 
+// The symbols produced (e.g. DIGIT) are called "terminals" or "tokens".
+// The return values MUST be Array[2]!
 rule
   {BLANK}      # no action
   {DIGIT}      { [:DIGIT, text.to_i] }
   {ADD}        { [:ADD, text] }
   {SUBTRACT}   { [:SUBTRACT, text] }
-  {MULTIPLY}   { [:MULTIPLY, text] }
-  {DIVIDE}     { [:DIVIDE, text] }
 
 inner
   def tokenize(code)
     scan_setup(code)
     tokens = []
-    while token = next_token
-      tokens << token
-    end
+    while token = next_token; tokens << token; end
     tokens
   end
 end
 REX
 
-rex test_language.rex -o lexer.rb
-```
+rex lexer.rex -o lexer.rb
 
-### Test
-
-```sh
-cat > language_lexer_spec.rb <<'RUBY'
-require './lexer'
-
-class TestLanguageTester
-  describe 'Testing the Lexer' do
-    before do
-      @evaluator = TestLanguage.new
-    end
-
-    it "tests for a digit" do
-      result = @evaluator.tokenize("2")
-      expect(result[0][0]).to eql(:DIGIT)
-      expect(result[0][1]).to eql(2)
-    end
-
-    it "tests for a symbol" do
-      result = @evaluator.tokenize("+")
-      expect(result[0][0]).to eql(:ADD)
-      expect(result[0][1]).to eql("+")
-    end
-
-    it "tests for a calculation" do
-      result = @evaluator.tokenize("2+2")
-      expect(result[0][0]).to eql(:DIGIT)
-      expect(result[0][1]).to eql(2)
-      expect(result[1][0]).to eql(:ADD)
-      expect(result[1][1]).to eql("+")
-      expect(result[2][0]).to eql(:DIGIT)
-      expect(result[2][1]).to eql(2)
-    end
-  end
-end
+ruby -r ./lexer <<'RUBY'
+  puts TestLanguage.new.tokenize("2")   # [[:DIGIT, 2]]
+  puts TestLanguage.new.tokenize("+")   # [[:ADD, "+"]]
+  puts TestLanguage.new.tokenize("2+2") # [[:DIGIT, 2], [:ADD, "+"], [:DIGIT, 2]]
 RUBY
-
-rspec language_lexer_spec.rb
 ```
 
 ## Parser
 
 ```sh
-cat > test_language.y <<'RACC'
+cat > parser.y <<'RACC'
 class TestLanguage
 rule
-  expression : DIGIT
-  | DIGIT ADD DIGIT       { return val[0] + val[2] }
-  | DIGIT SUBTRACT DIGIT  { return val[0] - val[2] }
-  | DIGIT MULTIPLY DIGIT  { return val[0] * val[2] }
-  | DIGIT DIVIDE DIGIT    { return val[0] / val[2] }
+  expression
+    : DIGIT
+    | DIGIT ADD DIGIT       { return val[0] + val[2] } # MUST include the `return`!!
+    | DIGIT SUBTRACT DIGIT  { return val[0] - val[2] }
+    ;
 end
 
 ---- header
@@ -120,31 +82,26 @@ end
   end
 RACC
 
-racc test_language.y -o parser.rb
+racc parser.y -o parser.rb
+
+ruby -r ./parser <<'RUBY'
+  puts TestLanguage.new.parse("2")   # 2
+  puts TestLanguage.new.parse("2+2") # 4
+RUBY
 ```
 
-### Test
+### More complex example
 
-```sh
-cat > language_parser_spec.rb <<'RUBY'
-require './parser.rb'
-
-class TestLanguageParser
-  describe 'Testing the Parser' do
-    before do
-      @evaluator = TestLanguage.new
-    end
-
-    it 'tests for a digit' do
-      @result = @evaluator.parse("2")
-      @result.should == 2
-    end
-
-    it 'tests for addition' do
-      @result = @evaluator.parse("2+2")
-      @result.should == 4
-    end
-  end
-end
-RUBY
+```racc
+  // Ordering matters!
+  options              // Repetition is encoded as recursion
+    : options option
+    | option
+    ;
+  option
+    : FIXED       { checked_assign(:fixed, val[0]) }
+    | FIXED TIME  { checked_assign(:fixed_time, val[1]) }
+    | SKIP        { checked_assign(:skip, val[0]) }
+    | UPDATE      { checked_assign(:update, val[0]) }
+    ;
 ```

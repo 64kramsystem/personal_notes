@@ -17,6 +17,7 @@
       - [Builder](#builder)
     - [YAML/Psych](#yamlpsych)
     - [OpenStruct [ostruct]/Struct](#openstruct-ostructstruct)
+      - [Convert Hash/Array to recursive openstruct](#convert-hasharray-to-recursive-openstruct)
     - [Optparse](#optparse)
     - [open-uri](#open-uri)
     - [File/Dir/FileUtils/Pathname](#filedirfileutilspathname)
@@ -37,6 +38,7 @@
       - [Telnet](#telnet)
       - [SMTP](#smtp)
     - [Ping (ICMP)](#ping-icmp)
+    - [Convert curl request to Ruby](#convert-curl-request-to-ruby)
   - [Databases](#databases)
     - [SQLite 3](#sqlite-3)
 
@@ -439,6 +441,30 @@ end
 MyModule::MyStruct.new('aval', 'bval')
 ```
 
+#### Convert Hash/Array to recursive openstruct
+
+Convenient solution for converting a Hash/Array to a recursive openstruct, builder pattern-style:
+
+```ruby
+def to_recursive_ostruct(node)
+  case node
+  when Hash
+    node.each_with_object(OpenStruct.new) { |(key, value), ostruct| ostruct[key] = to_recursive_ostruct(value) }
+  when Array
+    node.map { |item| to_recursive_ostruct(item) }
+  else
+    node
+  end
+end
+
+strk = to_recursive_ostruct({key: [1,2,3], key2: {subkey: 'a'}})
+strk.key           # [1,2,3]
+strk.key2.subkey   # 'a'
+strk.key2.notfound # nil
+```
+
+Original source: https://stackoverflow.com/a/42520668.
+
 ### Optparse
 
 ```ruby
@@ -835,6 +861,10 @@ end
 ### Ping (ICMP)
 
 `net/ping` has been removed from the stdlib anymore. Must use a gem or the `ping` unix tool, since the solution proposed on [StackOverflow](https://stackoverflow.com/a/7520485) has inconsistent results.
+
+### Convert curl request to Ruby
+
+See https://jhawthorn.github.io/curl-to-ruby.
 
 ## Databases
 
