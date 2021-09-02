@@ -1,3 +1,9 @@
+## Thu 02/Sep/2021
+
+- Ruby/CS
+  - RACC parsing
+    - [x] Read: https://practicingruby.com/articles/parsing-json-the-hard-way
+
 ## Wed 01/Sep/2021
 
 - Admin
