@@ -4,7 +4,6 @@
   - [References](#references)
   - [Lexer](#lexer)
   - [Parser](#parser)
-    - [More complex example](#more-complex-example)
 
 ## References
 
@@ -23,21 +22,28 @@ fi
 
 ## Lexer
 
+WATCH OUT!! There is no semantic safety in the lexer/parser definitions (only syntax checks of the parser file format); if there is a mistake, e.g misnamed token, it will cause a parsing error while parsing, without any mention of the actual cause!
+
+Comments can be `//` or `#`; blank lines are mandatory!
+
 ```sh
 cat > lexer.rex <<'REX'
 class TestLanguage
-// The `macro` section values are regex patterns, so a character doesn't need quotes.
+# The `macro` section values are regex patterns; they don't need quoting
 macro
-  BLANK     [\ \t]+
+  BLANK     [\ \t]+    # Can also use `?` metachar
   DIGIT     \d+
   ADD       \+
   SUBTRACT  \-
 
-// The symbols produced (e.g. DIGIT) are called "terminals" or "tokens".
-// The return values MUST be Array[2]!
+# The symbols produced (e.g. `DIGIT`) are called "terminals" or "tokens".
+#
+# WATCH OUT! If whitespace is meaningful to the parser (eg. to distinguish separated from joined tokens),
+# then the rule must return a value.
+#
 rule
-  {BLANK}      # no action
-  {DIGIT}      { [:DIGIT, text.to_i] }
+  {BLANK}      # no action; it's discarded and the parse doesn't receive it
+  {DIGIT}      { [:DIGIT, text.to_i] }  # return values must be Array(2) (or nothing at all)
   {ADD}        { [:ADD, text] }
   {SUBTRACT}   { [:SUBTRACT, text] }
 
@@ -62,8 +68,15 @@ RUBY
 
 ## Parser
 
+The rule code blocks won't be executed if there is a parsing error, so they can't be used for debug purposes.
+
+Blank lines are not mandatory here.
+
 ```sh
 cat > parser.y <<'RACC'
+# This is example performs logic inside the parser, so parsing the expression returns the result. Non
+# trivial parsers separate domains (as possible).
+#
 class TestLanguage
 rule
   expression
@@ -71,6 +84,26 @@ rule
     | DIGIT ADD DIGIT       { return val[0] + val[2] } # MUST include the `return`!!
     | DIGIT SUBTRACT DIGIT  { return val[0] - val[2] }
     ;
+
+  # Repetition is encoded as recursion
+  options
+    : options option
+    | option                # define option is in a separate rule
+    ;
+
+  # In order to define optional productions, must use three cases:
+
+  rule_b
+    : TOK_B
+    | TOK_B rule_c     # If `c` is the last token of the string, use the token (ie. TOK_C) instead of the rule.
+    | rule_c
+    ;
+
+  # The empty string allows a simpler encoding of optional productions:
+
+  expression: A rule_B rule_C
+  rule_B: | B                 # syntax for empty string
+  rule_C: | C                 # in order for this to work, B and C must not start with the same letter
 end
 
 ---- header
@@ -88,20 +121,4 @@ ruby -r ./parser <<'RUBY'
   puts TestLanguage.new.parse("2")   # 2
   puts TestLanguage.new.parse("2+2") # 4
 RUBY
-```
-
-### More complex example
-
-```racc
-  // Ordering matters!
-  options              // Repetition is encoded as recursion
-    : options option
-    | option
-    ;
-  option
-    : FIXED       { checked_assign(:fixed, val[0]) }
-    | FIXED TIME  { checked_assign(:fixed_time, val[1]) }
-    | SKIP        { checked_assign(:skip, val[0]) }
-    | UPDATE      { checked_assign(:update, val[0]) }
-    ;
 ```
