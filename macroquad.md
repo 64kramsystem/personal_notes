@@ -214,7 +214,7 @@ let tiled_map_json = load_string("assets/map.json").await?;
 rand::srand(SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_nanos() as u64);
 
 let r: u32 = rand();                   // only for u32 ...
-let r: f32 = gen_range(0., 1.)         // all numerical types; interval open on the right
+let r: f32 = gen_range(0., 1.)         // all numerical types; interval = [min, max)
 let b: bool = gen_range(0., 1.) < 0.5  // bool
 
 
@@ -226,8 +226,4 @@ vec.choose()?;                          // random element
 vec.choose_mut()?;                      // random element (immutable)
 vec.choose_mut()?;                      // random element (mutable)
 let iter = vec.choose_multiple(amount); // multiple random elements
-
-// Generate a value in the interval [min, max).
-//
-let rand = gen_range(min, max);
 ```

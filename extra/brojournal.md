@@ -1,3 +1,14 @@
+## Fri 03/Sep/2021
+
+- Ruby/CS
+  - RACC parsing
+    - [x] Complete parser for the schedule manager
+- Projects
+  - Schedule manager
+    - [ ] Wire parser
+  - Fish Fight
+    - [x] Review new project, and discuss assets licensing
+
 ## Thu 02/Sep/2021
 
 - Ruby/CS
