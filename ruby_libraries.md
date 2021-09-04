@@ -410,10 +410,11 @@ object.to_yaml            # ... convenience
 Struct is in the stdlib; it doesn't accept new arguments.
 
 ```ruby
-os = OpenStruct.new can also pass a hash!
+os = OpenStruct.new           # can also pass a hash!
 os.name = "John"
-os['surname'] = "Smith" # alternate assignment form
+os['surname'] = "Smith"       # alternate assignment form
 puts os.name, os.surname
+os.delete_field(:surname)     # remove a field
 
 # !!! Substruct.new(a: 1).a => 1 !!!
 # This works because Struct.new returns a class (!); if not subclasses, it's accessed as Struct.new(...).new

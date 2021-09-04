@@ -99,11 +99,15 @@ rule
     | rule_c
     ;
 
-  # The empty string allows a simpler encoding of optional productions:
+  # The empty string allows a simpler encoding of optional productions.
+  # In order for this to work, optional tokens (in this case B and C) must not cause conflicts (ambiguity):
+  # - the optional tokens should not start with the same letter;
+  # - if they're productions, the first token must not be ambiguous with the one following the optional
+  #   production, e.g. `rule_C: | D C`.
 
-  expression: A rule_B rule_C
+  expression: A rule_B rule_C D
   rule_B: | B                 # syntax for empty string
-  rule_C: | C                 # in order for this to work, B and C must not start with the same letter
+  rule_C: | C
 end
 
 ---- header
