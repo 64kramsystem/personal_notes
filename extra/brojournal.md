@@ -1,3 +1,23 @@
+## Sat 04/Sep/2021
+
+- Projects
+  - geet
+    - [x] Make GitClient#cherry use the configurable main branch
+  - Fish Fight
+    - [x] Move assets for old weapons (added by @64kramsystem) to temporary assets directory
+  - Schedule manager
+    - [x] Convert codec to RACC
+      - [x] Tweak parser: return tokens instead of true/false, to make the manager token-oblivious
+      - [x] Make period optional
+      - [x] Wire parser
+- Rust
+  - [x] Search intermediate/advanced resources
+    - [x] Review Jon Gjengset channel
+- Ruby/CS
+  - RACC parsing
+    - [x] Simplify ReplanParser by using optional productions
+    - [x] Review LL(*) parsers
+
 ## Fri 03/Sep/2021
 
 - Ruby/CS
