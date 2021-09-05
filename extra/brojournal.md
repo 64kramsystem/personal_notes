@@ -1,3 +1,34 @@
+## Cycle changes
+
+RACC took most of the week (more than expected); one day vga-passthrough, and a misc day.
+
+- Unscheduled
+  - zfs-installer
+    - Add Debian 11 support (request)
+  - geet
+    - Make GitClient#cherry use the configurable main branch
+  - schedule manager
+    - RACC work has been more complex than expected
+- Not completed
+  - Rust/Gamedev: 6 total chapters of the two books
+  - nv-switch article
+  - Port the classics follow-up
+  - SWE: reads
+
+## Sun 05/Sep/2021
+
+- Tools
+  - [x] (Internal) Music management tool: Misc updates/cleanups
+- Projects
+  - Fish Fight
+    - [x] Review site; plan future participation
+- Admin
+  - [x] End of cycle admin
+    - [x] Merge temp resources into pool
+    - [x] Buy new book
+      - [x] Fight Packt horrible site
+    - [x] Plan new cycle/projects
+
 ## Sat 04/Sep/2021
 
 - Projects
