@@ -1,3 +1,13 @@
+## Mon 06/Sep/2021
+
+- Projects
+  - Port Code the Classics
+    - Port Infinite Bunner to Tetra
+      - [ ] Accurate reading of the source code
+- Rust
+  - [ ] Programming Rust (2nd ed.)
+    - [ ] Chapter 13: Utility Traits
+
 ## Cycle changes
 
 RACC took most of the week (more than expected); one day vga-passthrough, and a misc day.
