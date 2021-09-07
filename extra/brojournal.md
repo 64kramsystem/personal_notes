@@ -1,3 +1,11 @@
+## Tue 07/Sep/2021
+
+- Rust/Low-level programming
+  - [ ] Optimization of random -1./+1
+    - [x] Benchmark different versions of random -1./+1.
+    - [x] Review disassembly
+    - [ ] Fight figure out how C version makes conditional version faster
+
 ## Mon 06/Sep/2021
 
 - Projects
