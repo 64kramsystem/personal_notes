@@ -42,6 +42,7 @@
       - [RSpec-style testing (`demonstrate`)](#rspec-style-testing-demonstrate)
       - [Cucumber](#cucumber)
       - [Utilities](#utilities)
+  - [Benchmarking (`criterion`)](#benchmarking-criterion)
     - [Static/global variables (`lazy_static`, `once_cell`, `thread_local!`)](#staticglobal-variables-lazy_static-once_cell-thread_local)
     - [Concurrency (multithreading) tools (`rayon`/`crossbeam`)](#concurrency-multithreading-tools-rayoncrossbeam)
     - [Enum utils, e.g. iterate (`strum`)](#enum-utils-eg-iterate-strum)
@@ -1247,6 +1248,34 @@ assert_float_absolute_eq!(3.0, 3.9, 1.0);
 //
 asserting(&"test condition").that(&1).is_equal_to(&2);
 ```
+
+## Benchmarking (`criterion`)
+
+Rust has an built-in bencharking tool (`cargo bench`), but it's unstable and too minimal.
+
+Add to `Cargo.toml`:
+
+```toml
+[[bench]]
+harness = false
+name = "my_benchmark"
+```
+
+Create `benches/my_benchmark.rs`
+
+```rs
+use criterion::{black_box, criterion_group, criterion_main, Criterion};
+use my_crate::my_function; // or, for simplicity, declare the function in this file
+
+fn criterion_benchmark(c: &mut Criterion) {
+    c.bench_function("fib 20", |b| b.iter(|| my_function(black_box(20))));
+}
+
+criterion_group!(benches, criterion_benchmark);
+criterion_main!(benches);
+```
+
+Run with `cargo benchmark`.
 
 ### Static/global variables (`lazy_static`, `once_cell`, `thread_local!`)
 
