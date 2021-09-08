@@ -1,3 +1,9 @@
+## Wed 08/Sep/2021
+
+- Rust
+  - [ ] Programming Rust (2nd ed.)
+    - [ ] Chapter 13: Utility Traits
+
 ## Tue 07/Sep/2021
 
 - Rust/Low-level programming
