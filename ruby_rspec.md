@@ -11,6 +11,7 @@
     - [Receive counts](#receive-counts)
     - [Responses](#responses)
   - [Testing modules](#testing-modules)
+  - [Transactions](#transactions)
   - [Custom matcher](#custom-matcher)
 
 ## Structure examples
@@ -190,6 +191,54 @@ end
 
 ```ruby
 let(:helper) { Class.new { extend ModuleToTest } }
+```
+
+## Transactions
+
+```rb
+describe Klazz do
+  # Make all the examples non-transactional; required for examples requiring a COMMIT
+  self.use_transactional_tests = false
+end
+
+describe Klazz do
+  # Enable per-example
+  uses_transaction "foo"
+  it "foo" do
+    # data changed here will no be rolled back, so this must be handled.
+  end
+end
+```
+
+Data changes is a PITA (see above), and the same hold for example groups that create/resets data.
+
+Manual rollback (ie. manually updating the data to what it was before) is another PITA, so the simplest (dev-wise) solution is to reset the data before each UT:
+
+```rb
+describe Klazz, "non-transactional examples" do
+  self.use_transactional_tests = false
+
+  before do
+    reset_data
+
+    # logic that would regularly be located in `before :all` must be moved in the `before (:each)`.
+  end
+
+  # `let` directives are compatible, even if in nested example groups
+  let! :my_instance { ... }
+
+  it "foo" { ... }
+
+  describe NestedExampleGroup do
+    let! :my_instance do
+      # `let` invocations are compatible with this approach, even if in nested example groups.
+    end
+
+    before do
+      # nested `before`s are fine; see note above for `before :all`.
+    end
+  end
+end
 ```
 
 ## Custom matcher
