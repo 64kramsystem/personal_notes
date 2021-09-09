@@ -1,3 +1,10 @@
+## Thu 09/Sep/2021
+
+- Projects
+  - Port Code the Classics
+    - Port Infinite Bunner to Tetra
+      - [x] Accurate reading of the source code
+
 ## Wed 08/Sep/2021
 
 - Rust
