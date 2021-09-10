@@ -3,8 +3,9 @@
 - [RSpec](#rspec)
   - [Structure examples](#structure-examples)
     - [Before](#before)
-  - [Setup](#setup)
+  - [Setup/configuration](#setupconfiguration)
     - [Add helpers to example groups (`describe`)](#add-helpers-to-example-groups-describe)
+    - [Hooks and execution params](#hooks-and-execution-params)
   - [Mocks](#mocks)
     - [Matchers](#matchers)
     - [Matching arguments](#matching-arguments)
@@ -59,7 +60,7 @@ describe MessagesController
 prepend_before { }
 ```
 
-## Setup
+## Setup/configuration
 
 On top of each test file, add `require 'rspec'`, which will load `spec/spec_helper.rb`.
 
@@ -83,7 +84,7 @@ RSpec.configure do |config|
   end
 end
 
-describe DividedPayment, :include_my_helper do
+describe MyClass, :include_my_helper do
   # the helper is NOT available here!
 
   it "should do something" do
@@ -91,13 +92,28 @@ describe DividedPayment, :include_my_helper do
   end
 end
 
-describe DividedPayment, :extend_my_helper do
+describe MyClass, :extend_my_helper do
   # the helper is available here!
 
   it "should do something" do
     # the helper is NOT available here!
   end
 end
+```
+
+### Hooks and execution params
+
+```rb
+RSpec.configure do |config|
+  # Run this hook if the example group :myconfig parameter is passed.
+  # Additionally, use the :myparam example group parameter.
+  #
+  config.before(:each, :myconfig) do
+    preset_data(myparam: self.class.metadata[:myparam])
+  end
+end
+
+describe MyClass, :myconfig, myparam: 10 do ...
 ```
 
 ## Mocks

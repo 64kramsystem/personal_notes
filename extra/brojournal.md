@@ -1,3 +1,10 @@
+## Fri 10/Sep/2021
+
+- Rust
+  - [ ] Programming Rust (2nd ed.)
+    - [x] Chapter 13: Utility Traits
+    - [x] Chapter 14: Closures
+
 ## Thu 09/Sep/2021
 
 - Projects

@@ -43,6 +43,7 @@
     - [Dirty pages](#dirty-pages)
     - [Dynamic SQL](#dynamic-sql)
   - [Fulltext indexes](#fulltext-indexes)
+    - [Symbols handling](#symbols-handling)
     - [Manipulate search relevance for multiple columns (boosting)](#manipulate-search-relevance-for-multiple-columns-boosting)
   - [Replication](#replication)
   - [Administration](#administration)
@@ -980,6 +981,39 @@ DEALLOCATE PREPARE pst_count;
 ```
 
 ## Fulltext indexes
+
+### Symbols handling
+
+Symbols are not stored in FT indexes, with the exception of `_`; for this reason, any (other) symbol is treated as space:
+
+```sql
+CREATE TABLE test (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  str VARCHAR(255),
+  FULLTEXT (str)
+);
+
+INSERT INTO test (str) VALUES ('foo bar'), ('foo_bar'), ('foo@bar'), ('foo=bar');
+
+SELECT * FROM test WHERE MATCH(str) AGAINST ('"foo bar"' IN BOOLEAN MODE);
+-- +----+---------+
+-- |  1 | foo bar |
+-- |  3 | foo@bar |
+-- |  4 | foo=bar |
+-- +----+---------+
+
+SELECT * FROM test WHERE MATCH(str) AGAINST ('"foo_bar"' IN BOOLEAN MODE);
+-- +----+---------+
+-- |  2 | foo_bar |
+-- +----+---------+
+
+SELECT * FROM test WHERE MATCH(str) AGAINST ('"foo@bar"' IN BOOLEAN MODE);
+-- +----+---------+
+-- |  1 | foo bar |
+-- |  3 | foo@bar |
+-- |  4 | foo=bar |
+-- +----+---------+
+```
 
 ### Manipulate search relevance for multiple columns (boosting)
 
