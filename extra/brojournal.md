@@ -1,3 +1,15 @@
+## Sat 11/Sep/2021
+
+- Projects
+  - Schedule manager
+    - [x] Add debug mode
+    - [x] Some improvements and supporting code for the following
+    - [x] Relister: Allow missing dates (sections)
+    - [x] Relister: Filter out non-replan events
+- SWE/Rust
+  - [ ] Tutoring
+    - [x] Find/contact candidates
+
 ## Fri 10/Sep/2021
 
 - Rust
