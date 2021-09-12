@@ -1,9 +1,13 @@
+- [Table of contents](#table-of-contents)
 - [Flowchart and basics](#flowchart-and-basics)
+  - [Class diagrams](#class-diagrams)
 - [Styling](#styling)
  
 ## Table of contents
 
+- [Table of contents](#table-of-contents)
 - [Flowchart and basics](#flowchart-and-basics)
+  - [Class diagrams](#class-diagrams)
 - [Styling](#styling)
 
 ## Flowchart and basics
@@ -47,6 +51,39 @@ amending_ticket_1 & amending_ticket_2 --> positive_ticket
 
 %% four edges!
 patient1 & patient2 --> doctor1 & doctor2
+```
+
+### Class diagrams
+
+```mermaid
+classDiagram
+
+%% comments can't be inside a class (bug!, https://git.io/JuX5t), and they must be in their own line
+%% blank lines are ignored
+class ClassA {
+  field
+  Type field
+
+  method()
+  method(param) ReturnType
+  static_method()$
+}
+
+class ClassC
+
+%% inheritance
+ClassA <|-- ClassB
+
+%% generic association, with label on the edge
+%% a label can span multiple lines via `\n`; leading/trailing spaces are ignored; colon is not allowed
+ClassC <-- ClassB : mylabel
+
+%% annotations; displayed inside, at the top
+class Color {
+  <<enum>>
+  RED
+  BLUE
+}
 ```
 
 ## Styling

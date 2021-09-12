@@ -59,6 +59,14 @@ bevy = {
 }
 ```
 
+Run with an alternate renderer backend:
+
+```sh
+# As of Sep/2021, the OpenGL backend is currently broken.
+#
+BEVY_WGPU_BACKEND=gl cargo run --release
+```
+
 ## Hello world
 
 ```rust

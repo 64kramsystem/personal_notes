@@ -1,3 +1,45 @@
+## Cycle changes
+
+Small burnout 🤯 Also had comparatively little time, and the optimization research has been "one of those".
+
+- Not completed
+  - Rust: Programming Rust (2nd ed.)
+    - Chapter 15: Iterators
+    - Chapter 16. Collections
+    - Chapter 17: Strings and Text
+  - SWE/Rust: Optimization of random -1./+1
+- Unscheduled
+  - SWE/Rust: Tutoring
+    - Find/contact candidates
+  - Projects/Schedule manager
+    - Some improvements/supporting code for the following
+    - Relister: Allow missing dates (sections)
+    - Relister: Filter out non-replan events
+  - Rust/Gamedev
+    - Test Arguably Better Breakout issue, and report it
+  - Tools
+    - Review Mermaid for class diagrams
+
+## Sun 12/Sep/2021
+
+- Rust/Low-level programming
+  - [ ] Optimization of random -1./+1
+    - [x] Post tutoring request
+    - [x] Post question about specific case
+- Rust
+  - [ ] Programming Rust (2nd ed.)
+    - [x] Copy notes chapter 13
+    - [x] Copy notes chapter 14
+- Tools
+  - [x] Review Mermaid for class diagrams
+- Rust/Gamedev
+  - [x] Test Arguably Better Breakout issue, and report it
+    - [x] Try OpenGL renderer backend
+- Projects
+  - Port Code the Classics
+    - Port Infinite Bunner to Tetra
+      - [x] Create architecture diagram
+
 ## Sat 11/Sep/2021
 
 - Projects

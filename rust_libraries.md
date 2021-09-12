@@ -6,8 +6,10 @@
       - [Default](#default)
       - [Copy, Clone, Drop and their relationships](#copy-clone-drop-and-their-relationships)
       - [Display](#display)
-      - [From (/Into)](#from-into)
+      - [[Try]From/Into](#tryfrominto)
       - [Index[Mut]](#indexmut)
+      - [Deref[Mut]](#derefmut)
+      - [AsRef[Mut]/Borrow[Mut]](#asrefmutborrowmut)
     - [Sorting](#sorting)
       - [Sorting floats](#sorting-floats)
     - [Files read/write/create](#files-readwritecreate)
@@ -97,7 +99,7 @@ impl std::fmt::Display for MyType {
 }
 ```
 
-#### From (/Into)
+#### [Try]From/Into
 
 Implement when representing conversions from a type; the `Into` (`into()`) trait will be automatically handled.
 
@@ -115,6 +117,10 @@ impl From<i32> for Number {
 let num = Number::from(30);
 let num: Number = int.into();
 ```
+
+Important: `From/To` don't guarantee that the trait implementation is cheap.
+
+The respective `Try` versions are fallible (return `Option`).
 
 #### Index[Mut]
 
@@ -151,6 +157,64 @@ impl IndexMut<Register> for Registers {
 let addr = self.registers[src_register] as usize;
 self.registers[dst_register] = 0x21;
 ```
+
+#### Deref[Mut]
+
+```rs
+struct Selector<T> {
+    elements: Vec<T>,
+    current: usize,
+}
+
+impl<T> Deref for Selector<T> {
+    type Target = T;
+    fn deref(&self) -> &T {
+        &self.elements[self.current]
+    }
+}
+
+let s = Selector {
+    elements: vec!['x', 'y', 'z'],
+    current: 2,
+};
+
+// Example of Deref
+assert_eq!(*s, 'z');
+
+// Deref coercions are not applied to satisfy type bounds (generics)!
+//
+fn show_it_generic<T: Display>(thing: T) { println!("{}", thing) }
+//
+show_it_generic(&s); // error
+show_it_generic(&*s); // works - manually deref
+```
+
+#### AsRef[Mut]/Borrow[Mut]
+
+`AsRef` represents a type where `&T` can be borrowed efficiently. Typically used to make functions flexible:
+
+```rs
+// Example implementors: String, str...
+//
+fn open<P: AsRef<Path>>(path: P) -> Result<File>
+```
+
+Use `AsRef` when possible, rather than creating a new `AsFoo` trait!
+
+`Borrow` is like `AsRef`, but it requires that the two types must hash and compares the same! It's designed specifically for hash maps etc. Example:
+
+```rs
+// not good! requires owned value
+fn get(&self, key: K) -> Option<&V> { ... }
+
+// not good! converting &str -> &String requires `&"str".to_string()`
+fn get(&self, key: &K) -> Option<&V> { ... }
+
+// good!
+fn get<Q: ?Sized + Eq + Hash, K: Borrow<Q>>(&self, key: &Q) -> Option<&V>
+```
+
+`String` for example, implements `Borrow<str>`, since they guarantee the requirements.
 
 ### Sorting
 

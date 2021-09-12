@@ -13,6 +13,7 @@
   - [Internal](#internal)
     - [Memory layout](#memory-layout)
     - [References](#references)
+    - [Functions/closures](#functionsclosures)
     - [Null pointer optimization](#null-pointer-optimization)
 
 ## User-facing
@@ -271,6 +272,14 @@ Reference:
 
 - are pointers; for dynamically sized types, they also include an integer (with extra information)
 - are aligned to `usize`
+
+### Functions/closures
+
+Space taken by variables in closures:
+
+- when borrowing: reference
+- when moving: copied variable
+- nothing else; if there are no vars, closures are identical to functions
 
 ### Null pointer optimization
 
