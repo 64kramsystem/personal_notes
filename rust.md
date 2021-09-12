@@ -353,9 +353,12 @@ v.sort();
 Equivalent of Ruby blocks!
 
 ```rust
-let multiple_of_10 = |x| { x % 10 == 0; }   // yay! note: the braces are optional
-(0..100).any(multiple_of_10);               // double yay!
-let is_0 = |x: i32| -> bool { x == 0; }     // with type annotations; they're not required
+let multiple_of_10 = |x: i32| { x % 10 == 0 };  // yay! braces and type annotation are optional
+(0..100).any(multiple_of_10);                   // double yay!
+
+// When closures refer to variables in the outer scope, they borrow them; alternatively, they can `move`
+//
+let key_fn = move |city| city.print_stat(stat);
 
 // Generic closure signature. The closure types passed don't need to be annotated.
 //
@@ -483,6 +486,7 @@ enumerate()                  // iterator (index, &value) (Ruby :each_with_index)
 zip(iter)                    // zip two arrays (iterators)!!!
 sum()                        // WATCH OUT! Returns the same type, so conversion is needed, e.g. `.map(|&x| x as u32).sum();`
 product()                    // ^^ same as above
+partition(|x| x % 2 == 0)    // divide a collection in two
 
 // Can't unpack directly in the `for` with these, since they're refutable patterns.
 //
@@ -1445,7 +1449,7 @@ pub extern "C" fn call_from_c() { }
 // Define a struct
 struct User {
   username: String,
-  active: bool,
+  active: bool,     // the last field can be ?Sized
 }
 
 // Instantiate it
