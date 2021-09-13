@@ -1,3 +1,14 @@
+## Mon 13/Sep/2021
+
+- Admin
+  - [x] Plan cycle
+- Projects
+  - Schedule manager
+    - [x] Add lpim half/off day option
+  - [ ] Port Code the Classics
+    - [ ] Port Bunner to Tetra
+      - [x] Base structure, including static intro screen
+
 ## Cycle changes
 
 Small burnout 🤯 Also had comparatively little time, and the optimization research has been "one of those".

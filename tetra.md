@@ -64,6 +64,8 @@ All the draw-related invocations are implied to be in the `draw()` function.
 ### Textures
 
 ```rs
+// The image path is relative to the current (run) dir. There is (currently) no way to specify asset path(s).
+//
 let texture = Texture::new(ctx, PADDLE_IMAGE_PATH)?;
 
 texture.width(), texture.height();
