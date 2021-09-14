@@ -8,6 +8,7 @@
       - [Bidimensional array struct, uninitialized and macro'ed](#bidimensional-array-struct-uninitialized-and-macroed)
     - [std::num::NonZero*](#stdnumnonzero)
     - [(LLVM) Intrinsics/ASM APIs](#llvm-intrinsicsasm-apis)
+    - [Examine ASM output](#examine-asm-output)
     - [Embedded/OS development](#embeddedos-development)
     - [Count allocations](#count-allocations)
   - [Internal](#internal)
@@ -189,6 +190,35 @@ extern "C" {
 loop {
     unsafe { asm!("hlt"); }
 }
+```
+
+### Examine ASM output
+
+In order to examing the asm output, install and use `cargo-asm`:
+
+```sh
+cargo asm --asm-style=intel --rust path::to::method
+```
+
+If the function is inlined, a trick one can use is to declare the function as public method in a separate library:
+
+```
+# Tree (extract)
+├── src
+    ├── foo.rs
+    └── main.rs
+
+# Cargo.toml (extract)
+[lib]
+name = "mylib"
+path = "src/foo.rs"
+
+[[bin]]
+name = "fdiv"
+path = "src/main.rs"
+
+# Run this way
+cargo asm --lib mylib::mymodule::mymethod
 ```
 
 ### Embedded/OS development

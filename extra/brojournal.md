@@ -1,3 +1,15 @@
+## Tue 14/Sep/2021
+
+- Rust
+  - Tutoring
+    - [x] Chris introduction
+    - [x] Review Zero to production (https://www.zero2prod.com/assets/sample_zero2prod.pdf)
+    - [x] Collect and send project information/questions
+- Rust/Low-level
+  - [x] Read: https://medium.com/journey-to-rust/viewing-assembly-for-rust-function-d4870baad941
+- Planning
+  - [x] Clean subjects pool
+
 ## Mon 13/Sep/2021
 
 - Admin
