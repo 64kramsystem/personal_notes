@@ -2,6 +2,7 @@
 
 - [Rust Tooling](#rust-tooling)
   - [Cargo/Rustup](#cargorustup)
+    - [Debugging information](#debugging-information)
     - [Features](#features)
     - [Conditional build (ifdef-like)](#conditional-build-ifdef-like)
     - [Toolchain](#toolchain)
@@ -94,6 +95,13 @@ See more keys and their definitions at https://doc.rust-lang.org/cargo/reference
 At the root, `Cargo.lock`, managed by Cargo, manages the dependency versions.
 
 The cargo configuration file (see custom configs below) `toml` extension is optional; it's search in many locations: https://doc.rust-lang.org/cargo/reference/config.html.
+
+### Debugging information
+
+If one needs to debug in release mode, the debug information needs to be retained:
+
+- via rustc, specify `-C debuginfo=2 -C opt-level=3`
+- or via Cargo, add `[profile.release] debug = true`
 
 ### Features
 
