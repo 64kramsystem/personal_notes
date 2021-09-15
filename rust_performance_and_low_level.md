@@ -11,6 +11,7 @@
     - [Examine ASM output](#examine-asm-output)
     - [Embedded/OS development](#embeddedos-development)
     - [Count allocations](#count-allocations)
+  - [Benchmarking (`criterion`)](#benchmarking-criterion)
   - [Internal](#internal)
     - [Memory layout](#memory-layout)
     - [References](#references)
@@ -285,6 +286,36 @@ let (counts, v) = count_alloc(|| {
 
 assert_eq!(counts, (1, 1, 0));
 ```
+
+## Benchmarking (`criterion`)
+
+Rust has an built-in bencharking tool (`cargo bench`), but it's unstable and too minimal.
+
+Add to `Cargo.toml`:
+
+```toml
+[[bench]]
+harness = false
+name = "my_benchmark"
+```
+
+and install the `cargo-criterion` crate.
+
+Create `benches/my_benchmark.rs`
+
+```rs
+use criterion::{black_box, criterion_group, criterion_main, Criterion};
+use my_crate::my_function; // or, for simplicity, declare the function in this file
+
+fn criterion_benchmark(c: &mut Criterion) {
+    c.bench_function("fib 20", |b| b.iter(|| my_function(black_box(20))));
+}
+
+criterion_group!(benches, criterion_benchmark);
+criterion_main!(benches);
+```
+
+Run with `cargo criterion`.
 
 ## Internal
 

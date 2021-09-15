@@ -2,6 +2,7 @@
 
 - [Rust Tooling](#rust-tooling)
   - [Cargo/Rustup](#cargorustup)
+    - [Interaction between Visual Studio Code and multiple-project workspace](#interaction-between-visual-studio-code-and-multiple-project-workspace)
     - [Debugging information](#debugging-information)
     - [Features](#features)
     - [Conditional build (ifdef-like)](#conditional-build-ifdef-like)
@@ -95,6 +96,17 @@ See more keys and their definitions at https://doc.rust-lang.org/cargo/reference
 At the root, `Cargo.lock`, managed by Cargo, manages the dependency versions.
 
 The cargo configuration file (see custom configs below) `toml` extension is optional; it's search in many locations: https://doc.rust-lang.org/cargo/reference/config.html.
+
+### Interaction between Visual Studio Code and multiple-project workspace
+
+The alternative to creating a formal Cargo workspace is to:
+
+- don't add the workspace root directory to the VSC workspace
+- add each project (sub) directory to VSC
+- create one `.vscode/launch.json` for each project
+- if there are required files in the root, create a temp directory with symlinks, and add it to VSC and the .gitignore
+
+Trying to add the root to VSC causes problems, firstly, it seems that it's not possible to specify the directory from where Cargo is executed (in `launch.json`), so it runs from the root and fails (since there's no formal workspace).
 
 ### Debugging information
 
