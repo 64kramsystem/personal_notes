@@ -1,3 +1,24 @@
+## Wed 15/Sep/2021
+
+- Rust/Low-level programming
+  - [ ] Optimization of random -1./+1
+    - [x] Prepare project
+- Planning
+  - [x] Precisely plan mid term
+    - [x] Further clean pool and remove current tasks
+    - [x] Think new cycle format and topics
+- Tools
+  - Invoicing script
+    - [x] Investigate/diagnose email client bug
+  - VSC
+    - [x] Fight multiproject
+- Rust/Gamedev
+  - [x] Check amdgpu compatibility with Bevy/other game engines (`https://github.com/bevyengine/bevy/discussions/2813`)
+
+## Cycle notes
+
+Radically reviewed and revamped the plan; dropped the current topics.
+
 ## Tue 14/Sep/2021
 
 - Rust
