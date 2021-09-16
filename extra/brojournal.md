@@ -1,3 +1,16 @@
+## Thu 16/Sep/2021
+
+- Tools
+  - VSC project creation tool
+    - [x] Make VSC exclusion entries dynamic
+    - [x] Some refactorings
+    - [x] Add Rust workspace functionality
+      - [x] Prepare `launch.json`
+      - [x] Prepare `.cargo/config.toml`
+    - [x] Add Rust independent project functionality
+- Emulation
+  - [ ] Review next emulation project
+
 ## Wed 15/Sep/2021
 
 - Rust/Low-level programming
