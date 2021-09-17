@@ -609,10 +609,10 @@ std::process::exit(exit_status);    // terminate program (exit)
 
 ### Blackbox (nightly)
 
-Be pessimistic about the side effects of this function. Can't make any absolute guarantee.
+Be pessimistic about the side effects of this function (typically used not to discard values/functions in the compiled code); doesn't make any absolute guarantee.
 
 ```rust
-#![feature(test)]
+#![feature(bench_black_box)]
 
 use test::bench::black_box;
 

@@ -8,7 +8,6 @@
       - [Bidimensional array struct, uninitialized and macro'ed](#bidimensional-array-struct-uninitialized-and-macroed)
     - [std::num::NonZero*](#stdnumnonzero)
     - [(LLVM) Intrinsics/ASM APIs](#llvm-intrinsicsasm-apis)
-    - [Examine ASM output](#examine-asm-output)
     - [Embedded/OS development](#embeddedos-development)
     - [Count allocations](#count-allocations)
   - [Benchmarking (`criterion`)](#benchmarking-criterion)
@@ -17,6 +16,8 @@
     - [References](#references)
     - [Functions/closures](#functionsclosures)
     - [Null pointer optimization](#null-pointer-optimization)
+    - [Examine ASM (Assembler) output](#examine-asm-assembler-output)
+      - [Prevent function inlining](#prevent-function-inlining)
 
 ## User-facing
 
@@ -193,35 +194,6 @@ loop {
 }
 ```
 
-### Examine ASM output
-
-In order to examing the asm output, install and use `cargo-asm`:
-
-```sh
-cargo asm --asm-style=intel --rust path::to::method
-```
-
-If the function is inlined, a trick one can use is to declare the function as public method in a separate library:
-
-```
-# Tree (extract)
-├── src
-    ├── foo.rs
-    └── main.rs
-
-# Cargo.toml (extract)
-[lib]
-name = "mylib"
-path = "src/foo.rs"
-
-[[bin]]
-name = "fdiv"
-path = "src/main.rs"
-
-# Run this way
-cargo asm --lib mylib::mymodule::mymethod
-```
-
 ### Embedded/OS development
 
 Basic structure for an O/S program:
@@ -354,3 +326,89 @@ enum MyEnum {
 ```
 
 internally, `EmptyVariant` will be stored as `Variant` with zero bits, making the enum data structure take no space.
+
+### Examine ASM (Assembler) output
+
+Notes:
+
+- optimized ASM is obviously hard to map to the source code, so annotations in general are just indicative;
+- if one is testing a function whose result is not used, one must use `test::bench::black_box`, however, it's simpler to create a library and make that function public.
+
+The rust compiler can output the asm:
+
+```
+# Release is automatically selected.
+# Setting `[profile.release] debug = true` doesn't help, as the symbols are not interpreted from an
+# ASM perspective; `c++filt` helps by demangling the function names. 
+# The name of the `.s` file is the name of the binary, or the library (if building with `--lib`).
+#
+cargo rustc --release -- --emit asm
+cat target/**/playground-*.s | c++filt
+```
+
+but the `cargo-asm` crate is more convenient, and it has more intuitive output:
+
+```
+# Defaults to release mode.
+# `--rust`: annotate with source code
+#
+$ cargo asm --rust playground::c_3
+ pub fn c_3() -> f32 {
+ push    rax
+ unsafe { rand() << 1 }
+ call    qword, ptr, [rip, +, rand@GOTPCREL]
+ f32::from_bits((gen_random_c_full() & F32_SIGN_BITMASK) | F32_EXP_BITMASK)
+ and     eax, -1073741824
+ add     eax, eax
+ add     eax, 1065353216
+     movd    xmm0, eax
+ }
+ pop     rax
+ ret
+```
+
+Another way is to use the `Disassembly Explorer` VSC extension:
+
+- extract the functions to examin (use the trick in the section below)
+- emit the asm for the library (e.g. `cargo rustc --release --lib -- --emit asm`), and `c++filt` it
+- follow up the extension instructions (copy/rename the `.s` file), and use it on the library functions :)
+
+Other (not applicable/convenient) frontends:
+
+- VS Code, in the July 2021 insiders version, has a Disassembly view (right click on a line while debugging), but it seems to be available only on C/++;
+- with the CodeLLDB extension installed, choose "LLDB: Show Disassembly"->"Always" (on breakpoint, the disassembly will be opened), but it has next to no symbols.
+
+Note that (in release mode?), breakpoints are not reliable, and it's not clear, when the debugger stops, the correspondence with the source code.
+
+#### Prevent function inlining
+
+In order to prevent inlining, one can move the functions in a library, and declare them public.
+
+A convenient structure to be able to run the binary and disassemble the library is the following.
+
+Cargo.toml (extract):
+
+```toml
+[lib]
+name = "mylib"
+path = "src/lib.rs"
+
+[[bin]]
+name = "mybin"
+path = "src/main.rs"
+```
+
+main.rs:
+
+```
+mod lib
+use crate::lib::*;
+```
+
+Use cargo-asm to disassemble:
+
+```sh
+cargo asm --rust --lib mylib::mymethod
+```
+
+WATCH OUT! The binary is still inlined; this strategy is purely for convenience.
