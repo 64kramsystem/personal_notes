@@ -7,6 +7,7 @@
   - [ActiveRecord](#activerecord)
     - [Querying](#querying)
       - [Scopes](#scopes)
+      - [Group by/having](#group-byhaving)
     - [Updating](#updating)
     - [Migrations](#migrations)
     - [Callbacks](#callbacks)
@@ -52,6 +53,12 @@ query.ids                   # pluck the ids!
 scope :with_tag, ->(name) do
   where(tag: name)
 end
+```
+
+#### Group by/having
+
+```rb
+customers.join(:orders).group('customers.id').having('count(*) > 10')
 ```
 
 ### Updating

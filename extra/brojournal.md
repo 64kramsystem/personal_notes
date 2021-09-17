@@ -1,3 +1,11 @@
+## Fri 17/Sep/2021
+
+- Rust/Low-level programming
+  - Practice/Tutoring
+    - [x] Rust low-level inspection/profiling
+  - [x] Experiment with analyzing the output of Rust asm tools
+    - [x] Epic fight to find a visual approach (-> write article)
+
 ## Thu 16/Sep/2021
 
 - Tools
