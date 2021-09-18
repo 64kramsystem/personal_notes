@@ -3179,6 +3179,8 @@ Crate "roots":
 - `src/main.rs` -> binary crate (same name as package)
 - `src/lib.rs` -> library crate (same name as package)
 
+This won't require any addition; Cargo will build the binary by default, and the library when `--lib` is specified.
+
 An option to put small binary crates inside a crate is to puth them in `src/bin`:
 
 - `src/bin/mycrate.rs` -> binary crate (named `mycrate`)

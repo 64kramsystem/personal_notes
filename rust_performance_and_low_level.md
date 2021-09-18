@@ -385,31 +385,6 @@ Note that (in release mode?), breakpoints are not reliable, and it's not clear, 
 
 In order to prevent inlining, one can move the functions in a library, and declare them public.
 
-A convenient structure to be able to run the binary and disassemble the library is the following.
+Cargo automatically supports both library and binary management if the files are called `src/lib.rs` and `src/main.rs`, so just create the library file, and generate the asm for it.
 
-Cargo.toml (extract):
-
-```toml
-[lib]
-name = "mylib"
-path = "src/lib.rs"
-
-[[bin]]
-name = "mybin"
-path = "src/main.rs"
-```
-
-main.rs:
-
-```
-mod lib
-use crate::lib::*;
-```
-
-Use cargo-asm to disassemble:
-
-```sh
-cargo asm --rust --lib mylib::mymethod
-```
-
-WATCH OUT! The binary is still inlined; this strategy is purely for convenience.
+WATCH OUT! This doesn't prevent the compiler to inline the functions in the binary!
