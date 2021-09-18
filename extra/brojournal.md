@@ -1,3 +1,25 @@
+## Cycle notes
+
+Completed the new plan.
+
+- Not completed
+  - Programming Rust (planned chapters)
+
+## Sun 19/Sep/2021
+
+- Writings
+  - [x] Rust: Godbolt with any crate in VSC
+    - [x] Experiment with Cargo crates structure
+    - [x] Send link to Rust newsletter
+- Emulation
+  - Planning
+    - [x] Review QEMU/C64 emulation resources
+- Planning
+  - [x] Complete the new plan, with details
+- Rust
+  - [ ] Programming Rust (2nd ed.)
+    - [ ] Chapter 15: Iterators
+
 ## Sat 18/Sep/2021
 
 - Rust/Low-level programming
