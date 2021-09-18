@@ -340,7 +340,7 @@ The rust compiler can output the asm:
 # Release is automatically selected.
 # Setting `[profile.release] debug = true` doesn't help, as the symbols are not interpreted from an
 # ASM perspective; `c++filt` helps by demangling the function names. 
-# The name of the `.s` file is the name of the binary, or the library (if building with `--lib`).
+# The name of the `.s` file is the name of the binary/library, as defined in Cargo.toml.
 #
 cargo rustc --release -- --emit asm
 cat target/**/playground-*.s | c++filt
@@ -369,9 +369,10 @@ $ cargo asm --rust playground::c_3
 
 Another way is to use the `Disassembly Explorer` VSC extension:
 
-- extract the functions to examin (use the trick in the section below)
-- emit the asm for the library (e.g. `cargo rustc --release --lib -- --emit asm`), and `c++filt` it
-- follow up the extension instructions (copy/rename the `.s` file), and use it on the library functions :)
+- VSC: set `disasexpl.associations`
+- Cargo: set `[profile.release] debug = true`
+- emit the asm for the binary and/or library (e.g. `cargo rustc --release --lib -- --emit asm`), and `c++filt` it
+- follow up the extension instructions (copy/rename the `.s` file(s)) :)
 
 Other (not applicable/convenient) frontends:
 

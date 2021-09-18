@@ -1,3 +1,10 @@
+## Sat 18/Sep/2021
+
+- Rust/Low-level programming
+  - [x] Refine/complete investigation on the disassembly procedures
+- Writings
+  - [ ] Rust: Godbolt with any crate in VSC
+
 ## Fri 17/Sep/2021
 
 - Rust/Low-level programming
