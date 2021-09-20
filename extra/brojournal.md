@@ -1,3 +1,26 @@
+## Mon 20/Sep/2021
+
+- SWE/Career
+  - [x] Check Shopify open source projects
+- Planning
+  - [x] Plan current cycle
+- SWE
+  - [x] Review/Pick SWE casts: https://twitter.com/wycats/status/1414002735771373568
+- Rust
+  - [x] What is `Cargo.toml` `default-members`?
+  - [ ] Programming Rust (2nd ed.)
+    - [x] Chapter 15: Iterators
+- Projects
+  - Schedule manager
+    - [x] Add weekday support to "next"
+      - [x] Fight Timecop bug
+      - [x] Brutal fight with lexical ambiguity
+    - [x] Minor parser refactoring
+- Projects/Emulation
+  - [ ] Recompilation project
+    - [ ] Project preparation
+      - [x] Review general information on compilation types
+
 ## Cycle notes
 
 Completed the new plan.

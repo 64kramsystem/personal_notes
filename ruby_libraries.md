@@ -205,6 +205,10 @@ In order to parse a freeform time, use DateTime (required `time`), but mind the 
 # If the offset is not specified, it's assumed to be UTC.
 #
 DateTime.parse("10:40 #{Time.now.strftime("%z")}")     # => #<DateTime: 2020-10-27T10:40:00+01:00 ...>
+
+# WATCH OUT! When parsing weekdays, the date in the current week is always returned, which for Ruby
+# starts on Sunday.
+#
 DateTime.parse("thu 10:33 #{Time.now.strftime("%z")}") # => #<DateTime: 2020-10-29T10:33:00+01:00 ...>
 ```
 
