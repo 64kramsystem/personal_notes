@@ -3,6 +3,7 @@
 - [RACC/Parsing](#raccparsing)
   - [References](#references)
   - [Lexer](#lexer)
+    - [Gotchas](#gotchas)
   - [Parser](#parser)
 
 ## References
@@ -21,8 +22,6 @@ fi
 ```
 
 ## Lexer
-
-WATCH OUT!! There is no semantic safety in the lexer/parser definitions (only syntax checks of the parser file format); if there is a mistake, e.g misnamed token, it will cause a parsing error while parsing, without any mention of the actual cause!
 
 Comments can be `//` or `#`; blank lines are mandatory!
 
@@ -48,6 +47,8 @@ rule
   {SUBTRACT}   { [:SUBTRACT, text] }
 
 inner
+  # This is just for testing the lexer; it's not needed for parsing.
+  #
   def tokenize(code)
     scan_setup(code)
     tokens = []
@@ -66,6 +67,24 @@ ruby -r ./lexer <<'RUBY'
 RUBY
 ```
 
+### Gotchas
+
+1. There is no semantic safety in the lexer/parser definitions (only syntax checks of the parser file format); if there is a mistake, e.g misnamed token, it will cause a parsing error while parsing, without any mention of the actual cause!
+
+2. Tokens ordering matters; in the following example, the `SUN` rule (the macro doesn't matter) must precede the `S` and `U`, otherwise, the `sun` string will be interpreted as `S`->`U`->error:
+
+```
+macro
+  SUN        sun
+  S          s
+  U          u
+
+rule
+  {SUN}        { [:SUN, text] }
+  {S}          { [:S, text] }
+  {U}          { [:U, text] }
+```
+
 ## Parser
 
 The rule code blocks won't be executed if there is a parsing error, so they can't be used for debug purposes.
@@ -76,13 +95,14 @@ Blank lines are not mandatory here.
 cat > parser.y <<'RACC'
 # This is example performs logic inside the parser, so parsing the expression returns the result. Non
 # trivial parsers separate domains (as possible).
+# `val` is an array; fetch() is just used to avoid bugs.
 #
 class TestLanguage
 rule
   expression
     : DIGIT
-    | DIGIT ADD DIGIT       { return val[0] + val[2] } # MUST include the `return`!!
-    | DIGIT SUBTRACT DIGIT  { return val[0] - val[2] }
+    | DIGIT ADD DIGIT       { return val.fetch(0) + val.fetch(2) } # MUST include the `return`!!
+    | DIGIT SUBTRACT DIGIT  { return val.fetch(0) - val.fetch(2) }
     ;
 
   # Repetition is encoded as recursion

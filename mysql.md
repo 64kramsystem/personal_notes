@@ -43,6 +43,7 @@
     - [Dirty pages](#dirty-pages)
     - [Dynamic SQL](#dynamic-sql)
   - [Fulltext indexes](#fulltext-indexes)
+    - [Stopwords](#stopwords)
     - [Symbols handling](#symbols-handling)
     - [Manipulate search relevance for multiple columns (boosting)](#manipulate-search-relevance-for-multiple-columns-boosting)
   - [Replication](#replication)
@@ -981,6 +982,12 @@ DEALLOCATE PREPARE pst_count;
 ```
 
 ## Fulltext indexes
+
+### Stopwords
+
+The default stopwords list is in the `INFORMATION_SCHEMA.INNODB_FT_DEFAULT_STOPWORD` table. It doesn't apply to boolean searches.
+
+In order to override it, define a table with a single column `value varchar(18) NOT NULL DEFAULT ''`, populate it with stopwords, and set the value of the `innodb_ft_server_stopword_table` with format: `db_name/table_name`.
 
 ### Symbols handling
 
