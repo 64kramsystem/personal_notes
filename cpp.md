@@ -2,6 +2,7 @@
 
 - [C++](#c)
   - [Basics](#basics)
+  - [Data types](#data-types)
 
 ## Basics
 
@@ -52,3 +53,7 @@ public:
   }
 };
 ```
+
+## Data types
+
+- `unsigned char`: (at least) 0-255 (see https://stackoverflow.com/a/87648)

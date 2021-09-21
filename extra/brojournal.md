@@ -1,3 +1,17 @@
+## Tue 21/Sep/2021
+
+- Projects/Emulation
+  - [ ] Recompilation project
+    - [x] Project preparation (import CHIP-8)
+      - [x] Check roms licensing, and include in the project
+      - [x] Read and test: https://matklad.github.io/2021/08/22/large-rust-workspaces.html
+      - [x] Import project
+        - [x] Minor cleanups
+        - [x] Major simplifications of the source project
+      - [x] Import and extend wiki
+    - [x] Study: [Building a simple JIT in Rust](https://www.jonathanturner.org/building-a-simple-jit-in-rust)
+      - [x] Refactor and experiment
+
 ## Mon 20/Sep/2021
 
 - SWE/Career

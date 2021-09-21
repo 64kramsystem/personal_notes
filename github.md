@@ -2,6 +2,7 @@
 
 - [GitHub](#github)
   - [Ruby CI action](#ruby-ci-action)
+    - [Variables](#variables)
     - [Caching](#caching)
     - [Minimal example](#minimal-example)
   - [Rust CI action](#rust-ci-action)
@@ -47,26 +48,38 @@ jobs:
     #
     strategy:
       fail-fast: false # default: true
+      # In order to base the matrix on env vars, add `env: [K1=V1, ...]`, and add it to the step (see
+      # below).
+      #
       matrix: # optional
         os: [ubuntu, macos]
         ruby-version: [head, 3.0, 2.9, 2.8, 2.7, 2.6, 2.5]
     # `debug` is only to show the functionality - it's not included above.
     #
     continue-on-error: ${{ endsWith(matrix.ruby, 'head') || matrix.ruby == 'debug' }}
-    # See caching section
+    # See caching section.
+    #
     steps:
     - uses: actions/checkout@v2
     - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
     - name: Set up Ruby ${{ matrix.ruby-version }}
       uses: ruby/setup-ruby@v1
+      if: ${{ matrix.suite == 'rspec' }}
       with:
-        ruby-version: ${{ matrix.ruby-version }}
+        ruby-version: ${{ matrix.ruby-version }} # not needed if .ruby-version is present and used
         bundler-cache: true
     - name: Install dependencies
       run: bundle install
     - name: Run tests
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: bundle exec rspec
 ```
+
+### Variables
+
+- `github.workspace`: where the repo is checked out
+- `env.GITHUB_WORKSPACE`: don't use; for unclear reasons, it's blank, even after `checkout@v2` has run
 
 ### Caching
 

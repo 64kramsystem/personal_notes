@@ -1129,7 +1129,7 @@ function print_variables {
 
     echo -n "$variable_name:"
 
-    case "$(declare -p "$variable_name")" in
+    case $(declare -p "$variable_name") in
     "declare -a"* )
       for entry in "${variable_reference[@]}"; do
         echo -n " \"$entry\""
