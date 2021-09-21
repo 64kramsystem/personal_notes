@@ -1374,6 +1374,17 @@ print_raw_pointers(ref_mut, ref_const);
 // declared (separately).
 //
 mymethod(&mut num, &num as *const i32);
+
+// (Some) APIs, specific to raw pointers:
+
+contents                                      // *mut u8
+    .offset(1)                                // pointer arithmetic; unit: size_of::<T>
+    .copy_from(source.as_ptr(), source.len()) // memcpy equiv.
+
+std::intrinsics::write_bytes(contents, byte, count) // memset equiv.
+libc::memset(contents, value, count);               // strict memset
+
+std::ptr::null_mut();                         // null pointer, to use in cases where it's discarded
 ```
 
 Functions:
@@ -1397,7 +1408,7 @@ let slice = &mut [0, 1, 2, 3][..];
 let mid = 2;
 
 let len = slice.len();
-let ptr = slice.as_mut_ptr();
+let ptr: *mut u32 = slice.as_mut_ptr(); // convert a slice to a raw pointer
 
 let (slice1, slice2) = unsafe {
   (

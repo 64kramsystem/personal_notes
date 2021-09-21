@@ -6,6 +6,7 @@
     - [Unsafe](#unsafe)
     - [Uninitialized memory (`std::mem::MaybeUninit`)](#uninitialized-memory-stdmemmaybeuninit)
       - [Bidimensional array struct, uninitialized and macro'ed](#bidimensional-array-struct-uninitialized-and-macroed)
+    - [Manually allocating memory](#manually-allocating-memory)
     - [std::num::NonZero*](#stdnumnonzero)
     - [(LLVM) Intrinsics/ASM APIs](#llvm-intrinsicsasm-apis)
     - [Embedded/OS development](#embeddedos-development)
@@ -163,6 +164,50 @@ let mut values: [[f64; $order]; $order] = unsafe { MaybeUninit::uninit().assume_
 for (row, source_row) in values.iter_mut().zip(source_values.chunks($order)) {
   row.copy_from_slice(source_row);
 }
+```
+
+### Manually allocating memory
+
+```rs
+// For simplicity, set buffer_size as multiple of PAGE_SIZE (see https://linux.die.net/man/3/posix_memalign).
+// Requires `extern crate libc` in order to import `libc::_SC_PAGESIZE`.
+
+let buffer: *mut u8 = unsafe {
+    let page_size = libc::sysconf(_SC_PAGESIZE) as usize;
+
+    // Since posix_memalign discards the existing associate memory, we can use init as null pointer.
+    // We can use MaybeUninit, but in this case it's more verbose and no more useful.
+    //
+    let mut buffer_addr: *mut c_void = std::ptr::null_mut();
+
+    // Allocate the memory, aligned to the page.
+    //
+    libc::posix_memalign(&mut buffer_addr, page_size, buffer_size);
+
+    libc::mprotect(
+        buffer_addr, buffer_size, libc::PROT_EXEC | libc::PROT_READ | libc::PROT_WRITE,
+    );
+
+    // The API accepts a 32 bits value (c_int), however it converts it to an unsigned char.
+    //
+    libc::memset(buffer_addr, fill_value, buffer_size);
+
+    buffer_addr as *mut u8
+};
+```
+
+The alternative to `null_mut()` is (extract; see https://users.rust-lang.org/t/removing-the-libc-calls/62298/13):
+
+```rs
+let mut buffer_addr: MaybeUninit<*mut c_void> = MaybeUninit::uninit();
+
+libc::posix_memalign(buffer_addr.as_mut_ptr(), G.page_size, size);
+
+// Shadow here, in order to avoid multiple assume_init().
+//
+let buffer_addr: *mut c_void = buffer_addr.assume_init();
+
+// etc.etc.
 ```
 
 ### std::num::NonZero*

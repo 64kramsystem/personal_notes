@@ -86,6 +86,12 @@ Using cargo from root requires the member name; otherwise, each member can be tr
 # Add the member before creating the crate.
 
 [workspace]
+# This can be globs (?/*).
+#
+# It can be set to `*`, but will include also `.git` and other files; although they could be excluded
+# via `exclude = [".git", ...]`, but it gets awkward (it also doesn't support wildcards).
+# In this case, the best layout is to create a directory `crates` and use `members = ["crates/*"]`.
+#
 members = ["playground", "rust_programming_by_example"]
 ```
 
