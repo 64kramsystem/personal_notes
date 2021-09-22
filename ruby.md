@@ -454,6 +454,26 @@ end
 
 ### Reflection
 
+Module methods are defined as instance methods, so they are accessible via `instance_*` APIs.
+
+```rb
+module MyModule
+  def mymethod(foo, bar=true, baz: false, qux:); end
+end
+
+# Get the method parameters:
+#
+# - :req:    required positional
+# - :bar:    optional positional
+# - :keyreq: required keyword
+# - :key:    optional keyword
+#
+# Note that the ordering of the keyword args doesn't necessarily match the signature's.
+#
+MyModule.instance_method(:mymethod).parameters
+# => [[:req, :foo], [:opt, :bar], [:keyreq, :qux], [:key, :baz]]
+```
+
 #### Pass a method as map block parameter
 
 ```ruby
@@ -463,7 +483,6 @@ enumerable.map(&method(:mymethod))
 ```
 
 ### Simulate Java annotations!!!
-
 
 Makes available a `roles(*roles)` method, which puts the following method in the `@access_list` instance variable of the class including `Authorization`:
 

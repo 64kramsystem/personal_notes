@@ -194,6 +194,9 @@ let buffer: *mut u8 = unsafe {
 
     buffer_addr as *mut u8
 };
+
+// Deallocate, on drop
+libc::munmap(buffer as *mut _, buffer_size);
 ```
 
 The alternative to `null_mut()` is (extract; see https://users.rust-lang.org/t/removing-the-libc-calls/62298/13):
