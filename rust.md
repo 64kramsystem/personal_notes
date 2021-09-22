@@ -445,54 +445,63 @@ fn my_closure() -> Box<dyn Fn(i32) -> i32> {
 
 #### Ranges and `std::iter::Iterator` methods
 
-General form: `[start] .. [[=]end]`.
+General form: `[start] .. [[=]end]`. Technically they're `Iterator`s of types `Range(Inclusive|From|To|Full)?`.
 
-Ranges are:
+For `Iterator` details, see the [related section](#iterator-traitassociated-typesimpl-trait).
 
-- lazy;
-- open ended on the `end`, unless `=` is specified.
-
-Iterator getting methods:
-
-```rust
-collection.iter()            // immutable references
-collection.iter_mut()        // mutable references
-collection.into_iter()       // owned values (arrays still return references)
-```
+Iterators are lazy; !! they implement arithmetic operators !!
 
 `std::iter::Iterator` methods (also implemented by Range):
 
 ```rust
 map(|x| x * 2)               // Ruby :map
 map(|(x, y)| x + y)          // Tuples unpacking: useful for example, on the result of zip()
-max().unwrap()               // Compute max, on types implementing `Ord`
-max_by(|i1, i2| i1.x.cmp(&i2.x)).unwrap() // Customer max (the closure returns `Ordering`; see [Sorting Floats](#sorting-floats))
 flat_map(|x| x)              // Ruby :flat_map. WATCH OUT! flattens only one level.
-fold(a, |a, x| a + x)        // Ruby :inject
+fold(a, |a, x| a + x)        // Ruby :inject; there is `rfold()`
+try_fold(a, |a, x|)          // Like fold(), but uses Result; on Ok, follows up, on Err, returns it immediately; there is `try_rfold()`.
 fold_first(|a, x| a + x)     // Like fold(), using the first element as initial value
 filter(|x| x % 2 == 0)       // Ruby :select
 filter_map(|x| Some(x * 2))  // AWESOME!!! Combines filter and map; None values are discarded
-find(|x| x % 2 == 0)         // Ruby :find/:detect
-position(|x| x == 2)         // Ruby :index(&block)
-flatten()                    // Quasi-Ruby :flatten. WATCH OUT! flattens only one level.
+find(|x| x % 2 == 0)         // Ruby :find/:detect; there is `rfind()`
+find_map(|x|)                // Like find(), but works with Option<T>
+position(|x| x == 2)         // Ruby :index(&block); None if not found
 dedup()                      // Ruby :uniq
 rev()                        // reverse. WATCH OUT, UNINTUITIVE: since it's not inclusive, it goes from 99 to 0.
-any(|x| x == 33)             // terminates on the first true
-all(|x| x % 2 == 0)          // terminates on the first false
-nth(n)                       // nth element (0-based)
+nth(n)                       // nth element (0-based); there is `nth_back()`
+last()
 skip(n)                      // skip n elements
 take(n)                      // iterator for the first n elements
+skip_while(||); take_while(||) // versions with closures
 enumerate()                  // iterator (index, &value) (Ruby :each_with_index)
 zip(iter)                    // zip two arrays (iterators)!!!
+partition(|x| x % 2 == 0)    // divide a collection in two
+drain(range)                 // removes and returns the elements in the range
+fuse()                       // ensures that after the first None, any other iteration returns None
+
+// Math
+// For each max() there is a min()
+max().unwrap()               // Compute max, on types implementing `Ord`
+max_by(|v1, v2| v1.x.cmp(&v2.x)).unwrap() // Custom max (the closure returns `Ordering`; see [Sorting Floats](#sorting-floats))
+max_by_key(|v| v.field)      // Easier version of max
 sum()                        // WATCH OUT! Returns the same type, so conversion is needed, e.g. `.map(|&x| x as u32).sum();`
 product()                    // ^^ same as above
-partition(|x| x % 2 == 0)    // divide a collection in two
+
+// Boolean inspection
+any(|x| x == 33)             // terminates on the first true
+all(|x| x % 2 == 0)          // terminates on the first false
 
 // Can't unpack directly in the `for` with these, since they're refutable patterns.
-//
 chunks(n)                    // iterate in chunks of n elements; includes last chunk, if smaller
 chunks_exact(n)              // (preferred) iterate in chunks of n elements; does not include the last chunk, if smaller
 windows(n)                   // like chunks, but with overlapping slices (Ruby :each_cons)
+
+// !! Since None() evaluates to empty iterator, invoking on a mix None/Some will perform Ruby :compact !!
+flatten()                    // Quasi-Ruby :flatten. WATCH OUT! flattens only one level.
+
+// Splitting
+split(|x| myfn(x))           // produces immutable slices
+split_mut(|x| myfn(x))       // mutable slices
+rsplit(...); splitn(n, ...)  // other versions
 
 // If one wants to convert an iterator from borrowed (&T) to owned (T), use copied() or cloned().
 // Example, from [f64; _] to Vec<f64>:
@@ -504,13 +513,32 @@ collect()
 collect::<Vec<i32>>()
 collect::<Vec<_>>()
 
-// Create an iterator for repeating a value
-std::iter::repeat(x)
+// Create an iterator for:
+//
+std::iter::repeat(x)  // repeating a value
+std::iter::empty()    // empty
+std::iter::once(x)    // single entry
+
+// Create an iterator for generating a sequence, which stops when the function returns None
+from_fn(|| Some(myfn()));
+successors(Some(start_val), |curr_val| Some(myfn(curr_val)))
+
+// Other adapters:
+peek()                 // Returns a peekable iterator (`peek() -> Option<T>`)
+chain(other_iter)      // Appends iterators
+inspect(|v|)           // Executes the function, without affecting the chain (useful for debugging)
+by_ref()               // Converts the iterator to mutable references (e.g. `String.lines().by_ref()...`)
+cycle()                // Endless repeating
 
 // Ruby :times can be emulated via ranges.
 // Range supports only the `into_iter()` iterator, but no iterator invocation is actually needed.
 (0..SHARKS_COUNT).map(|x| 2 * x).collect::<Vec<_>>();
 (0..SHARKS_COUNT).for_each(|x| println!("{}", x)); // for_each() returns no values
+
+// !! Option and Result are iterators !!
+//
+Some(v), Ok(v) // iterator with v
+None, Err(e)   // empty iterator
 ```
 
 #### Method chaining
@@ -901,6 +929,7 @@ s.into_bytes();                         // convert to Vec[u8]
 // in order to use the slice methods, do `collect()`
 //
 s.split("sep")
+s.split_mut("sep")                      // returns mutable slices
 s.split(char::is_numeric);
 s.split(|c: char| c.is_numeric()).collect();
 s.splitn(max_splits, "sep").collect::Vec<T>(); // splits from left by separator to Vec, long `max_splits` maximum
@@ -2077,6 +2106,20 @@ let super_ref = &(my_better_display as fmt::Display);
 
 ### Iterator trait/Associated types/impl trait
 
+Iterator getting methods:
+
+```rust
+collection.into_iter()       // depends on being invoked on:
+                             // - &     -> iterates shared refs
+                             // - &mut  -> iterates mut refs
+                             // - owned -> iterates owned values
+
+// The below are actually conveniences for `&[ mut]iterable.into_iter()`:
+//
+collection.iter()            // immutable references
+collection.iter_mut()        // mutable references
+```
+
 ```rust
 // Basic Iterator implementation.
 //
@@ -2108,6 +2151,18 @@ fn cyclical_zip(v: Vec<u8>, u: Vec<u8>) -> impl Iterator<Item=u8> { /* ... */ }
 // WATCH OUT! This doesn't work for trait objects, since it's static dispatching, and the return type
 // must be known!
 ```
+
+If a type can be iterated, it should implement `IntoIterator`:
+
+```rs
+trait IntoIterator where Self::IntoIter: Iterator<Item=Self::Item> {
+  type Item;
+  type IntoIter: Iterator;
+  fn into_iter(self) -> Self::IntoIter;
+}
+```
+
+For loops are actually invoking `into_iter()` on the iterable (`Iterator`s return themselves).
 
 ## Ownership
 

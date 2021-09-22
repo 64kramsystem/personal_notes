@@ -1,3 +1,14 @@
+## Wed 22/Sep/2021
+
+- Projects/Emulation
+  - [ ] Recompilation project
+    - [x] Collect/store posts: https://make-a-demo-tool-in-rust.github.io and https://andrewkelley.me/post/jamulator.html
+- Blog
+  - [x] Update Disqus plan, and restore blog comments
+- Rust
+  - [ ] Programming Rust (2nd ed.)
+    - [ ] Copy pending notes
+
 ## Tue 21/Sep/2021
 
 - Projects/Emulation
