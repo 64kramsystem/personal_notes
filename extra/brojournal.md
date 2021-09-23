@@ -1,3 +1,13 @@
+## Thu 23/Sep/2021
+
+- Open source
+  - TenderJIT
+    - [ ] Review and understand project
+    - [x] Check helper books
+- Rust
+  - [ ] Programming Rust (2nd ed.)
+    - [x] Copy pending notes (p.381+)
+
 ## Wed 22/Sep/2021
 
 - Projects/Emulation
