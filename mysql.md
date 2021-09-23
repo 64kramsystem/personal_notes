@@ -91,11 +91,13 @@ SHOW GRANTS for <user>[@'<host>']\G
 ```sql
 IF(condition, trueBranch, falseBranch)
 
+# WATCH OUT!!! This is the control flow operator, not the CASE statement (https://dev.mysql.com/doc/refman/en/case.html).
+#
 CASE case_value
 WHEN when_value THEN statement_list
 [WHEN when_value THEN statement_list] ...
 [ELSE statement_list]
-END CASE
+END
 ```
 
 ## General statements
@@ -104,7 +106,7 @@ END CASE
 # Note that values outside the @values list will take priority over the ones inside, so for some cases
 # it's necessary to use the DESC modifier.
 #
-ORDER BY FIELD( field, @values...)
+ORDER BY FIELD(field, @values...)
 ```
 
 ## General built-in functions

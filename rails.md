@@ -8,6 +8,7 @@
     - [Querying](#querying)
       - [Scopes](#scopes)
       - [Group by/having](#group-byhaving)
+    - [Batching](#batching)
     - [Updating](#updating)
     - [Migrations](#migrations)
     - [Callbacks](#callbacks)
@@ -60,6 +61,10 @@ end
 ```rb
 customers.join(:orders).group('customers.id').having('count(*) > 10')
 ```
+
+### Batching
+
+Both `:find_each` and `:find_in_batches` have a default batch size of 1000.
 
 ### Updating
 

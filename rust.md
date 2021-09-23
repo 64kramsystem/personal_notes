@@ -532,6 +532,8 @@ cycle()                // Endless repeating
 
 // Ruby :times can be emulated via ranges.
 // Range supports only the `into_iter()` iterator, but no iterator invocation is actually needed.
+// There is a `try_for_each()`, to support early exit.
+//
 (0..SHARKS_COUNT).map(|x| 2 * x).collect::<Vec<_>>();
 (0..SHARKS_COUNT).for_each(|x| println!("{}", x)); // for_each() returns no values
 
@@ -2120,9 +2122,23 @@ collection.iter()            // immutable references
 collection.iter_mut()        // mutable references
 ```
 
+Iterator-related general notes:
+
+- `collect()` relies on `FromIterator`, which converts an iterator to a (generally) collection
+- `Iterator` provides a `size_hint()`, which help optimizing building a collection from it
+
+Generic function receiving an iterable (`IntoIterator`):
+
+```rs
+// u32 can be made generic
+fn pizza<T: IntoIterator<Item = u32>>(iterable: T) {
+    for _ in iterable { /*... */ }
+}
+```
+
+Basic `Iterator` implementation:
+
 ```rust
-// Basic Iterator implementation.
-//
 impl Iterator for PhonyCounter {
   // Associated type. Similar to generics, however, doesn't require the type to be specified every
   // time the related methods (in this case, `next()`) are invoked.
