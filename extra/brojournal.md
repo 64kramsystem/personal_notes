@@ -1,3 +1,20 @@
+## Fri 24/Sep/2021
+
+- Linux
+  - [x] Different attempt to correctly decode textfile encoding
+- Open source
+  - MySQL
+    - [x] Diagnose and report `ROW_COUNT()` bug
+  - TenderJIT
+    - [ ] Review and understand project
+      - [x] Review README example
+    - Related studies
+      - [x] YJIT Talk: https://www.youtube.com/watch?v=PBVLf3yfMs8
+- CS/Interpreters
+  - [ ] Ruby Under a Microscope
+    - [x] Chapter 1: Tokenization and Parsing
+    - [ ] Chapter 2: Compilation
+
 ## Thu 23/Sep/2021
 
 - Open source

@@ -12,6 +12,7 @@
     - [Numeric functions](#numeric-functions)
     - [Aggregates](#aggregates)
     - [Other/generic functions](#othergeneric-functions)
+  - [SELECT multiple rows from literals (convert scalars to rows)](#select-multiple-rows-from-literals-convert-scalars-to-rows)
   - [(Status) Variables](#status-variables)
   - [Regular expressions (regexes)](#regular-expressions-regexes)
     - [Strategies](#strategies)
@@ -193,6 +194,20 @@ SLEEP(@secs)
 LAST_INSERT_ID()                     # last inserted AUTO_INCREMENTed id
 ROW_COUNT()                          # number of rows affected by last operation (NOT rows changed!)
 GREATEST|LEAST(@values...)           # min/max on multiple values
+```
+
+## SELECT multiple rows from literals (convert scalars to rows)
+
+This can be used with `CREATE TABLE ... SELECT`, without insert.
+
+```sql
+SELECT *
+FROM (
+  VALUES
+    ROW(1),
+    ROW(2)
+) `alias` -- append `(col_name)` to set the column name
+;
 ```
 
 ## (Status) Variables
@@ -715,6 +730,8 @@ DECLARE max_table_id   INT DEFAULT (SELECT MAX(id) FROM mytable);
 -- Declared variables can be used in some places where standard variables can't.
 DELETE FROM mytable LIMIT deletion_limit;
 ```
+
+Globa variables **can't** be used for `LIMIT` clauses, however, procedure variables can.
 
 ### Control flow syntax
 

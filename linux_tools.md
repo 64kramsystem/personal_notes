@@ -714,8 +714,9 @@ comm -12 $file_1_sorted $file_2_sorted
 ## Encoding
 
 ```sh
-enca -L none filename                   detects file encoding
-iconv -f UCS-2 -t UTF-8 filename        converts file encoding
+file -i $filename                        detect file encoding
+enca -L none $filename                   ^^
+iconv -f UCS-2 -t UTF-8 $filename        converts file encoding
 
 # convert binary input to something human readable (eg. hexadecimal)
 #
