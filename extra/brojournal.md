@@ -1,3 +1,20 @@
+## Sat 25/Sep/2021
+
+- CS/Interpreters
+  - [ ] Ruby Under a Microscope
+    - [x] Chapter 2: Compilation
+    - [x] Chapter 3: How Ruby Executes Your Code
+    - [x] Chapter 4: Control Structures and Method Dispatch
+    - [x] Chapter 5: Objects and Classes
+- Projects
+  - ZFS installer
+    - [ ] Ubuntu Server 21.04 user issue
+      - [x] Test on VM
+      - [x] Discuss
+- Open source
+  - TenderJIT
+    - [ ] Review project
+
 ## Fri 24/Sep/2021
 
 - Linux
