@@ -1,3 +1,21 @@
+## Sun 26/Sep/2021
+
+- Open source
+  - TenderJIT
+    - [x] Implement branchif test suite
+    - [x] Merge branchunless test suite files
+    - [x] Issue: Handle Gemfile.lock
+    - [x] Find out how the JIT gets the iseq, and think if testing could be based on it
+      - [x] Find out if Ruby has APIs for creating an iseq
+    - [ ] Try to understand branchif/branchunless
+    - [ ] Implement test suites
+      - [x] `branchnil`
+      - [x] `intern`
+      - [x] `nop`
+- CS/Interpreters
+  - [ ] Ruby Under a Microscope
+    - [x] Chapter 6: Method Lookup and Constant Lookup
+
 ## Sat 25/Sep/2021
 
 - CS/Interpreters
@@ -14,6 +32,7 @@
 - Open source
   - TenderJIT
     - [ ] Review project
+      - [x] Check branchif/branchunless: Ruby source/JIT
 
 ## Fri 24/Sep/2021
 
