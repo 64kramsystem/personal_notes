@@ -17,6 +17,7 @@
     - [Regular expression APIs/notes](#regular-expression-apisnotes)
     - [Weak references](#weak-references)
   - [Special variables/Built-in constants](#special-variablesbuilt-in-constants)
+    - [Verbose mode (enable warnings)](#verbose-mode-enable-warnings)
   - [Strings](#strings)
     - [Substitution](#substitution)
   - [Classes/Metaprogramming](#classesmetaprogramming)
@@ -414,6 +415,10 @@ RUBY_PATCHLEVEL                     # patch level (Integer)
 RUBY_VERSION                        # e.g. "2.7.0"
 __dir__                             # directory of current file
 ```
+
+### Verbose mode (enable warnings)
+
+Set `$VERBOSE = true`.
 
 ## Strings
 

@@ -1,3 +1,26 @@
+## Mon 27/Sep/2021
+
+- Projects
+  - Fish Fight
+    - [x] Help beginner about Galleon weapon
+- CS/Interpreters
+  - [x] Ruby Under a Microscope
+    - [x] Chapter 7: The Hash Table: The Workhorse of Ruby Internals
+    - Skipped chapters 8/9
+    - [x] Chapter 10: JRuby: Ruby on the JVM
+    - [x] Chapter 11: Rubinius: Ruby Implemented with Ruby
+    - [x] Chapter 12: Garbage Collection in MRI, JRuby, and Rubinius
+      - Second part skipped
+- Open source
+  - TenderJIT
+    - [x] Implement test suites
+      - [x] `leave`
+      - [x] `jump`
+      - [x] `leave`
+      - [x] `opt_aset`
+    - [x] Search learning resources
+    - [x] Fix testing warnings
+
 ## Sun 26/Sep/2021
 
 - Open source
