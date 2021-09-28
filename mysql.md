@@ -47,6 +47,7 @@
     - [Stopwords](#stopwords)
     - [Symbols handling](#symbols-handling)
     - [Manipulate search relevance for multiple columns (boosting)](#manipulate-search-relevance-for-multiple-columns-boosting)
+    - [Maintenance](#maintenance)
   - [Replication](#replication)
   - [Administration](#administration)
     - [Non-blocking schema changes](#non-blocking-schema-changes)
@@ -1046,11 +1047,25 @@ SELECT * FROM test WHERE MATCH(str) AGAINST ('"foo@bar"' IN BOOLEAN MODE);
 Create three indexes: on the two individual columns, and on both.
 
 ```sql
+# If searching in boolean mode, specify it for all the MATCH clauses!
+#
 SELECT id
 FROM mytable
 WHERE MATCH (col1, col2) AGAINST (@keyword)
 ORDER BY
   5 * MATCH (col1) AGAINST (@keyword) + MATCH (col2) AGAINST (@keyword) DESC;
+```
+
+### Maintenance
+
+```sql
+SET GLOBAL innodb_ft_aux_table = 'db/table';
+
+# Check unmerged insertions+updates / deletes
+#
+SELECT COUNT(*) FROM INFORMATION_SCHEMA.INNODB_FT_INDEX_CACHE
+UNION ALL
+SELECT COUNT(*) FROM INFORMATION_SCHEMA.INNODB_FT_DELETED;
 ```
 
 ## Replication

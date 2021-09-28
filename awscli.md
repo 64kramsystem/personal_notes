@@ -6,6 +6,7 @@
     - [EC2](#ec2)
     - [IAM](#iam)
     - [RDS](#rds)
+    - [EBS](#ebs)
     - [S3](#s3)
       - [Upload objects](#upload-objects)
       - [List keys/objects](#list-keysobjects)
@@ -73,6 +74,19 @@ Find RDS instance informations:
 ```sh
 aws rds describe-db-instances --db-instance-identifier $id                   # can specify only one; no wildcards
 aws rds describe-db-instances --filters Name=db-instance-id,Values=$id1,$id2 # wildcards are not supported
+
+# Change the storage type; gp3 is currently not supported
+#
+aws rds modify-db-instance --storage-type gp2 --db-instance-identifier $id
+```
+
+### EBS
+
+```sh
+# Change the type, for an EC2 instance.
+# For RDS, see the dedicated section.
+#
+aws ec2 modify-volume --volume-type gp3 -volume-id $id
 ```
 
 ### S3

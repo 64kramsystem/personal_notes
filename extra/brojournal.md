@@ -1,3 +1,35 @@
+## Tue 28/Sep/2021
+
+- Open source
+  - Fish Fight
+    - [x] Review Zac's PR
+    - [x] Configuration file discussions
+  - Awesome compilers
+    - [x] Create PR with new tutorial
+  - Schedule manager
+    - [x] Retemplater: Automatically fill missing brackets
+  - QEMU/Rust
+    - [x] Collect current QEMU/Rust project references
+- Interpreters/Low-level programming
+  - [ ] Review resources for learning JIT programming, and plan
+- SWE
+  - [x] Check SWE meetups
+- Admin
+  - [x] Flush staging/Plan cycle
+- Tools
+  - [x] Notes syncer: add force previous functionality
+  - [x] Daily script: add comment options functionality
+
+## Cycle changes
+
+- Unscheduled
+  - Projects: Schedule manager: Minor parser refactoring
+  - CS/Interpreters: Ruby Under a Microscope
+  - ZFS installer: Handle reported issue
+  - Fish Fight: Help beginner
+- Swapped
+  - Recompilation Project <> TenderJIT+QEMU
+
 ## Mon 27/Sep/2021
 
 - Projects
@@ -20,6 +52,9 @@
       - [x] `opt_aset`
     - [x] Search learning resources
     - [x] Fix testing warnings
+- Rust
+  - Programming Rust (2nd ed.)
+  - [ ] Chapter 17: Strings and Text
 
 ## Sun 26/Sep/2021
 
