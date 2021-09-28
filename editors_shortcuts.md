@@ -304,7 +304,8 @@ htop:
 Tilix:
 
 - `Ctrl+Shift+I`            Synchronize input
-- `Alt+<directtion>`        Move between terminals
+- `Alt+<direction>`         Move between terminals
+- `Alt+Shift+<direction>`   Resize terminal
 
 Telnet:
 

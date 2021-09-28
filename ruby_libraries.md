@@ -694,9 +694,16 @@ Etc.getpwuid.dir                                # Get current user home dir. For
 ### StringIO
 
 ```ruby
-# WATCH OUT! If the `a`ppend mode is not specified, the string passed is overwritten!
+# In order to append and allow reading at the same time, use the combination below.
 #
-StringIO.new("start_string", "a")
+# WATCH OUT! Must consider the cursor (on read/write) when initializing with a string:
+#
+# - if append mode is not specified, the cursor is at the beginning (writes will overwrite)
+# - if append mode is specified, the cursor is at the end (reads will be blank)
+#
+# can use #rewind to reset the cursor
+#
+StringIO.new("start_string", File::RDWR | File::APPEND)
 
 # WATCH OUT! :puts adds a newline, but chomps the parameter's last trailing newline
 #
