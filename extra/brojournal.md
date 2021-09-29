@@ -1,3 +1,19 @@
+## Wed 29/Sep/2021
+
+- Open source
+  - Fish Fight
+    - [x] Review Zac's new PR
+    - [x] Second review Zac's PR
+  - RG3D
+    - [x] Discuss RG3D proposals
+  - QEMU/Rust
+    - [x] Review libvfio-user Rust port, and join Outreachy
+    - [x] Fight Patchew
+  - [x] Review/Join Hacktoberfest
+- Rust
+  - Programming Rust (2nd ed.)
+    - [x] Chapter 16. Collections
+
 ## Tue 28/Sep/2021
 
 - Open source
