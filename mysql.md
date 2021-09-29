@@ -1005,9 +1005,23 @@ DEALLOCATE PREPARE pst_count;
 
 ### Stopwords
 
-The default stopwords list is in the `INFORMATION_SCHEMA.INNODB_FT_DEFAULT_STOPWORD` table. It doesn't apply to boolean searches.
+Remember that disabling stopwords requires index rebuild, as the stopwords apply to build, not search; if, say, `innodb_ft_enable_stopword` is set to false, the index is built, and `innodb_ft_enable_stopword` is set to true, stopwords will not be used.
 
-In order to override it, define a table with a single column `value varchar(18) NOT NULL DEFAULT ''`, populate it with stopwords, and set the value of the `innodb_ft_server_stopword_table` with format: `db_name/table_name`.
+There are two alternatives to disable stopwords:
+
+```sql
+# Disable stopwords entirely
+#
+SET GLOBAL innodb_ft_enable_stopword = FALSE;
+
+# Create an empty stopwords table (this applies to InnoDB only)
+#
+CREATE TABLE my_stopwords LIKE INFORMATION_SCHEMA.INNODB_FT_DEFAULT_STOPWORD; # the name is arbitrary
+ALTER TABLE my_stopwords ENGINE=InnoDB; # otherwise leaves it as memory table
+SET GLOBAL innodb_ft_server_stopword_table = 'mydb/my_stopwords';
+```
+
+If emails have to be stored, they can't be queried like `"my@email"*`; a workaround is to identify emails (when storing and searching), and replace symbols with `_`, which is an allowed character.
 
 ### Symbols handling
 
