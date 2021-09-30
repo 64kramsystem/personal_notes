@@ -1,3 +1,16 @@
+## Thu 30/Sep/2021
+
+- Open source
+  - Fish Fight
+    - [x] Review reason for crash in Zac's PR modification
+  - ZFS installer
+    - [x] Review/discuss opened issue about Dropbear boot
+  - QEMU/Rust
+    - [ ] Review all projects, and plan
+  - TenderJIT
+    - [x] Prepare for webcast
+    - [x] Hexdevs Webcast
+
 ## Wed 29/Sep/2021
 
 - Open source
