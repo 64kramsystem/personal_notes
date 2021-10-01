@@ -1,3 +1,16 @@
+## Fri 01/Oct/2021
+
+- Projects
+  - TenderJIT
+    - [x] Review new PR
+    - [x] Open issue about cleanly generating bytecode
+    - [x] Brutal fight with attempt to implement `concatarray`
+    - [x] Attempt to add `splatarray` UTs
+      - [x] Implement `newarray` case for empty array (fixes bug)
+      - [x] Add UT for empty array splatting
+- Ruby/Email
+  - [x] Fight manual composition and sending of emails (with attachments)
+
 ## Thu 30/Sep/2021
 
 - Open source
