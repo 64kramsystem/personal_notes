@@ -814,60 +814,85 @@ connection.cmd( 'flush_all' )
 https://stackoverflow.com/a/3559598
 
 ```ruby
-# Pay much attention to the newlines, which are fundamental.
+# WATCH OUT! This can't be any arbitrary string.
 #
-sender_email, recipient_email    = 'sender@email.com', 'recipient@email.com'
-sender, recipient, subject, body = "Sender <email>", "Recipient <email>", "Subject", "Body"
-marker                           = "MARKER_=+!£$%^&*()-#'~@`¬|,.;/][:?}{_ENDMARKER"
+BOUNDARY_MARKER = 'C64PIZZAOHYEAH!!!'
 
-raise "The body includes the marker!" if body.include?(marker)
+# cc/recipients:  standard format (emails separated by `;`)
+# attachments: (array or single string) filenames
+#
+def prepare_email_text(sender, recipients, subject, body, cc: nil, attachments: [])
+  raise "The body includes the boundary_marker!" if BODY.include?(BOUNDARY_MARKER)
 
-mail_headers = %Q{\
-From: #{sender}
-To: #{recipient}
-Subject: #{subject}
-}
+  # Spacing is crucial!!! Pay much attention to where newlines are (and aren't).
 
-if attachments_data.size > 0
-  mail_headers << %Q{\
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="#{marker}"
---#{marker}
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+  body += "\n" if body !~ /\n\Z/
 
-}
-  attachment_section = attachments_data.inject("") do |attachments_buffer, (filename, content) |
-    encoded_content = [content].pack('m')  # base 64
+  mail_headers = <<~TEXT
+    To: #{recipients}
+    From: #{sender}
+    Subject: #{subject}
+  TEXT
 
-    attachments_buffer += %Q{
---#{marker}
-Content-Type: application/octet-stream; name=\"#{filename}\"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="#{filename}"
+  mail_headers <<~TEXT if cc
+    Cc: #{cc}
+  TEXT
 
-#{encoded_content}\
-}
+  if attachments.size > 0
+    mail_headers << <<~TEXT
+      MIME-Version: 1.0
+      Content-Type: multipart/mixed; boundary="#{BOUNDARY_MARKER}"
+      --#{BOUNDARY_MARKER}
+      Content-Type: text/plain
+      Content-Transfer-Encoding: 7bit
+    TEXT
+
+    attachment_section = Array(attachments).inject("") do |attachments_buffer, full_filename|
+      base_filename = File.basename(full_filename)
+      raw_content = IO.read(full_filename)
+
+      encoded_content = [raw_content].pack('m')  # base 64
+
+      attachments_buffer += <<~TEXT.chomp
+
+        --#{BOUNDARY_MARKER}
+        Content-Type: application/octet-stream; name=\"#{base_filename}\"
+        Content-Transfer-Encoding: base64
+        Content-Disposition: attachment; filename="#{base_filename}"
+
+        #{encoded_content}
+      TEXT
+    end
+
+    attachment_section << "--#{BOUNDARY_MARKER}--"
   end
 
-  attachment_section << "--#{marker}"
+  "#{mail_headers}\n#{body}#{attachment_section}"
 end
 
-mail_text = "#{mail_headers}#{body}#{attachment_section}--\n"
-
-# Basic send.
+# sender:            assumed to be the same as login user
+# cc/bcc/recipients: standard format (emails separated by `;`)
 #
-Net::SMTP.start('localhost') do |smtp|
-   smtp.send_message(mail_text, sender_email, [recipient_email])
+def send_email(sender, recipients, email_text, password, cc: '', bcc: '')
+  domain = sender[/@(.+)/, 1]
+
+  # BCCs are simply emails that are SMTP recipients, but are not listed in the email headers.
+  #
+  all_recipients = recipients.split(';') + cc.split(';') + bcc.split(';')
+
+  # To send via local mail transport agent, simply use:
+  #
+  #     Net::SMTP.start('localhost')
+  #
+  smtp = Net::SMTP.new('smtp.gmail.com', 587) # TLS send (see https://stackoverflow.com/a/3559598)
+  smtp.enable_starttls
+  smtp.start(domain, sender, password, :login) do
+    smtp.send_message(email_text, sender, all_recipients)
+  end
 end
 
-# TLS send (see https://stackoverflow.com/a/3559598).
-#
-smtp = Net::SMTP.new 'smtp.gmail.com', 587
-smtp.enable_starttls
-smtp.start("domain", "user", "pwd", :login) do
-  smtp.send_message(mail_text, sender_email, [recipient_email])
-end
+email_text = prepare_email_text(SENDER_EMAIL, RECIPIENT_EMAILS, SUBJECT, BODY, cc: CC_EMAILS attachments: attachment)
+send_email(SENDER_EMAIL, RECIPIENT_EMAILS, email_text, password, cc: CC_EMAILS, bcc: BCC_EMAILS)
 ```
 
 ### Ping (ICMP)

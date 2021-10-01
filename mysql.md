@@ -929,6 +929,12 @@ FROM t1
 WHERE t2_id IN (SELECT /*+ SUBQUERY(MATERIALIZATION) */ id FROM t2)
 ```
 
+```sql
+# Enforce a timeout!
+#
+SELECT /*+ MAX_EXECUTION_TIME(5000) */ COUNT(*) FROM ...;
+```
+
 ### Profiling
 
 Query optimizer trace; includes in-depth details about the query execution (plan):
