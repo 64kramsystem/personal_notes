@@ -1,3 +1,14 @@
+## Sat 02/Oct/2021
+
+- Rust
+  - Programming Rust (2nd ed.)
+  - [x] Chapter 18: Input and Output
+- Projects
+  - Openscripts
+    - [x] `git_purge_empty_branches`: Add support for generic development branch
+- MySQL
+  - [x] Fulltext performance investigation
+
 ## Fri 01/Oct/2021
 
 - Projects
@@ -10,6 +21,9 @@
       - [x] Add UT for empty array splatting
 - Ruby/Email
   - [x] Fight manual composition and sending of emails (with attachments)
+- MySQL
+  - [ ] Fulltext performance investigation
+  - [x] Discuss documentation issue/bug
 
 ## Thu 30/Sep/2021
 
@@ -23,6 +37,8 @@
   - TenderJIT
     - [x] Prepare for webcast
     - [x] Hexdevs Webcast
+- MySQL
+  - [ ] Fulltext performance investigation
 
 ## Wed 29/Sep/2021
 
