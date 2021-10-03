@@ -1,3 +1,17 @@
+## Sun 03/Oct/2021
+
+- Projects
+  - Schedule manager
+    - [x] Workaround Timecop 0.8.x bug
+    - [x] Refactor Replanner
+    - [ ] Mega-refactoring to ReplanCodec
+    - [x] Add update whole line (`-U`)
+    - [x] Replanner: On full update, consider recurring the events with weekday but no interval
+      - [x] Refactoring: Simplify line update logic when there is no interval
+- Rust
+  - Programming Rust (2nd ed.)
+    - [ ] Chapter 17: Strings and Text
+
 ## Sat 02/Oct/2021
 
 - Rust
