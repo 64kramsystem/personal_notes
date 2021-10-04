@@ -1,3 +1,51 @@
+## Mon 04/Oct/2021
+
+- Open Source
+  - SubSync
+    - [x] Report encoding detection issue
+- Admin
+  - SWE
+    - [x] Buy new books for the month
+      - Fight "Computer Systems: A Programmer's Perspective" editions
+  - QEMU/Rust
+    - [x] Join Slack channel
+- Projects
+  - TenderJIT
+    - [x] Review/discuss issues opened
+      - [x] Investigate potential RubyGems issue
+- Rust
+  - Programming Rust (2nd ed.)
+    - [x] Chapter 17: Strings and Text
+    - [x] Chapter 19: Concurrency
+    - [x] Chapter 23: Foreign Functions
+    - Skipped chapters 20, 21, 22
+
+## Cycle changes
+
+Overall, TenderJIT took most of the time.
+
+- Swapped
+  - Recompilation Project <> TenderJIT+QEMU
+- Unscheduled
+  - (Various projects)
+    - Discussions
+  - Fish Fight
+    - Mentor Zac/Review PRs
+  - ZFS installer
+    - Review/discuss feature request dropbear boot
+  - Ruby/Email
+    - Fight manual composition and sending of emails (with attachments)
+  - SWE
+    - Review/Join Hacktoberfest
+  - QEMU/Rust
+    - Fight Patchew
+  - Rust
+    - Programming Rust (2nd ed.): Several chapters
+  - Openscripts
+    - `git_purge_empty_branches`: Add support for generic development branch
+  - Schedule manager
+    - Add update whole line (`-U`) (a few refactorings, including two significant ones)
+
 ## Sun 03/Oct/2021
 
 - Projects
