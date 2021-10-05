@@ -1,3 +1,24 @@
+## Tue 05/Oct/2021
+
+- Projects
+  - Blog
+    - [x] `add_new_book.sh`: Don't prompt for reviewers on PR creation
+  - QEMU-pinning
+    - [x] Fix 6.1 breakage issue: https://github.com/64kramsystem/qemu-pinning/issues/35
+  - TenderJIT
+    - [x] Fight attempt to implement new instruction
+    - [x] Fight understand project
+    - [x] Review Fisk
+      - [x] Fight debug symbols
+        - [x] Open PR with indications in the README
+    - [ ] Review symbols [issue](https://github.com/tenderlove/tenderjit/issues/24) and [PR](https://github.com/tenderlove/tenderjit/pull/29)
+    - [ ] Investigate Clang code todos
+      - [ ] Investigate unexpected failures with Fisk
+        - [x] Open issue
+        - [x] Discuss and review issue
+    - [ ] Review Ruby fingerprinting
+      - [x] Open issue
+
 ## Mon 04/Oct/2021
 
 - Open Source
