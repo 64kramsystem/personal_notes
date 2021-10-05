@@ -16,7 +16,7 @@
   - [Metadata (constants etc.) modifiers](#metadata-constants-etc-modifiers)
     - [Regular expression APIs/notes](#regular-expression-apisnotes)
     - [Weak references](#weak-references)
-  - [Special variables/Built-in constants](#special-variablesbuilt-in-constants)
+  - [Special variables/Built-in constants/Other metadata](#special-variablesbuilt-in-constantsother-metadata)
     - [Verbose mode (enable warnings)](#verbose-mode-enable-warnings)
   - [Strings](#strings)
     - [Substitution](#substitution)
@@ -373,7 +373,7 @@ def cached_load(url)
 end
 ```
 
-## Special variables/Built-in constants
+## Special variables/Built-in constants/Other metadata
 
 Updated up to: https://ruby-doc.org/stdlib-2.3.0/libdoc/English/rdoc/English.html
 
@@ -414,6 +414,16 @@ $=  $IGNORECASE                     # [ENG] obsolete: case-insensitivity flag
 RUBY_PATCHLEVEL                     # patch level (Integer)
 RUBY_VERSION                        # e.g. "2.7.0"
 __dir__                             # directory of current file
+```
+
+```rb
+Gem.ruby                            # binary/executable path
+```
+
+```rb
+require 'rbconfig'
+RbConfig::CONFIG["CFLAGS"]
+RbConfig::CONFIG["CC"]              # compiler (+ some other info)
 ```
 
 ### Verbose mode (enable warnings)
