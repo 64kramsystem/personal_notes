@@ -1,3 +1,20 @@
+## Wed 06/Oct/2021
+
+- Admin
+- Projects
+  - TenderJIT
+    - [ ] Ruby fingerprinting
+      - [x] Review RbConfig source
+      - [x] Discuss new solution
+    - [x] Investigate/fix `Fisk error when running the test suite, on a Clang-compiled Ruby`
+      - [x] Add smoke test suite for `Runtime`
+- Rust
+- Tools
+  - Invoicing script
+    - [x] Refactor
+    - [x] Add dry run functionality
+    - [x] Automatically compute net days
+
 ## Tue 05/Oct/2021
 
 - Projects

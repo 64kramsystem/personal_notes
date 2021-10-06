@@ -34,6 +34,7 @@
     - [Ask for input (keypress)](#ask-for-input-keypress)
     - [Trapping errors (hooks)](#trapping-errors-hooks)
     - [Log a script output/Enable debugging [log]](#log-a-script-outputenable-debugging-log)
+    - [Print to stdout while setting a variable](#print-to-stdout-while-setting-a-variable)
     - [Check if there's data in stdin](#check-if-theres-data-in-stdin)
     - [Check if a script is `source`d](#check-if-a-script-is-sourced)
     - [Sudo-related tasks](#sudo-related-tasks)
@@ -948,6 +949,12 @@ exec 2>&1
 exec 5> "$logfile"
 BASH_XTRACEFD="5"
 set -x
+```
+
+### Print to stdout while setting a variable
+
+```sh
+var=$(cmd | tee /dev/tty)
 ```
 
 ### Check if there's data in stdin
