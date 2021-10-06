@@ -15,7 +15,7 @@
   - [SELECT multiple rows from literals (convert scalars to rows)](#select-multiple-rows-from-literals-convert-scalars-to-rows)
   - [(Status) Variables](#status-variables)
   - [Regular expressions (regexes)](#regular-expressions-regexes)
-    - [Strategies](#strategies)
+    - [Strategies/Examples](#strategiesexamples)
   - [JSON + MVI and array storage](#json--mvi-and-array-storage)
   - [XPath](#xpath)
   - [CSV Import/Export](#csv-importexport)
@@ -224,13 +224,17 @@ SHOW GLOBAL STATUS [LIKE 'pattern' | WHERE expr];
 
 Metacharacters/functionalities supported:
 
-- `^ $ . * + ? | {} [] \b`;
-- `()` but not with groups capturing;
-- `[:digit:]` and so on;
-- backreferences is not supported;
-- lookahead is not supported.
+- `^ $ . * + ? | {} [] \b \w \S`
+- `()` but not with groups capturing
+- `[:digit:]` and so on
 
-!! The backslash needs to be doubled where it's literal, e.g. `\\.`/`\\b` !!
+Note supported:
+
+- `\w` match inside character class
+- backreferences
+- lookahead
+
+!! The backslash needs to be escaped, e.g. `\\.`/`\\b` !!
 
 `LIKE`-style operator:
 
@@ -248,9 +252,14 @@ SELECT 'abcd' RLIKE 'b.' `match`;
 Matching a substring:
 
 ```sql
--- - `position` (optional): 1-based, default=1;
--- - `occurrence` (optional): 1-based, default=1;
--- - `match_type` (optional): `c`ase sensitive, `m`ulti-line match, `n`ewlines matched by dot;
+-- - `position` (optional)  : 1-based, default=1
+-- - `occurrence` (optional): 1-based, default=0; which occurrence to replace
+--    - on search : 0 behaves as 1
+--    - on replace: 0 replaces all occurrences
+-- - `match_type` (optional)
+--   - `c`ase sensitive
+--   - `m`ulti-line match (makes `^` and `$` match lines rather than the whole string)
+--   - `n`ewlines matched by dot
 --
 SET @position = 1, @occurrence = 2, @match_type = NULL;
 
@@ -262,20 +271,19 @@ SELECT REGEXP_SUBSTR('ab0b1', 'b[[:digit:]]', @position, @occurrence, @match_typ
 -- +-------+
 
 SELECT
-  REGEXP_SUBSTR('a\nb', 'a$', 1, 1, 'm') `match_m`,
-  REPLACE(
-    REGEXP_SUBSTR('a\nb', 'a.b', 1, 1, 'n'),
-    '\n', '<\\n>'
-  ) `match_n`
+  REGEXP_SUBSTR('a\nb', 'a$', 1, 1) `match_line_nom`,
+  REGEXP_SUBSTR('a\nb', 'b$', 1, 1) `match_str_nom`,
+  REGEXP_SUBSTR('a\nb', 'a$', 1, 1, 'm') `match_line_m`,
+  REGEXP_SUBSTR('a\nb', 'a.b', 1, 1, 'n') `match_n`
 ;
-+---------+---------+
-| match_m | match_n |
-+---------+---------+
-| a       | a<\n>b  |
-+---------+---------+
+-- +----------------+---------------+--------------+---------+
+-- | match_line_nom | match_str_nom | match_line_m | match_n |
+-- +----------------+---------------+--------------+---------+
+-- | NULL           | b             | a            | a\nb    |
+-- +----------------+---------------+--------------+---------+
 ```
 
-Search/replace:
+Search/replace (without capturing group):
 
 ```sql
 -- Supports the same options as `REGEXP_SUBSTR`.
@@ -289,10 +297,12 @@ SELECT REGEXP_REPLACE('a b b c', 'b', 'X', 1, 0) `replace`;
 -- +---------+
 ```
 
-### Strategies
+### Strategies/Examples
 
 Since capturing groups are not supported, using `REGEXP_REPLACE` can be the simplest option in some cases.  
 Note that MySQL supports XPath, so input data like this is best handle throught that.
+
+Extract a substring from a multi-line match:
 
 ```sql
 SET @input := '
@@ -300,10 +310,12 @@ SET @input := '
 <op>my_op</op>
 ';
 
+-- options: <position>, <occurrence (0=all)>, <(n)ewlines dot match>
+---
 SELECT
   REGEXP_REPLACE(
-    REGEXP_SUBSTR(@input, 'my_id</id>.*?</', 1, 1, 'mn'),
-    '^.*>|</$', '', 1, 0, 'mn'
+    REGEXP_SUBSTR(@input, 'my_id</id>.*?</', 1, 1, 'n'),
+    '.*>|</', '', 1, 0, 'n'
   ) `operator`
 ;
 -- +----------+
@@ -311,6 +323,43 @@ SELECT
 -- +----------+
 -- | my_op    |
 -- +----------+
+```
+
+Simulate the replacement of one captured group with a function of the match; this doesn't work for multiple groups, because the inner replacement function is invoked only once, at first.
+
+```sql
+SET @input := 'f+o-o f+o-o12@gmail.com b+a-r b+a-r3456@gmail.com b+a-z';
+
+-- If we include `_` in the from pattern, this logic can be put in a loop.
+--
+SET @pattern := '\\S+@\\S+';
+SET @replace_from := '[^[:alnum:]_]';
+SET @replace_to   := '_';
+
+SELECT
+  -- We can't use a single replace, because we need to replace only terms matching the pattern.
+  --
+  REGEXP_REPLACE(
+    @input,
+    @pattern,
+
+    -- Isolate the match, and compute the replacement.
+    --
+    REGEXP_REPLACE(
+      REGEXP_SUBSTR(@input, @pattern),
+      @replace_from,
+      @replace_to
+    ),
+
+    1,
+    1  -- Replace only one occurrence; using `0` will cause the mentioned problem.
+  ) `repl`
+;
+-- +---------------------------------------------------------+
+-- | repl                                                    |
+-- +---------------------------------------------------------+
+-- | f+o-o f_o_o12_gmail_com b+a-r b+a-r3456@gmail.com b+a-z |
+-- +---------------------------------------------------------+
 ```
 
 ## JSON + MVI and array storage
