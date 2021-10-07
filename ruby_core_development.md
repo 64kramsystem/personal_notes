@@ -1,7 +1,20 @@
 # Ruby Core development
 
 - [Ruby Core development](#ruby-core-development)
+  - [Disassemble code](#disassemble-code)
   - [Compile with custom options](#compile-with-custom-options)
+
+## Disassemble code
+
+```rb
+# Printout form
+RubyVM::InstructionSequence.of(method(:empty_hash)).disasm
+RubyVM::InstructionSequence.compile(%q[ {a: 2, b: 'something'} ]).disasm
+
+# Structured format (ignore the rest of the data)
+#
+RubyVM::InstructionSequence.compile(%q[ {a: 1, b: 2} ]).to_a.last[2..] # => [[:duphash, {:a=>1, :b=>2}], [:leave]]
+```
 
 ## Compile with custom options
 
