@@ -1,3 +1,16 @@
+## Thu 07/Oct/2021
+
+- Projects
+  - TenderJIT
+    - [x] Ruby fingerprinting
+      - [x] Implement and open PR
+    - [x] Discuss `newhash`
+      - [x] Investigate which are the conditions under which `duphash` is used instead
+      - [x] Investigate Ruby internal hash creation
+- Tools
+  - Visual Studio Code
+    - [x] Fight find out how to exclude files per-project
+
 ## Wed 06/Oct/2021
 
 - Admin
