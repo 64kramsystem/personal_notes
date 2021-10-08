@@ -1,3 +1,19 @@
+## Fri 08/Oct/2021
+
+- Projects
+  - TenderJIT
+    - [x] Fight implement newhash
+      - [x] Discuss helping other contributor
+    - [x] Review default Rake task
+      - [x] Investigate history and open issue
+    - [x] Review running direct test
+    - [x] Tentative `checkkeyword` implementation
+      - [x] Open PR with test suite only
+    - [x] Rake test task: Add support for test suite prefix and unit test name
+    - [x] Brutal fight to implement concatarray
+  - ZFS installer
+    - [x] Review and discuss [remote unlock feature request](https://github.com/64kramsystem/zfs-installer/discussions/240)
+
 ## Thu 07/Oct/2021
 
 - Projects
