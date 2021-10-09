@@ -1,3 +1,12 @@
+## Sat 09/Oct/2021
+
+- Projects
+  - TenderJIT
+    - [x] First review tenderlove's `concatarray` update
+  - ZFS installer
+    - [x] Investigate [21.10 grub-install issue](https://github.com/64kramsystem/zfs-installer/issues/241)
+    - [x] Check if it's possible to make the `libzfs?linux` package installation generic
+
 ## Fri 08/Oct/2021
 
 - Projects
