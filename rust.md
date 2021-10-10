@@ -16,7 +16,7 @@
     - [Hash maps](#hash-maps)
   - [Arithmetic/math APIs](#arithmeticmath-apis)
   - [Strings](#strings)
-    - [String/char-related APIs/conversions](#stringchar-related-apisconversions)
+    - [String/Slice/Char-related APIs/conversions](#stringslicechar-related-apisconversions)
     - [Internal representation (bytes/chars/graphemes)](#internal-representation-bytescharsgraphemes)
   - [Control flow](#control-flow)
   - [Enums](#enums)
@@ -59,6 +59,7 @@
       - [Real complex case of iterating a recursive structure with Rc/RefCell](#real-complex-case-of-iterating-a-recursive-structure-with-rcrefcell)
   - [Multithreading](#multithreading)
     - [Channels: Multiple Producers Single Consumer](#channels-multiple-producers-single-consumer)
+    - [Simple Multiple Producers Multiple Consumes](#simple-multiple-producers-multiple-consumes)
     - [Mutex<T>/Arc<T>](#mutextarct)
     - [Atomic primitive type wrappers](#atomic-primitive-type-wrappers)
     - [Barrier](#barrier)
@@ -144,8 +145,11 @@ println!("{:?}", vec);                  // `Debug` format (requires the `Debug` 
 
 eprintln!("Error!");                    // print on stderr!
 
-format!("The number is {}", 1);                          // the template *must* be a literal (!)
-format!("The number is {0}, again {0}, not {1}!", 1, 2); // numbered placeholders!
+// The placeholder types can be mixed (named ones must be last).
+//
+format!("The number is {}", 1)                                // "positional" pl.; the template *must* be a literal (!)
+format!("The number is {0:.2}, again {0:.2}, not {1}!", 1, 2) // indexed placeholders!
+format!("The number is {value:.2}", value=1.0)                // "named" placeholders!
 
 writeln!(writer, "{}", 123).unwrap();   // write formatted data into a Write implementor; `write()` also available
 ```
@@ -264,7 +268,7 @@ For strings, see the [Strings chapter](#strings).
 Memory-related operations:
 
 ```rs
-std::mem::swap(&mut a, &mut b); // !! swap two variables !!
+std::mem::swap(&mut a, &mut b); // !! swap two values (variables, array entries, etc.) !!
 std::mem::size_of::(Type)       // memory occupation of a type
 std::mem::size_of_val(v)        // memory occupation of a variable !!
 ```
@@ -306,10 +310,19 @@ f64::from_bits(u64)                           // transmute from u64 (for bit-wis
 f64::is_sign_positive()                       // important! we can't use `-0.0 >= 0.0` for comparison (if sign is important)
 
 integer.to_string();                      // integer to string
-String::from_utf8(bytes).unwrap();        // (valid) utf-8 bytes to string
-char.to_digit(RADIX).unwrap();            // (parse) char to numeric
+char.to_digit(RADIX).unwrap();            // (parse) ASCII char to numeric
+char::from_digit(4, 10);                  // (number, radix)
 1_u8 as char;                             // only u8 can be casted to char
-let x: Option<char> = std::char::from_u32(1_u32); // cast u32 to char (not available for other data types)
+std::char::from_u32(1_u32);               // cast u32 to char (not available for other data types)
+
+// Convenient conversion traits
+FromStr#from_str(s: &str)                 // convert &str to any (implementing) type
+ToString#to_string()                      // supertrait of Display; it's preferrable to implement Display, though
+
+// UTF-8 conversions
+String::from_utf8(vec)?                   // requires valid input; also `str`
+String::from_utf8_lossy(&byte)            // replaces invalid chars with `�`
+String::from_utf8_unchecked(&byte)        // assumes valid input; also `str`
 
 // parse string to numeric type; with any numeric implementing `FromString`
 // f64 will parse integer strings (e.g. `1`)
@@ -462,53 +475,64 @@ try_fold(a, |a, x|)          // Like fold(), but uses Result; on Ok, follows up,
 fold_first(|a, x| a + x)     // Like fold(), using the first element as initial value
 filter(|x| x % 2 == 0)       // Ruby :select
 filter_map(|x| Some(x * 2))  // AWESOME!!! Combines filter and map; None values are discarded
-find(|x| x % 2 == 0)         // Ruby :find/:detect; there is `rfind()`
+[r]find(|x| x % 2 == 0)      // Ruby :find/:detect
 find_map(|x|)                // Like find(), but works with Option<T>
-position(|x| x == 2)         // Ruby :index(&block); None if not found
-dedup()                      // Ruby :uniq
+[r]position(|x| x == 2)      // Ruby :[r]index(&block); None if not found
+dedup();                     // Ruby :uniq, with variations `_by(||)` and `_by_key(value)`
 rev()                        // reverse. WATCH OUT, UNINTUITIVE: since it's not inclusive, it goes from 99 to 0.
-nth(n)                       // nth element (0-based); there is `nth_back()`
+nth(n); nth_back()           // nth element (0-based)
 last()
-skip(n)                      // skip n elements
-take(n)                      // iterator for the first n elements
-skip_while(||); take_while(||) // versions with closures
+take(n); skip(n)             // iterator taking/skipping the first n elements
+take_while(||)               // stops iteration, by returning always false after the first false
+skip_while(||)               // start iteration on the first true, returning all the others
 enumerate()                  // iterator (index, &value) (Ruby :each_with_index)
 zip(iter)                    // zip two arrays (iterators)!!!
 partition(|x| x % 2 == 0)    // divide a collection in two
 drain(range)                 // removes and returns the elements in the range
 fuse()                       // ensures that after the first None, any other iteration returns None
 
+// `_by` and `by_key` variations example
+max_by(|v1, v2| v1.x.cmp(&v2.x)).unwrap()      // Custom max (the closure returns `Ordering`; see [Sorting Floats](rust_libraries.md#sorting-floats))
+max_by_key(|v| v.field)                        // Easier version of max
+col.sort_by(|a, b| a.partial_cmp(b).unwrap()); // sort with closure 😍!
+
 // Math
 // For each max() there is a min()
-max().unwrap()               // Compute max, on types implementing `Ord`
-max_by(|v1, v2| v1.x.cmp(&v2.x)).unwrap() // Custom max (the closure returns `Ordering`; see [Sorting Floats](#sorting-floats))
-max_by_key(|v| v.field)      // Easier version of max
+max().unwrap()               // Compute max, on types implementing `Ord`; with variations `_by(||)` and `_by_key(value)`
 sum()                        // WATCH OUT! Returns the same type, so conversion is needed, e.g. `.map(|&x| x as u32).sum();`
 product()                    // ^^ same as above
+
+// Iterator comparisons (!); supported: lt, le, eq, etc.
+iterator1.lt(iterator2)
 
 // Boolean inspection
 any(|x| x == 33)             // terminates on the first true
 all(|x| x % 2 == 0)          // terminates on the first false
 
 // Can't unpack directly in the `for` with these, since they're refutable patterns.
+
+// Splitting APIs
+// Typical variations: `r...`, `...n`, and `..._mut`.
+split(|x| myfn(x))
 chunks(n)                    // iterate in chunks of n elements; includes last chunk, if smaller
 chunks_exact(n)              // (preferred) iterate in chunks of n elements; does not include the last chunk, if smaller
-windows(n)                   // like chunks, but with overlapping slices (Ruby :each_cons)
 
-// !! Since None() evaluates to empty iterator, invoking on a mix None/Some will perform Ruby :compact !!
-flatten()                    // Quasi-Ruby :flatten. WATCH OUT! flattens only one level.
+// Other splitting APIs; may not support all the variations
+split_at(); split_first(); split_last()
+windows(n)                   // like chunks, but with overlapping slices (Ruby :each_cons); doesn't have variations
 
-// Splitting
-split(|x| myfn(x))           // produces immutable slices
-split_mut(|x| myfn(x))       // mutable slices
-rsplit(...); splitn(n, ...)  // other versions
+// Quasi-Ruby :flatten. WATCH OUT! flattens only one level.
+// !! Since None() evaluates to empty iterator, invoking on an Iterator<Option> perform Ruby :compact !!
+// Same applies to an Iterator<Result>
+flatten()
 
 // If one wants to convert an iterator from borrowed (&T) to owned (T), use copied() or cloned().
 // Example, from [f64; _] to Vec<f64>:
 myarr_f64.iter().flatten().copied().collect::<Vec<_>>();
 myarr_f64.iter().flatten().cloned().collect::<Vec<_>>();
 
-// transform an iterator into a collection ("consume")
+// Transform an iterator into a collection ("consume")
+// Can use Iterator#size_hint() for optimization purposes.
 collect()
 collect::<Vec<i32>>()
 collect::<Vec<_>>()
@@ -520,6 +544,7 @@ std::iter::empty()    // empty
 std::iter::once(x)    // single entry
 
 // Create an iterator for generating a sequence, which stops when the function returns None
+// Use take(n) if want to use size as limitation, instead of Option.
 from_fn(|| Some(myfn()));
 successors(Some(start_val), |curr_val| Some(myfn(curr_val)))
 
@@ -532,12 +557,13 @@ cycle()                // Endless repeating
 
 // Ruby :times can be emulated via ranges.
 // Range supports only the `into_iter()` iterator, but no iterator invocation is actually needed.
-// There is a `try_for_each()`, to support early exit.
+// There is a `try_for_each()`, to support early exit (or fallible closures).
 //
 (0..SHARKS_COUNT).map(|x| 2 * x).collect::<Vec<_>>();
 (0..SHARKS_COUNT).for_each(|x| println!("{}", x)); // for_each() returns no values
 
 // !! Option and Result are iterators !!
+// This is very clever, as it explains some neat iterator APIs design
 //
 Some(v), Ok(v) // iterator with v
 None, Err(e)   // empty iterator
@@ -607,21 +633,25 @@ let mut vec: Vec<i32> = Vec::new();     // Basic, if type can't be inferred
 let mut vec = vec![1, 2, 3];            // Macro to initialize a vector from a literal list; allocates exact capacity
 let mut vec = vec![true; n];            // Same, with variable-specified length and initialization; allocates exact capacity
 (0..5).collect();                       // Create vector from range
-Vec::with_capacity(cap);                // Preallocating version; WATCH OUT! The length is still 0 at start; use `vec![<val>, n]` if required
 vec.fill_with(|| rand::random())        // Set vector values via closure; uses len()
 vec.fill(1);                            // Set vector values via Clone; uses len()
 
-vec[0] = 2;
+// Size-optimization APIs
+Vec::with_capacity(cap);                // Preallocating version; WATCH OUT! The length is still 0 at start; use `vec![<val>, n]` if required
+vec.reserve(n)
+vec.reserve_exact(n)
+vec.shrink_to_fit(n)
 
 let val = &vec[0];
+vec[0] = 2;
+
+// Safe versions; they also have a `_mut` version
 vec.get(2);                             // Safe (Option<T>) version
 vec.first();
 vec.last();
 
 vec.push(1);                            // Push at the end
 vec.pop();                              // Pop from the end
-let old = vec.swap_remove(i);           // Fast removal (fills in with the last element)
-std::mem::swap(&mut new, &mut vec[0])   // Replace an entry with another
 
 vec.extend([1, 2, 3].iter().copied());  // Append (concatenate) an array
 vec.extend(&[1, 2, 3]);                 // Append (borrowing version)
@@ -682,9 +712,13 @@ See the [ownership chapter](#ownership), for the related properties.
 #### Shared Vec/array methods
 
 ```rust
-vec.swap(pos1, pos2);
-vec.resize(new_len, value: T);          // resize (extend/shrink) a vector; T must be Clone
-vec.resize_with(new_len, || expr);      // resize, via function (e.g. when T is not Clone)
+col.swap(pos1, pos2)
+col1.swap(&mut col2)                    // Swatp the contants of two slices (must have same len)
+let old = col.swap_remove(i);           // Fast removal (fills in with the last element)
+std::mem::swap(&mut new, &mut col[0])   // Replace an entry with another
+col.resize(new_len, value: T);          // resize (extend/shrink) a vector; T must be Clone
+col.resize_with(new_len, || expr);      // resize, via function (e.g. when T is not Clone)
+
 
 // Splitting/joining
 (sl1, sl2) = coll.split_at(split_point);     // immutable
@@ -693,15 +727,16 @@ coll2 = coll.split_off(split_point);         // mutable: the returned (sub)array
 join("str");                                 // join using str; doesn't join `char` collections
 concat();                                    // join without separator
 
+col.len();
+col.iter();                             // iterator
 
-vec.len();
-vec.iter();                             // iterator
-
-// Sorting (destructive!)
-vec.sort();                             // stable
-vec.sort_by_key(|e| e.abs());           // stable, by key!
-vec.sort_unstable();                    // unstable (typically faster than stable)
-vec.sort_by(|a, b| a.partial_cmp(b).unwrap()); // sort with closure 😍!
+// Sorting (destructive!) and finding
+col.sort()                              // stable; with variations `_by(||)` and `_by_key(value)`
+col.sort_unstable()                     // unstable (typically faster than stable)
+col.binary_search(&value)               // with variations `_by(||)` and `_by_key(value)`
+col.contains(value)                     // linear search
+col1.starts_with(col2)
+col1.ends_with(col2)
 ```
 
 In order to pick a random element, see [rand crate](#random-with-and-without-rand).
@@ -899,26 +934,31 @@ str_method(&literal[..]);
 str_method(literal);
 ```
 
-### String/char-related APIs/conversions
+### String/Slice/Char-related APIs/conversions
 
-String APIs:
+String (`s`)/Slice (`sl`) APIs:
 
 ```rust
 s.eq(&str)                              // test equality (compare)
-s.len();
-s.is_empty();                           // must be 0 chars long
+sl.len()
+sl.is_empty()                           // true if 0 chars long
 s.contains("pattern");
 s.start_with("pref");
+sl.is_char_boundary(i)
 s1 == s2;                               // String comparison (all comparisons supported); char-based (not graph.cl.!)
 
 s += &s2;                               // concatenate via overloaded operator; can take &str or &String
 s.push_str(&str);                       // concatenate (append) strings
 s.push('c');
 s.insert(pos, 'c');                     // insert; use also as Ruby unshift()
-s.replace_range(range, "s");            // replace a string range (!)
+s.insert_str(pos, slice)                // ^^ same, for slice
 s.to_lowercase(); s.to_uppercase();
-s.replace("a", "b");                    // gsub
 s.clear();                              // blank a string
+s.truncate(n)                           // truncate after n chars
+s.drain(range)                          // remove and return iterator over removed
+
+writeln!(str, "text")?                  // concatenate via `fmt::Write` trait
+format!("{}/{}/{}"), s1, s2, s3);       // preferred format for more complex concatenations
 s.repeat(8);                            // string repeat (multiplication)
 
 s.trim(); s.trim_end(); s.trim_start(); // trim/strip
@@ -926,34 +966,50 @@ s.trim_end_matches("suffix");           // chomp suffix (but repeated)! also acc
 
 s.as_bytes();                           // byte slice (&[u8]) of the string contents
 s.into_bytes();                         // convert to Vec[u8]
+sl.bytes()
+sl.chars()
+sl.char_indices()                       // Iterator over chars and byte position
 
 // splits; there is a `rsplit*` version for each
 // in order to use the slice methods, do `collect()`
 //
-s.split("sep")
-s.split_mut("sep")                      // returns mutable slices
-s.split(char::is_numeric);
-s.split(|c: char| c.is_numeric()).collect();
-s.splitn(max_splits, "sep").collect::Vec<T>(); // splits from left by separator to Vec, long `max_splits` maximum
+sl.split("sep")
+sl.split_mut("sep")                      // returns mutable slices
+sl.split(char::is_numeric);
+sl.split(|c: char| c.is_numeric()).collect();
+sl.splitn(max_splits, "sep").collect::Vec<T>(); // splits from left by separator to Vec, long `max_splits` maximum
+sl.split_at(i)
+sl.split_terminator(pattern)            // doesn't produce an empty string if separator is last char; has `r` variation
+sl.split_whitespace(); sl.split_ascii_whitespace()
 
 s.lines();                              // the newline char is not included in the output!
-s.split_whitespace();
 
-format!("{}/{}/{}"), s1, s2, s3);       // preferred format for more complex concatenations
+s.find(pattern)                         // find position; accepts char, slice, String, FnMut
+s.contains(pattern)
+s.replace(pattern, repl)                // Ruby :gsub; with `...n` variation
+s.replace_range(range, repl);
+
+// There are some other APIs
 ```
 
 Char APIs:
 
 ```rust
-c.is_alphabetic();
-c.is_numeric();
+// WATCH OUT! These method may also include unintuitive chars, like `⑧` and `ᛮ`.
+// Use the `is_ascii_*()` methods in order to restrict to ascii chars.
+// Note that there are other methods.
+//
+c.is_alphabetic()
+c.is_numeric()
+c.is_whitespace()
+c.is_control()                            // control char
+c.is_digit()                              // ASCII-only
+c.is_lowercase(); c.is_uppercase()        // also non-latin
 
 c.to_lowercase(); c.to_uppercase();       // returns an iterator (AAARGH!!!)
-
-use std::char;
-
-let c = char::from_digit(4, 10);          // (number, radix)
 ```
+
+See [Casting/Conversions](#castingconversions) for cast-related APIs.
 
 ### Internal representation (bytes/chars/graphemes)
 
@@ -1088,8 +1144,9 @@ enum IpAddr {
   V6(String),
 }
 
-// Enums can be associated to values.
-// `repr(u8)` forces the compiler to use 8-bits for each variant, but it's not necessary for assigning values.
+// Enums can have particular internal representations, and can be associated to values.
+// `repr(u<N>)` forces the compiler to use N bits for each variant, but it's not necessary for assigning
+// values; there are interesting representations (see https://doc.rust-lang.org/nomicon/other-reprs.html).
 //
 #[repr(u8)]
 enum Color {
@@ -2108,32 +2165,70 @@ let super_ref = &(my_better_display as fmt::Display);
 
 ### Iterator trait/Associated types/impl trait
 
-Iterator getting methods:
+Terminology:
+
+- `iterator`: type implementing `Iterator`
+- `iterable`: type implementing `IntoIterator`
+- an iterator produces `values`
+- the code that receives values is a `consumer`
+
+Iterator-related types/APIs:
 
 ```rust
-collection.into_iter()       // depends on being invoked on:
-                             // - &     -> iterates shared refs
-                             // - &mut  -> iterates mut refs
-                             // - owned -> iterates owned values
+trait Iterator {
+    type Item;
+    // Returns None when finished, however, it's UB what happens on subsequent calls.
+    //
+    fn next(&mut self) -> Option<Self::Item>;
+    ... // many default methods
+}
 
-// The below are actually conveniences for `&[ mut]iterable.into_iter()`:
+// IntoIterator trait represent a natural iteration; generally (not always, e.g. for slices) consuming.
+// If there are other natural iterations possible, other iteration methods are provided (e.g. for String:
+// chars, bytes...).
+//
+trait IntoIterator where Self::IntoIter: Iterator<Item=Self::Item> {
+    type Item;
+    type IntoIter: Iterator;
+    // depends on being invoked on:
+    // - &     -> iterates shared refs
+    // - &mut  -> iterates mut refs
+    // - owned -> iterates owned values
+    //
+    fn into_iter(self) -> Self::IntoIter;
+}
+
+// The below are conveniences for `&[ mut]iterable.into_iter()`; they're not bound to any trait.
 //
 collection.iter()            // immutable references
 collection.iter_mut()        // mutable references
+
+// Use in reversible iterations
+//
+trait DoubleEndedIterator: Iterator {
+    fn next_back(&mut self) -> Option<Self::Item>;
+}
+
+// Use for position-based APIs
+//
+trait ExactSizeIterator: Iterator {
+    fn len(&self) -> usize { ... }
+    fn is_empty(&self) -> bool { ... }
+}
 ```
 
 Iterator-related general notes:
 
+- there is not contract for iterables to provide all three implementations (e.g. `iter_mut()` for sorted collections)
 - `collect()` relies on `FromIterator`, which converts an iterator to a (generally) collection
 - `Iterator` provides a `size_hint()`, which help optimizing building a collection from it
 
 Generic function receiving an iterable (`IntoIterator`):
 
 ```rs
-// u32 can be made generic
-fn pizza<T: IntoIterator<Item = u32>>(iterable: T) {
-    for _ in iterable { /*... */ }
-}
+fn iter_u32<T: IntoIterator<Item=u32>>(iterable: T) { /* ... */ }
+// This signature allows using unsized types
+fn iter_generic<T: IntoIterator<Item=U>, U: MyType>(iterable: T) { /* ... */ }
 ```
 
 Basic `Iterator` implementation:
@@ -2782,11 +2877,24 @@ let handle = thread::spawn(move || {
 handle.join().unwrap();
 ```
 
+Traits:
+
+- `Send`: types safe to pass by value across threads
+- `Sync`: safe for pass by non-mut reference
+
 If there are serious problems with lifetimes (eg. recursively passing references), use concurrent toolkits (see concurrency tools section).
 
 ### Channels: Multiple Producers Single Consumer
 
 For SPMC, see crate [bus](#channels-single-producer-multiple-consumers-bus), although it can be emulated with multiple channels.
+
+Channels use optimized strategies, per-usage:
+
+- if only one object is ever sent, the overhead is minimal
+- if the Sender is cloned, it's switched to a thread-safe strategy
+- regardless, any strategy is a lock-free queue implementation
+
+The important thing is to make sure not to overload the queue (see below).
 
 ```rust
 use std::sync::mpsc;
@@ -2816,6 +2924,37 @@ println!("{}", rx.recv().unwrap());
 
 for received in rx {
   println!("{}", received);
+}
+```
+
+### Simple Multiple Producers Multiple Consumes
+
+```rs
+pub mod shared_channel {
+    use std::sync::mpsc::{channel, Receiver, Sender};
+    use std::sync::{Arc, Mutex};
+
+    // Thread-safe wrapper around a `Receiver`.
+    #[derive(Clone)]
+    pub struct SharedReceiver<T>(Arc<Mutex<Receiver<T>>>);
+
+    impl<T> Iterator for SharedReceiver<T> {
+        type Item = T;
+        // Get the next item from the wrapped receiver.
+        fn next(&mut self) -> Option<T> {
+            let guard = self.0.lock().unwrap();
+            guard.recv().ok()
+        }
+    }
+
+    // Create a new channel whose receiver can be shared across threads.
+    // This returns a sender and a receiver, just like the stdlib's
+    // `channel()`, and sometimes works as a drop-in replacement.
+    //
+    pub fn shared_channel<T>() -> (Sender<T>, SharedReceiver<T>) {
+        let (sender, receiver) = channel();
+        (sender, SharedReceiver(Arc::new(Mutex::new(receiver))))
+    }
 }
 ```
 
@@ -2851,9 +2990,12 @@ The ownership of an instance in a mutex can be released, if there are no other t
 
 Primitive types have special atomic structs that are very efficient, e.g. (simplified):
 
-```rust
-// AtomicU128 is only in nightly.
+```rs
+// Atomic types besides the obvious ones:
 //
+// - AtomicU128 (only in nightly)
+// - AtomicPtr<T>: shared value of the unsafe pointer type *mut T
+
 let current_cycle = Arc::new(AtomicU32::new(0));
 
 {
@@ -2880,7 +3022,7 @@ for cycle_i in 0..cycles {
 static NEXT_ID: AtomicU32 = AtomicU32::new(1);
 
 pub(crate) fn new_shape_id() -> u32 {
-  NEXT_ID.fetch_add(1, Ordering::SeqCst)
+    NEXT_ID.fetch_add(1, Ordering::SeqCst)
 }
 ```
 
@@ -2889,7 +3031,7 @@ Some APIs (return the previous value):
 - `fetch_add(value, ordering)`:                add to the current value, and return the previous
 - `compare_and_swap(current, value, ordering`: if the existing value equals `current`, set to `value`
 
-**WATCH OUT**: Check out the [CPP reference](https://en.cppreference.com/w/cpp/atomic/memory_order) to understand memory orderings. The most conservative ordering, `Ordering::SeqCst` has still performance good enough to be used as default, according to Programming Rust 1st ed.
+**WATCH OUT**: Check out the [CPP reference](https://en.cppreference.com/w/cpp/atomic/memory_order) to understand memory orderings. The most conservative ordering, `Ordering::SeqCst` has still performance good enough to be used as default, according to Programming Rust 2nd ed.
 
 ### Barrier
 

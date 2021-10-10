@@ -4,6 +4,10 @@
   - [User-facing](#user-facing)
     - [std::mem APIs](#stdmem-apis)
     - [Unsafe](#unsafe)
+    - [FFI](#ffi)
+      - [C to Rust types mapping](#c-to-rust-types-mapping)
+      - [Extern functions/Build scripts](#extern-functionsbuild-scripts)
+      - [C library patterns](#c-library-patterns)
     - [Uninitialized memory (`std::mem::MaybeUninit`)](#uninitialized-memory-stdmemmaybeuninit)
       - [Bidimensional array struct, uninitialized and macro'ed](#bidimensional-array-struct-uninitialized-and-macroed)
     - [Manually allocating memory](#manually-allocating-memory)
@@ -97,6 +101,129 @@ let r = address as *mut i32;
 let slice: &[i32] = unsafe {
   std::slice::from_raw_parts_mut(r, 10000)
 };
+```
+
+### FFI
+
+#### C to Rust types mapping
+
+(types are mostly `std::os::raw`)
+
+|            C            |            Rust             |
+| :---------------------: | :-------------------------: |
+|          short          |           c_short           |
+|           int           |            c_int            |
+|          long           |           c_long            |
+|        long long        |         c_longlong          |
+|     unsigned short      |          c_ushort           |
+| unsigned , unsigned int |           c_uint            |
+|      unsigned long      |           c_ulong           |
+|   unsigned long long    |         c_ulonglong         |
+|          char           |           c_char            |
+|       signed char       |           c_schar           |
+|      unsigned char      |           c_uchar           |
+|          float          |           c_float           |
+|         double          |          c_double           |
+|  void * , const void *  | *mut c_void , *const c_void |
+|    size_t, ptrdiff_t    |        usize, isize         |
+
+Other types (Rust -> C):
+
+- `char`: not `wchar_t` (no fixed implementation); `char32_t` is closer, but not guaranteed to be Unicode
+- `*mut T`, `*const T`: C, C++ pointers, C++
+- (`std::ffi`) `CString`, `CStr`: Strings (limited)
+- `ptr::null_mut()`: null pointer
+
+```rs
+// Mapping to an incomplete struct type, like `typedef struct mytype mytype`
+#[repr(C)] pub struct mytype { _private: [u8; 0] }
+```
+
+For functions accepting uninitialized memory, see [Manually allocating memory](#manually-allocating-memory).
+
+#### Extern functions/Build scripts
+
+Extern functions are declared in linked libraries.
+
+```rs
+extern "C" {
+    static environ: *mut *mut c_char;
+    fn strlen(s: *const c_char) -> usize;
+}
+
+unsafe {
+    let len = strlen(CString::new("I'll be back")?.as_ptr());
+
+    if !environ.is_null() && !(*environ).is_null() {
+        let str = CStr::from_ptr(*environ).to_string_lossy();
+    }
+}
+```
+
+In order to link to a specific library (linker's option `-lgit2`), use `#[link(name = "my_lib_name")]`.
+
+The location of external libraries needs to be specified; for this, use a so-called build script:
+
+```sh
+# Put in the same directory as `Cargo.toml`. In real-world cases, the path should not be absolute.
+#
+$ cat > build.rs << 'RUST'
+fn main() {
+    println!("cargo:rustc-link-search=native=/path/to/libgit2-0.25.1/build");
+}
+RUST
+
+# Must specify the library location. The altenative is to statically link.
+#
+$ export LD_LIBRARY_PATH=/path/to/libgit2-0.25.1/build:"$LD_LIBRARY_PATH"
+$ cargo run
+```
+
+The convention for a wrapper library project is:
+
+- crates providing access to a C library are named `LIB-sys`, where `LIB` is the name of the C library
+- a `-sys` crate should contain only the statically linked library and Rust modules containing extern blocks and type definitions
+- higher-level interfaces then belong in crates that depend on the `-sys` crate
+
+#### C library patterns
+
+```rs
+// Register this on initialization.
+// Note that closures can't be called from C, but standard functions can, as long as they're marked
+// `extern` (so that calling conventions are adapted).
+//
+assert_eq!(libc::atexit(shutdown), 0);
+
+// Must exit via abort(), since we're in a C context.
+//
+extern "C" fn shutdown() {
+    // if any error...
+    std::process::abort();
+}
+
+// Manage C<>Rust strings.
+// The `as_bytes` method exists only on Unix-like systems.
+//
+#[cfg(unix)]
+fn path_to_cstring(path: &Path) -> Result<CString> {
+    use std::os::unix::ffi::OsStrExt;
+    Ok(CString::new(path.as_os_str().as_bytes())?)
+}
+
+// Define lifetimes when the type has no (Rust) references to another type, via PhantomData
+//
+pub struct Commit<'r> {
+    raw: *mut raw::git_commit,
+    _marker: PhantomData<&'r Repository>, // as it contained a &Repository, with a 'r lifetime
+}
+
+// Use drop in order to free C objects.
+//
+impl Drop for Repository {
+    fn drop(&mut self) {
+        raw::git_repository_free(self.raw);
+    }
+}
 ```
 
 ### Uninitialized memory (`std::mem::MaybeUninit`)
