@@ -1,3 +1,14 @@
+## Sun 10/Oct/2021
+
+- Rust
+  - [x] Copy Programming Rust (massive) remaining notes
+- Open Source
+  - Macroquad
+    - [x] Investigate open issue High CPU usage (#257), and propose solution
+- Low-level programming
+- [ ] Search and review next ASM book(s)
+  - [x] Search x64/RISC-V books
+
 ## Sat 09/Oct/2021
 
 - Projects

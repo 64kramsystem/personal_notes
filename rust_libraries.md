@@ -12,16 +12,15 @@
       - [AsRef[Mut]/Borrow[Mut]](#asrefmutborrowmut)
     - [Sorting](#sorting)
       - [Sorting floats](#sorting-floats)
-    - [Files read/write/create](#files-readwritecreate)
-      - [Read/Write traits](#readwrite-traits)
+    - [Base I/O (reading/writing)](#base-io-readingwriting)
+      - [Spawning a process and piping to it](#spawning-a-process-and-piping-to-it)
+    - [File operations](#file-operations)
     - [Paths handling/Directories](#paths-handlingdirectories)
     - [File/directory operations](#filedirectory-operations)
     - [Testing](#testing)
       - [Integration tests](#integration-tests)
     - [Collections](#collections)
-      - [BTreeSet: sorted set](#btreeset-sorted-set)
-      - [VecDeque: double-ended queue](#vecdeque-double-ended-queue)
-    - [TCP client/server](#tcp-clientserver)
+    - [COW (clone-on-write)](#cow-clone-on-write)
     - [Commandline arguments (basic)](#commandline-arguments-basic)
     - [O/S, Processes](#os-processes)
     - [Blackbox (nightly)](#blackbox-nightly)
@@ -45,6 +44,7 @@
       - [Cucumber](#cucumber)
       - [Utilities](#utilities)
     - [Static/global variables (`lazy_static`, `once_cell`, `thread_local!`)](#staticglobal-variables-lazy_static-once_cell-thread_local)
+    - [Single-time initialization (`std::sync::Once`)](#single-time-initialization-stdsynconce)
     - [Concurrency (multithreading) tools (`rayon`/`crossbeam`)](#concurrency-multithreading-tools-rayoncrossbeam)
     - [Enum utils, e.g. iterate (`strum`)](#enum-utils-eg-iterate-strum)
     - [Convenience macros for operator overloading (`auto_ops`)](#convenience-macros-for-operator-overloading-auto_ops)
@@ -277,89 +277,111 @@ impl PartialOrd for SortableFloat {
 }
 ```
 
-### Files read/write/create
+### Base I/O (reading/writing)
+
+(there APIs other than the described)
 
 ```rust
-let str: String = std::fs::read_to_string(filename)?     // content must be valid UTF-8; filename can be relative.
-let buf: Vec<u8> = std::fs::read(game_rom_filename)      // read binary content
-writer.write_all(data: &[u8])?                           // write the whole buffer to a writer (e.g. File)
-let bytes_copied = std::io::copy(&reader, &mut writer)?  // copy a reader into a writer until EOF is reached
-
-// Open in read mode (no write/create).
-//
-let f = File::open("log.txt")?;
-
-// Read line by line.
-// Buffered read/write require the import below
-//
+// Convenience
 use std::io::prelude::*;
-let mut reader = BufReader::new(f);
-let mut line = String::new();
-let len = reader.read_line(&mut line)?;
 
-// Read whole lines (two ways: iteration, vector)
+// std::io::Read
+//
+read(filename)?                        // binary content; filename can be relative
+read_to_string(filename)?              // valid UTF-8
+read_to_end(&mut buffer)?              // read until the EOF; binary
+read_exact(&mut buf)?
+take(n)                                // create an adapter reading at most n bytes
+
+// std::io::Write
+//
+write_all(&mut buf)?                   // write the whole buffer to a writer (e.g. File)
+write(&mut buf)?                       // prefer `write_all()` to `write()`, since the latter doesn't guarantee that the whole buffer is written!
+flush()?
+
+// Copy
+//
+let bytes_copied = std::io::copy(&reader, &mut writer)?  // copy a reader into a writer until EOF is reached
+```
+
+Buffered operations:
+
+```rs
+// Read (e.g. BufReader)
+let len = reader.read_line(&mut line)?
+let lines = reader.lines().collect::<Result<Vec<_>, _>>()?
 for line in reader.lines() { println!("{}", line?); }
-let lines = reader.lines().collect::<Result<Vec<_>, _>>()?;
 
-// Open file R/W + create; quite odd:
-//
-let f: File = OpenOptions::new()
-                  .create(true)            // use create_new(true) to fail if the file exists
-                  .write(true)             // append() is also available
-                  .read(true)
-                  .open("log.txt");
-
-// Open file for writing; if existing, it's truncated.
-//
-let mut file = File::create("log.txt")
-
-// Buffered write. Think about write() vs. write_all()
-// Flushes when the buffer is full, not at the end of each line.
+// Write. Dont' forget about write() vs. write_all()
+// BufWriter flushes when the buffer is full, not at the end of each line.
 //
 let mut stream = BufWriter::new(TcpStream::connect("127.0.0.1:34254").unwrap());
 stream.write(&[666]).unwrap();
+BufWriter::with_capacity(size, writer)     // custom buffer size
 
 // Per-line buffered write; convenient if each line must be immediately available.
 let mut writer = LineWriter::new(file);
 writer.write_all(b"I like pizza!\n")?;
-```
 
-Filesystem operations:
+// `Vec` can be trivially used as `StringIO` equivalent:
 
-```rust
-// Read/Writes (obviously) move the current position.
-
-file.set_len(len)?;               // truncate/extend; the cursor position stays the same (if was end, and the file was shrunk, it will be past the end!)
-file.seek(SeekFrom::Start(i64))?; // also: SeekFrom::{End,Current}
-file.seek(SeekFrom::Current(0))?; // get current position
-```
-
-`Vec` can be trivially used as `StringIO` equivalent:
-
-```rust
 BufReader::new(&str.as_bytes());
 BufReader::new(vec.as_slice()); // don't forget that Read requires slices!
 BufWriter::new(vec);
 ```
 
-for more complex operations (ie. involving seek), can use [io::Cursor](https://doc.rust-lang.org/std/io/struct.Cursor.html).
+Other types:
 
-A convenient type is `std::io::Sink`, which discards all the data sent.
+- `io::Cursor`                  : for more complex operations (ie. involving seek)
+- `io::stdin()`, `io::stdout()` : they have mutexes; require invoking `lock()`
+- `io::sink`                    : discard all the data sent
+- `io::repeat(byte)`
+- `io::empty()`
 
-#### Read/Write traits
-
-`std::io::Read`:
+Section of APIs that handle size/errors:
 
 ```rs
-take(n)                      // create an adapter reading at most n bytes
-read_to_end(&mut buffer)     // read until the EOF
+let len = match reader.read(&mut buf) {
+  Ok(0) => return Ok(written),
+  Ok(len) => len,                                               // size handling
+  Err(ref e) if e.kind() == ErrorKind::Interrupted => continue, // COOL! match guard, to handle a specific error type (and continue)
+  Err(e) => return Err(e),
+};
 ```
 
-`std::io::Write`:
+#### Spawning a process and piping to it
 
 ```rs
-write_all(buf: &[u8])
-write(buf: &[u8])            // prefer `write_all()` to `write()`, since the latter doesn't guarantee that the whole buffer is written!
+let mut child = Command::new("grep").arg("foo").stdin(Stdio::piped()).spawn()?;
+
+// The #stdin type is `process::ChildStdin`
+let mut to_child = child.stdin.take().unwrap();
+
+for word in my_words {
+  writeln!(to_child, "{}", word)?;
+}
+
+drop(to_child); // close grep's stdin, so it will exit
+child.wait()?;
+```
+
+### File operations
+
+```rust
+let f = File::open("log.txt")?             // read mode (no write/create)
+let mut f = File::create("log.txt")        // write mode; if existing, truncate
+
+let f: File = OpenOptions::new()           // Open file R/W + create
+                  .create(true)            // use create_new(true) to fail if the file exists
+                  .write(true)             // append() is also available
+                  .read(true)
+                  .open("log.txt");
+
+// Don't forget that reads/writes move the current position.
+
+file.set_len(len)?;               // truncate/extend; the cursor position stays the same (if was end, and the file was shrunk, it will be past the end!)
+file.seek(SeekFrom::Start(i64))?; // also: SeekFrom::{End,Current}
+file.seek(SeekFrom::Current(0))?; // get current position
 ```
 
 ### Paths handling/Directories
@@ -425,18 +447,34 @@ if pathbuf.file_name().unwrap().to_str().unwrap().start_with("js0") { /* */ }
 
 ### File/directory operations
 
-```rust
-fs::remove_file(file)?;
+There are some other APIs, e.g. for traversing directories.
 
-path.exists()                    // test if file/dir exists
-std::fs::create_dir(&path)?;     // create a directory (mkdir)
-std::fs::create_dir_all(&path)?; // create a directory (mkdir -p)
+```rust
+path.exists()                   // test if file/dir exists
+
+fs::remove_file(path)
+fs::remove_dir_all(path)        // (rm -r)
+
+fs::create_dir(path)            // create a directory (mkdir)
+fs::create_dir_all(path)        // create a directory (mkdir -p)
+
+fs::copy(src, dest)             // copy a file (cp -p)
+fs::rename(src, dest)           // copy a file (cp -p)
+fs::rename(src, dest)           // copy a file (cp -p)
+
+std::os::unix::fs::symlink(target, dest) // OS-specific (use `std::os::unix::prelude::*` for others)
+fs::canonicalize(path)          // Ruby File.expand_path
+fs::metadata(path)              // metadata, including `permissions()`, `len()`, is_dir()`; follows symlinks
+fs::set_permissions(path)
 
 // Read a directory's file basenames (stdlib doesn't have glob APIs).
-// WATCH OUT! The result is not sorted!
+// WATCH OUT! The result is not sorted! `.` and `..` are not included.
 //
-let block_devices: ReadDir = std::fs::read_dir("/dev").unwrap();
-block_devices
+// Other `DirEntry` APIs: `path()`, `metadata()`, `file_type()`
+//
+//
+let entries: ReadDir = std::fs::read_dir("/dev").unwrap();
+entries
     .map(|entry| {
       entry.unwrap()             // DirEntry
         .file_name()             // base filename, OsString
@@ -447,7 +485,7 @@ block_devices
 // Rigorous way of filtering + mapping a directory's filenames
 // This also shows how to work with full path names.
 //
-block_devices
+entries
     .filter_map(|entry| {
         let path = entry.unwrap().path();
         let file_name = path.file_name().unwrap().to_str().unwrap();
@@ -534,7 +572,7 @@ When testing binary crates, don't forget that binary crates can't expose functio
 
 ### Collections
 
-#### BTreeSet: sorted set
+`HashSet`/`BTreeSet` (un/sorted sets):
 
 ```rust
 let set = BTreeSet::new()
@@ -543,13 +581,15 @@ set.insert(10);
 set.insert(4);
 set.insert(1981);
 
-set.contains(88); // false
-set.remove(123);  // false
+set.contains(88)     // false
+set.remove(123)      // false
+set.replace(&value)  // replace a value with another
 set.clear();
 
 set.first();      // 4
 set.last();       // 1981
 
+// Whole-set operations; there are other APIs
 set.is_subset(&BTreeSet);
 set.is_superset(&BTreeSet);
 set.is_disjoint(&BTreeSet);  // disjoint: no elements in common
@@ -559,13 +599,41 @@ set.union(&BTreeSet).clone().collect();
 
 For sorting floats, see [sorting section](#sorting-floats).
 
-#### VecDeque: double-ended queue
+`VecDeque` (double-ended queue, implemented via ring buffer):
 
 ```rust
 let mut mailbox = VecDeque::new();
-mailbox.push_back(item);
-let front_item: Option<T> = mailbox.pop_front();
+mailbox.push_back(item); mailbox.push_front(item)
+mailbox.pop_front(); mailbox.pop_back()
+mailbox.front(); mailbox.back()                     // With `_mut()` variation
+
+// There are other in-depth APIs
 ```
+
+`BinaryHeap` (priority queue):
+
+```rs
+push(); pop()
+peek()
+peek_mut()
+```
+
+There is a `LinkedList`, however, according to Programming Rust, there are better alternatives.
+
+### COW (clone-on-write)
+
+Avoids allocations, when possible. Example, for strings:
+
+```rs
+// If the var is None, we use a &str, avoiding the allocation of a String.
+//
+// For strings, the stdlib has special support for Cow<'a, str>, so the into() version can be used.
+//
+fn get_name() -> Cow<'static, str> {
+    std::env::var("USER")
+        .map(|v| Cow::Owned(v))                       // v.into()
+        .unwrap_or(Cow::Borrowed("whoever you are"))  // "...".into()
+}```
 
 ### TCP client/server
 
@@ -606,6 +674,8 @@ let exe: io::Result<PathBuf> = std::env::current_dir(); // working directory
 std::env::consts::OS;               // values: https://doc.rust-lang.org/std/env/consts/constant.OS.html
 std::process::exit(exit_status);    // terminate program (exit)
 ```
+
+In order to spawn a process and pipe I/O, see the [specific section](#spawning-a-process-and-piping-to-it).
 
 ### Blackbox (nightly)
 
@@ -1359,6 +1429,21 @@ TL_VAR.with(|tl_var_cell| {
   println!("TLV: {}", tl_value); // 32
 });
 ```
+
+### Single-time initialization (`std::sync::Once`)
+
+```rs
+// Makes sure that this initialization is invoked only once, even if called multiple times.
+//
+fn ensure_initialized() {
+    static ONCE: std::sync::Once = std::sync::Once::new();
+    ONCE.call_once(|| unsafe {
+        check(raw::git_libgit2_init()).expect("initializing libgit2 failed");
+        assert_eq!(libc::atexit(shutdown), 0);
+    });
+}
+```
+
 
 ### Concurrency (multithreading) tools (`rayon`/`crossbeam`)
 
