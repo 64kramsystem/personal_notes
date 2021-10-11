@@ -1,3 +1,32 @@
+## Mon 11/Oct/2021
+
+- Low-level programming
+  - [x] Fight prepare RISC-V book
+  - [ ] Beginning x64 Assembly Programming
+    - [x] Chapter 1: Your First Program
+    - [x] Chapter 2: Binary Numbers, Hexadecimal Numbers, and Registers
+    - [ ] Chapter 3: Program Analysis with a Debugger: GDB
+      - [x] Search debugger GUI (gdbgui)
+- SWE
+  - [x] Fight find women in tech organizations
+    - [x] Girls Who Code
+    - [x] Contact Code Curious leader
+- Projects
+  - ZFS installer
+    - [x] Make the `libzfs?linux` package installation generic
+- Tools
+  - [x] Journal transfer script: New section skipping logic
+  - [x] Daily script: Open file only if specified (by new option)
+
+## Cycle changes
+
+Going well. Only minor unscheduled stuff. Lots of TenderJIT stuff, and completed the damn Rust book.
+
+- Unscheduled
+  - Blog: `add_new_book.sh`: Don't prompt for reviewers on PR creation
+  - Macroquad: Investigate open issue High CPU usage (#257), and propose solution
+  - Tools: Visual Studio Code: Fight find out how to exclude files per-project
+
 ## Sun 10/Oct/2021
 
 - Rust
