@@ -1,3 +1,17 @@
+## Tue 12/Oct/2021
+
+- Open Source
+  - [x] Search Hacktoberfest Rust projects
+    - [x] Fight how to unsubscribe from Hacktoberfest
+- Projects
+  - TenderJIT
+    - [ ] Study new `concatarray`, and investigate improvements
+    - [x] Fight investigate no-op `mov`s
+    - [x] Review potential new instructions to implement
+- Low-level programming
+  - [x] Study x64 [C Calling convention PDF](https://aaronbloomfield.github.io/pdr/book/x86-64bit-ccc-chapter.pdf)
+    - [x] Other reading: https://staffwww.fullcoll.edu/aclifton/cs241/lecture-stack-c-functions.html (conventions only)
+
 ## Mon 11/Oct/2021
 
 - Low-level programming

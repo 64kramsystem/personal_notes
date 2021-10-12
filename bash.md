@@ -755,16 +755,16 @@ coordinates[1]=b                     # set an indexed value
 echo "${coordinates[@]:2}"           # array slicing! ([2..-1]) (see https://stackoverflow.com/a/1336245)
 echo "${@:2}"                        # slice the `$@` variable
 echo ${#coordinates[@]}              # size (length)
-printf '%s\n' "${array[@]}"          # print the entries (one per line); `echo` prints all in one line
 
 # Simple inclusion test (there is no direct way); ensure $value doesn't include metachars.
 #
 printf '%s\0' "${array[@]}" | grep -qz "^$value$"
 
-# Joining arrays.
+# Printing/joining arrays.
 #
 # The pure multi-char bash version is ugly (see https://stackoverflow.com/a/17841619 and https://dev.to/meleu/how-to-join-array-elements-in-a-bash-script-303a).
 #
+printf '%s\n' "${array[@]}"                      # print the entries (one per line); `echo` prints all in one line
 echo $(IFS=,; echo "${arr[*]}")                  # Single-char; !!! don't forget the `;` and the quotes !!!
 perl -e 'print join("--", @ARGV)' -- "${arr[@]}" # Multi-char, perl `--` is for safety, if any value starts with `-`
 printf %s "${arr[@]/#/->}"                       # Join, but also prepends the separator; works also with `arr[*]` (for interpolation)
