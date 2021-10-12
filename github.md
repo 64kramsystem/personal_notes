@@ -1,12 +1,20 @@
 # GitHub
 
 - [GitHub](#github)
+  - [Searches](#searches)
   - [Ruby CI action](#ruby-ci-action)
     - [Variables](#variables)
     - [Caching](#caching)
     - [Minimal example](#minimal-example)
   - [Rust CI action](#rust-ci-action)
   - [README.md](#readmemd)
+
+## Searches
+
+Sample search using multiple topics and a language:
+
+- GUI: `language:rust topic:hacktoberfest topic:virtualization`
+- HTTP: https://github.com/search?l=Rust&q=topic%3Ahacktoberfest+topic%3Avirtualization&type=Repositories
 
 ## Ruby CI action
 

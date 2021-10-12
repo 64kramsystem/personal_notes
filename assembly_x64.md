@@ -5,6 +5,7 @@
   - [Makefile for compiling](#makefile-for-compiling)
   - [Data types](#data-types)
   - [Registers/Flags](#registersflags)
+  - [C Calling convention](#c-calling-convention)
   - [References](#references)
 
 ## Basic structure
@@ -58,17 +59,17 @@ hello.o: hello.asm
 
 General purpose registers:
 
-| 64-bit | 32-bit | 16-bit | low  8-bit | high 8-bit | note      |
-| :----: | :----: | :----: | :--------: | :--------: | --------- |
-|  rax   |  eax   |   ax   |     al     |     ah     |           |
-|  rbx   |  ebx   |   bx   |     bl     |     bh     |           |
-|  rcx   |  ecx   |   cx   |     cl     |     ch     |           |
-|  rdx   |  edx   |   dx   |     dl     |     dh     |           |
-|  rsi   |  esi   |   si   |    sil     |     -      |           |
-|  rdi   |  edi   |   di   |    dil     |     -      |           |
-|  rbp   |  ebp   |   bp   |    bpl     |     -      |           |
-|  rsp   |  esp   |   sp   |    spl     |     -      |           |
-|   r8   |  r8d   |  r8w   |    r8b     |     -      | Up to r15 |
+| 64-bit  | 32-bit | 16-bit | low  8-bit | high 8-bit |
+| :-----: | :----: | :----: | :--------: | :--------: |
+|   rax   |  eax   |   ax   |     al     |     ah     |
+|   rbx   |  ebx   |   bx   |     bl     |     bh     |
+|   rcx   |  ecx   |   cx   |     cl     |     ch     |
+|   rdx   |  edx   |   dx   |     dl     |     dh     |
+|   rsi   |  esi   |   si   |    sil     |     -      |
+|   rdi   |  edi   |   di   |    dil     |     -      |
+|   rbp   |  ebp   |   bp   |    bpl     |     -      |
+|   rsp   |  esp   |   sp   |    spl     |     -      |
+| r8..r15 |  rXd   |  rXw   |    rXb     |     -      |
 
 (r/e)ip is not considered general purpose.
 
@@ -83,6 +84,25 @@ Flags:
 |   Sign    |   SF   |   8   | Previous instruction resulted in most significant bit equal to 1 |
 | Direction |   DF   |  10   | Direction of string operations (increment or decrement)          |
 | Overflow  |   OF   |  11   | Previous instruction resulted in overflow                        |
+
+## C Calling convention
+
+Pushes are required only if the regs are used in that scope.
+
+- caller:
+  - push: `r10`, `r11`, parameter regs
+  - put params in regs (in order; max 6): `rdi`, `rsi`, `rdx`, `rcx`, `r8`, `r9`
+  - push: additional params (in reverse order)
+  - callee:
+    - allocate local vars on the stack
+    - push: `rbx`, `rbp`, `r12` .. `r15`
+    - execute (can use `r10`/`r11`); retval: `rax`
+    - pop regs used
+    - deallocate local vars
+  - pop additional params
+  - pop parameter regs, `r11`, `r10`
+
+The call/return push/pop `rip`.
 
 ## References
 
