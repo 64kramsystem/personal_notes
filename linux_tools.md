@@ -702,7 +702,9 @@ for f in *.ORF; do darktable-cli "$f" "$f".jpg; done
 #
 column -s $separators -t
 
-# "subtract" lines of one files from another
+# Diff (subtract) lines of two files (file_2 - file_1).
+# The two files don't need to be sorted.
+# When using in a script, append `|| true`, otherwise it will fail if the result is empty.
 #
 grep -Fvx -f $file_1 $file_2
 
