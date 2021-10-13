@@ -767,7 +767,7 @@ printf '%s\0' "${array[@]}" | grep -qz "^$value$"
 printf '%s\n' "${array[@]}"                      # print the entries (one per line); `echo` prints all in one line
 echo $(IFS=,; echo "${arr[*]}")                  # Single-char; !!! don't forget the `;` and the quotes !!!
 perl -e 'print join("--", @ARGV)' -- "${arr[@]}" # Multi-char, perl `--` is for safety, if any value starts with `-`
-printf %s "${arr[@]/#/->}"                       # Join, but also prepends the separator; works also with `arr[*]` (for interpolation)
+printf %s "${arr[@]/#/->}"                       # Join, but also prepend the separator; works also with `arr[*]` (for interpolation)
 
 # Iteration (regular vars/$@)
 #

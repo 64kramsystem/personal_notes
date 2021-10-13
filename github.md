@@ -70,7 +70,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-    - name: Set up Ruby ${{ matrix.ruby-version }}
+    - name: Setup Ruby ${{ matrix.ruby-version }}
       uses: ruby/setup-ruby@v1
       if: ${{ matrix.suite == 'rspec' }}
       with:

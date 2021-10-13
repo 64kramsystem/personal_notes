@@ -1,3 +1,13 @@
+## Wed 13/Oct/2021
+
+- Low-level programming
+  - [x] C Calling convention (Stack alignment): https://staffwww.fullcoll.edu/aclifton/cs241/lecture-stack-c-functions.html: Stack alignment
+- Projects
+  - TenderJIT
+    - [x] Instruction handlers modernization (first batch)
+    - [x] Instruction handlers modernization (second batch)
+    - [x] Implement `tostring` instruction
+
 ## Tue 12/Oct/2021
 
 - Open Source
