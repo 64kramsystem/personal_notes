@@ -49,7 +49,7 @@ Conventions:
 
 - `$branch~[$n]` : reference to `$branch` minus `$n` (0 is also valid, and it refers to `$branch`)
 - `branch^`      : `$branch` - 1
-- `-$n`          : !!! HEAD - `$n` !!!
+- `-$n`          : should be (HEAD - `$n`), but it's not the same, e.g. on merge commits
 - `HEAD`         : head of the current branch (current commit)
 - `ORIG_HEAD`    : last value of HEAD before dangerous operations
 - `$ref@{-$n}`   : nth checkout previous to the last one; eg. checkout master => checkout feature => now `@{-1}` refers to master
@@ -122,6 +122,7 @@ stsh = "!f() { git stash show -p stash@{${1-0}}; }; f"
 config --global core.excludesfile ~/.gitignore_global       # create a global gitignore
 
 update-index --[no-]assume-unchanged $file                  # ignore changes to a file in the index
+update-index --[no-]skip-worktree $file                     # ^^ same, but ignores more cases (eg. checkout)
 echo '/.ruby-version' >> .git/info/exclude                  # ignore an untracked file only in the local repository
 ```
 
@@ -256,15 +257,18 @@ log --merges v0.1.8...v0.1.9                           # search merges between t
 # `--color` applies to diff/show, and forces coloring (if `color.ui` != `always`); this may be undesirable for processing.
 # `--ws-error-highlight=new,old` colors the removed trailing whitespace (which is not displayed by default (!!))
 
-show --name-[only|status] rev[:file]            # diff rev^..rev; show name only [--name-only] or status only [--name-status]
+show rev[:file]                                 # diff rev^..rev
 show -m $merge                                  # show the full diff of the parents of a merge
 
 diff [--cached]                                 # non committed files; [--cached] files in the index
-diff --stat                                     # only filenames
+diff $commit [$commit2]                         # can be used to show a merge diff!
 difftool                                        # GUI version of diff
 git difftool --extcmd='vim -d -c "windo set wrap" $5'    # Convenient vimdiff usage; requires `diffchar` plugin, otherwise, it's ugly
 
-status -sb                                      # more compact version of the status (show [b]ranch; first column: in index
+diff [--stat|--name-status|--name-only]         # only filenames with: stats+summary | status | nothing else
+show <diff_options> [--pretty=""]               # same options as diff; --pretty hides heading information
+
+status -sb                                      # more compact version of the status (show [b]ranch; first column: in index)
 
 # Run a certain operation for each modified file.
 #
@@ -325,16 +329,18 @@ symbolic-ref --short -q HEAD  # on non named branches prints nothing
 ls-tree --full-name --name-only HEAD $filename
 ```
 
-Porcelain (low(er) level information, intended to be programmatically parsed); can be used to find the remote branch:
+Porcelain is supposed to be user-facing, however with `status`, it's for computer consumption; can be used to find the remote branch:
 
 ```sh
-# The output listed is exact. Show [b]ranch info.
+# The output listed is exact (but indented). Show [b]ranch info.
 
 status -b --porcelain
-## test...origin/test [gone]
+  ## test...origin/test [gone]
+  (files...)
 
 status -b --porcelain
-## master...origin/master
+  ## master...origin/master
+  (files...)
 ```
 
 ## Merging
