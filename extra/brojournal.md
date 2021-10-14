@@ -1,3 +1,16 @@
+## Thu 14/Oct/2021
+
+- Low-level programming
+  - [ ] Beginning x64 Assembly Programming
+    - [x] Chapter 3: Program Analysis with a Debugger: GDB
+    - [x] Chapter 4: Your Next Program: Alive and Kicking!
+- Projects
+  - TenderJIT
+    - [x] Remove unnecessary `Fisk::Imm64` wraps
+    - [x] Review how to disassemble generated code
+      - [x] Fight `StringIO` vs. `JITBuffer` heisenstuff (!!)
+    - [x] Test `rt.return` crash again
+
 ## Wed 13/Oct/2021
 
 - Low-level programming

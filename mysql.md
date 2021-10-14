@@ -805,7 +805,7 @@ END WHILE;
 
 REPEAT
   # block
-UNTIL @condition
+UNTIL @condition # stops on true
 END REPEAT;
 
 LOOP
