@@ -11,26 +11,44 @@
 ## Basic structure
 
 ```asm
-; Data; this section goes into the executable
+; Data: this section goes into the executable
 ;
 section .data
-    msg    db      "hello, world", 0  ; any defined bytes sequence is called a "string"
-    pi     equ     3.1415
+    msg     db      "Hello world!", 0x0A, 0 ; any defined bytes sequence is called a "string"
+    msgLen  equ     $ - msg - 1             ; constant; `$` is the current address
 
-; Reserved space; initialized at runtime with 0s.
+; Reserved space: not in the executable; initialized at runtime with 0s
 ; "Block Started by Symbol"
 ;
 section .bss
-    myres  resw    5    ; 5 words
+    myres  resw    5    ; 5 words
 
 ; Program code
 ;
 section .text
-    global main
+    global main
+
 main:
-    mov    rax, 60      ; exit
-    mov     rdi, 0      ; exit code
-    syscall             ; Watch out! Different between 32 and 64 bits
+; Function prologue
+    push           rbp
+    mov            rbp, rsp
+
+; System call
+; WATCH OUT! Syscalls are different between 32 and 64 bits
+    mov            rax, 1         ; 1 = write
+    mov            rdi, 1         ; 1 = to stdout
+    mov            rsi, msg
+    mov            rdx, msgLen
+    syscall
+
+; Function epilogue
+    mov            rsp, rbp
+    pop            rbp
+
+; Exit
+    mov            rax, 60     ; exit
+    mov            rdi, 0      ; exit code
+    syscall
 ```
 
 ## Makefile for compiling

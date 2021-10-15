@@ -1,3 +1,23 @@
+## Fri 15/Oct/2021
+
+- Open source
+  - MySQLTuner
+    - [x] Diagnose log buffer size bug
+    - [x] Open issue and PR
+    - [x] Open second (related) issue
+- Projects
+  - TenderJIT
+    - [x] Discuss no-op `mov`s handling
+      - [x] Test NASM behavior
+      - [x] Quick look at (other) ASM optimizations
+      - [x] Write summary
+  - QEMU-pinning
+    - [x] Discuss v6.1 vCPU issue
+- Low-level programming
+  - [ ] Beginning x64 Assembly Programming
+    - [x] Chapter 5: Assembly Is Based on Logic
+    - [x] Chapter 6: Data Display Debugger
+
 ## Thu 14/Oct/2021
 
 - Low-level programming
