@@ -1,3 +1,15 @@
+## Sat 16/Oct/2021
+
+- Tools
+  - [x] Fix notes sync script
+- Low-level programming
+  - [ ] Beginning x64 Assembly Programming
+    - [x] Chapter 7: Jumping and Looping
+    - [x] Chapter 8: Memory
+- Projects
+  - TenderJIT
+    - [x] Quick review discussions
+
 ## Fri 15/Oct/2021
 
 - Open source
@@ -17,6 +29,7 @@
   - [ ] Beginning x64 Assembly Programming
     - [x] Chapter 5: Assembly Is Based on Logic
     - [x] Chapter 6: Data Display Debugger
+    - [ ] Chapter 7: Jumping and Looping
 
 ## Thu 14/Oct/2021
 
