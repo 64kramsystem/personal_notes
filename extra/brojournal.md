@@ -1,3 +1,20 @@
+## Cycle
+
+Full immersion in TenderJIT/ASM.
+
+Negligible unscheduled stuff.
+
+## Sun 17/Oct/2021
+
+- Projects
+  - TenderJIT
+    - [x] Fight try to debug `tostring instruction fails on complex examples`
+- Low-level programming
+  - [ ] Beginning x64 Assembly Programming
+    - [x] Chapter 9: Integer Arithmetic
+    - [ ] Copy notes
+  - [x] Find/install updated SASM
+
 ## Sat 16/Oct/2021
 
 - Tools

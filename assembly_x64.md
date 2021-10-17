@@ -15,7 +15,10 @@
 ;
 section .data
     msg     db      "Hello world!", 0x0A, 0 ; any defined bytes sequence is called a "string"
-    msgLen  equ     $ - msg - 1             ; constant; `$` is the current address
+    msgLen  equ     $ - msg - 1             ; constant (only for ints); `$` is the current address
+                                            ; WATCH OUT! Don't forget `-1` (terminator) when printing a string
+    %define         pi 3.14                 ; macro; can use to define non-int pseudo-constants (but they're
+                                            ; have slightly different semantics)
 
 ; Reserved space: not in the executable; initialized at runtime with 0s
 ; "Block Started by Symbol"
