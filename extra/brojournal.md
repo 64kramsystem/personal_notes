@@ -1,3 +1,15 @@
+## Mon 18/Oct/2021
+
+- Low-level programming
+  - [ ] Beginning x64 Assembly Programming
+    - [x] Chapter 10: The Stack
+    - [x] Chapter 11: Floating-Point Arithmetic
+    - [x] Chapter 12: Functions
+- Projects
+  - TenderJIT
+    - [x] Further investigation on `tostring instruction fails on complex examples`
+    - [x] Improve generated ASM debug output
+
 ## Cycle
 
 Full immersion in TenderJIT/ASM.
