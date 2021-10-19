@@ -1,3 +1,10 @@
+## Tue 19/Oct/2021
+
+- Projects
+  - TenderJIT
+    - [x] Review Fisk, and design performance linter
+    - [x] [Search why loop is slower than dec cx/jnz](https://stackoverflow.com/q/35742570)
+
 ## Mon 18/Oct/2021
 
 - Low-level programming
