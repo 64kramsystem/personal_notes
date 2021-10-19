@@ -17,6 +17,7 @@
     - [`mount`](#mount)
     - [`package`/`dpkg_package`](#packagedpkg_package)
     - [`remote_file`](#remote_file)
+    - [`remote_dir` (copy directory trees)](#remote_dir-copy-directory-trees)
     - [`systemd_unit`](#systemd_unit)
   - [Tools](#tools)
     - [Knife](#knife)
@@ -150,7 +151,25 @@ Watch out! One can't use two resources with the same name, for creation and (cle
 directory '/etc/apache2' do
   mode      '0755'        # default = 0777 + umask -> typically 0755; if recursive, the permission are applied to the entire created tree
   recursive false         # If true and :create, owner/group apply only to the leaf!
+  owner     'willy'
+  group     'willy'
   action    :create       # :delete (don't forget :recursive=true!)
+end
+
+# Progressively create a directory.
+# Using each_with_object() + concat() works, but must use dup(), otherwise, the same instance is modified
+# and shared!
+#
+"/foo/bar/baz".split("/")[1..].inject("") do |current_path, entry|
+  current_path += "/#{entry}"
+
+  directory current_path do
+    owner  'app'
+    group  'app'
+    not_if { ::Dir.exist?(current_path) }
+  end
+
+  current_path
 end
 ```
 
@@ -235,6 +254,16 @@ end
 ```ruby
 remote_file local_tarball_filename do
   source node[:mysql_server][:tarball_uri]
+end
+```
+
+### `remote_dir` (copy directory trees)
+
+```rb
+remote_directory '/path/to/dest' do
+  source 'path/to/source'
+  owner  'myuser'
+  group  'myuser'
 end
 ```
 
