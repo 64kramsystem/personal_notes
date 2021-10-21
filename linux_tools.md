@@ -22,6 +22,7 @@
   - [Sleep](#sleep)
   - [Watch](#watch)
   - [Displaying messages](#displaying-messages)
+  - [Nohup](#nohup)
   - [Dates](#dates)
     - [Formatting](#formatting)
     - [Operations](#operations)
@@ -551,6 +552,21 @@ query_option=("$(printf "%q" "SELECT * FROM mytable")")
 zenity --info --no-markup --text 'Text message!'
 ```
 
+## Nohup
+
+Avoid a process to be closed on HUP (ie. SSH disconnection):
+
+```sh
+# Can replace the stdout/err redirections with `> myprog.log 2>&1`
+#
+nohup myprog > myprog.out 2> myprog.err < /dev/null &
+```
+
+References:
+
+- [general](https://stackoverflow.com/a/29172)
+- [</dev/null](https://stackoverflow.com/a/19956266)
+
 ## Dates
 
 General format: `date +<format>`
@@ -568,6 +584,7 @@ Symbols:
 - `%H:%M:%s`
 - `%Y-%m-%d`
 - `%F %T`    : same as `%Y-%m-%d %H:%M:S` (time without seconds: `%R`)
+- `+"%T.%3N"`: time with milliseconds (`%N` is nanoseconds; `.%3` prints 3 digits)
 - `+%s`      : date in seconds
 
 The output language is the system one; in order to change, set `LC_ALL`:
