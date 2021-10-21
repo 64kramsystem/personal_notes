@@ -1,3 +1,15 @@
+## Thu 21/Oct/2021
+
+- Low-level programming
+  - [ ] Beginning x64 Assembly Programming
+    - [x] Chapter 16: Bit Operations
+    - [x] Chapter 17: Bit Manipulations
+    - [x] Chapter 18: Macros
+    - [x] Chapter 19: Console I/O
+- Projects
+  - TenderJIT
+    - [x] Performance check design: review and implement two variations
+
 ## Wed 20/Oct/2021
 
 - Projects

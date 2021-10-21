@@ -304,7 +304,7 @@ Number-related casts/operations:
 
 0_u32.to_be_bytes();                          // convert big endian u32 to array of bytes
 u32::from_le_bytes([u8; _])                   // convert big endian array of bytes to u32
-u32::from_le_bytes(&[u8].try_into().unwrap()) // same, from slice; requires `std::convert::TryInto`
+u32::from_le_bytes(&[u8].try_into().unwrap()) // same, from slice
 f64.to_bits()                                 // transmute to u64 (for bit-wise ops)
 f64::from_bits(u64)                           // transmute from u64 (for bit-wise ops)
 f64::is_sign_positive()                       // important! we can't use `-0.0 >= 0.0` for comparison (if sign is important)
@@ -657,7 +657,7 @@ vec.extend([1, 2, 3].iter().copied());  // Append (concatenate) an array
 vec.extend(&[1, 2, 3]);                 // Append (borrowing version)
 vec[range].copy_from_slice(&source);    // memcpy; see array example
 
-// Convert vector to array; requires TryInto. If type annotations are required, use the second form:
+// Convert vector to array. If type annotations are required, use the second form:
 //
 vec.as_slice().try_into().unwrap();
 TryInto::<&[f64; 3]>::try_into(vec.as_slice());
