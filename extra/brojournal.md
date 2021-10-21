@@ -1,3 +1,14 @@
+## Wed 20/Oct/2021
+
+- Projects
+  - TenderJIT
+    - [x] Implement performance check
+- Low-level programming
+  - [ ] Beginning x64 Assembly Programming
+    - [x] Chapter 13: Stack Alignment and Stack Frame
+    - [x] Chapter 14: External Functions
+    - [x] Chapter 15: Calling Conventions
+
 ## Tue 19/Oct/2021
 
 - Projects
