@@ -1,3 +1,14 @@
+## Fri 22/Oct/2021
+
+- Projects
+  - TenderJIT
+    - [x] Implenent `toregexp`
+      - [x] Fight storing a value across cfunc calls
+      - [x] First review at disassembling via LLDB
+    - [x] Help Nikita with PR
+      - [x] Disassemble and find issue with the test
+      - [x] Fight find simpler `swap` implementation
+
 ## Thu 21/Oct/2021
 
 - Low-level programming
