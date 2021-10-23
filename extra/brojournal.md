@@ -1,3 +1,12 @@
+## Sat 23/Oct/2021
+
+- Low-level programming
+  - [ ] Beginning x64 Assembly Programming
+    - [x] Chapter 20: File I/O
+    - [x] Chapter 21: Command Line
+    - [x] Chapter 22: From C to Assembler
+    - [ ] Chapter 23: Inline Assembly
+
 ## Fri 22/Oct/2021
 
 - Projects
