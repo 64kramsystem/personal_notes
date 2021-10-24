@@ -1,3 +1,16 @@
+## Sun 24/Oct/2021
+
+- Projects
+  - TenderJIT
+    - [x] Quick review recent PRs
+    - [x] Implement `newrange`
+      - [x] Fight attempt to implement a deeper version
+    - [x] Implement `splatarray`
+    - [ ] Cleanup warnings
+      - Fight disable warnings for some UTs
+    - [x] Discuss potential IR implementation
+      - [x] First look at Rhizome design
+
 ## Sat 23/Oct/2021
 
 - Low-level programming
