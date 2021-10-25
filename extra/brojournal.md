@@ -1,3 +1,27 @@
+## Cycle
+
+Full attention on TenderJIT, but slow week.
+
+## Mon 25/Oct/2021
+
+- Scripts
+  - [x] Fight rewriting of file with unsupported unicode chars
+- System
+  - [x] Merge Windows virtual machines
+- Projects
+  - QEMU-pinning
+    - [x] Follow up discussion with user
+    - [x] Update README with new status
+    - [x] Update master: disable vcpu check
+      - [x] Verify (also against v6.1.0-rc2 patch)
+    - [x] Reorganize branches for v6.1
+  - TenderJIT/Fisk
+    - [x] Reorganize the (big) pool
+  - Fisk
+    - [x] Clean up build warning
+    - [x] Implement the optimizer
+    - [x] Implement no-op `MOV` optimization
+
 ## Sun 24/Oct/2021
 
 - Projects
