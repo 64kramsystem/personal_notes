@@ -16,6 +16,10 @@ RubyVM::InstructionSequence.compile(%q[ {a: 2, b: 'something'} ]).disasm
 RubyVM::InstructionSequence.compile(%q[ {a: 1, b: 2} ]).to_a.last[2..] # => [[:duphash, {:a=>1, :b=>2}], [:leave]]
 ```
 
+```sh
+ruby --dump=insns -e "puts nil"
+```
+
 ## Compile with custom options
 
 ```sh
