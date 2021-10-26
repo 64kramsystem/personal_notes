@@ -433,6 +433,7 @@ Set `$VERBOSE = true`.
 ## Strings
 
 ```rb
+str.b                               # ASCII-8 (binary) copy of the string
 str.slice!(interval)                # removes and return the sliced substring, so it can be used in expressions
 ```
 
