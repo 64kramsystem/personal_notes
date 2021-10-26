@@ -1,3 +1,20 @@
+## Tue 26/Oct/2021
+
+- Projects
+  - Geet
+    - [x] Backup summary before operations
+  - TenderJIT
+    - [x] Implement `opt_succ` instruction
+      - [x] Fight pretty much everything
+      - [x] Implement `Runtime#inc`
+    - [x] Implemtn `opt_div` instruction
+      - [x] Implement `Runtime#div`
+      - [ ] Try to find how to execute the JIT buffer
+  - Schedule manager
+    - [x] Update full with interval: keep the `U` flag
+- Low-level programming
+  - [x] Investigate presumed errata on Beginning x64 Assembly Programming
+
 ## Cycle
 
 Full attention on TenderJIT, but slow week.
