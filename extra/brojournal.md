@@ -1,3 +1,17 @@
+## Wed 27/Oct/2021
+
+- Projects: TenderJIT/Fisk
+  - [x] Add Rake (lldb) debug task
+    - [x] Brutal fight with Bundler
+  - [x] Rakefile: Don't generate the reverse test suite
+  - [x] Implement opt_mod instruction
+  - [x] Testing: Make warnings into errors
+  - [x] Comple list and open issue "Easy/ish missing instructions"
+  - [x] Correctly implement `swap`
+    - [x] Brutal fight with finding an alternate code generation
+    - [x] Write summary
+    - [x] Brutal fight with the implementation
+
 ## Tue 26/Oct/2021
 
 - Projects

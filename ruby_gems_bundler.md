@@ -6,6 +6,7 @@
     - [Cache directory](#cache-directory)
     - [Commands](#commands)
   - [Gem](#gem)
+    - [Programmatic APIs](#programmatic-apis)
     - [Gemspec](#gemspec)
     - [Packaged gems/YAML gemspec](#packaged-gemsyaml-gemspec)
     - [Gem commands](#gem-commands)
@@ -68,6 +69,29 @@ It's possible to create a cache directory (`vendor/cache`), but it's all-or-noth
 - `bundler package`: download gems into `vendor/cache`
 
 ## Gem
+
+### Programmatic APIs
+
+```rb
+# Easiest way to find a gem path.
+# Apparently, there's no direct way to find this via gem (bundler can)
+#
+Gem::Specification.find_by_name('passenger').gem_dir
+
+# Find the path of the binary of a given gem.
+# The second version is the same as the first, with the addition that it activates the gem.
+#
+Gem.bin_path("passenger-enterprise-server", "passenger-status"[, <version])
+Gem.activate_bin_path(...)
+
+# Find a gem version
+Gem.loaded_specs['activerecord'].version
+
+# Compare (gem) versions!!!
+#
+Gem::Version.new('3.0') > Gem::Version.new('10.0') # string-comparison returns true (wrong)!
+Gem.ruby_version > Gem::Version.new('10.0')        # ready API to retrieve the ruby version
+```
 
 ### Gemspec
 

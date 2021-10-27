@@ -35,7 +35,6 @@
     - [Hash](#hash)
     - [Enumerable](#enumerable)
   - [Basic I/O](#basic-io)
-  - [Gem](#gem)
   - [Handling processes](#handling-processes)
     - [Basic handling, via `IO.popen`](#basic-handling-via-iopopen)
     - [Using `IO.popen3`](#using-iopopen3)
@@ -705,29 +704,6 @@ Files:
 ```rb
 io_obj.readline                         # includes the newline!
 io_obj.readchar                         # reads one char; raises EOFError at the EOF
-```
-
-## Gem
-
-```ruby
-# Easiest way to find a gem path.
-# Apparently, there's no direct way to find this via gem (bundler can)
-#
-Gem::Specification.find_by_name('passenger').gem_dir
-
-# Find the path of the binary of a given gem.
-# The second version is the same as the first, with the addition that it activates the gem.
-#
-Gem.bin_path("passenger-enterprise-server", "passenger-status"[, <version])
-Gem.activate_bin_path(...)
-
-# Find a gem version
-Gem.loaded_specs['activerecord'].version
-
-# Compare (gem) versions!!!
-#
-Gem::Version.new('3.0') > Gem::Version.new('10.0') # string-comparison returns true (wrong)!
-Gem.ruby_version > Gem::Version.new('10.0')        # ready API to retrieve the ruby version
 ```
 
 ## Handling processes
