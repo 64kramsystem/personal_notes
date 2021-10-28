@@ -1,6 +1,16 @@
+## Thu 28/Oct/2021
+
+- Projects
+  - TenderJIT
+    - [x] Review Nikita's `swap` implementation
+      - [x] Test bug
+      - [x] Research x64 swap strategies speed
+  - Schedule manager
+    - [x] Detection of a new type of invalid work line format
+
 ## Wed 27/Oct/2021
 
-- Projects: TenderJIT/Fisk
+- Projects: TenderJIT
   - [x] Add Rake (lldb) debug task
     - [x] Brutal fight with Bundler
   - [x] Rakefile: Don't generate the reverse test suite
