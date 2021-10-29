@@ -1,3 +1,11 @@
+## Fri 29/Oct/2021
+
+- SWE
+  - [x] Search code reading clubs
+- Projects: TenderJIT
+  - [x] Runtime: Split division() into div() and mod() #85
+  - [x] `topn`: Add UT
+
 ## Thu 28/Oct/2021
 
 - Projects
