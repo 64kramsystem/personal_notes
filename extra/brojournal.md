@@ -1,3 +1,14 @@
+## Sat 30/Oct/2021
+
+- Low-level programming: Beginning x64 Assembly Programming
+  - [x] Chapter 23: Inline Assembly
+  - [ ] Chapter 24: Strings
+    - [x] Fight bug with code/text
+- Projects: TenderJIT/Fisk
+  - [ ] Study Fisk
+    - Temp registers
+    - Immediate operands
+
 ## Fri 29/Oct/2021
 
 - SWE
