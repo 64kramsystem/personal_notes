@@ -489,6 +489,15 @@ MyModule.instance_method(:mymethod).parameters
 # => [[:req, :foo], [:opt, :bar], [:keyreq, :qux], [:key, :baz]]
 ```
 
+Source location:
+
+```rb
+instance.method(:meth).source_location
+# Use Object as parent of root objects
+mod.const_source_location(:Klass)      # String accepted
+Klass.const_source_location(:CONST)    # String accepted
+```
+
 #### Pass a method as map block parameter
 
 ```ruby
