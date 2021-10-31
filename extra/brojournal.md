@@ -1,3 +1,10 @@
+## Sun 31/Oct/2021
+
+- Projects: TenderJIT/Fisk
+  - [x] Implement `intern` instruction (shallow)
+  - [ ] Implement `newrraykwsplat` instruction
+    - [x] Dig down the rabbit hole
+
 ## Sat 30/Oct/2021
 
 - Low-level programming: Beginning x64 Assembly Programming
