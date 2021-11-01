@@ -1,3 +1,15 @@
+## Mon 01/Nov/2021
+
+- Projects: TenderJIT/Fisk
+  - [x] Implement intern instruction (shallow): Apply feedback
+  - [x] Refinements to make_warnings_errors, and two cleanups
+    - [x] Require `make_warnings_errors` earlier
+    - [x] make_warnings_errors: Ensure that $VERBOSE is set
+    - [x] make_warnings_errors: Undefine :warn
+    - [x] ISEQCompiler: Remove two unused variables
+  - [x] Implement `cfunc_call` automatic alignment
+    - [x] Fisk: Implement size() for Register and Temp
+
 ## Sun 31/Oct/2021
 
 - Projects: TenderJIT/Fisk
