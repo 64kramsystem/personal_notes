@@ -207,20 +207,35 @@ int.to_s(base)
 #
 numerical_str.to_i(base)
 
-# Numerical string to bytes; the directive is the base of the string; some directives:
+# Array of bytes to binary string; the directive is the base of the string; some directives:
+#
 # - `B*`: binary
 # - `H*`: hex
 #
-[numerical_str].pack(directive)
+# Reference (also for unpack): https://apidock.com/ruby/Array/pack
+#
+array.pack(directive)
+
+# Binary string to value
+#
+# - `Q`: native endian qword, unsigned
+# - `L`: native endian dword, unsigned
+#
+# `unpack1` avoids invoking `:first`.
+#
+binstr.unpack1(directive)
 ```
 
 Specific conversions:
 
 ```ruby
-bytes.each_byte.map { |b| "%02X" % b }.join   # bytes → hex string (see printf link below)
+bytes.each_byte.map { |b| "%02X" % b }.join   # array of bytes → hex string (see printf link below)
+bytes.pack('c*').unpack1("h*")                # ^^
 bytes.each_byte.each_slice(2) { |i, j| puts "%016b" % (256 * i + j) } # bytes → binary, padded 16 bits big endian
-bytes.each_byte.map(&:to_i)                   # bytes → array of ints
-arr.map(&:chr).join                           # array of ints → bytes
+bytes.each_byte.map(&:to_i)                   # array of bytes → array of ints
+arr.map(&:chr).join                           # array of ints → array of bytes
+
+"0x%016X" % bytes[8 * i, 8].pack("c*").unpack1("Q")  # native endian qword (array of bytes) → int -> (padded upcase) hex string
 
 "c".ord                                       # char  → int
 int.chr                                       # int   → byte/char (ASCII-8)
@@ -234,6 +249,8 @@ str.codepoints                                # like str.bytes, but each entry i
 ```
 
 See https://idiosyncratic-ruby.com/49-what-the-format.html for `printf`-style formatting.
+
+Printf `%#X`prefixes with `0X`, which is ugly.
 
 There is a gem, `bitarray`, however, it's not so much better than just using a string (bits = `"0" * 8`) for generic work, as it doesn't even support bit operations like `OR`.
 

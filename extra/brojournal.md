@@ -1,3 +1,25 @@
+## Tue 02/Nov/2021
+
+- Open source
+  - Mydumper
+    - [x] Try negative regex option, from `regex` branch
+    - [x] Open issue "Warning `Couldn't acquire global lock` when dumping"
+    - [x] Open issue "With --source-db, the source database is still created"
+    - [x] Open issue "Error Thread 3 issue restoring [...]: Table 'tablename' already exists while restoring tables"
+- Projects
+  - ZFS installer
+    - [x] Reply to issues
+    - [x] Attempt add KDE Neon support
+  - TenderJIT/Fisk
+    - LLDB
+      - [x] Fight disassemble previous instructions/relative address
+    - [x] Implement registers saving buffer (to be released)
+      - [x] Fight a lot of stuff
+- SWE
+  - [x] Review and buy The Programmer's Brain
+- Misc
+  - [x] Plan week
+
 ## Mon 01/Nov/2021
 
 - Projects: TenderJIT/Fisk
