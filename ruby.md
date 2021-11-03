@@ -218,8 +218,8 @@ array.pack(directive)
 
 # Binary string to value
 #
-# - `Q`: native endian qword, unsigned
-# - `L`: native endian dword, unsigned
+# - `Q`/`q`: native endian qword, unsigned/signed
+# - `L`    : native endian dword, unsigned
 #
 # `unpack1` avoids invoking `:first`.
 #
@@ -235,7 +235,7 @@ bytes.each_byte.each_slice(2) { |i, j| puts "%016b" % (256 * i + j) } # bytes �
 bytes.each_byte.map(&:to_i)                   # array of bytes → array of ints
 arr.map(&:chr).join                           # array of ints → array of bytes
 
-"0x%016X" % bytes[8 * i, 8].pack("c*").unpack1("Q")  # native endian qword (array of bytes) → int -> (padded upcase) hex string
+"0x%016x" % bytes[8 * i, 8].pack("c*").unpack1("Q")  # native endian unsigned qword (array of bytes) → int -> (padded lowcase) hex string
 
 "c".ord                                       # char  → int
 int.chr                                       # int   → byte/char (ASCII-8)
