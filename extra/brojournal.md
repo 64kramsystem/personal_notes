@@ -1,3 +1,13 @@
+## Wed 03/Nov/2021
+
+- Projects: TenderJIT/Fisk
+  - [x] Implement registers saving buffer (integration)
+    - [x] Handle RSP value adjustment
+    - [x] Minor cleanups
+    - [x] Implement integration
+      - [x] Various fights
+      - [x] Update `Runtime.inc` test
+
 ## Tue 02/Nov/2021
 
 - Open source

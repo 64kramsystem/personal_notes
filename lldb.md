@@ -28,6 +28,7 @@ Disassemble/Inspect:
 
 ```sh
 di -b -s 0x1eb8 -c 20 # disassemble --bytes --start-address 0x1eb8 --count 20
+m rea $rdi-8          # memory read
 re re [$reg]          # register(s) read
 ```
 
