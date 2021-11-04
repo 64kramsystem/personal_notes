@@ -1,3 +1,10 @@
+## Thu 04/Nov/2021
+
+- Low-level programming
+  - [ ] Beginning x64 Assembly Programming
+    - [x] Chapter 24: Strings
+    - [x] Chapter 25: Got Some ID?
+
 ## Wed 03/Nov/2021
 
 - Projects: TenderJIT/Fisk
