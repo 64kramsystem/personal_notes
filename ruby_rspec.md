@@ -11,6 +11,7 @@
     - [Matching arguments](#matching-arguments)
     - [Receive counts](#receive-counts)
     - [Responses](#responses)
+      - [Conditional stubbing](#conditional-stubbing)
   - [Testing modules](#testing-modules)
   - [Transactions](#transactions)
   - [Custom matcher](#custom-matcher)
@@ -168,7 +169,7 @@ See [reference](https://relishapp.com/rspec/rspec-mocks/v/3-10/docs/configuring-
 - `and_call_original`
 - `and_wrap_original`
 
-Conditional stubbing:
+#### Conditional stubbing
 
 ```ruby
 allow(repository).to receive(:remote).with('origin').and_return('git@github.com:saveriomiroddi/goby-dev')
@@ -199,7 +200,7 @@ Arbitrary handling (references: [README](https://github.com/rspec/rspec-mocks#ar
 # WATCH OUT! When using :expect_any_instance_of, the first arg is the instance.
 # If a `with()` expectation is added, it's still verified.
 #
-expect(double).to receive(:msg) do |*args|
+expect(double).to receive(:msg) do |instance, *args|
   expect(args.size).to eq(7)
 end
 ```
