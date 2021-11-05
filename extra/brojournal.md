@@ -1,3 +1,19 @@
+## Fri 05/Nov/2021
+
+- Projects: Fisk
+  - [x] Open discussion: Add support for `mov [reg1 + K * reg2]` addressing
+  - [x] Open discussion: Add support for writing binary values in `Fisk#asm`
+- Projects: TenderJIT
+  - [ ] Implement unit test for unaligned failing call_cfunc
+    - [x] Cause SIGSEGV, and try to trap it
+    - [x] Find way to write a UT (not implemented)
+- Low-level programming
+  - [x] x64 ASM: [Stack alignment](https://stackoverflow.com/a/52300101)
+  - [x] Cause/recover SIGSEGV
+  - Beginning x64 Assembly Programming
+    - [x] Chapter 26: SIMD
+    - [x] Chapter 27: Watch Your MXCSR
+
 ## Thu 04/Nov/2021
 
 - Low-level programming

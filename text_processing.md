@@ -419,6 +419,8 @@ RS                    # separator
 expr { statement }    # execute `statement` if `expr` is true
 
 ENVIRON["MYVAR"]      # access environment vars!
+
+\t \n                 # tab, newline
 ```
 
 Expressions apply by default to the current string:
