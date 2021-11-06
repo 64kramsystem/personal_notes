@@ -1,3 +1,16 @@
+## Sat 06/Nov/2021
+
+- Tools
+  - Editors
+    - [x] VSC: Find out how to go to beginning of current block
+- Low-level programming
+  - [ ] Beginning x64 Assembly Programming
+    - [x] Chapter 28: SSE Alignment
+    - [x] Chapter 29: SSE Packed Integers
+    - [x] Chapter 35: AVX
+    - [x] Chapter 36: AVX Matrix Operations (part)
+    - Skipped some SSE/AVX chapters
+
 ## Fri 05/Nov/2021
 
 - Projects: Fisk

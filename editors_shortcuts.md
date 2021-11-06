@@ -50,7 +50,8 @@ The VIM section requires some cleanup.
 - `Alt+(←/→)`               Navigate through history
 - `Ctrl+(↓/↑)`                 Scroll the viewport without moving the cursor
 - `F8`                        Show next warning/error
-- `Ctrl+@`:                   Open link in browser (custom)
+- `Ctrl+@`                    Open link in browser (custom)
+- `Ctrl+K, F`                 Go to parent fold (top of current vertical line) (custom)
 
 - `Alt+Shift+(↓/↑)`           Column (box) selection
 - `Alt+C`                     Search box: Match case
