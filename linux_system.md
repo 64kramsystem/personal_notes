@@ -3,7 +3,7 @@
 - [Linux system](#linux-system)
   - [Processes](#processes)
     - [Useful operations](#useful-operations)
-    - [Suspension](#suspension)
+    - [Signals/exit codes/suspension](#signalsexit-codessuspension)
     - [Process tree display](#process-tree-display)
   - [Security](#security)
   - [Filesystems/partitions/mounts](#filesystemspartitionsmounts)
@@ -67,7 +67,9 @@ sudo pkill -f '[p]rocessname'
 pkill --parent --pidfile $(< parent_pidfile)
 ```
 
-### Suspension
+### Signals/exit codes/suspension
+
+Suspension:
 
 ```sh
 kill -STOP $pid  # suspend
@@ -75,6 +77,8 @@ ps               # STAT=`T`: suspended
 kill $pid        # when running on a suspended process, it won't kill it, but ->
 kill -CONT $pid  # resume (in background) -> if previously sent TERM, it will now have effect
 ```
+
+Exit codes: when a signal is sent, the exit code is (128 + signal value), e.g INT = (128 + 2 = 130).
 
 ### Process tree display
 
