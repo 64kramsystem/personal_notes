@@ -5,7 +5,7 @@
   - [Makefile for compiling](#makefile-for-compiling)
   - [Data types](#data-types)
   - [Registers/Flags](#registersflags)
-  - [C Calling convention](#c-calling-convention)
+  - [C Calling convention (System V ABI)](#c-calling-convention-system-v-abi)
   - [References](#references)
 
 ## Basic structure
@@ -106,24 +106,27 @@ Flags:
 | Direction |   DF   |  10   | Direction of string operations (increment or decrement)          |
 | Overflow  |   OF   |  11   | Previous instruction resulted in overflow                        |
 
-## C Calling convention
+## C Calling convention (System V ABI)
 
 Pushes are required only if the regs are used in that scope.
 
 - caller:
-  - push: `r10`, `r11`, parameter regs
-  - put params in regs (in order; max 6): `rdi`, `rsi`, `rdx`, `rcx`, `r8`, `r9`
-  - push: additional params (in reverse order)
+  - push `rdi`, `rsi`, `rdx`, `rcx`, `r8`, `r9` (parameter regs; "caller saved")
+  - set parameter regs
+  - push additional params (in reverse order)
   - callee:
     - allocate local vars on the stack
-    - push: `rbx`, `rbp`, `r12` .. `r15`
-    - execute (can use `r10`/`r11`); retval: `rax`
-    - pop regs used
+    - push `rbx`, `rbp`, `r12` .. `r15` ("callee saved")
+    - execute; retval: `rax`
+    - pop callee saved regs
     - deallocate local vars
   - pop additional params
-  - pop parameter regs, `r11`, `r10`
+  - pop caller saved regs
 
-The call/return push/pop `rip`.
+Notes:
+
+- don't forget that `call`/`ret` push/pop `rip`
+- `r10`/`r11` are not required to be saved
 
 ## References
 

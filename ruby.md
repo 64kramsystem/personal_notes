@@ -235,7 +235,7 @@ bytes.each_byte.each_slice(2) { |i, j| puts "%016b" % (256 * i + j) } # bytes �
 bytes.each_byte.map(&:to_i)                   # array of bytes → array of ints
 arr.map(&:chr).join                           # array of ints → array of bytes
 
-"0x%016x" % bytes[8 * i, 8].pack("c*").unpack1("Q")  # native endian unsigned qword (array of bytes) → int -> (padded lowcase) hex string
+"0x%016x" % bytes[loc, 8].pack("c*").unpack1("Q")  # native endian unsigned qword (array of bytes) → int -> (padded lowcase) hex string
 
 "c".ord                                       # char  → int
 int.chr                                       # int   → byte/char (ASCII-8)
