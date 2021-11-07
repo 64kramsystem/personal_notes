@@ -1,3 +1,25 @@
+## Sun 07/Nov/2021
+
+- Low-level programming
+  - [x] Beginning x64 Assembly Programming
+    - [x] Chapter 38: Performance Optimization
+    - [x] Chapter 39: Hello, Windows World
+    - [x] Chapter 40: Using the Windows API
+    - [x] Chapter 41: Functions in Windows
+    - Skipped last two Windows chapters
+    - [x] Collect, verify and publish question about seeming errata
+      - [x] Brief look at NASM code, to find out why `SAL` is converted to `SHL`
+- Open source
+  - ps_mem
+    - [x] Investigate and open PR: Convert shebang to python3
+- Projects: TenderJIT/Fisk
+  - [x] Brutal fight with finding SEGV case
+    - [x] Brutal fight with stack alignment interpretation
+  - [ ] Brutal fight with TJ's alignment
+    - The runtime start unaligned (!!)
+  - [x] Find issue with alignment UT failing
+    - `RegistersSavingBuffer` misaligns the stack
+
 ## Sat 06/Nov/2021
 
 - Tools
