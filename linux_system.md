@@ -5,6 +5,7 @@
     - [Useful operations](#useful-operations)
     - [Signals/exit codes/suspension](#signalsexit-codessuspension)
     - [Process tree display](#process-tree-display)
+  - [Memory (measurement)](#memory-measurement)
   - [Security](#security)
   - [Filesystems/partitions/mounts](#filesystemspartitionsmounts)
     - [Partitions](#partitions)
@@ -101,6 +102,10 @@ top -Hb -n1 -p $(pgrep -f qemu-sys)
 #
 echo q | htop -p $(pgrep -f qemu-sys) | aha --black --line-fix > /tmp/htop.html
 ```
+
+## Memory (measurement)
+
+Measuring memory is a complex topic. A simple and accurate enough tool that can be used is [`ps_mem`](https://github.com/pixelb/ps_mem).
 
 ## Security
 

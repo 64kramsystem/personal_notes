@@ -57,6 +57,7 @@
   - [Database metadata](#database-metadata)
   - [Convenient operations](#convenient-operations)
     - [Skip the indexes on mysqldump dumps](#skip-the-indexes-on-mysqldump-dumps)
+  - [Mydumper/myloader](#mydumpermyloader)
 
 ## General database SQL concepts
 
@@ -1257,4 +1258,71 @@ The leading comma could be deleted with some text processing trickery, but this 
 
 ```sh
 mysqldump $db | perl -pe 's/^  (UNIQUE |FULLTEXT )?KEY.+?(,)?$/  CHECK(TRUE)$2'
+```
+
+## Mydumper/myloader
+
+```sh
+# Using chunked load is not worth. The dump requires more threads, since many queries will return no records.
+#
+# - account 004/226
+#   - rows 100k
+#     - dump: threads=16: 56",                 threads=4: 1'30"
+#     - load: threads=16: 37", threads=8: 46", threads=4: 1'29"
+#   - entire tables
+#     - dump: threads=16: 56",                 threads=4: 46"
+#     - load: threads=16: 43",                 threads=4: 1'25"
+#
+# --verbose $n   : output level; 3=info (each table operation is reported)
+# --compress-protocol : enable MySQL protocol compression
+# --lock-all-tables : important on RDS, since standard locking (FTWRL) doesn't work; locks only briefly,
+#                  at the beginning
+# --database $d  : important, otherwise, also the MySQL schemas are dumped
+# --nregex $r    : exclude by regex; '.*' prefix and suffix are implied; when using delimiters, remember
+#                  that the match is performed against the full name (db_name.table)
+#
+# --triggers     : dump triggers (off by default)
+#
+# --outputdir $d : default=export-$timestamp
+# --threads $n   : default=4
+# --logfile $f   : default=stdout
+# --rows $n      : set chunks to N rows; by default, tables are dumped in a single query
+# --chunk-filesize $n : set the chunk size to N megabytes; seems not to work as intended
+#
+# On verbose=3, tt's important to check the exit status, because mydumper will continue for some errors (e.g. where
+# condition causing an error), and at this level, the errors are not easy to spot.
+#
+mydumper \
+  -h $HOST -u $USER -p $PWD \
+  --verbose 3 \
+  --compress-protocol \
+  --lock-all-tables \
+  --threads 16 \
+  --database $SOURCE_DB \
+  --nregex '^$SOURCE_DB\.(table_prefix|table_name$)' \
+  --where 'tenant_id IN (64)' \
+  || echo 'Errors found!'
+
+# --source-db $src --database $dst : restore into a different db; WATCH OUT! $dst must exist, otherwise
+#                                    nothing is raised
+# --socket $f    : important
+# --innodb-optimize-keys : yay!
+# --overwrite-tables
+#
+# --threads $n   : default=4
+#
+# There are a few issues; see:
+#
+# - https://github.com/maxbube/mydumper/issues/468
+# - https://github.com/maxbube/mydumper/issues/469
+#
+myloader \
+  -u $USER --socket /tmp/mysql.sock \
+  --directory export-* \
+  --verbose 2 \
+  --source-db $SOURCE_DB --database $DEST_DB \
+  --innodb-optimize-keys \
+  --threads 16 \
+  --overwrite-tables \
+  || echo 'Errors found!'
 ```

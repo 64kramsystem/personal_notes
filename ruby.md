@@ -5,7 +5,6 @@
     - [Variables](#variables)
     - [Array literals](#array-literals)
     - [Equality/inclusion testing](#equalityinclusion-testing)
-    - [Runtime code evaluation](#runtime-code-evaluation)
     - [Block-oriented processing methods](#block-oriented-processing-methods)
     - [Ampersand prefix operator `&<object>`](#ampersand-prefix-operator-object)
     - [Heredoc](#heredoc)
@@ -87,20 +86,6 @@ Object.==()
 #
 Object.eql?()
 Object.hash()
-```
-
-### Runtime code evaluation
-
-Create a (namespaced) class runtime, inside a method:
-
-```ruby
-# Version using :class_eval and a heredoc string; the parameters passed enable source debugging.
-#
-ActiveTrigger.class_eval <<-'RUBY', __FILE__, __LINE__ + 1
-  class Application < Rails::Application; end
-'RUBY'
-
-ActiveTrigger.const_set :Application, Class.new(Rails::Application) do; end
 ```
 
 ### Block-oriented processing methods
@@ -478,10 +463,23 @@ MyModule.autoload :MyClass, '/path/to/file.rb' # MyModule is optional
 
 ### Dynamic class instantiation
 
+Three ways to dynamically define a class:
+
 ```ruby
-new_class = Class.new(opt_superclass) do
+# `superclass` is optional.
+#
+new_class = Class.new(superclass) do
   attr_accessor my_attr
 end
+
+# The parameters passed enable source debugging.
+# If the defined class needs to be in the root scope, append `::` to the class name be sure!
+#
+ActiveTrigger.class_eval <<-'RUBY', __FILE__, __LINE__ + 1
+  class Application < Rails::Application; end
+'RUBY'
+
+ActiveTrigger.const_set :Application, Class.new(Rails::Application) do; end
 ```
 
 ### Reflection

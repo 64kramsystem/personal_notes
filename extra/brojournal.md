@@ -1,3 +1,17 @@
+## Mon 08/Nov/2021
+
+- Open source
+  - Mydumper
+    - [x] Follow up investigation on [myloader drop table issue](https://github.com/maxbube/mydumper/issues/469)
+  - Openscripts: `git_maintain_branches`
+    - [x] Refactor
+    - [x] Sync with upstream, if present
+- Low-level programming
+  - [x] Review and buy The Art of 64-bit Assembly Vol.1
+- Tools
+  - VSC
+    - [x] Investigate and report [Ruby indentation bug](https://github.com/microsoft/vscode/issues/136708)
+
 ## Sun 07/Nov/2021
 
 - Low-level programming

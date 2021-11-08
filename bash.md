@@ -814,7 +814,7 @@ See https://www.artificialworlds.net/blog/2012/10/17/bash-associative-array-exam
 ```sh
 declare -A MYHASH                    # explicit creation
 declare -A MYHASH=([foo]=1 [bar]=2)  # explicit creation with multiple values (it's possible to quote both keys and values)
-MYHASH[foo]=bar                      # implicit creation
+MYHASH[foo bar]=baz                  # implicit creation; quotes not required inside the brackets
 unset MYHASH                         # destruction
 MYHASH=()                            # empty the hash
 
@@ -823,6 +823,7 @@ content="[foo]=1"
 eval declare -A MYHASH=\("$content"\)
 
 echo ${MYHASH[foo]}                  # access an entry
+echo ${MYHASH[foo]:-bar}             # empty var substitution works!
 unset MYHASH[foo]                    # remove an entry
 [[ -v MYHASH[foo] ]]                 # test if a key exists
 
