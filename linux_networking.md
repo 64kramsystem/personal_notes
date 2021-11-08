@@ -34,7 +34,7 @@
 Find process listening on port:
 
 ```sh
-sudo lsof -i :$4000
+sudo lsof -i :$port
 fuser -n tcp -v $port
 ```
 
