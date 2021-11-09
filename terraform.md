@@ -238,7 +238,8 @@ state list
 # Import a resource
 import -state-out=terraform.tfstate aws_iam_user.saverio saverio
 
-# Remove a resource from the statefile
+# Remove a resource from the statefile.
+# If the resource includes other resources, the whole tree is removed.
 state rm aws_iam_user.saverio saverio
 ```
 

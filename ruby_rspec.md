@@ -137,6 +137,7 @@ See [reference](https://relishapp.com/rspec/rspec-expectations/v/3-10/docs/built
  |              | `contain_exactly(*values)`                           | Like `match_array`, but splatted                  |
  |              | `be_false`, `be_true`, `be_falsey`, `be_truthy`      |                                                   |
  |              | `be_empty`                                           |                                                   |
+ |              | `start_with`                                         |                                                   |
  | Include      | `include`                                            |                                                   |
  | Error        | `raise_error(ErrorClass, "message")`                 | Defaults to Exception                             |
  | Stdout/err   | `output("message").to_stdout`                        | Captures `$stdout`/`$stderr`; `to_*` is necessary |

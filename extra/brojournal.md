@@ -1,3 +1,13 @@
+## Tue 09/Nov/2021
+
+- Ruby
+  - [x] Review type checking
+- Projects: Schedule manager
+  - [x] Add support for skip on updates
+    - [x] Made massive refactorings, part of which were required
+  - [x] Refactored and extended Replanner test suite
+  - [x] Fix (old) bug with updates showing the prefix on indented lines
+
 ## Mon 08/Nov/2021
 
 - Open source
