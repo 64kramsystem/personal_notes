@@ -1,3 +1,26 @@
+## Wed 10/Nov/2021
+
+- Linux
+  - [x] Review ZFS/DB write safety
+    - https://lists.launchpad.net/maria-discuss/msg05205.html
+- Projects
+  - Openscripts
+    - `.git_maintain_branches`
+      - [x] Exit with error if the configfile is not present (note that it's important)
+      - [x] Don't push protected branches
+  - Schedule manager
+    - [x] Implement automatic work end times
+- SWE
+  - The Programmer's Brain
+    - [x] 1. Decoding your confusion while coding
+    - [ ] 2. Speed reading for code
+- Open source
+  - Resque
+    - [x] Discuss future development (and scheduler status)
+- Low-level programming
+  - Beginning x64 Assembly Programming
+    - [ ] Copy notes
+
 ## Tue 09/Nov/2021
 
 - Ruby

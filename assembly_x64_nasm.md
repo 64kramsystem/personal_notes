@@ -1,26 +1,28 @@
-# Assembly x64
+# Assembly x64 (NASM)
 
-- [Assembly x64](#assembly-x64)
+- [Assembly x64 (NASM)](#assembly-x64-nasm)
   - [Basic structure](#basic-structure)
-  - [Makefile for compiling](#makefile-for-compiling)
+    - [Makefile for compiling](#makefile-for-compiling)
   - [Data types](#data-types)
+  - [Functions](#functions)
   - [Registers/Flags](#registersflags)
   - [C Calling convention (System V ABI)](#c-calling-convention-system-v-abi)
-  - [References](#references)
+  - [Instructions](#instructions)
+  - [Syscalls](#syscalls)
 
 ## Basic structure
 
 ```asm
-; Data: this section goes into the executable
+; Data (optional): this section goes into the executable
 ;
 section .data
     msg     db      "Hello world!", 0x0A, 0 ; any defined bytes sequence is called a "string"
     msgLen  equ     $ - msg - 1             ; constant (only for ints); `$` is the current address
                                             ; WATCH OUT! Don't forget `-1` (terminator) when printing a string
-    %define         pi 3.14                 ; macro; can use to define non-int pseudo-constants (but they're
+    %define         pi 3.14                 ; macro; can use to define non-int pseudo-constants (but they
                                             ; have slightly different semantics)
 
-; Reserved space: not in the executable; initialized at runtime with 0s
+; Reserved space (optional): not in the executable; initialized at runtime with 0s
 ; "Block Started by Symbol"
 ;
 section .bss
@@ -32,19 +34,18 @@ section .text
     global main
 
 main:
-; Function prologue
+; Function prologue; can use the `enter 0,0` instruction, but it's slower.
     push           rbp
     mov            rbp, rsp
 
 ; System call
-; WATCH OUT! Syscalls are different between 32 and 64 bits
     mov            rax, 1         ; 1 = write
     mov            rdi, 1         ; 1 = to stdout
     mov            rsi, msg
     mov            rdx, msgLen
     syscall
 
-; Function epilogue
+; Function epilogue; can use the `leave` instruction.
     mov            rsp, rbp
     pop            rbp
 
@@ -54,7 +55,7 @@ main:
     syscall
 ```
 
-## Makefile for compiling
+### Makefile for compiling
 
 ```makefile
 # - no-pie: makes debugging easier ("Position-Independent Executable")
@@ -71,10 +72,31 @@ hello.o: hello.asm
       nasm -f elf64 -g -F dwarf hello.asm -l hello.lst
 ```
 
+Can add for convenience:
+
+```
+run: hello
+      ./hello
+```
+
 ## Data types
 
 - `db`, `dw`, `dd`, `dq`
 - `resb`, `resw`, `resres`, `resq`
+
+## Functions
+
+Private function; put it inside the `text` section, before `main`.
+
+```asm
+area:
+section .data
+    .pi  dq  3.141   ; local to area
+section .text
+    enter 0,0
+    leave
+    ret
+```
 
 ## Registers/Flags
 
@@ -128,6 +150,16 @@ Notes:
 - don't forget that `call`/`ret` push/pop `rip`
 - `r10`/`r11` are not required to be saved
 
-## References
+## Instructions
 
-- Linux x86-64 syscalls: http://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64
+Arithmetic:
+
+- `SAL`/`SHL` : Move the high bit into CF
+- `SAR`       : Keeps the high bit as before shifting
+- `SHR`       : Sets the high bit to 0
+
+## Syscalls
+
+Linux x86-64 syscalls: http://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64
+
+WATCH OUT! Syscalls are different between 32 and 64 bits.
