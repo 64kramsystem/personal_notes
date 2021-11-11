@@ -1,3 +1,9 @@
+## Thu 11/Nov/2021
+
+- Projects
+  - Fisk
+    - [x] Investigate for Jeremy a useful UT, and discuss it
+
 ## Wed 10/Nov/2021
 
 - Linux

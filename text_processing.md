@@ -638,14 +638,16 @@ tr -cd '\0' | wc -c	# count zero chars (example with `\0`)
 ## sort
 
 ```sh
+sort -r           # reverse
 sort -V           # compare by versions! WATCH OUT! '5.8' is sorted before '5.8.0'
 
 # `-t/--field-separator`: separator
-# `-n/--numeric-sort`: interpret as number
+# `-r/--reverse`
+# `-n/--numeric-sort`   : interpret as number
 # `-k/--key <start,end>`: specify sorting column number (1-based); if specifying only <start>, <end>
 #                         is assumed to be the last field (can be acceptable, for simplification)
 #
-sort -t, -n -k1
+sort -t, -r -n -k1
 
 # Sort by multiple fields; in this case, it's important to use the <start,end> format.
 #
