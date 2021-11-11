@@ -225,7 +225,7 @@ SHOW GLOBAL STATUS [LIKE 'pattern' | WHERE expr];
 
 Metacharacters/functionalities supported:
 
-- `^ $ . * + ? | {} [] \b \w \S`
+- `^ $ . * + ? | {} [] \b \w \s \S`
 - `()` but not with groups capturing
 - `[:digit:]` and so on
 
@@ -288,9 +288,9 @@ Search/replace (without capturing group):
 
 ```sql
 -- Supports the same options as `REGEXP_SUBSTR`.
--- !!! Don't forget to set <occurrence> to 0 for gsub !!!
+-- By default: start from first character, and replace all occurrences.
 --
-SELECT REGEXP_REPLACE('a b b c', 'b', 'X', 1, 0) `replace`;
+SELECT REGEXP_REPLACE('a b b c', 'b', 'X') `replace`;
 -- +---------+
 -- | replace |
 -- +---------+
