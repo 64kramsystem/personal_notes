@@ -1,3 +1,15 @@
+## Fri 12/Nov/2021
+
+- Projects
+  - TenderJIT
+    - [ ] Try install BSD distro(s)
+      - [x] Find other distro
+- Open Source
+  - Mydumper
+    - [x] Brutal fight with Myloader bug investigation
+- Sysadmin
+  - [x] Check Terraform Up and Running 2nd ed.
+
 ## Thu 11/Nov/2021
 
 - Projects
