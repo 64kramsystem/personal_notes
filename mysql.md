@@ -374,8 +374,8 @@ CREATE TABLE clients (
 )
 SELECT 1 `id`, '["foo", "bar", "baz"]' `client_tags`;
 
--- Limited to 512!
-ALTER TABLE clients ADD KEY client_tags ( (CAST(client_tags -> '$' AS CHAR(512) ARRAY)) );
+-- The max length of (CHAR) each entry is 512!
+ALTER TABLE clients ADD KEY client_tags ( (CAST(client_tags -> '$' AS CHAR(16) ARRAY)) );
 
 EXPLAIN FORMAT=TREE SELECT * FROM clients WHERE 'foo' MEMBER OF (client_tags -> '$')\G
 -- -> Filter: json'"foo"' member of (cast(json_extract(client_tags,_utf8mb4'$') as char(64) array))  (cost=0.35 rows=1)
@@ -385,14 +385,16 @@ EXPLAIN FORMAT=TREE SELECT * FROM clients WHERE 'foo' MEMBER OF (client_tags -> 
 JSON search functions:
 
 ```sql
--- `one`: return first match; `All`: return all
--- the return type of `All` is inconsistent; it depends on the number of elements found.
+-- `one`: return first match; `all`: return all.
+-- Uses the LIKE-style patterns (`%`, `_`).
+-- The return type of `all` is inconsistent; it depends on the number of elements found.
+-- As of v8.0.24, MVI indexes are not used.
 --
 SELECT JSON_SEARCH(client_tags, 'one', 'bar') FROM clients;
 -- "$[1]"
-SELECT JSON_SEARCH('["bar", "bar"]', 'All', 'bar');
+SELECT JSON_SEARCH('["bar", "bar"]', 'all', 'ba%');
 -- ["$[0]", "$[1]"]
-SELECT JSON_SEARCH(client_tags, 'All', 'bar') FROM clients;
+SELECT JSON_SEARCH(client_tags, 'all', 'ba_') FROM clients;
 -- "$[1]"
 ```
 
