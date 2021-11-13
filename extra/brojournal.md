@@ -1,3 +1,14 @@
+## Sat 13/Nov/2021
+
+- Low-level programming
+  - Beginning x64 Assembly Programming
+    - [ ] Copy notes
+- Projects
+  - Fisk
+    - [x] Prepare BSD for testing
+    - [x] Try and report issue
+    - [x] Brutal fight with BSD variants
+
 ## Fri 12/Nov/2021
 
 - Projects

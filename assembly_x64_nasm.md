@@ -4,10 +4,12 @@
   - [Basic structure](#basic-structure)
     - [Makefile for compiling](#makefile-for-compiling)
   - [Data types](#data-types)
-  - [Functions](#functions)
+  - [Addressing](#addressing)
   - [Registers/Flags](#registersflags)
-  - [C Calling convention (System V ABI)](#c-calling-convention-system-v-abi)
   - [Instructions](#instructions)
+  - [Optimizations](#optimizations)
+  - [Functions](#functions)
+  - [C Calling convention (System V ABI)](#c-calling-convention-system-v-abi)
   - [Syscalls](#syscalls)
 
 ## Basic structure
@@ -58,7 +60,7 @@ main:
 ### Makefile for compiling
 
 ```makefile
-# - no-pie: makes debugging easier ("Position-Independent Executable")
+# - no-pie: makes debugging easier ("Position-Independent Executable"), and allows external functions.
 #
 hello: hello.o
       gcc -o hello hello.o -no-pie
@@ -84,18 +86,11 @@ run: hello
 - `db`, `dw`, `dd`, `dq`
 - `resb`, `resw`, `resres`, `resq`
 
-## Functions
-
-Private function; put it inside the `text` section, before `main`.
+## Addressing
 
 ```asm
-area:
-section .data
-    .pi  dq  3.141   ; local to area
-section .text
-    enter 0,0
-    leave
-    ret
+mov rsi, radius      ; WATCH OUT!! Stores *the address*
+mov rsi, [radius]    ; Dereferences an address (stores *the value*)
 ```
 
 ## Registers/Flags
@@ -128,6 +123,46 @@ Flags:
 | Direction |   DF   |  10   | Direction of string operations (increment or decrement)          |
 | Overflow  |   OF   |  11   | Previous instruction resulted in overflow                        |
 
+## Instructions
+
+`mov`:
+
+- WATCH OUT! `mov eax, $val` clears the `rax` upper bits (mov `al`/`ax` doesn't)
+
+Control flow:
+
+- `loop $label` : Decreases `rcx`
+
+Arithmetic:
+
+- `SAL`/`SHL` : Move the high bit into CF
+- `SAR`       : Keeps the high bit as before shifting
+- `SHR`       : Sets the high bit to 0
+
+## Optimizations
+
+- `xor $reg, $reg`      : Fastest way to reset a register
+- `dec rcx; jnz $label` : Faster than `loop $label`!!!
+
+## Functions
+
+```asm
+; External function.
+; WATCH OUT! Require PIE to be disabled.
+;
+extern printf
+
+; Private function; put it inside the `text` section, before `main`.
+;
+area:
+section .data
+    .pi  dq  3.141   ; local to area
+section .text
+    enter 0,0
+    leave
+    ret
+```
+
 ## C Calling convention (System V ABI)
 
 Pushes are required only if the regs are used in that scope.
@@ -149,14 +184,6 @@ Notes:
 
 - don't forget that `call`/`ret` push/pop `rip`
 - `r10`/`r11` are not required to be saved
-
-## Instructions
-
-Arithmetic:
-
-- `SAL`/`SHL` : Move the high bit into CF
-- `SAR`       : Keeps the high bit as before shifting
-- `SHR`       : Sets the high bit to 0
 
 ## Syscalls
 
