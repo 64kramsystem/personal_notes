@@ -106,6 +106,13 @@ xinput set-int-prop 3 "Device Enabled" 8 1
 
 ## Screen stuff
 
+Set resolution:
+
+```sh
+# Find the output device using `xrandr -q`.
+xrandr --output DisplayPort-2 --mode 1920x1080
+```
+
 ### Disable blanking
 
 ```sh
