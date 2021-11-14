@@ -50,6 +50,7 @@
     - [Maintenance](#maintenance)
   - [Replication](#replication)
   - [Administration](#administration)
+    - [Logging](#logging)
     - [Non-blocking schema changes](#non-blocking-schema-changes)
     - [Observe ALTER TABLE progress](#observe-alter-table-progress)
   - [Client/server](#clientserver)
@@ -1159,6 +1160,20 @@ SELECT SERVICE_STATE FROM performance_schema.replication_applier_status;
 ```
 
 ## Administration
+
+### Logging
+
+```sql
+-- Log deadlocks in the error log.
+--
+SET GLOBAL innodb_print_all_deadlocks = TRUE;
+
+-- The general log includes a lot of stuff (including, all the queries).
+--
+SET GLOBAL log_output = 'FILE';
+SET GLOBAL general_log_file = 'general.log'; -- with FILE output, this is mandatory
+SET GLOBAL general_log = 'ON';
+```
 
 ### Non-blocking schema changes
 

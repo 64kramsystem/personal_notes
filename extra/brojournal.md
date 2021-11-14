@@ -1,3 +1,21 @@
+## Sun 14/Nov/2021
+
+- Projects
+  - Schedule manager
+    - [x] Allow any prefix
+- Admin
+  - [x] Plan cycle
+- Open Source
+  - Mydumper
+    - [x] Myloader: Investigate exact conditions, and prepare/anonymize simplest dataset for issue reproduction
+  - Schedule manager
+    - [x] Fix: numerical next prefix was not included when rewriting a full update
+- Tools
+  - [x] Add script to manage remote desktop operations
+- System
+  - [x] Check modern 13"+ detachable laptops
+    - [ ] Check Surface series [Linux project compatibity](https://github.com/linux-surface/linux-surface)
+
 ## Sat 13/Nov/2021
 
 - Low-level programming
