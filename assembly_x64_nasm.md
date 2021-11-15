@@ -4,13 +4,16 @@
   - [Basic structure](#basic-structure)
     - [Makefile for compiling](#makefile-for-compiling)
   - [Data types](#data-types)
+  - [Memory layout](#memory-layout)
+  - [Stack alignment/frame](#stack-alignmentframe)
   - [Addressing](#addressing)
   - [Registers/Flags](#registersflags)
   - [Instructions](#instructions)
   - [Optimizations](#optimizations)
-  - [Functions](#functions)
+  - [Functions/Access levels](#functionsaccess-levels)
   - [C Calling convention (System V ABI)](#c-calling-convention-system-v-abi)
   - [Syscalls](#syscalls)
+  - [Utilities](#utilities)
 
 ## Basic structure
 
@@ -36,7 +39,7 @@ section .text
     global main
 
 main:
-; Function prologue; can use the `enter 0,0` instruction, but it's slower.
+; Function prologue ("stack frame" setup)
     push           rbp
     mov            rbp, rsp
 
@@ -47,7 +50,7 @@ main:
     mov            rdx, msgLen
     syscall
 
-; Function epilogue; can use the `leave` instruction.
+; Function epilogue
     mov            rsp, rbp
     pop            rbp
 
@@ -77,6 +80,9 @@ hello.o: hello.asm
 Can add for convenience:
 
 ```
+debug: hello
+      lldb -o r ./hello
+
 run: hello
       ./hello
 ```
@@ -86,11 +92,29 @@ run: hello
 - `db`, `dw`, `dd`, `dq`
 - `resb`, `resw`, `resres`, `resq`
 
+## Memory layout
+
+Low to high:
+
+- text (main)
+- data
+- bss
+- heap
+- stack
+- env vars, cmdline args
+
+## Stack alignment/frame
+
+Stack alignment is required by some instructions; the stack frame is useful primarily for debuggers.
+
+When there is complete control over a workflow (e.g. leaf routine), the two can be omitted.
+
 ## Addressing
 
 ```asm
 mov rsi, radius      ; WATCH OUT!! Stores *the address*
 mov rsi, [radius]    ; Dereferences an address (stores *the value*)
+lea rsi, [radius]    ; Stores the address
 ```
 
 ## Registers/Flags
@@ -125,26 +149,41 @@ Flags:
 
 ## Instructions
 
-`mov`:
-
-- WATCH OUT! `mov eax, $val` clears the `rax` upper bits (mov `al`/`ax` doesn't)
+`DP` = Double Precision
 
 Control flow:
 
 - `loop $label` : Decreases `rcx`
+- `enter 0,0`   : Prologue (same as `push rbp` + `mov rbp, rsp`) (see [performance](#optimizations))
+- `leave`       : Epilogue (same/performance as `mov rsp, rbp` + `pop rbp`)
+
+Storage:
+
+- `MOV`       : WATCH OUT! `mov eax, $val` clears the `rax` upper bits (mov `al`/`ax` doesn't)
+- `MOVSD`     : DP-float to/from `xmm`
 
 Arithmetic:
 
+- `ADD`/`SUB`, `INC`/`DEC`
 - `SAL`/`SHL` : Move the high bit into CF
 - `SAR`       : Keeps the high bit as before shifting
 - `SHR`       : Sets the high bit to 0
+- `IMUL`      : Multiply; result in `rdx`:`rax`
+- `IDIV`      : Divide `rdx`:`rax`; result in `rax`, modulo in `rdx`
+
+Floating-point:
+
+- `ADDSD`, `SUBSD`: Add/sub DP in `xmm`
+- `MULSD`, `DIVSD`: Multiply/divide DP in `xmm`
+- `SQRTSD`        : Square root DP in `xmm`
 
 ## Optimizations
 
+- `enter 0,0`           : Slower than `push rbp` + `mov rbp, rsp`!
 - `xor $reg, $reg`      : Fastest way to reset a register
 - `dec rcx; jnz $label` : Faster than `loop $label`!!!
 
-## Functions
+## Functions/Access levels
 
 ```asm
 ; External function.
@@ -152,14 +191,16 @@ Arithmetic:
 ;
 extern printf
 
-; Private function; put it inside the `text` section, before `main`.
+global myvar         ; global variable
+global myfunc        ; global function
+
+; Function-private section; place it as any other function.
 ;
 area:
 section .data
     .pi  dq  3.141   ; local to area
 section .text
-    enter 0,0
-    leave
+    ; ... use .pi ...
     ret
 ```
 
@@ -190,3 +231,14 @@ Notes:
 Linux x86-64 syscalls: http://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64
 
 WATCH OUT! Syscalls are different between 32 and 64 bits.
+
+## Utilities
+
+```sh
+# Printf useful file info, e.g. the header includes the entry point.
+#
+readelf --file-header $file
+
+# Notice `main`, `__data_start`, `__bss_start`
+readelf --symbols $file | tail +10 | sort -k 2 -r
+```

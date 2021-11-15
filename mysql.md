@@ -50,7 +50,7 @@
     - [Maintenance](#maintenance)
   - [Replication](#replication)
   - [Administration](#administration)
-    - [Logging](#logging)
+    - [Logging/monitors](#loggingmonitors)
     - [Non-blocking schema changes](#non-blocking-schema-changes)
     - [Observe ALTER TABLE progress](#observe-alter-table-progress)
   - [Client/server](#clientserver)
@@ -1161,18 +1161,30 @@ SELECT SERVICE_STATE FROM performance_schema.replication_applier_status;
 
 ## Administration
 
-### Logging
+### Logging/monitors
 
 ```sql
--- Log deadlocks in the error log.
---
-SET GLOBAL innodb_print_all_deadlocks = TRUE;
-
 -- The general log includes a lot of stuff (including, all the queries).
 --
 SET GLOBAL log_output = 'FILE';
 SET GLOBAL general_log_file = 'general.log'; -- with FILE output, this is mandatory
 SET GLOBAL general_log = 'ON';
+
+-- Log deadlocks in the error log.
+--
+SET GLOBAL innodb_print_all_deadlocks = ON;
+```
+
+Monitors affect performance, so they should be enabled only for debugging:
+
+```sql
+-- Enable periodic (every 15") general monitor output.
+--
+SET GLOBAL innodb_status_output = ON;
+
+-- Enable lock monitor output in the InnoDB engine status, and the periodic output (the latter requires `innodb_status_output=ON`).
+--
+SET GLOBAL innodb_status_output_locks = ON;
 ```
 
 ### Non-blocking schema changes
