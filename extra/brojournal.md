@@ -1,3 +1,18 @@
+## Mon 15/Nov/2021
+
+- Low-level programming
+  - Beginning x64 Assembly Programming
+    - [ ] Copy notes
+      - [x] Investigate another book errata
+- Open Source
+  - Mydumper
+    - [x] Discuss negative regex issue
+
+## Cycle notes
+
+- Unscheduled
+  - Schedule Manager: A full session spent on refactoring/extending/fixing
+
 ## Sun 14/Nov/2021
 
 - Projects
