@@ -47,6 +47,11 @@ Article.joins(:user).optimizer_hints("JOIN_ORDER(articles, users)").to_sql
 ```ruby
 query.ids                   # pluck the ids!
 arel.table                  # name of the main AREL query table
+
+# OR operator.
+# If in the MyTable scope, where second where doesn't need qualification.
+#
+MyTable.where(cond1).or(MyTable.where(cond2))
 ```
 
 #### Scopes

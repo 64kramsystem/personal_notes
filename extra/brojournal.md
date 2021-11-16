@@ -1,3 +1,23 @@
+## Tue 16/Nov/2021
+
+- Projects
+  - ZFS installer
+    - [x] Review Issue [No suitable disks have been found | KVM | Guest](https://github.com/64kramsystem/zfs-installer/issues/247)
+- Blog
+  - [x] Review and apply [Bash comment](https://tinyurl.com/yegwnyxk)
+  - [x] Review and reply [Custom kernel build comment](https://tinyurl.com/yzn8w7g2)
+- Tools
+  - Visual Studio Code (Extensions)
+    - [x] Add ASM/TF code block support 
+      - Fight hacking Code Fences extension
+    - [x] Setup and publish extension
+- Low-level programming
+  - Beginning x64 Assembly Programming
+    - [ ] Copy notes
+- SWE
+  - The Programmer's Brain
+    - [ ] 2. Speed reading for code
+
 ## Mon 15/Nov/2021
 
 - Low-level programming
