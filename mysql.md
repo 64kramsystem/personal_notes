@@ -2,26 +2,33 @@
 
 - [MySQL](#mysql)
   - [General database SQL concepts](#general-database-sql-concepts)
-  - [Privileges](#privileges)
+  - [Data types](#data-types)
+    - [`CHAR`](#char)
+  - [SELECT multiple rows from literals (convert scalars to rows)](#select-multiple-rows-from-literals-convert-scalars-to-rows)
+  - [ORDER BY](#order-by)
   - [Control flow](#control-flow)
-  - [General statements](#general-statements)
+  - [ALTER TABLE](#alter-table)
+    - [Observe progress](#observe-progress)
+  - [Indexes](#indexes)
+  - [Virtual columns](#virtual-columns)
   - [General built-in functions](#general-built-in-functions)
     - [String functions](#string-functions)
       - [Character conversions](#character-conversions)
     - [Date functions](#date-functions)
+      - [Formatting/parsing](#formattingparsing)
     - [Numeric functions](#numeric-functions)
     - [Aggregates](#aggregates)
     - [Other/generic functions](#othergeneric-functions)
-  - [SELECT multiple rows from literals (convert scalars to rows)](#select-multiple-rows-from-literals-convert-scalars-to-rows)
-  - [(Status) Variables](#status-variables)
   - [Regular expressions (regexes)](#regular-expressions-regexes)
     - [Strategies/Examples](#strategiesexamples)
   - [JSON + MVI and array storage](#json--mvi-and-array-storage)
+  - [Fulltext indexes](#fulltext-indexes)
+    - [Stopwords](#stopwords)
+    - [Symbols handling](#symbols-handling)
+    - [Manipulate search relevance for multiple columns (boosting)](#manipulate-search-relevance-for-multiple-columns-boosting)
+    - [Maintenance](#maintenance)
   - [XPath](#xpath)
   - [CSV Import/Export](#csv-importexport)
-  - [Dates](#dates)
-    - [General useful notes](#general-useful-notes)
-    - [Formatting/parsing](#formattingparsing)
   - [Window functions](#window-functions)
     - [Define each window extent (`PARTITION BY`), and picking a row per window](#define-each-window-extent-partition-by-and-picking-a-row-per-window)
     - [Window function aggregates](#window-function-aggregates)
@@ -35,30 +42,11 @@
     - [Statements output and SLEEP](#statements-output-and-sleep)
     - [Exceptions handling](#exceptions-handling)
     - [Cursors (with example procedure)](#cursors-with-example-procedure)
-  - [Events](#events)
-  - [ALTER TABLE](#alter-table)
   - [Performance/Optimization](#performanceoptimization)
     - [General optimization topics](#general-optimization-topics)
     - [Query hints](#query-hints)
     - [Profiling](#profiling)
-    - [Dirty pages](#dirty-pages)
     - [Dynamic SQL](#dynamic-sql)
-  - [Fulltext indexes](#fulltext-indexes)
-    - [Stopwords](#stopwords)
-    - [Symbols handling](#symbols-handling)
-    - [Manipulate search relevance for multiple columns (boosting)](#manipulate-search-relevance-for-multiple-columns-boosting)
-    - [Maintenance](#maintenance)
-  - [Replication](#replication)
-  - [Administration](#administration)
-    - [Logging/monitors](#loggingmonitors)
-    - [Non-blocking schema changes](#non-blocking-schema-changes)
-    - [Observe ALTER TABLE progress](#observe-alter-table-progress)
-  - [Client/server](#clientserver)
-    - [Find configuration files used](#find-configuration-files-used)
-  - [Database metadata](#database-metadata)
-  - [Convenient operations](#convenient-operations)
-    - [Skip the indexes on mysqldump dumps](#skip-the-indexes-on-mysqldump-dumps)
-  - [Mydumper/myloader](#mydumpermyloader)
 
 ## General database SQL concepts
 
@@ -79,15 +67,36 @@ FROM t1
      JOIN (SELECT id FROM t2) USING (id)
 ```
 
-## Privileges
+## Data types
+
+### `CHAR`
+
+WATCH OUT! The semantics differ when using in [DDLs](https://dev.mysql.com/doc/refman/8.0/en/char.html) versus [casts](https://dev.mysql.com/doc/refman/8.0/en/cast-functions.html#function_cast):
+
+- in DDLs, `CHAR` right pads the data on store, and trims the padding on retrieval (unless `PAD_CHAR_TO_FULL_LENGTH` is set)
+- in casts, `CHAR` is the definition of `VARCHAR`
+
+## SELECT multiple rows from literals (convert scalars to rows)
+
+This can be used with `CREATE TABLE ... SELECT`, without insert.
 
 ```sql
-SHOW GRANTS for <user>[@'<host>']\G
+SELECT *
+FROM (
+  VALUES
+    ROW(1),
+    ROW(2)
+) `alias` -- append `(col_name)` to set the column name
+;
+```
 
--- *************************** 1. row ***************************
--- Grants for user@%: GRANT SELECT, .. ON *.* TO `user`@`1.2.3.4` WITH GRANT -- OPTION
--- *************************** 2. row ***************************
--- Grants for user@%: GRANT APPLICATION_PASSWORD_ADMIN, ... ON *.* TO `user`@`1.2.3.4` WITH GRANT OPTION
+## ORDER BY
+
+```sql
+# Note that values outside the @values list will take priority over the ones inside, so for some cases
+# it's necessary to use the DESC modifier.
+#
+ORDER BY FIELD(field, @values...)
 ```
 
 ## Control flow
@@ -104,13 +113,55 @@ WHEN when_value THEN statement_list
 END
 ```
 
-## General statements
+## ALTER TABLE
+
+As of 8.0.25, the `INSTANT` algorithm doesn't work if there are MVI indexes on the table.
+
+### Observe progress
+
+Reference: https://dev.mysql.com/doc/refman/8.0/en/monitor-alter-table-performance-schema.html
+
+Example of ALTER TABLE monitoring, at different stages; test estimation is updated (increased) between stages:
 
 ```sql
-# Note that values outside the @values list will take priority over the ones inside, so for some cases
-# it's necessary to use the DESC modifier.
+SELECT EVENT_NAME, WORK_COMPLETED, WORK_ESTIMATED FROM performance_schema.events_stages_current;
+
+-- +------------------------------------------------------+----------------+----------------+
+-- | EVENT_NAME                                           | WORK_COMPLETED | WORK_ESTIMATED |
+-- +------------------------------------------------------+----------------+----------------+
+-- | stage/innodb/alter table (read PK and internal sort) |         155094 |        7904880 |
+-- +------------------------------------------------------+----------------+----------------+
+
+-- +----------------------------------+----------------+----------------+
+-- | EVENT_NAME                       | WORK_COMPLETED | WORK_ESTIMATED |
+-- +----------------------------------+----------------+----------------+
+-- | stage/innodb/alter table (flush) |        7054880 |        7901111 |
+-- +----------------------------------+----------------+----------------+
+```
+
+The `alter table (flush)` stage empirically took from 10% to 100% of the total time before that stage.
+
+Only the last stage `log apply table` causes contention; on the longest occurrence, it took ≈2.4% of the total time (44/1858").
+
+## Indexes
+
+Functional indexes: 
+
+```sql
+KEY `idx_year_to_date`( (YEAR(to_date)) );
+
+# WATCH OUT! It's not clear if the optimizer supports this as of 8.0.25; based on some tests, this is
+# not used (even when adding the charset, which is implied).
 #
-ORDER BY FIELD(field, @values...)
+KEY `my_key_str` ( (CAST(my_column AS CHAR)) );
+```
+
+## Virtual columns
+
+```sql
+# `NOT NULL` can't be specified.
+#
+COLUMN `my_column_str` VARCHAR(10) AS (my_column)
 ```
 
 ## General built-in functions
@@ -170,6 +221,70 @@ DATE_(ADD|SUB(@date, INTERVAL @n (DAY|SECOND|...))
 # When adding a time to a time, use the following. DON'T use "+ INTERVAL xx MINUTES"!
 #
 ADDTIME(@time, 'hh:mm:ss');
+
+# Current timezone:
+#
+SELECT TIMEDIFF( NOW(), CONVERT_TZ( NOW(), @@session.time_zone, '+00:00' ) );
+
+# Don't use `-` to substract timestamps!! Use:
+#
+TIMESTAMPDIFF(SECOND, timestamp1, timestamp2);
+```
+
+#### Formatting/parsing
+
+```sql
+DATE_FORMAT(@date, @format);
+STR_TO_DATE(@date, @format);
+```
+
+- `%a` : Abbreviated weekday name (Sun..Sat)
+- `%b` : Abbreviated month name (Jan..Dec)
+- `%c` : Month, numeric (0..12)
+- `%D` : Day of the month with English suffix (0th, 1st, 2nd, 3rd, …)
+- `%d` : Day of the month, numeric (00..31)
+- `%e` : Day of the month, numeric (0..31)
+- `%f` : Microseconds (000000..999999)
+- `%H` : Hour (00..23)
+- `%h` : Hour (01..12)
+- `%I` : Hour (01..12)
+- `%i` : Minutes, numeric (00..59)
+- `%j` : Day of year (001..366)
+- `%k` : Hour (0..23)
+- `%l` : Hour (1..12)
+- `%M` : Month name (January..December)
+- `%m` : Month, numeric (00..12)
+- `%p` : AM or PM
+- `%r` : Time, 12-hour (hh:mm:ss followed by AM or PM)
+- `%S` : Seconds (00..59)
+- `%s` : Seconds (00..59)
+- `%T` : Time, 24-hour (hh:mm:ss)
+- `%U` : Week (00..53), where Sunday is the first day of the week
+- `%u` : Week (00..53), where Monday is the first day of the week
+- `%V` : Week (01..53), where Sunday is the first day of the week; used with %X
+- `%v` : Week (01..53), where Monday is the first day of the week; used with %x
+- `%W` : Weekday name (Sunday..Saturday)
+- `%w` : Day of the week (0=Sunday..6=Saturday)
+- `%X` : Year for the week, where Sunday is the first day of the week, numeric, four digits; used with %V
+- `%x` : Year for the week, where Monday is the first day of the week, numeric, four digits; used with %v
+- `%Y` : Year, numeric, four digits
+- `%y` : Year, numeric (two digits)
+- `%%` : A literal "%" character
+
+```sql
+# 0427 = Sunday
+
+# Week starts on Sunday
+#
+str_to_date(date_format('20080426', '%X%V 0'), '%X%V %w'); -- 04-20
+str_to_date(date_format('20080427', '%X%V 0'), '%X%V %w'); -- 04-27
+str_to_date(date_format('20080428', '%X%V 0'), '%X%V %w'); -- 04-27
+
+# Week starts on Monday
+#
+str_to_date(date_format('20080426', '%x%v 1'), '%x%v %w'); -- 04-21
+str_to_date(date_format('20080427', '%x%v 1'), '%x%v %w'); -- 04-21
+str_to_date(date_format('20080428', '%x%v 1'), '%x%v %w'); -- 04-28
 ```
 
 ### Numeric functions
@@ -197,29 +312,6 @@ SLEEP(@secs)
 LAST_INSERT_ID()                     # last inserted AUTO_INCREMENTed id
 ROW_COUNT()                          # number of rows affected by last operation (NOT rows changed!)
 GREATEST|LEAST(@values...)           # min/max on multiple values
-```
-
-## SELECT multiple rows from literals (convert scalars to rows)
-
-This can be used with `CREATE TABLE ... SELECT`, without insert.
-
-```sql
-SELECT *
-FROM (
-  VALUES
-    ROW(1),
-    ROW(2)
-) `alias` -- append `(col_name)` to set the column name
-;
-```
-
-## (Status) Variables
-
-```sql
-SHOW GLOBAL VARIABLES [LIKE 'pattern'| WHERE expr];
-SELECT @@variable_name;                             -- alternate form for selecting a global var
-
-SHOW GLOBAL STATUS [LIKE 'pattern' | WHERE expr];
 ```
 
 ## Regular expressions (regexes)
@@ -496,6 +588,112 @@ WHERE s.tenant_id = 0\G
 SELECT COUNT(*) FROM source where tenant_id = 0 AND unindexed_column = 'xxx';
 ```
 
+## Fulltext indexes
+
+### Stopwords
+
+Remember that disabling stopwords requires index rebuild, as the stopwords apply to build, not search; if, say, `innodb_ft_enable_stopword` is set to false, the index is built, and `innodb_ft_enable_stopword` is set to true, stopwords will not be used.
+
+There are two alternatives to disable stopwords:
+
+```sql
+# Disable stopwords entirely
+#
+SET GLOBAL innodb_ft_enable_stopword = FALSE;
+
+# Create an empty stopwords table (this applies to InnoDB only)
+#
+CREATE TABLE my_stopwords LIKE INFORMATION_SCHEMA.INNODB_FT_DEFAULT_STOPWORD; # the name is arbitrary
+ALTER TABLE my_stopwords ENGINE=InnoDB; # otherwise leaves it as memory table
+SET GLOBAL innodb_ft_server_stopword_table = 'mydb/my_stopwords';
+```
+
+If emails have to be stored, they can't be queried like `"my@email"*`; a workaround is to identify emails (when storing and searching), and replace symbols with `_`, which is an allowed character.
+
+### Symbols handling
+
+Symbols are not stored in FT indexes, with the exception of `_`; for this reason, any (other) symbol is treated as space:
+
+```sql
+CREATE TABLE test (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  str VARCHAR(255),
+  FULLTEXT (str)
+);
+
+INSERT INTO test (str) VALUES ('foo bar'), ('foo_bar'), ('foo@bar'), ('foo=bar');
+
+SELECT * FROM test WHERE MATCH(str) AGAINST ('"foo bar"' IN BOOLEAN MODE);
+-- +----+---------+
+-- |  1 | foo bar |
+-- |  3 | foo@bar |
+-- |  4 | foo=bar |
+-- +----+---------+
+
+SELECT * FROM test WHERE MATCH(str) AGAINST ('"foo_bar"' IN BOOLEAN MODE);
+-- +----+---------+
+-- |  2 | foo_bar |
+-- +----+---------+
+
+SELECT * FROM test WHERE MATCH(str) AGAINST ('"foo@bar"' IN BOOLEAN MODE);
+-- +----+---------+
+-- |  1 | foo bar |
+-- |  3 | foo@bar |
+-- |  4 | foo=bar |
+-- +----+---------+
+```
+
+### Manipulate search relevance for multiple columns (boosting)
+
+Create three indexes: on the two individual columns, and on both.
+
+```sql
+# If searching in boolean mode, specify it for all the MATCH clauses!
+#
+SELECT id
+FROM mytable
+WHERE MATCH (col1, col2) AGAINST (@keyword)
+ORDER BY
+  5 * MATCH (col1) AGAINST (@keyword) + MATCH (col2) AGAINST (@keyword) DESC;
+```
+
+Keep in mind that this has the overhead of 3 fulltext searches. If one simply needs to put the results of one search before the other, then use hardcoded ranking:
+
+```sql
+WITH
+col1_results (
+  SELECT id, 5 `ranking`
+  FROM mytable
+  WHERE MATCH (col1) AGAINST (@keyword)
+),
+col2_results (
+  SELECT id, 0 `ranking`
+  FROM mytable
+  WHERE MATCH (col2) AGAINST (@keyword)
+),
+all_results (
+  SELECT * FROM col1_results
+  UNION ALL
+  SELECT * FROM col2_results
+)
+SELECT id
+FROM all_results
+GROUP BY id
+ORDER BY MAX(ranking) DESC
+```
+
+### Maintenance
+
+```sql
+SET GLOBAL innodb_ft_aux_table = 'db/table';
+
+# Check unmerged insertions+updates / deletes
+#
+SELECT COUNT(*) FROM INFORMATION_SCHEMA.INNODB_FT_INDEX_CACHE
+UNION ALL
+SELECT COUNT(*) FROM INFORMATION_SCHEMA.INNODB_FT_DELETED;
+```
+
 ## XPath
 
 Examples:
@@ -565,76 +763,6 @@ INTO TABLE events
 FIELDS TERMINATED BY ','
 ( id, layout_id, @customer_id )
 SET tenant_id = 89, customer_id = NULLIF(@customer_id, '');
-```
-
-## Dates
-
-### General useful notes
-
-```sql
-# Current timezone:
-#
-SELECT TIMEDIFF( NOW(), CONVERT_TZ( NOW(), @@session.time_zone, '+00:00' ) );
-
-# Don't use `-` to substract timestamps!! Use:
-#
-TIMESTAMPDIFF(SECOND, timestamp1, timestamp2);
-```
-
-### Formatting/parsing
-
-```sql
-DATE_FORMAT(@date, @format);
-STR_TO_DATE(@date, @format);
-```
-
-- `%a` : Abbreviated weekday name (Sun..Sat)
-- `%b` : Abbreviated month name (Jan..Dec)
-- `%c` : Month, numeric (0..12)
-- `%D` : Day of the month with English suffix (0th, 1st, 2nd, 3rd, …)
-- `%d` : Day of the month, numeric (00..31)
-- `%e` : Day of the month, numeric (0..31)
-- `%f` : Microseconds (000000..999999)
-- `%H` : Hour (00..23)
-- `%h` : Hour (01..12)
-- `%I` : Hour (01..12)
-- `%i` : Minutes, numeric (00..59)
-- `%j` : Day of year (001..366)
-- `%k` : Hour (0..23)
-- `%l` : Hour (1..12)
-- `%M` : Month name (January..December)
-- `%m` : Month, numeric (00..12)
-- `%p` : AM or PM
-- `%r` : Time, 12-hour (hh:mm:ss followed by AM or PM)
-- `%S` : Seconds (00..59)
-- `%s` : Seconds (00..59)
-- `%T` : Time, 24-hour (hh:mm:ss)
-- `%U` : Week (00..53), where Sunday is the first day of the week
-- `%u` : Week (00..53), where Monday is the first day of the week
-- `%V` : Week (01..53), where Sunday is the first day of the week; used with %X
-- `%v` : Week (01..53), where Monday is the first day of the week; used with %x
-- `%W` : Weekday name (Sunday..Saturday)
-- `%w` : Day of the week (0=Sunday..6=Saturday)
-- `%X` : Year for the week, where Sunday is the first day of the week, numeric, four digits; used with %V
-- `%x` : Year for the week, where Monday is the first day of the week, numeric, four digits; used with %v
-- `%Y` : Year, numeric, four digits
-- `%y` : Year, numeric (two digits)
-- `%%` : A literal "%" character
-
-```sql
-# 0427 = Sunday
-
-# Week starts on Sunday
-#
-str_to_date(date_format('20080426', '%X%V 0'), '%X%V %w'); -- 04-20
-str_to_date(date_format('20080427', '%X%V 0'), '%X%V %w'); -- 04-27
-str_to_date(date_format('20080428', '%X%V 0'), '%X%V %w'); -- 04-27
-
-# Week starts on Monday
-#
-str_to_date(date_format('20080426', '%x%v 1'), '%x%v %w'); -- 04-21
-str_to_date(date_format('20080427', '%x%v 1'), '%x%v %w'); -- 04-21
-str_to_date(date_format('20080428', '%x%v 1'), '%x%v %w'); -- 04-28
 ```
 
 ## Window functions
@@ -913,26 +1041,6 @@ DELIMITER ;
 CALL ALL_TENANTS_OPERATION(); DROP PROCEDURE ALL_TENANTS_OPERATION;
 ```
 
-## Events
-
-```sql
--- The options set are the default.
-
-CREATE EVENT my_event
-ON SCHEDULE
-EVERY 15 MINUTE
--- Optional; options: DISABLE | DISABLE ON SLAVE
-ENABLE
--- Optional.
-COMMENT 'My event comment'
-DO
-CALL mydb.my_stored_procedure;
-```
-
-## ALTER TABLE
-
-As of 8.0.25, the `INSTANT` algorithm doesn't work if there are MVI indexes on the table.
-
 ## Performance/Optimization
 
 ```sql
@@ -1032,23 +1140,6 @@ Digest slow query log, using Maatkit:
 mk-query-digest /path/to/*-slow.log
 ```
 
-### Dirty pages
-
-Dirty pages percentage query:
-
-```sql
-SELECT
-  ROUND(
-    100 * (SELECT VARIABLE_VALUE FROM performance_schema.global_status WHERE VARIABLE_NAME = "Innodb_buffer_pool_pages_dirty") /
-    (
-      1 +
-      (SELECT VARIABLE_VALUE FROM performance_schema.global_status WHERE VARIABLE_NAME = "Innodb_buffer_pool_pages_data") +
-      (SELECT VARIABLE_VALUE FROM performance_schema.global_status WHERE VARIABLE_NAME = "Innodb_buffer_pool_pages_free")
-    )
-  , 2) `dirty_pct`
-;
-```
-
 ### Dynamic SQL
 
 - `@SQL_STRING` must be either a literal, or a variable - functions are illegal;
@@ -1060,298 +1151,3 @@ EXECUTE pst_count;
 DEALLOCATE PREPARE pst_count;
 ```
 
-## Fulltext indexes
-
-### Stopwords
-
-Remember that disabling stopwords requires index rebuild, as the stopwords apply to build, not search; if, say, `innodb_ft_enable_stopword` is set to false, the index is built, and `innodb_ft_enable_stopword` is set to true, stopwords will not be used.
-
-There are two alternatives to disable stopwords:
-
-```sql
-# Disable stopwords entirely
-#
-SET GLOBAL innodb_ft_enable_stopword = FALSE;
-
-# Create an empty stopwords table (this applies to InnoDB only)
-#
-CREATE TABLE my_stopwords LIKE INFORMATION_SCHEMA.INNODB_FT_DEFAULT_STOPWORD; # the name is arbitrary
-ALTER TABLE my_stopwords ENGINE=InnoDB; # otherwise leaves it as memory table
-SET GLOBAL innodb_ft_server_stopword_table = 'mydb/my_stopwords';
-```
-
-If emails have to be stored, they can't be queried like `"my@email"*`; a workaround is to identify emails (when storing and searching), and replace symbols with `_`, which is an allowed character.
-
-### Symbols handling
-
-Symbols are not stored in FT indexes, with the exception of `_`; for this reason, any (other) symbol is treated as space:
-
-```sql
-CREATE TABLE test (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  str VARCHAR(255),
-  FULLTEXT (str)
-);
-
-INSERT INTO test (str) VALUES ('foo bar'), ('foo_bar'), ('foo@bar'), ('foo=bar');
-
-SELECT * FROM test WHERE MATCH(str) AGAINST ('"foo bar"' IN BOOLEAN MODE);
--- +----+---------+
--- |  1 | foo bar |
--- |  3 | foo@bar |
--- |  4 | foo=bar |
--- +----+---------+
-
-SELECT * FROM test WHERE MATCH(str) AGAINST ('"foo_bar"' IN BOOLEAN MODE);
--- +----+---------+
--- |  2 | foo_bar |
--- +----+---------+
-
-SELECT * FROM test WHERE MATCH(str) AGAINST ('"foo@bar"' IN BOOLEAN MODE);
--- +----+---------+
--- |  1 | foo bar |
--- |  3 | foo@bar |
--- |  4 | foo=bar |
--- +----+---------+
-```
-
-### Manipulate search relevance for multiple columns (boosting)
-
-Create three indexes: on the two individual columns, and on both.
-
-```sql
-# If searching in boolean mode, specify it for all the MATCH clauses!
-#
-SELECT id
-FROM mytable
-WHERE MATCH (col1, col2) AGAINST (@keyword)
-ORDER BY
-  5 * MATCH (col1) AGAINST (@keyword) + MATCH (col2) AGAINST (@keyword) DESC;
-```
-
-### Maintenance
-
-```sql
-SET GLOBAL innodb_ft_aux_table = 'db/table';
-
-# Check unmerged insertions+updates / deletes
-#
-SELECT COUNT(*) FROM INFORMATION_SCHEMA.INNODB_FT_INDEX_CACHE
-UNION ALL
-SELECT COUNT(*) FROM INFORMATION_SCHEMA.INNODB_FT_DELETED;
-```
-
-## Replication
-
-```sql
--- The `SLAVE` definiton has been deprecated.
---
-SHOW REPLICA STATUS\G
-```
-
-Gather the replication status via SELECT:
-
-```sql
--- `ON`/`OFF` (enum).
---
-SELECT SERVICE_STATE FROM performance_schema.replication_applier_status;
-
--- Another replication metadata table is `performance_schema.replication_connection_status`.
-```
-
-## Administration
-
-### Logging/monitors
-
-```sql
--- The general log includes a lot of stuff (including, all the queries).
---
-SET GLOBAL log_output = 'FILE';
-SET GLOBAL general_log_file = 'general.log'; -- with FILE output, this is mandatory
-SET GLOBAL general_log = 'ON';
-
--- Log deadlocks in the error log.
---
-SET GLOBAL innodb_print_all_deadlocks = ON;
-```
-
-Monitors affect performance, so they should be enabled only for debugging:
-
-```sql
--- Enable periodic (every 15") general monitor output.
---
-SET GLOBAL innodb_status_output = ON;
-
--- Enable lock monitor output in the InnoDB engine status, and the periodic output (the latter requires `innodb_status_output=ON`).
---
-SET GLOBAL innodb_status_output_locks = ON;
-```
-
-### Non-blocking schema changes
-
-Gh-ost (works also on tables with triggers).
-
-This is the configuration for running it on the master (has more overhead than running from the slave); with `--execute`, changes are applied, and the old table is kept, without it, changes are not applied:
-
-```sh
-gh-ost \
-  --user=$USER --password=$PWD --host=localhost \
-  --database=$DB --table=comments \
-  --alter="ENGINE=InnoDB" \
-  --exact-rowcount --verbose \
-  --allow-on-master \
-  --execute \
-;
-```
-
-`pt-online-schema-change` doesn’t work on tables with triggers; crashed on production:
-
-```sh
-pt-online-schema-change --execute --alter "MODIFY section VARCHAR(40) NOT NULL DEFAULT ''" D=db_name,t=table_name,u=root,p=root_pwd
-```
-
-### Observe ALTER TABLE progress
-
-Reference: https://dev.mysql.com/doc/refman/8.0/en/monitor-alter-table-performance-schema.html
-
-Example of ALTER TABLE monitoring, at different stages; test estimation is updated (increased) between stages:
-
-```sql
-SELECT EVENT_NAME, WORK_COMPLETED, WORK_ESTIMATED FROM performance_schema.events_stages_current;
-
--- +------------------------------------------------------+----------------+----------------+
--- | EVENT_NAME                                           | WORK_COMPLETED | WORK_ESTIMATED |
--- +------------------------------------------------------+----------------+----------------+
--- | stage/innodb/alter table (read PK and internal sort) |         155094 |        7904880 |
--- +------------------------------------------------------+----------------+----------------+
-
--- +----------------------------------+----------------+----------------+
--- | EVENT_NAME                       | WORK_COMPLETED | WORK_ESTIMATED |
--- +----------------------------------+----------------+----------------+
--- | stage/innodb/alter table (flush) |        7054880 |        7901111 |
--- +----------------------------------+----------------+----------------+
-```
-
-The `alter table (flush)` stage empirically took from 10% to 100% of the total time before that stage.
-
-Only the last stage `log apply table` causes contention; on the longest occurrence, it took ≈2.4% of the total time (44/1858").
-
-## Client/server
-
-### Find configuration files used
-
-```sh
-ls -l $(mysqld --verbose --help | awk "/Default options/ { getline; gsub(\"~\", \"$HOME\", \$0); print }") 2> /dev/null
-```
-
-## Database metadata
-
-Space occupation of InnoDB indexes (data):
-
-```sql
-# Remember that the table data is the primary index!
-#
-SELECT index_name, stat_value*@@innodb_page_size `size`
-FROM mysql.innodb_index_stats
-WHERE stat_name = 'size'
-     AND (database_name, table_name) = ('my_db', 'my_table')
-ORDER BY index_name;
-```
-
-Find the foreign keys for a table/column:
-
-```sql
-SELECT TABLE_NAME, COLUMN_NAME, CONSTRAINT_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME
-FROM information_schema.KEY_COLUMN_USAGE
-WHERE (REFERENCED_TABLE_SCHEMA, TABLE_NAME, COLUMN_NAME) = ('my_db', 'my_table', 'my_column');
-```
-
-## Convenient operations
-
-### Skip the indexes on mysqldump dumps
-
-Replace keys with null operations; valid alternatives:
-
-- on `ALTER TABLE`
-  - `ALGORITHM=DEFAULT`
-  - `LOCK=DEFAULT`
-  - `ENABLE KEYS`
-  - `ADD CHECK (TRUE)` : adds a check
-- on `CREATE TABLE`
-  - `CHECK (TRUE)` : adds a check
-
-`ALTER TABLE` key additions is produced by the Percona distro with `--innodb-optimize-keys`.
-
-We can't just remove the lines, because if they're at the end of the table def, they'll leave the previous statement with a terminating comma.  
-The leading comma could be deleted with some text processing trickery, but this solution is simpler.
-
-```sh
-mysqldump $db | perl -pe 's/^  (UNIQUE |FULLTEXT )?KEY.+?(,)?$/  CHECK(TRUE)$2'
-```
-
-## Mydumper/myloader
-
-```sh
-# Using chunked load is not worth. The dump requires more threads, since many queries will return no records.
-#
-# - account 004/226
-#   - rows 100k
-#     - dump: threads=16: 56",                 threads=4: 1'30"
-#     - load: threads=16: 37", threads=8: 46", threads=4: 1'29"
-#   - entire tables
-#     - dump: threads=16: 56",                 threads=4: 46"
-#     - load: threads=16: 43",                 threads=4: 1'25"
-#
-# --verbose $n   : output level; 3=info (each table operation is reported)
-# --compress-protocol : enable MySQL protocol compression
-# --lock-all-tables : important on RDS, since standard locking (FTWRL) doesn't work; locks only briefly,
-#                  at the beginning
-# --database $d  : important, otherwise, also the MySQL schemas are dumped
-# --nregex $r    : exclude by regex; '.*' prefix and suffix are implied; when using delimiters, remember
-#                  that the match is performed against the full name (db_name.table)
-#
-# --triggers     : dump triggers (off by default)
-#
-# --outputdir $d : default=export-$timestamp
-# --threads $n   : default=4
-# --logfile $f   : default=stdout
-# --rows $n      : set chunks to N rows; by default, tables are dumped in a single query
-# --chunk-filesize $n : set the chunk size to N megabytes; seems not to work as intended
-#
-# On verbose=3, tt's important to check the exit status, because mydumper will continue for some errors (e.g. where
-# condition causing an error), and at this level, the errors are not easy to spot.
-#
-mydumper \
-  -h $HOST -u $USER -p $PWD \
-  --verbose 3 \
-  --compress-protocol \
-  --lock-all-tables \
-  --threads 16 \
-  --database $SOURCE_DB \
-  --nregex '^$SOURCE_DB\.(table_prefix|table_name$)' \
-  --where 'tenant_id IN (64)' \
-  || echo 'Errors found!'
-
-# --source-db $src --database $dst : restore into a different db; WATCH OUT! $dst must exist, otherwise
-#                                    nothing is raised
-# --socket $f    : important
-# --innodb-optimize-keys : yay!
-# --overwrite-tables
-#
-# --threads $n   : default=4
-#
-# There are a few issues; see:
-#
-# - https://github.com/maxbube/mydumper/issues/468
-# - https://github.com/maxbube/mydumper/issues/469
-#
-myloader \
-  -u $USER --socket /tmp/mysql.sock \
-  --directory export-* \
-  --verbose 2 \
-  --source-db $SOURCE_DB --database $DEST_DB \
-  --innodb-optimize-keys \
-  --threads 16 \
-  --overwrite-tables \
-  || echo 'Errors found!'
-```
