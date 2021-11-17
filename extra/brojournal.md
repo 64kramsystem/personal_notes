@@ -1,3 +1,18 @@
+## Wed 17/Nov/2021
+
+- Projects
+  - ZFS installer
+    - [x] Review [support request](https://github.com/64kramsystem/zfs-installer/discussions/251)
+      - [x] Extend related message (and release new version)
+    - [x] Follow up on EFI issue
+- Blog
+  - Custom Linux Kernel compilation
+    - [x] Follow up discussion on modern tooling
+- Low-level programming
+  - Beginning x64 Assembly Programming
+    - [ ] Copy notes
+      - [x] Investigate Yet Another Error
+
 ## Tue 16/Nov/2021
 
 - Projects

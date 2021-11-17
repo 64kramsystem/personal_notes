@@ -170,9 +170,9 @@ COLUMN `my_column_str` VARCHAR(10) AS (my_column)
 
 ```sql
 TRIM(<expr>)                                       # Strips only spaces by default! Defaults to `BOTH` sides
-TRIM([BOTH|LEADING|TRAILING] str FROM <expr>)      # Strip characters; usable for newlines
+TRIM([BOTH|LEADING|TRAILING] str FROM <expr>)      # Strip characters; defaults to BOTH
 
-SUBSTR(`field` (FROM|,) @start (FOR|,) @len)       # @start = 1-based; if start < 0, start from the end
+SUBSTR(`field` (FROM|,) @start (FOR|,) @len)       # @start = 1-based; if start < 0, start from the end; end position is not supported
 
 INSTR(@str, @pattern)                              # 1-based; 0 if not found
 
@@ -180,11 +180,20 @@ CONCAT_WS(@separator, @fields..)                   # concatenate using the separ
 (L|U)CASE(@sstr)                                   # down/upcase
 ```
 
-`SUBSTR` doesn't support end position (only length). If one wants to strip values around a string, can use `TRIM`:
+Trimming/stripping:
 
 ```sql
-SELECT TRIM('"' FROM '"aa"aa"');
--- aa"aa
+# WATCH OUT:
+# - TRIM() strips only spaces
+# - When comparing strings, trailing space is implicitly stripped, so must use BINARY!
+
+# Strip a specific char
+#
+TRIM('"' FROM '"aa"aa"');
+
+# Strip all type of whitespace in an UPDATE
+#
+SET REGEXP_REPLACE(field, '^\\s+|\\s+$', '') WHERE BINARY field != REGEXP_REPLACE(field, '^\\s+|\\s+$', '');
 ```
 
 #### Character conversions
