@@ -182,8 +182,9 @@ Flags:
 
 - `clc`, `stc`    : Clear/Set Carry flag
 
-Bit manipulation:
+Bit testing/manipulation:
 
+- `test`          : Performs `and`, discards the result, and sets `SF`/`PF`/`ZF`
 - `setCC`         : Set operator to 1 if `CC` flag is set (omit the `F`, e.g. `setc`)
 - `bts/btr op, n` : Bit `n` set/reset
 - `bt op, reg`    : Test `reg`ᵗʰ bit (doesn't support immediate); stores byte 0/1 into operand
@@ -199,6 +200,11 @@ Floating-point:
 - `addsd`, `subsd`: Add/sub DP in `xmm`
 - `mulsd`, `divsd`: Multiply/divide DP in `xmm`
 - `sqrtsd`        : Square root DP in `xmm`
+
+Other:
+
+- `cpuid`         : Read CPU characteristics; requires mode in `eax` -> sets the result in `rcx`/`rdx`
+                    Infos here: https://exceptionshub.com/how-to-check-if-a-cpu-supports-the-sse3-instruction-set.html
 
 Trivial:
 
