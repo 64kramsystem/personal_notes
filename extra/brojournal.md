@@ -1,3 +1,9 @@
+## Thu 18/Nov/2021
+
+- Low-level programming
+  - Beginning x64 Assembly Programming
+    - [x] Copy notes
+
 ## Wed 17/Nov/2021
 
 - Projects

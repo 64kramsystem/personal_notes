@@ -28,6 +28,7 @@ section .data
                                                ; WATCH OUT! Don't forget `-1` (terminator) when printing
                                                ; a string
     myArr           times 5 dw 0               ; array of 5 words with value=0
+align 16                                       ; align section!
     %define pi      3.14                       ; define non-int pseudo-constants via macro (but they
                                                ; have slightly slightly different semantics)
 
@@ -35,6 +36,7 @@ section .data
 ; "Block Started by Symbol"
 ;
 section .bss
+alignb 16                                      ; BSS align uses a different keyword
     myres          resw 5                      ; 5 words
     msgFullLen     msgLen + 1                  ; constants can be used in declarations, anywhere a number
                                                ; is used
@@ -115,7 +117,23 @@ Stack alignment is required by some instructions; the stack frame is useful prim
 
 When there is complete control over a workflow (e.g. leaf routine), the two can be omitted.
 
-If one doesn't know the alignment state, he can use `AND rsp, 0xfffffffffffffff0`.
+If one doesn't know the alignment state, he can use:
+
+```asm
+; irreversible
+;
+and rsp, 0xfffffffffffffff0
+
+; reversible
+;
+xor r15, r15
+test rsp, 0xf        ; not aligned?
+setnz r15b           ; set if not aligned
+shl r15, 3           ; multiply by 8
+sub rsp, r15         ; substract 0 or 8
+call $myfunc
+add rsp, r15         ; add 0 or 8 to restore rsp
+```
 
 ## Addressing
 
@@ -123,6 +141,8 @@ If one doesn't know the alignment state, he can use `AND rsp, 0xfffffffffffffff0
 mov rsi, radius      ; WATCH OUT!! Stores *the address*
 mov rsi, [radius]    ; Dereferences an address (stores *the value*)
 lea rsi, [radius]    ; Stores the address
+
+push qword [radius]
 ```
 
 ## Registers/Flags
@@ -155,9 +175,27 @@ Flags:
 | Direction |   DF   |  10   | Direction of string operations (increment or decrement)          |
 | Overflow  |   OF   |  11   | Previous instruction resulted in overflow                        |
 
+FP/SSE registers:
+
+- `xmm` registers: can contain a scalar (e.g. a single float) or packed data:
+  - 4 * single precision
+  - 2 * double precision
+  - 16 * 8-bit
+  - 8 * 16-bit
+  - 4 * 32-bit
+  - 2 * 64-bit
+- `mxcsr`: control flags (lower 16 bits used)
+  - 0..5, 7..12 : errors (e.g. overflow) and corresponding masks
+  - 13, 14      : rounding behavior (nearest, down, up, truncate)
+  - 6, 15       : other flags
+
+AVX registers: 16 `ymm`, 256-bit
+
+AVX-512 registers: 32 `zmm`, 512-bit
+
 ## Instructions
 
-`DP` = Double Precision
+`SP`/`DP` = Single/Double Precision
 
 Control flow:
 
@@ -197,14 +235,29 @@ Bit testing/manipulation:
 
 Floating-point:
 
-- `addsd`, `subsd`: Add/sub DP in `xmm`
-- `mulsd`, `divsd`: Multiply/divide DP in `xmm`
-- `sqrtsd`        : Square root DP in `xmm`
+- `movss`              : Move scalar SP
+- `cvtss2sd`           : Convert scalar SP to scalar DP
+- `addsd`, `subsd`     : Add/sub DP in `xmm`
+- `mulsd`, `divsd`     : Multiply/divide DP in `xmm`
+- `sqrtsd`             : Square root DP in `xmm`
+- `ldmxcsr`, `stmxcsr` : Load/store `mxcsr` (32-bit)
+
+SSE:
+
+- `mov[ua]p[sd]`         : Move Un/Aligned packed S/DP
+- `movdqa`               : Move Double int Aligned (4 sizes)
+- `addp[sd]`             : Add Packed S/DP
+- `paddd`                : Packed Add Double int (4 sizes)
+- `pextrd reg, xmm, pos` : Packed Extract Double int at (xmm) Pos into reg (4 sizes)
+- `pinsrd xmm, reg, pos` : Packed Insert reg into (xmm) Pos Double int (4 sizes)
 
 Other:
 
 - `cpuid`         : Read CPU characteristics; requires mode in `eax` -> sets the result in `rcx`/`rdx`
                     Infos here: https://exceptionshub.com/how-to-check-if-a-cpu-supports-the-sse3-instruction-set.html
+- `rdtsc`         : Start timing; store timestamp into `edx`:`eax`; must precede with a serializing instruction
+                    (e.g. `cpuid`), in order to prevent out-of-order execution (which would hamper the timing precision)
+- `rdtscp`        : Stop timing; store timestamp into `edx`:`eax`; must be followed by a serializing instruction
 
 Trivial:
 
@@ -272,6 +325,8 @@ Linux x86-64 syscalls: http://blog.rchapman.org/posts/Linux_System_Call_Table_fo
 - I/O symbols: `/usr/include/asm-generic/fcntl.h` (WATCH OUT: `0nn` is octal)
 
 WATCH OUT! Syscalls are different between 32 and 64 bits.
+
+In Windows, "syscalls" are internal; one uses the Windows API.
 
 ## NASM Preprocessor directives/Macros
 
