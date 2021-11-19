@@ -30,7 +30,7 @@
   - [Associative arrays](#associative-arrays)
   - [Shellcheck](#shellcheck)
   - [Script operational concepts/Useful scripts](#script-operational-conceptsuseful-scripts)
-    - [Split a string (via IFS) and cycle the tokens](#split-a-string-via-ifs-and-cycle-the-tokens)
+    - [Split a string](#split-a-string)
     - [Ask for input (keypress)](#ask-for-input-keypress)
     - [Trapping errors (hooks)](#trapping-errors-hooks)
     - [Log a script output/Enable debugging [log]](#log-a-script-outputenable-debugging-log)
@@ -722,8 +722,6 @@ myarray=(                           # create a filled array; space/newline is se
 )
 myarray2=("${myarray[@]}")          # copy an array
 
-coordinates=(${1//./ })             # split by `.` (bash) !!! use only for unspaced stuff !!!
-
 # More solid way of creating an array from a string.
 # `mapfile` is synonym of `readarray`.
 #
@@ -874,11 +872,21 @@ run shellcheck with the options:
 
 ## Script operational concepts/Useful scripts
 
-### Split a string (via IFS) and cycle the tokens
+### Split a string
 
-Use IFS to tokenize a string with alternative characters (they're considered a set of **single** chars); **must** unset after:
+Cheap; can use only for unspaced stuff:
 
 ```sh
+coordinates=(${1//$delimiter/ }) # split by `.`
+```
+
+For a more solid solution, use `mapfile` (see [Arrays section](#arrays)).
+
+Via IFS (single-char):
+
+```sh
+# Use IFS to tokenize a string with alternative characters (they're considered a set of **single** chars); **must** unset after:
+
 IFS=",;"
 for token in $'a,b c;d\ne'; do echo "<$token>"; done
 # <a>
@@ -887,14 +895,24 @@ for token in $'a,b c;d\ne'; do echo "<$token>"; done
 # e>
 
 unset IFS
-```
 
-The `while/IFS/read` pattern has different semantics:
+# The `while/IFS/read` pattern has different semantics:
 
-```sh
 while IFS=",;" read -r t0 t1 t2; do echo "<$t0><$t1><$t2>"; done <<< $'a,b c;d\ne'
 # <a><b c><d>
 # <e><><>
+```
+
+Via while + Bash string replace (multi-char):
+
+```sh
+# Clever; consumes the input string:
+
+result=()
+while [[ -n $input ]]; do
+  result+=("${input%%"$delimiter"*}")
+  input=${input#*"$delimiter"}
+done
 ```
 
 ### Ask for input (keypress)
