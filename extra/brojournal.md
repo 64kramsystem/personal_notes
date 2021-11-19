@@ -1,3 +1,23 @@
+## Fri 19/Nov/2021
+
+- Tools
+  - [x] Brogramming transcriber
+    - [x] Add splitting of an entry, when there is a delimiter (`: `)
+- SWE
+  - The Programmer's Brain
+    - [x] 2. Speed reading for code
+- Gamedev
+  - [x] Review Carmack's post [Wine <> Native ports](https://www.reddit.com/r/linux/comments/17x0sh/comment/c89sfto)
+- Projects
+  - ZFS installer
+    - Issue: [Redundant 'EFI' does not work](https://github.com/64kramsystem/zfs-installer/discussions/249)
+      - [x] Try to reproduce
+      - [x] Discuss
+  - TenderJIT
+    - [x] Fight download streams
+- Writings
+  - [x] Article: Beginning x64 Assembly Programming Errata
+
 ## Thu 18/Nov/2021
 
 - Low-level programming
