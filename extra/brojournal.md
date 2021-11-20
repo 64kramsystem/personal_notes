@@ -1,3 +1,14 @@
+## Sat 20/Nov/2021
+
+- Writings
+  - [x] Add another erratum to the "Beginning x64 Assembly Programming Errata" article
+- Projects
+  - TenderJIT
+  - [ ] Watch TenderJIT Webcasts
+    - [ ] Episode 01
+- Planning
+  - [ ] Large review, update and reorganization of the brogramming pools
+
 ## Fri 19/Nov/2021
 
 - Tools

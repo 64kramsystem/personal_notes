@@ -5,6 +5,7 @@
   - [Compile with custom options](#compile-with-custom-options)
   - [JIT](#jit)
     - [Create an executable buffer, via Fiddle](#create-an-executable-buffer-via-fiddle)
+  - [Crabstone disassembly](#crabstone-disassembly)
 
 ## Disassemble code
 
@@ -72,4 +73,14 @@ end
 buffer = allocate_buffer 4096
 # ... fill the buffer ...
 buffer.to_function([], TYPE_VOID).call
+```
+
+## Crabstone disassembly
+
+```rb
+cs = Crabstone::Disassembler.new(Crabstone::ARCH_X86, Crabstone::MODE_64)
+
+cs.disasm(buffer.string[0, pos], 0x0000).each do |i|
+  printf "%#04x:\t%s\t\t%s\n", i.address, i.mnemonic, i.op_str
+end
 ```
