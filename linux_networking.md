@@ -11,6 +11,7 @@
     - [PGP (GnuPG/gpg)](#pgp-gnupggpg)
       - [Key servers](#key-servers)
     - [Samba (SMB)](#samba-smb)
+  - [Network manager client (`nmcli`)](#network-manager-client-nmcli)
   - [Lower level networking](#lower-level-networking)
     - [SSL](#ssl)
     - [DNS](#dns)
@@ -84,7 +85,6 @@ curl -H 'Accept: application/halo+json' "$URL"
 - `-l|--links`     : copy symlinks as symlinks
 - `-r`             : recursive
 - `-z`             : compress
-
 
 `-ptgoD`				  : preserve [p]ermissions, modification [t]imes, [g]roup, [o]wner (super user only), [D]evices/specials
 `-HAX`            : preserve [H]ard links, [A]cls (implies -p), e[X]tended attributes
@@ -307,6 +307,19 @@ perl -i -pe 's/(\[global\]\n)/$1        min protocol = SMB2_10\n/'
 smbpasswd -a myuser		# set this if a user was configured
 
 systemctl restart smbd
+```
+
+## Network manager client (`nmcli`)
+
+```sh
+# Connect to networkg; the command is synchronous.
+#
+nmcli con up id $conn_id
+
+# If the connection is not active, there is no output.
+# Exit status is success in either in/active case.
+#
+nmcli con show --active $conn_id
 ```
 
 ## Lower level networking
