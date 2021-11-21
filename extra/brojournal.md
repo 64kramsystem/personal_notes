@@ -1,3 +1,23 @@
+## Sun 21/Nov/2021
+
+- Projects
+  - TenderJIT
+    - [ ] Watch TenderJIT Webcasts
+      - [ ] Episode 01
+    - [x] Extend Runtime test suite functionality (and add supporting changes)
+      - [x] Brutal fight with 64-bit addressing niggles
+      - [x] Investigate unexpected build failure not in dev
+- Tools
+  - Connections handler
+    - [x] Merge two scripts into one
+    - [x] Handle other service, and pause before disconnecting
+- Planning
+  - [x] Large review, update and reorganization of the brogramming pools
+- Open source
+  - MyDumper
+    - [x] Discuss FK checks bug
+      - [x] Test alternate procedures, and provide super simple one
+
 ## Sat 20/Nov/2021
 
 - Writings

@@ -28,7 +28,10 @@ Disassemble/Inspect/Modify:
 
 ```sh
 di -b -s 0x1eb8 -c 20 # disassemble --bytes --start-address 0x1eb8 --count 20
+
 m rea $rdi-8          # memory read
+m rea -s 8 -f x $rsp  # read with a size of 8 bytes, format hex (ie. display qwords)
+
 re re [$reg]          # register(s) read
 re wr $reg $val       # register write
 ```
