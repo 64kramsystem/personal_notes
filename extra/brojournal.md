@@ -1,3 +1,20 @@
+## Mon 22/Nov/2021
+
+- Open source
+  - ZFS installer
+    - [x] README: Add project status section, and extend stability section
+- Projects
+  - TenderJIT
+    - [ ] Watch TenderJIT Webcasts
+      - [x] Episode 01
+      - [ ] Episode 02
+    - [x] Discuss [Ruby version support](https://github.com/tenderlove/tenderjit/discussions/98)
+- Planning
+  - [x] Arrange long term view prospects
+- SWE
+  - The Programmer's Brain
+    - [ ] 3. How to learn programming syntax quickly
+
 ## Sun 21/Nov/2021
 
 - Projects

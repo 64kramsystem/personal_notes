@@ -16,6 +16,8 @@
   - [NASM Preprocessor directives/Macros](#nasm-preprocessor-directivesmacros)
   - [C Integration (inline assembly)](#c-integration-inline-assembly)
   - [Utilities](#utilities)
+  - [General concepts](#general-concepts)
+    - [JIT and calls](#jit-and-calls)
 
 ## Basic structure
 
@@ -426,3 +428,12 @@ readelf --symbols $file | tail +10 | sort -k 2 -r
 #
 objdump -M intel -d $file
 ```
+
+## General concepts
+
+### JIT and calls
+
+See epic posts:
+
+- https://stackoverflow.com/questions/54947302/handling-calls-to-potentially-far-away-ahead-of-time-compiled-functions-from-j
+- https://stackoverflow.com/questions/19552158/call-an-absolute-pointer-in-x86-machine-code
