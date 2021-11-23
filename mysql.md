@@ -327,13 +327,13 @@ GREATEST|LEAST(@values...)           # min/max on multiple values
 
 Metacharacters/functionalities supported:
 
-- `^ $ . * + ? | {} [] \b \w \s \S`
+- `^ $ . * + ? | {} [] \b \w \d \s \S`
 - `()` but not with groups capturing
 - `[:digit:]` and so on
+- `\w \d` matches inside character classes
 
-Note supported:
+Not supported:
 
-- `\w` match inside character class
 - backreferences
 - lookahead
 
@@ -666,7 +666,7 @@ ORDER BY
   5 * MATCH (col1) AGAINST (@keyword) + MATCH (col2) AGAINST (@keyword) DESC;
 ```
 
-Keep in mind that this has the overhead of 3 fulltext searches. If one simply needs to put the results of one search before the other, then use hardcoded ranking:
+Keep in mind that the above has the overhead of 3 fulltext searches. If one simply needs to put the results of one search before the other, then use hardcoded ranking:
 
 ```sql
 WITH
