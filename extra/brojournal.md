@@ -1,3 +1,24 @@
+## Tue 23/Nov/2021
+
+- Open source
+  - Schedule manager
+    - [x] Add work task comment option
+  - Mydumper
+    - [x] Discuss the issue workaround options
+- Projects
+  - TenderJIT
+    - [ ] Watch TenderJIT Webcasts
+      - [ ] Episode 02
+    - [x] Prepare for testing optcarrot with TJ
+- SWE
+  - The Programmer's Brain
+    - [ ] 3. How to learn programming syntax quickly
+      - [x] Try flash card programs
+      - [x] Start storing some cards
+      - [x] Report Anki bug
+        - [x] Follow-up with developer: test on alternate client
+        - [x] Report on forum
+
 ## Mon 22/Nov/2021
 
 - Open source
