@@ -207,7 +207,7 @@ mysqldump $db | perl -pe 's/^  (UNIQUE |FULLTEXT )?KEY.+?(,)?$/  CHECK(TRUE)$2'
 # --verbose $n   : output level; 3=info (each table operation is reported)
 # --compress-protocol : enable MySQL protocol compression
 # --lock-all-tables : important on RDS, since standard locking (FTWRL) doesn't work; locks only briefly,
-#                  at the beginning
+#                  at the beginning (see https://answers.launchpad.net/mydumper/+question/236273)
 # --database $d  : important, otherwise, also the MySQL schemas are dumped
 # --nregex $r    : exclude by regex; '.*' prefix and suffix are implied; when using delimiters, remember
 #                  that the match is performed against the full name (db_name.table)
@@ -215,6 +215,7 @@ mysqldump $db | perl -pe 's/^  (UNIQUE |FULLTEXT )?KEY.+?(,)?$/  CHECK(TRUE)$2'
 # --triggers     : dump triggers (off by default)
 #
 # --outputdir $d : default=export-$timestamp
+# --no-data
 # --threads $n   : default=4
 # --logfile $f   : default=stdout
 # --rows $n      : set chunks to N rows; by default, tables are dumped in a single query
@@ -247,6 +248,8 @@ mydumper \
 # - https://github.com/maxbube/mydumper/issues/468
 # - https://github.com/maxbube/mydumper/issues/469
 #
+# Also, as of v0.11.2, on a test db, an error exit status is returned, even if no errors are displayed.
+#
 myloader \
   -u $USER --socket /tmp/mysql.sock \
   --directory export-* \
@@ -254,6 +257,5 @@ myloader \
   --source-db $SOURCE_DB --database $DEST_DB \
   --innodb-optimize-keys \
   --threads 16 \
-  --overwrite-tables \
-  || echo 'Errors found!'
+  --overwrite-tables
 ```

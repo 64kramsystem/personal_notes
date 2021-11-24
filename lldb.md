@@ -1,8 +1,16 @@
 # lldb
 
 - [lldb](#lldb)
+  - [To review](#to-review)
   - [Misc](#misc)
   - [Common commands](#common-commands)
+
+## To review
+
+- `bt`: backtrace
+- `f`: frame
+- `p`: print
+- `rp`: Ruby print (from ``misc/lldb_cruby.py``)
 
 ## Misc
 

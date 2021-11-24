@@ -1,3 +1,15 @@
+## Wed 24/Nov/2021
+
+- Projects
+  - TenderJIT
+    - [ ] Watch TenderJIT Webcasts
+      - [x] Episode 02
+      - [ ] Episode 03
+- Ruby
+  - Investigate Solargraph YARD methods documentation
+    - [x] Try on TenderJIT
+    - [x] Brutal fight with vscode-solargraph performance investigation
+
 ## Tue 23/Nov/2021
 
 - Open source

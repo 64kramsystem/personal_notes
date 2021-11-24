@@ -1,9 +1,12 @@
 # TenderJIT
 
 - [TenderJIT](#tenderjit)
-  - [General notes](#general-notes)
+  - [Old notes (to review)](#old-notes-to-review)
+  - [Debug mode](#debug-mode)
+  - [Generic design](#generic-design)
+  - [Useful patterns](#useful-patterns)
 
-## General notes
+## Old notes (to review)
 
 - `yjit/yjit_codegen.c` -> code generator (equivalent of `ISEQCompiler`)
 
@@ -25,3 +28,26 @@
   - TenderJIT doesn't advance PC and SP!
     - so they may not represent reality
     - they need to be adjusted before returning control
+
+## Debug mode
+
+Command: `ruby -d`
+
+- The address on the right is of the method to executed instruction belongs to
+- `NEW ISEQ Compiler` -> means recursively compiled new method
+
+## Generic design
+
+The are two compilers:
+
+- an instant one (`handle_*`)
+- a deferred one
+
+the deferred one executes when a method is invoked, since it needs to figure out the receiving object.
+
+## Useful patterns
+
+```rb
+klass_addr = rb.rb_class_of(recv) # returns the pointer
+puts Fiddle.dlunwrap(klass_addr)  # find the class; in general, `dlunwrap` returns the object at the given address
+```
