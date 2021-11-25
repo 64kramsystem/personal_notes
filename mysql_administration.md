@@ -18,13 +18,27 @@
 
 ## Privileges
 
+The user format is `name[@'host']`
+
 ```sql
-SHOW GRANTS for <user>[@'<host>']\G
+-- `PASSOWRD EXPIRE` makes the user choose the password on first connection.
+--
+CREATE USER @user IDENTIFIED BY @pwd PASSWORD EXPIRE;
+
+-- Change user properties, including pwd.
+--
+ALTER USER @user IDENTIFIED BY @pwd PASSWORD EXPIRE;
+
+GRANT SELECT ON mydb.* TO @user;
+
+SHOW GRANTS for @user\G
 
 -- *************************** 1. row ***************************
 -- Grants for user@%: GRANT SELECT, .. ON *.* TO `user`@`1.2.3.4` WITH GRANT -- OPTION
 -- *************************** 2. row ***************************
 -- Grants for user@%: GRANT APPLICATION_PASSWORD_ADMIN, ... ON *.* TO `user`@`1.2.3.4` WITH GRANT OPTION
+
+DROP USER @user;
 ```
 
 ## (Status) Variables

@@ -1,3 +1,11 @@
+## Thu 25/Nov/2021
+
+- Ruby
+  - [x] Open `vscode-solargraph` issue about performance inconsistency
+- SWE
+  - The Programmer's Brain
+    - [x] 3. How to learn programming syntax quickly
+
 ## Wed 24/Nov/2021
 
 - Projects
