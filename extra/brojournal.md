@@ -1,3 +1,9 @@
+## Fri 26/Nov/2021
+
+- SWE
+  - The Programmer's Brain
+  - [ ] 4. How to read complex code
+
 ## Thu 25/Nov/2021
 
 - Ruby
