@@ -1,3 +1,10 @@
+## Sat 27/Nov/2021
+
+- SWE
+  - The Programmer's Brain
+  - [x] 4. How to read complex code
+  - [ ] 5. Reaching a deeper understanding of code
+
 ## Fri 26/Nov/2021
 
 - SWE
