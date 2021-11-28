@@ -1,3 +1,9 @@
+## Sun 28/Nov/2021
+
+- SWE
+  - The Programmer's Brain
+  - [ ] 5. Reaching a deeper understanding of code
+
 ## Sat 27/Nov/2021
 
 - SWE
