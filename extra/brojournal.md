@@ -1,3 +1,12 @@
+## Tue 30/Nov/2021
+
+- Projects
+  - TenderJIT
+    - [x] Review Ruby jokes code compilation
+- SWE
+  - The Programmer's Brain
+    - [ ] 5. Reaching a deeper understanding of code
+
 ## Sun 28/Nov/2021
 
 - SWE

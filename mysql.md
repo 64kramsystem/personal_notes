@@ -5,6 +5,7 @@
   - [Data types](#data-types)
     - [`CHAR`](#char)
   - [SELECT multiple rows from literals (convert scalars to rows)](#select-multiple-rows-from-literals-convert-scalars-to-rows)
+    - [`DATETIME`/`TIMESTAMP`](#datetimetimestamp)
   - [ORDER BY](#order-by)
   - [Control flow](#control-flow)
   - [ALTER TABLE](#alter-table)
@@ -89,6 +90,12 @@ FROM (
 ) `alias` -- append `(col_name)` to set the column name
 ;
 ```
+
+### `DATETIME`/`TIMESTAMP`
+
+- From 8.0.19, `DATETIME`/`TIMESTAMP` allow specifying the TZ on value initialization (e.g. `2020-01-01 10:10:10+05:30`)
+- `TIMESTAMP` converts to UTC when storing, then back; if the time zone setting changes between storage/retrieval, the value will be different
+- `DATETIME` converts the TZ *only* if explicit; it never converts on retrieval
 
 ## ORDER BY
 
@@ -279,6 +286,8 @@ STR_TO_DATE(@date, @format);
 - `%Y` : Year, numeric, four digits
 - `%y` : Year, numeric (two digits)
 - `%%` : A literal "%" character
+
+There's no `%z` (time zone)!
 
 ```sql
 # 0427 = Sunday
