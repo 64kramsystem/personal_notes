@@ -28,7 +28,7 @@
     - [Operations](#operations)
     - [Calendar](#calendar)
   - [Images handling](#images-handling)
-    - [Imagemagick](#imagemagick)
+    - [Imagemagick (convert)](#imagemagick-convert)
     - [Raw to JPEG conversion](#raw-to-jpeg-conversion)
   - [Formatting/diff operations](#formattingdiff-operations)
   - [Encoding](#encoding)
@@ -667,22 +667,7 @@ cal [[$month] $year]
 
 ## Images handling
 
-### Imagemagick
-
-Resample to 200 DPI (resample+units)
-
-- Darken midtones (level)
-- Converts format (.ext2)
-- Uses a compression quality of 85% (quality); JPEG default is 92%
-
-The used values are good for resizing, contrasting and compressing a scanned letter.
-See how to execute an operation on multiple files, while changing the extension, for batch conversion.
-
-```sh
-convert -resample 200 -units PixelsPerInch -level 0%,100%,0.5 -quality 85% "$input.ext1" "$output.ext2"
-```
-
-Other operations:
+### Imagemagick (convert)
 
 ```sh
 convert $input -flip -flop $output                # Rotate 180°
@@ -692,7 +677,27 @@ convert -coalesce animation.gif $output           # Split an animated gif into i
 convert -crop 3x3@ $input $prefix_%d.ext          # Simplest splitting of an image (3x3); see https://is.gd/cDPUxD
 ```
 
-Use coalesce, then, separately, resize, in order to resize an animated gif.
+In order to resize an animated gif, use `coalesce`, then, separately, `resize`.
+
+Create a PDF out of image files; even if there is a resize stage at the end, the images seem to be identical to the souce:
+
+```sh
+# WATCH OUT! For unclear reasons, v6.9.10-23, when the source files are not in the current directory, sometimes hangs.
+#
+# -monitor: display progress
+#
+convert -monitor *.jpg output.pdf
+```
+
+Preset for resizing, contrasting and compressing a scanned document:
+
+```sh
+# -resample/-units : resample to 200 DPI
+# -level           : darken midtones
+# -quality         : set compression quality; JPEG default is 92%
+#
+convert -resample 200 -units PixelsPerInch -level 0%,100%,0.5 -quality 85% "$input.ext1" "$output.ext2"
+```
 
 ### Raw to JPEG conversion
 

@@ -311,3 +311,7 @@ Tilix:
 Telnet:
 
 - `Ctrl+]` => `q`           Terminate session
+
+Feh:
+
+- `Ctrl+Del`                Delete image
