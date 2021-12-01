@@ -23,7 +23,7 @@
   - [Debian alternatives](#debian-alternatives)
   - [Environment](#environment)
     - [Available variables](#available-variables)
-    - [Shell (initscripts)](#shell-initscripts)
+    - [Shell (initscripts: bashrc, ...)](#shell-initscripts-bashrc-)
       - [Example cases](#example-cases)
       - [sudo -i, login shell test, and bash](#sudo--i-login-shell-test-and-bash)
   - [Handle system date/time](#handle-system-datetime)
@@ -591,7 +591,7 @@ Current user run dir:
 $XDG_RUNTIME_DIR
 ```
 
-### Shell (initscripts)
+### Shell (initscripts: bashrc, ...)
 
 There are two aspects of a shell:
 

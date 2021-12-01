@@ -42,8 +42,9 @@ The `git` command is implicit in all the examples, except where:
 
 ## General concepts
 
-- `Target branch` : git merge <target_branch>
+- `Target branch` : git merge $target_branch
 - `First parent`  : (of a merge) the current branch when doing a merge
+- `theirs`/`ours` : target/current branch, during a merge
 
 Conventions:
 
@@ -347,6 +348,7 @@ status -b --porcelain
 
 ```sh
 checkout (--ours|--theirs) $files   # resolve conflict using ours/theirs version
+merge -X ours|theirs                # solve merge conflicts using ours/theirs version
 ```
 
 Examples:
