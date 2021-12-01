@@ -1,3 +1,14 @@
+## Wed 01/Dec/2021
+
+- Open Source
+  - Schedule Manager
+    - [x] Check for `replan` token before moving the current date section
+- Admin
+  - System
+    - [x] Find clean strategy for loading `$HOME/.profile` on non-login shells
+  - Planning
+    - [x] Refine cycle schedule (especially practice)
+
 ## Tue 30/Nov/2021
 
 - Projects
@@ -6,6 +17,21 @@
 - SWE
   - The Programmer's Brain
     - [ ] 5. Reaching a deeper understanding of code
+
+## Cycle changes
+
+A weak week; took a break-ish in the second half. Sunk a whole evening into Ruby Solargraph hell (although it lead to better VSC Ruby editing).
+
+- Unscheduled
+  - Blog: Review and reply [Custom kernel build comment](https://tinyurl.com/yzn8w7g2)
+  - Tools
+    - Brogramming transcriber: Add splitting of an entry, when there is a delimiter (`: `)
+    - Connections handler: Refactoring and minor improvement
+  - Open Source: Schedule manager: Add work task comment option
+  - Writings: Article: Beginning x64 Assembly Programming Errata
+  - Ruby: Investigate Solargraph YARD methods documentation
+- Postponed
+  - (dropped) TenderJit: Implement unit test for unaligned failing call_cfunc
 
 ## Sun 28/Nov/2021
 
