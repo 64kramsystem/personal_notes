@@ -14,9 +14,10 @@
     - [Print a stack trace on segfault](#print-a-stack-trace-on-segfault)
   - [Make](#make)
   - [Configure/Compiler (gcc)](#configurecompiler-gcc)
-  - [Library issues](#library-issues)
+  - [Common issues](#common-issues)
     - [Error `glibconfig.h: No such file or directory`](#error-glibconfigh-no-such-file-or-directory)
     - [Error `cannot find install-sh, install.sh, or shtool in ...`](#error-cannot-find-install-sh-installsh-or-shtool-in-)
+    - [Error `multiple definition of '<variable>'` (linker)](#error-multiple-definition-of-variable-linker)
 
 ## Requirements
 
@@ -143,7 +144,7 @@ make distclean       # Remove `configure`+`make` output
 - `-static`         : compile statically
 - `-Dmacro[=value]` : define a macro (e.g. for `ifdef`); the option is cumulative
 
-## Library issues
+## Common issues
 
 ### Error `glibconfig.h: No such file or directory`
 
@@ -173,3 +174,7 @@ Execute:
 autoreconf -vif
 # follow up with ./configure etc.
 ```
+
+### Error `multiple definition of '<variable>'` (linker)
+
+Make the variable `static`.

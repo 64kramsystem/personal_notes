@@ -78,13 +78,22 @@ main:
 hello: hello.o
       gcc -o hello hello.o -no-pie
 
-# -f: output format
-# -g: add debug info
-# -F: debug info type
-# -l: generate list file
-#
 hello.o: hello.asm
+      # NASM
+      #
+      # -f: output format
+      # -g: add debug info
+      # -F: debug info type
+      # -l: generate list file
+      #
       nasm -f elf64 -g -F dwarf hello.asm -l hello.lst
+
+      # UASM
+      #
+      # -Zi3: debug info (max); no DWARF support
+      # -Fl: generate list file (!! the option must precede `hello.asm` !!)
+      #
+	    uasm -elf64 -Zi3 -Fl=hello.lst hello.asm
 ```
 
 Can add for convenience:
@@ -95,6 +104,9 @@ debug: hello
 
 run: hello
       ./hello
+
+clean:
+      rm -f hello hello.o hello.lst
 ```
 
 ## Data types
