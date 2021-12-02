@@ -1,3 +1,18 @@
+## Thu 02/Dec/2021
+
+- Tools
+  - [x] Search clipboard manager
+- Open Source
+  - Clipit
+    - [x] Investigate source code for "offline mode" feature
+      - [x] Explain on existing GitHub issue
+  - UASM
+    - [x] Investigate MASM alternatives on Linux
+    - [x] Create UASM fork, and fix it to work on modern Linux systems
+- Low-level Programming
+  - [ ] The Art of 64-Bit Assembly, Volume 1
+    - [ ] 1: Hello, World of Assembly Language
+
 ## Wed 01/Dec/2021
 
 - Open Source
