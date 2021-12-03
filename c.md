@@ -5,6 +5,7 @@
   - [Basics](#basics)
     - [Base program and functions](#base-program-and-functions)
       - [printf](#printf)
+  - [Preprocessor](#preprocessor)
   - [Stdlib](#stdlib)
     - [Env variables](#env-variables)
   - [Linux](#linux)
@@ -12,7 +13,7 @@
   - [Conveniences](#conveniences)
     - [Print a struct instances's bytes](#print-a-struct-instancess-bytes)
     - [Print a stack trace on segfault](#print-a-stack-trace-on-segfault)
-  - [Make](#make)
+    - [Find the current executable filename](#find-the-current-executable-filename)
   - [Configure/Compiler (gcc)](#configurecompiler-gcc)
   - [Common issues](#common-issues)
     - [Error `glibconfig.h: No such file or directory`](#error-glibconfigh-no-such-file-or-directory)
@@ -25,7 +26,7 @@ In all the examples (stdlib, linux...), the following inclusions are implied:
 
 ```c
 #include <stdio.h>   // printf(3)
-#include <stdlib.h>  // exit(3)`, EXIT_FAILURE
+#include <stdlib.h>  // exit(3), EXIT_FAILURE, system(3)
 ```
 
 The exit with error examples are intentionally simplified (no braces, messages, etc.).
@@ -35,9 +36,6 @@ The exit with error examples are intentionally simplified (no braces, messages, 
 ### Base program and functions
 
 ```c
-#include <fcntl.h>    // open(2), O_RDONLY, AT_FDCWD
-#include <unistd.h>   // read(2), close(2)
-
 int main(int argc, char **argv) {
   if (argc != 2) {
     fprintf(stderr, "Invalid number of command line arguments.\n");
@@ -47,15 +45,26 @@ int main(int argc, char **argv) {
   printf("123");
 
   system("ls -l /tmp");
-
-  int length = read(fd, buffer, EVENT_BUF_LEN);
-  close(fd);
 }
 ```
 
 #### printf
 
 - `lu/ld` long unsigned/signed
+
+## Preprocessor
+
+```c
+// Parentheses around the const are valid
+#
+#ifdef MYCONST
+#endif // MYCONST
+
+// Or (`||`) is also supported
+//
+#if defined MYCONST && defined MYCONST2
+#endif
+```
 
 ## Stdlib
 
@@ -130,14 +139,20 @@ Send the result to addr2line:
 a.out 2>&1 | perl -ne '/\(\+(0x\w+)\)/ && print("$1 ")' | xargs addr2line -e a.out
 ```
 
-## Make
+### Find the current executable filename
 
-```sh
-# Note that 'make' depends on the product of './configure'.
-#
-make clean           # Remove `make` output
-make distclean       # Remove `configure`+`make` output
+This is a simple and good enough solution, but for considerations about a very solid solution, see https://stackoverflow.com/a/34271901:
+
+```c
+char exe_filename[PATH_MAX];
+ssize_t len = readlink("/proc/self/exe", exe_filename, sizeof(exe_filename));
+if (len == -1 || len == sizeof(exe_filename)) {
+    len = 0;
+}
+exe_filename[len] = '\0';
 ```
+
+This is the equivalent of `_pgmptr`/`GetModuleFileName` on Windows.
 
 ## Configure/Compiler (gcc)
 

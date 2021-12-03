@@ -1,3 +1,25 @@
+## Fri 03/Dec/2021
+
+- Open Source
+  - ASM Code Lens
+    - [x] Add support for ASM in Markdown code fences (https://github.com/maziac/asm-code-lens/issues/63)
+- Projects
+  - UASM-linux
+    - [x] Update to v2.51, with Linux fixes
+      - [x] Linux Compatibility: Redefine _getcwd as getcwd
+      - [x] Clang compatibility: Cast `uint_8*` to `char*` for pointer arithmetic
+      - [x] Linux compatibility: Find the executable filename (equivalent of Windows' `_pgmptr`)
+      - [x] Linux compatiblity: Redefine _MAX_PATH as PATH_MAX
+      - [x] Makefile (Linux): Compile in C99 std, by removing `-ansi`
+    - [x] Update to v2.53 (no fixes required)
+    - [x] Add announcement post on the blog
+- Projects
+  - TenderJIT
+    - [x] Watch today's live stream
+- Low-level Programming
+- [ ] The Art of 64-Bit Assembly, Volume 1
+  - [ ] 1: Hello, World of Assembly Language
+
 ## Thu 02/Dec/2021
 
 - Tools

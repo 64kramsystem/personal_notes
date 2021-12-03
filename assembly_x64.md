@@ -1,8 +1,7 @@
-# Assembly x64 (NASM)
+# Assembly x64
 
-- [Assembly x64 (NASM)](#assembly-x64-nasm)
+- [Assembly x64](#assembly-x64)
   - [Basic structure](#basic-structure)
-    - [Makefile for compiling](#makefile-for-compiling)
   - [Data types](#data-types)
   - [Memory layout](#memory-layout)
   - [Stack alignment/frame](#stack-alignmentframe)
@@ -10,11 +9,7 @@
   - [Registers/Flags](#registersflags)
   - [Instructions](#instructions)
   - [Optimizations](#optimizations)
-  - [Functions/Access levels](#functionsaccess-levels)
-  - [C Calling convention (System V ABI)](#c-calling-convention-system-v-abi)
   - [Syscalls](#syscalls)
-  - [NASM Preprocessor directives/Macros](#nasm-preprocessor-directivesmacros)
-  - [C Integration (inline assembly)](#c-integration-inline-assembly)
   - [Utilities](#utilities)
   - [General concepts](#general-concepts)
     - [JIT and calls](#jit-and-calls)
@@ -22,31 +17,7 @@
 ## Basic structure
 
 ```asm
-; Data (optional): this section goes into the executable
-;
-section .data
-    msg             db "Hello world!", 0x0A, 0 ; any defined bytes sequence is called a "string"
-    msgLen          equ $ - msg - 1            ; constant (only for ints); `$` is the current address
-                                               ; WATCH OUT! Don't forget `-1` (terminator) when printing
-                                               ; a string
-    myArr           times 5 dw 0               ; array of 5 words with value=0
-align 16                                       ; align section!
-    %define pi      3.14                       ; define non-int pseudo-constants via macro (but they
-                                               ; have slightly slightly different semantics)
-
-; Reserved space (optional): not in the executable; initialized at runtime with 0s
-; "Block Started by Symbol"
-;
-section .bss
-alignb 16                                      ; BSS align uses a different keyword
-    myres          resw 5                      ; 5 words
-    msgFullLen     msgLen + 1                  ; constants can be used in declarations, anywhere a number
-                                               ; is used
-
-; Program code
-;
-section .text
-    global main
+; The other sections edited out; see notes for the specific assembler.
 
 main:
 ; Function prologue ("stack frame" setup)
@@ -68,45 +39,6 @@ main:
     mov            rax, 60     ; exit
     mov            rdi, 0      ; exit code
     syscall
-```
-
-### Makefile for compiling
-
-```makefile
-# - no-pie: makes debugging easier ("Position-Independent Executable"), and allows external functions.
-#
-hello: hello.o
-      gcc -o hello hello.o -no-pie
-
-hello.o: hello.asm
-      # NASM
-      #
-      # -f: output format
-      # -g: add debug info
-      # -F: debug info type
-      # -l: generate list file
-      #
-      nasm -f elf64 -g -F dwarf hello.asm -l hello.lst
-
-      # UASM
-      #
-      # -Zi3: debug info (max); no DWARF support
-      # -Fl: generate list file (!! the option must precede `hello.asm` !!)
-      #
-	    uasm -elf64 -Zi3 -Fl=hello.lst hello.asm
-```
-
-Can add for convenience:
-
-```
-debug: hello
-      lldb -o r ./hello
-
-run: hello
-      ./hello
-
-clean:
-      rm -f hello hello.o hello.lst
 ```
 
 ## Data types
@@ -236,7 +168,8 @@ Flags:
 
 Bit testing/manipulation:
 
-- `test`          : Performs `and`, discards the result, and sets `SF`/`PF`/`ZF`
+- `test`          : Performs `and`, discards the result, and sets `SF`/`PF`/`ZF` accordingly; can't be used to test
+                    if multiple bits are set (any one set will unset ZF)
 - `setCC`         : Set operator to 1 if `CC` flag is set (omit the `F`, e.g. `setc`)
 - `bts/btr op, n` : Bit `n` set/reset
 - `bt op, reg`    : Test `reg`ᵗʰ bit (doesn't support immediate); stores byte 0/1 into operand
@@ -286,51 +219,6 @@ Trivial:
 - `xor $reg, $reg`      : Fastest way to reset a register
 - `dec rcx; jnz $label` : Faster than `loop $label`!!!
 
-## Functions/Access levels
-
-```asm
-; External function.
-; WATCH OUT! Require PIE to be disabled.
-;
-extern printf
-
-; By making a function global, it can be also accessed from C, via `extern`.
-;
-global myvar         ; global variable
-global myfunc        ; global function
-
-; Function-private section; place it as any other function.
-;
-area:
-section .data
-    .pi  dq  3.141   ; local to area
-section .text
-    ; ... use .pi ...
-    ret
-```
-
-## C Calling convention (System V ABI)
-
-Pushes are required only if the regs are used in that scope.
-
-- caller:
-  - push `rdi`, `rsi`, `rdx`, `rcx`, `r8`, `r9`, `xmm0-7` (parameter regs; "caller saved")
-  - set parameter regs
-  - push additional params (in reverse order)
-  - callee:
-    - allocate local vars on the stack
-    - push `rbx`, `rbp`, `r12` .. `r15` ("callee saved")
-    - execute; retval: `rax`/`xmm0-1`
-    - pop callee saved regs
-    - deallocate local vars
-  - pop additional params
-  - pop caller saved regs
-
-Notes:
-
-- don't forget that `call`/`ret` push/pop `rip`
-- `r10`/`r11`, `xmm8-15` are not required to be saved
-
 ## Syscalls
 
 Linux x86-64 syscalls: http://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64
@@ -341,86 +229,6 @@ Linux x86-64 syscalls: http://blog.rchapman.org/posts/Linux_System_Call_Table_fo
 WATCH OUT! Syscalls are different between 32 and 64 bits.
 
 In Windows, "syscalls" are internal; one uses the Windows API.
-
-## NASM Preprocessor directives/Macros
-
-Conditional assembly:
-
-```asm
-; if O_READ != 0
-;
-%IF O_READ
-; conditional block
-%ENDIF
-```
-
-Macros (define before the data section):
-
-```asm
-; single line macro
-;
-%define double_it(r)    sal r, 1
-
-; multiline macro with 2 arguments
-;
-%macro prntf 2
-section .data
-    %%arg1    db    %1, 0           ; 1ˢᵗ macro argument
-    %%fmtint  db    "%s %ld", 10, 0 ; 2ⁿᵈ macro argument
-section .text
-    mov   rdi, %%fmtint
-    mov   rsi, %%arg1
-    mov   rdx, [%2]       ; second argument
-    mov   rax,0
-    call  printf
-%endmacro
-```
-
-## C Integration (inline assembly)
-
-"Extended" inline:
-
-```c
-// inline.c extract
-
-int x = 11, y = 12, product; // can be globals or locals
-
-// The metadata is optional, including the colons, but in some cases are required, e.g. `:::"rbx"`.
-//
-__asm__(
-  ".intel_syntax noprefix;"
-  "mov rbx, rdx;"
-  "imul rbx, rcx;"
-  "mov rax, rbx;"
-  :"=a"(product)   # output operands (rax)
-  :"d"(x), "c"(y)  # input operands (rdx, rcx)
-  :"rbx"           # clobbered regs; they're saved/restored by the compiler
-);
-
-printf("Product: %d\n", product);
-```
-
-Operand register constraints:
-
-- `a` => rax, eax, ax, al
-- `b` => rbx, ebx, bx, bl
-- `c` => rcx, ecx, cx, cl
-- `d` => rdx, edx, dx, dl
-- `S` => rsi, esi, si
-- `D` => rdi, edi, di
-- `r` => any register
-
-There is a basic inline, but it's more restricted.
-
-Required Makefile:
-
-```makefile
-# c files can be added to the gcc command, along the object files.
-# `-masm=intel` is required to use inline assembly with intel dialect.
-#
-hello: hello.o
-      gcc -o hello inline.c -masm=intel -no-pie
-```
 
 ## Utilities
 
