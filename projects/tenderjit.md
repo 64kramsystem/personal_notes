@@ -1,10 +1,33 @@
 # TenderJIT
 
 - [TenderJIT](#tenderjit)
+  - [New notes (to review)](#new-notes-to-review)
   - [Old notes (to review)](#old-notes-to-review)
   - [Debug mode](#debug-mode)
   - [Generic design](#generic-design)
   - [Useful patterns](#useful-patterns)
+
+## New notes (to review)
+
+- bt backtrace
+- f frame
+- p print
+- rp ruby print
+
+```
+# Kill self; get an extensive stack trace
+# Ruby will create a core dump
+irb> Process.kill 'SEGV', $$
+
+# Required  to create a core dump (check why)
+$ ulimit -c unlimited
+
+# Debug using a core dump
+$ lldb --core /path/to/core.dump ruby
+
+# Now can print the backtrace
+(lldb) bt
+```
 
 ## Old notes (to review)
 

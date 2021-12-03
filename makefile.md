@@ -16,6 +16,15 @@ Print variables during run (put this in a target):
 echo [CC: ${CC}] [LIBS: ${LIBS}] # etc.
 ```
 
+General tasks:
+
+```sh
+# Note that 'make' depends on the product of './configure'.
+#
+make clean           # Remove `make` output
+make distclean       # Remove `configure`+`make` output
+```
+
 ## Sample breakdown
 
 The makefile name can be `makefile` or `Makefile`
