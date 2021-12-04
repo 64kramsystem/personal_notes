@@ -20,8 +20,8 @@ Pushes are required only if the regs are used in that scope.
   - push additional params (in reverse order)
   - callee:
     - allocate local vars on the stack
-    - push `rbx`, `rbp`, `r12` .. `r15` ("callee saved")
-    - execute; retval: `rax`/`xmm0-1`
+    - push `rbx`, `rbp`, `r12-15` ("callee saved")
+    - execute; retval: `rax`, `xmm0`, `xmm1`
     - pop callee saved regs
     - deallocate local vars
   - pop additional params
@@ -30,7 +30,7 @@ Pushes are required only if the regs are used in that scope.
 Notes:
 
 - don't forget that `call`/`ret` push/pop `rip`
-- `r10`/`r11`, `xmm8-15` are not required to be saved
+- `r10`, `r11`, `xmm8-15` are not required to be saved
 
 ## Access ASM functions from C
 
