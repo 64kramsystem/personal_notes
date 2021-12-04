@@ -95,17 +95,17 @@ push qword [radius]
 
 General purpose registers:
 
-| 64-bit  | 32-bit | 16-bit | low  8-bit | high 8-bit |
+| 64-bit  | 32-bit | 16-bit | high 8-bit | low  8-bit |
 | :-----: | :----: | :----: | :--------: | :--------: |
-|   rax   |  eax   |   ax   |     al     |     ah     |
-|   rbx   |  ebx   |   bx   |     bl     |     bh     |
-|   rcx   |  ecx   |   cx   |     cl     |     ch     |
-|   rdx   |  edx   |   dx   |     dl     |     dh     |
-|   rsi   |  esi   |   si   |    sil     |     -      |
-|   rdi   |  edi   |   di   |    dil     |     -      |
-|   rbp   |  ebp   |   bp   |    bpl     |     -      |
-|   rsp   |  esp   |   sp   |    spl     |     -      |
-| r8..r15 |  rXd   |  rXw   |    rXb     |     -      |
+|   rax   |  eax   |   ax   |     ah     |     al     |
+|   rbx   |  ebx   |   bx   |     bh     |     bl     |
+|   rcx   |  ecx   |   cx   |     ch     |     cl     |
+|   rdx   |  edx   |   dx   |     dh     |     dl     |
+|   rsi   |  esi   |   si   |     -      |    sil     |
+|   rdi   |  edi   |   di   |     -      |    dil     |
+|   rbp   |  ebp   |   bp   |     -      |    bpl     |
+|   rsp   |  esp   |   sp   |     -      |    spl     |
+| r8..r15 |  rXd   |  rXw   |     -      |    rXb     |
 
 (r/e)ip is not considered general purpose.
 
@@ -120,6 +120,8 @@ Flags:
 |   Sign    |   SF   |   8   | Previous instruction resulted in most significant bit equal to 1 |
 | Direction |   DF   |  10   | Direction of string operations (increment or decrement)          |
 | Overflow  |   OF   |  11   | Previous instruction resulted in overflow                        |
+
+`OF`, `CF`, `SF` and `ZF` are called "condition flags".
 
 FP/SSE registers:
 
@@ -142,6 +144,8 @@ AVX-512 registers: 32 `zmm`, 512-bit
 ## Instructions
 
 `SP`/`DP` = Single/Double Precision
+
+There is only one instruction that supports a 64-bit constant (`mov reg64, imm64`).
 
 Control flow:
 
@@ -218,6 +222,7 @@ Trivial:
 - `enter 0,0`           : Slower than `push rbp` + `mov rbp, rsp`!
 - `xor $reg, $reg`      : Fastest way to reset a register
 - `dec rcx; jnz $label` : Faster than `loop $label`!!!
+- `mov $reg, $imm64`    : Preferrable to `lea reg, $addr`, but only for this case (see https://stackoverflow.com/a/35475959)
 
 ## Syscalls
 

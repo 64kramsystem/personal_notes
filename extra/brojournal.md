@@ -1,3 +1,19 @@
+## Sat 04/Dec/2021
+
+- Open Source
+  - ASM Code Lens
+    - [x] Research and discuss Markdown preview rendering
+- Low-level Programming
+  - [ ] The Art of 64-Bit Assembly, Volume 1
+    - [x] 1: Hello, World of Assembly Language
+    - [ ] 2: Computer Data Representation and Operations
+- SWE
+  - The Programmer's Brain
+    - [x] Copy remaining exercises from past chapters
+    - [x] 5. Reaching a deeper understanding of code
+    - [ ] 6. Getting better at solving programming problems
+  - [x] Read and analyze a randomization algorithm in Fish Fight
+
 ## Fri 03/Dec/2021
 
 - Open Source
