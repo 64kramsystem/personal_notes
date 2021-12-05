@@ -29,6 +29,17 @@ $ lldb --core /path/to/core.dump ruby
 (lldb) bt
 ```
 
+```
+# In theory, there can be more VMs
+p *ruby_current_vm_ptr
+
+# Get the object space
+p *ruby_current_vm_ptr->objspace
+
+# In upcoming Ruby versions, there are more object pools
+p ruby_current_vm_ptr->objspace->size_pools[0].eden_heap
+```
+
 ## Old notes (to review)
 
 - `yjit/yjit_codegen.c` -> code generator (equivalent of `ISEQCompiler`)

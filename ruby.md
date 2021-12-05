@@ -40,6 +40,7 @@
     - [Live execution, via `Kernel#system`](#live-execution-via-kernelsystem)
     - [Backticks](#backticks)
     - [Definitive way of capturing Ctrl+C (trap signals)](#definitive-way-of-capturing-ctrlc-trap-signals)
+  - [YARD documentation (+Solargraph)](#yard-documentation-solargraph)
   - [Misc](#misc)
     - [Terminal](#terminal)
     - [Poor man's deep_dup (deep duplicate objects)](#poor-mans-deep_dup-deep-duplicate-objects)
@@ -824,6 +825,36 @@ end
 ```
 
 Interrupt can still be regularly caught in some contexts, e.g. on `STDIN.gets`.
+
+## YARD documentation (+Solargraph)
+
+Standard tags:
+
+```rb
+# @return [String]
+#
+# Other types: `nil`, `self`, `void`.
+#
+def meth; 'str'; end
+
+# @return [Integer]
+attr_reader :number
+
+# @param val [Integer, String]
+def meth(val); val * 2; end
+
+# @yieldparam [String]
+def meth; yield 'str'; end
+```
+
+Solargraph extensions:
+
+```rb
+# @type [String]
+str = method_returning_string
+```
+
+[YARD](https://www.rubydoc.info/gems/yard/file/docs/Tags.md) and [Solargraph](https://solargraph.org/guides/yard) documentations.
 
 ## Misc
 

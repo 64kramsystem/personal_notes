@@ -47,6 +47,7 @@ The VIM section requires some cleanup.
 - `Ctrl+K, M`                 Select language mode
 
 - `Ctrl+Shift+O`              Go to symbol in current file (includes Markdown headers)
+- `Ctrl+T`                    Go to symbol in workspace
 - `Alt+(←/→)`               Navigate through history
 - `Ctrl+(↓/↑)`                 Scroll the viewport without moving the cursor
 - `F8`                        Show next warning/error
