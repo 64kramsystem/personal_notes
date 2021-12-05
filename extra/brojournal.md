@@ -1,3 +1,22 @@
+## Cycle and notes
+
+Resurrected from the break :) Nice open source production.
+
+Lessons: must be 100% sure of a problem, and have a very reproducible test case, before attacking it; wasted time due to working on the wrong-ish and nondeterministic problem with Solargraph.
+
+## Sun 05/Dec/2021
+
+- Projects
+  - Openscripts
+    - [x] Add script to convert .CBR to .PDF
+- SWE
+  - [x] Read https://docseuss.medium.com/look-what-you-made-me-do-a-lot-of-people-have-asked-me-to-make-nft-games-and-i-wont-because-i-m-29c7cfdbbb79
+  - [x] Read https://docseuss.medium.com/look-what-i-made-for-you-apparently-while-i-am-not-a-dumbass-many-cryptobros-are-and-i-am-going-f6468c877acc
+- Projects/SWE
+  - Solargraph
+    - [x] Study source code
+    - [x] Experiment to make go to definition faster
+
 ## Sat 04/Dec/2021
 
 - Open Source

@@ -39,6 +39,7 @@
       - [SMTP](#smtp)
     - [Ping (ICMP)](#ping-icmp)
     - [Convert curl request to Ruby](#convert-curl-request-to-ruby)
+  - [Solargraph](#solargraph)
   - [Databases](#databases)
     - [SQLite 3](#sqlite-3)
 
@@ -902,6 +903,19 @@ send_email(SENDER_EMAIL, RECIPIENT_EMAILS, email_text, password, cc: CC_EMAILS, 
 ### Convert curl request to Ruby
 
 See https://jhawthorn.github.io/curl-to-ruby.
+
+## Solargraph
+
+Base configuration (`.solargraph.yml` in project root):
+
+```yaml
+---
+include:
+- "**/*.rb"
+exclude:
+- lib/tenderjit/ruby/**/*
+- test/**/*
+```
 
 ## Databases
 
