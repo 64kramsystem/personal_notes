@@ -35,7 +35,7 @@ main:
     mov            rsp, rbp
     pop            rbp
 
-; Exit
+; Exit. At the top-level, can also exit with `mov al, 0; ret`
     mov            rax, 60     ; exit
     mov            rdi, 0      ; exit code
     syscall

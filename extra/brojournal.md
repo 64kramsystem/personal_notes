@@ -1,3 +1,21 @@
+## Mon 06/Dec/2021
+
+- Projects
+  - TenderJIT
+    - [ ] Watch TenderJIT Webcasts
+      - [ ] Episode 03
+- Projects
+  - QEMU/libvfio-user
+    - [x] Write about `libvfio-user` project
+- Low-level Programming
+  - [ ] The Art of 64-Bit Assembly, Volume 1
+    - [ ] 2: Computer Data Representation and Operations
+      - [x] Study
+        - [x] Fight verify erratum
+        - [x] Fight Search official errata
+          - https://randallhyde.com/Forum/viewtopic.php?f=27&t=66
+      - [x] Exercises
+
 ## Cycle and notes
 
 Resurrected from the break :) Nice open source production.
