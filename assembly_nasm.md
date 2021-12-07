@@ -3,8 +3,10 @@
 - [Assembly NASM](#assembly-nasm)
   - [Basic structure](#basic-structure)
     - [Makefile for compiling](#makefile-for-compiling)
+  - [Addressing syntax](#addressing-syntax)
   - [Functions/Public interfacing](#functionspublic-interfacing)
   - [Preprocessor directives/Macros](#preprocessor-directivesmacros)
+  - [Memory layout](#memory-layout)
 
 ## Basic structure
 
@@ -78,6 +80,12 @@ clean:
       rm -f hello hello.o hello.lst
 ```
 
+## Addressing syntax
+
+```asm
+push qword [radius]
+```
+
 ## Functions/Public interfacing
 
 ```asm
@@ -134,3 +142,13 @@ section .text
     call  printf
 %endmacro
 ```
+
+## Memory layout
+
+Low to high:
+
+- text (main)
+- data
+- bss
+- heap..stack
+- env vars, cmdline args

@@ -6,6 +6,7 @@
     - [Makefile for compiling](#makefile-for-compiling)
   - [Data types](#data-types)
   - [Public interfacing](#public-interfacing)
+  - [Memory layout](#memory-layout)
 
 ## Requirements
 
@@ -14,8 +15,17 @@ The reference is [assembly_nasm.md](assembly_nasm.md).
 ## Basic structure
 
 ```asm
-myConst1 equ 2             ; constant; can be located _anywhere_
-myconst  =   2             ; constant, other format
+myConst1 equ 2               ; constant; can be located _anywhere_
+myconst  =   2               ; constant, other format
+
+; sections may appear: in any order, and multiple times
+
+         .const              ; constants that occupy memory
+
+pi       real4 3.14159       ; must be initialized
+
+         .data?              ; uninitialized objects
+maybeVar db  ?
 
          .data
 
@@ -23,6 +33,13 @@ myVar    dw  0xCAFE
 myVar2   dq  ?               ; uninitialized value
 myStr    db  "a string", 0
 myArr    db  10 dup (?)      ; can use a: constant, initialized value(s)
+
+         align 4             ; align the following variable (1 to 16)
+myByte   db  0
+
+union1   label dword         ; labels don't occupy space themselves
+union2   label dword         ; tee-hee unions
+         dd  0
 
          .code
 
@@ -87,3 +104,14 @@ asmFunc  PROC
 
 asmFunc  ENDP
 ```
+
+## Memory layout
+
+Low to high:
+
+- O/S reserved
+- stack
+- heap
+- code
+- readonly
+- variables
