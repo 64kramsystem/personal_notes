@@ -3,9 +3,9 @@
 - [Assembly x64](#assembly-x64)
   - [Basic structure](#basic-structure)
   - [Data types](#data-types)
-  - [Memory layout](#memory-layout)
   - [Stack alignment/frame](#stack-alignmentframe)
   - [Addressing](#addressing)
+    - [Pages (MMU)](#pages-mmu)
   - [Registers/Flags](#registersflags)
   - [Instructions](#instructions)
   - [Optimizations](#optimizations)
@@ -46,17 +46,6 @@ main:
 - `db`, `dw`, `dd`, `dq`
 - `resb`, `resw`, `resres`, `resq`
 
-## Memory layout
-
-Low to high:
-
-- text (main)
-- data
-- bss
-- heap
-- stack
-- env vars, cmdline args
-
 ## Stack alignment/frame
 
 Stack alignment is required by some instructions; the stack frame is useful primarily for debuggers.
@@ -83,13 +72,27 @@ add rsp, r15         ; add 0 or 8 to restore rsp
 
 ## Addressing
 
+Syntax:
+
 ```asm
 mov rsi, radius      ; WATCH OUT!! Stores *the address*
 mov rsi, [radius]    ; Dereferences an address (stores *the value*)
 lea rsi, [radius]    ; Stores the address
-
-push qword [radius]
 ```
+
+Addressing modes (effective = end value):
+
+- Register          | `reg, reg`
+- PC-relative       | `op, symbol`                                 | WATCH OUT! The displacement is encoded, not the effective address!
+- Register-indirect | `[reg64], op`                                | Effective addr.
+- Indirect+offset   | `[reg64 ± displ]`                            | Effective addr.
+- Scaled-indexes    | `[base_reg64 + index_reg64 * scale ± displ]` | Effective addr.; scale = 1,2,4,8
+
+If `LARGEADDRESSAWARE` is disabled, other PC-relative addressing modes are available (e.g. `var[reg64]`), however, they can address only ±2 GB.
+
+### Pages (MMU)
+
+In x64, pages are 4k; they're managed by the MMU, and can be Read/Write/Executable.
 
 ## Registers/Flags
 
@@ -153,10 +156,19 @@ Control flow:
 - `enter 0,0`   : Prologue (same as `push rbp` + `mov rbp, rsp`) (see [performance](#optimizations))
 - `leave`       : Epilogue (same/performance as `mov rsp, rbp` + `pop rbp`)
 
+Conditional jump flags:
+
+- `jb`  / `jae` : `CF`             / `!CF`
+- `jbe` / `ja`  : `CF || ZF`       / `!CF && !ZF`
+- `jl`  / `jge` : `SF != OF`       / `SF == OF`
+- `jle` / `jg`  : `SF != OF || ZF` / `SF == OF && !ZF`
+
 Storage:
 
-- `mov`       : WATCH OUT! `mov eax, $val` clears the `rax` upper bits (mov `al`/`ax` doesn't)
-- `movsd`     : DP-float to/from `xmm`
+- `mov`            : WATCH OUT! `mov eax, $val` clears the `rax` upper bits (mov `al`/`ax` doesn't)
+- `movsd`          : DP-float to/from `xmm`
+- `push`/`pop`     : reg₁₆/₆₄, mem₁₆/₆₄; pop: const₆₄ (use `pushw` for const₁₆)
+- `pushfq`/`popfq` : rflags (eflags without `q`)
 
 Arithmetic:
 
@@ -165,23 +177,24 @@ Arithmetic:
 - `shr`       : Sets the high bit to 0
 - `imul`      : Multiply; result in `rdx`:`rax`
 - `idiv`      : Divide `rdx`:`rax`; result in `rax`, modulo in `rdx`
+- `neg`       : Two's complement negation
 
 Flags:
 
-- `clc`, `stc`    : Clear/Set Carry flag
+- `clc`, `stc`, `cmc` : Clear/Set/Complement the Carry flag
+- `sahf`, `lahf`      : (Store AH into/Load AH from) low 8 bit flags
 
 Bit testing/manipulation:
 
 - `test`          : Performs `and`, discards the result, and sets `SF`/`PF`/`ZF` accordingly; can't be used to test
                     if multiple bits are set (any one set will unset ZF)
-- `setCC`         : Set operator to 1 if `CC` flag is set (omit the `F`, e.g. `setc`)
+- `setCC`         : Set the (8-bit) operand to 1 if `CC` flag is set (omit the `F`, e.g. `setc`); DOES NOT reset the higher bits
 - `bts/btr op, n` : Bit `n` set/reset
-- `bt op, reg`    : Test `reg`ᵗʰ bit (doesn't support immediate); stores byte 0/1 into operand
+- `bt op, reg`    : Test `reg`ᵗʰ bit (doesn't support immediate); stores bit value into CF
   ```asm
   mov   rax, 61             ; test bit 61
-  xor   rdi, rdi            ; optional if only dil is used
-  bt    [bitflags], rax
-  setc  dil
+  bt    $op, rax
+  setc  al
   ```
 
 Floating-point:
@@ -209,6 +222,7 @@ Other:
 - `rdtsc`         : Start timing; store timestamp into `edx`:`eax`; must precede with a serializing instruction
                     (e.g. `cpuid`), in order to prevent out-of-order execution (which would hamper the timing precision)
 - `rdtscp`        : Stop timing; store timestamp into `edx`:`eax`; must be followed by a serializing instruction
+- `bswap`         : Swaps the byte order of a reg
 
 Trivial:
 

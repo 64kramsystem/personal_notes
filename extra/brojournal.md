@@ -1,3 +1,22 @@
+## Tue 07/Dec/2021
+
+- Tools
+  - Visual Studio Code
+    - [x] Find out easiest way/extensions for comparison
+- Low-level Programming
+- [ ] The Art of 64-Bit Assembly, Volume 1
+  - [x] 2: Computer Data Representation and Operations
+    - [x] Notes
+  - [x] 3: Memory Access and Organization
+- Projects
+  - TenderJIT
+    - [x] Search (other) interpreter internals books
+    - [ ] [Runtime#call_cfunc etc should be smarter](https://github.com/tenderlove/tenderjit/issues/83)
+      - [x] Fight with architecture, to find the fitting design
+      - [ ] Fight with register allocation issue
+  - Schedule manager
+    - [x] Compute work hour times
+
 ## Mon 06/Dec/2021
 
 - Projects
