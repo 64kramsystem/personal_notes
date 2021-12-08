@@ -840,7 +840,9 @@ def meth; 'str'; end
 # @return [Integer]
 attr_reader :number
 
-# @param val [Integer, String]
+# @param val [Integer, String] Optional param description, with a
+#   second line.
+#
 def meth(val); val * 2; end
 
 # @yieldparam [String]

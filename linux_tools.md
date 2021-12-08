@@ -692,11 +692,15 @@ convert -monitor *.jpg output.pdf
 Preset for resizing, contrasting and compressing a scanned document:
 
 ```sh
-# -resample/-units : resample to 200 DPI
+# -resample/-units : resample to 300 DPI
 # -level           : darken midtones
 # -quality         : set compression quality; JPEG default is 92%
 #
-convert -resample 200 -units PixelsPerInch -level 0%,100%,0.5 -quality 85% "$input.ext1" "$output.ext2"
+convert -resample 300 -units PixelsPerInch -level 0%,100%,0.5 -quality 85% "$input.ext1" "$output.ext2"
+
+# If the above doesn't work, use:
+#
+convert -density 300 -level 0%,100%,0.5 -quality 85% "$input.ext1" "$output.ext2"
 ```
 
 ### Raw to JPEG conversion
