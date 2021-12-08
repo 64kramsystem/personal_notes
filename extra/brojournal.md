@@ -1,3 +1,14 @@
+## Wed 08/Dec/2021
+
+- Projects
+  - TenderJIT
+    - [ ] Watch TenderJIT Webcasts
+      - [x] Episode 03
+      - [ ] Episode 04
+    - [x] Make TenderJIT allocated memory configurable
+    - [ ] [Runtime: Save scratch registers before calling cfuncs](https://github.com/tenderlove/tenderjit/pull/101)
+      - [x] Discuss tempvars issue
+
 ## Tue 07/Dec/2021
 
 - Tools
@@ -11,7 +22,7 @@
 - Projects
   - TenderJIT
     - [x] Search (other) interpreter internals books
-    - [ ] [Runtime#call_cfunc etc should be smarter](https://github.com/tenderlove/tenderjit/issues/83)
+    - [ ] [Runtime: Save scratch registers before calling cfuncs](https://github.com/tenderlove/tenderjit/pull/101)
       - [x] Fight with architecture, to find the fitting design
       - [ ] Fight with register allocation issue
   - Schedule manager
