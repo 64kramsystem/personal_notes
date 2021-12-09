@@ -29,6 +29,10 @@ CREATE USER @user IDENTIFIED BY @pwd PASSWORD EXPIRE;
 --
 ALTER USER @user IDENTIFIED BY @pwd PASSWORD EXPIRE;
 
+-- Use this to make an unprivileged user change their own pwd; can also use literal instead of USER().
+--
+ALTER USER USER() IDENTIFIED BY @pwd;
+
 GRANT SELECT ON mydb.* TO @user;
 
 SHOW GRANTS for @user\G

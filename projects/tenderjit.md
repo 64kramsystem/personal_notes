@@ -1,13 +1,20 @@
 # TenderJIT
 
 - [TenderJIT](#tenderjit)
-  - [New notes (to review)](#new-notes-to-review)
-  - [Old notes (to review)](#old-notes-to-review)
+  - [Notes to review](#notes-to-review)
+  - [Notes to review](#notes-to-review-1)
+  - [Notes to review](#notes-to-review-2)
   - [Debug mode](#debug-mode)
   - [Generic design](#generic-design)
   - [Useful patterns](#useful-patterns)
 
-## New notes (to review)
+## Notes to review
+
+Fiddle.dlwrap(ruby_value) # to temp stack value
+RB_SPECIAL_CONST_P: any of the 3 low bits set
+RB_BUILTIN_TYPE: any other type (allocated)
+
+## Notes to review
 
 - bt backtrace
 - f frame
@@ -40,7 +47,7 @@ p *ruby_current_vm_ptr->objspace
 p ruby_current_vm_ptr->objspace->size_pools[0].eden_heap
 ```
 
-## Old notes (to review)
+## Notes to review
 
 - `yjit/yjit_codegen.c` -> code generator (equivalent of `ISEQCompiler`)
 

@@ -1,3 +1,10 @@
+## Thu 09/Dec/2021
+
+- Projects
+  - TenderJIT
+    - [ ] Watch TenderJIT Webcasts
+      - [x] Episode 04
+
 ## Wed 08/Dec/2021
 
 - Projects

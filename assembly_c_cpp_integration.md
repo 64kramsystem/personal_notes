@@ -12,25 +12,25 @@ Specialized code is in the specific assembler notes.
 
 ## C Calling convention (System V ABI)
 
-Pushes are required only if the regs are used in that scope.
+Caller:
 
-- caller:
-  - push `rdi`, `rsi`, `rdx`, `rcx`, `r8`, `r9`, `xmm0-7` (parameter regs; "caller saved")
-  - set parameter regs
-  - push additional params (in reverse order)
-  - callee:
-    - allocate local vars on the stack
-    - push `rbx`, `rbp`, `r12-15` ("callee saved")
-    - execute; retval: `rax`, `xmm0`, `xmm1`
-    - pop callee saved regs
-    - deallocate local vars
-  - pop additional params
-  - pop caller saved regs
+- set parameter regs (`rdi`, `rsi`, `rdx`, `rcx`, `r8`, `r9`, `xmm0-7`)
+- push additional params (in reverse order)
+- (call)
+- pop additional params
+
+Callee:
+
+- allocate local vars on the stack
+- save `rbx`, `rbp`, (`rsp`), `r12-15` ("callee saved"/"nonvolatile") if used
+- execute; retval: `rax`, `xmm0`, `xmm1`
+- restore callee saved regs
+- deallocate local vars
 
 Notes:
 
 - don't forget that `call`/`ret` push/pop `rip`
-- `r10`, `r11`, `xmm8-15` are not required to be saved
+- "caller saved"/"volatile" registers are all except the callee saved, and are saved if needed
 
 ## Access ASM functions from C
 
