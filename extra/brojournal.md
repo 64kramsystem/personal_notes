@@ -1,3 +1,9 @@
+## Fri 10/Dec/2021
+
+- Low-level Programming
+- [ ] The Art of 64-Bit Assembly, Volume 1
+  - [ ] 4: Constants, Variables, and Data Types
+
 ## Thu 09/Dec/2021
 
 - Projects
