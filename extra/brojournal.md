@@ -1,3 +1,10 @@
+## Sat 11/Dec/2021
+
+- Projects
+  - TenderJIT
+    - [ ] Watch TenderJIT Webcasts
+      - [ ] Episode 05
+
 ## Fri 10/Dec/2021
 
 - Low-level Programming
