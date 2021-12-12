@@ -1,3 +1,12 @@
+## Sun 12/Dec/2021
+
+- SWE
+  - [x] Review recurse.com
+  - [x] Review new books to buy
+- QEMU/Rust
+  - [x] Write RedHat employee
+    - [x] Brutal fight with Matrix (verification)
+
 ## Sat 11/Dec/2021
 
 - Projects
