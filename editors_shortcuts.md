@@ -280,6 +280,12 @@ Upper case commands are generally "extended" versions of the correspective lower
 
 ## Other program shortcuts
 
+MATE:
+
+- `Mod4 + Alt + ←/→`          Tile window top left/right
+- `Mod4 + Alt + Shift + ←/→ ` Tile window bottom left/right
+- `Alt + F8`                   Resize window
+
 Firefox:
 
 - `Ctrl+Shift+O`            Bookmarks editor
