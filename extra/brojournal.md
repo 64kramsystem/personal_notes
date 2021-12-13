@@ -1,3 +1,25 @@
+## Mon 13/Dec/2021
+
+- Tools
+  - [x] Research shortcuts for some MATE/VSC actions
+- Admin
+  - [x] Plan cycle
+- Low-level Programming
+- [ ] The Art of 64-Bit Assembly, Volume 1
+  - [x] Copy errata
+- Projects
+  - TenderJIT
+    - [x] Watch TenderJIT Webcasts
+      - [x] Episode 05
+    - [x] A few cleanups
+    - [x] Runtime: Add autoalign support to Ruby func calling
+    - [x] Investigate issues on [Runtime: Save temp var registers before calling cfuncs](https://github.com/tenderlove/tenderjit/pull/101)
+      - [x] Fix issue with `toregexp`
+      - [x] Brutal fight with the segfault
+- SWE
+  - [ ] [Sebastian Lague Webcasts](https://www.youtube.com/c/SebastianLague/videos)
+    - [x] [A* Pathfinding (E01: algorithm explanation)](https://www.youtube.com/watch?v=-L-WgKMFuhE)
+
 ## Sun 12/Dec/2021
 
 - SWE

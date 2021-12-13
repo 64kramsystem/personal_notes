@@ -79,7 +79,7 @@ WATCH OUT! The semantics differ when using in [DDLs](https://dev.mysql.com/doc/r
 
 ## SELECT multiple rows from literals (convert scalars to rows)
 
-This can be used with `CREATE TABLE ... SELECT`, without insert.
+This can be used with `CREATE TABLE ... SELECT`, without insert (in this case, the column names must be specified).
 
 ```sql
 SELECT *

@@ -662,12 +662,26 @@ write_thread.join
 
 ```ruby
 arr = [0, 1, 2]
+Array.new(size) { |i| fx(i) }           # creates an array of the given size, where each element is the result of the block
 
 arr.fill(nil, arr.size...5)             # resize/extend (destructive) in arguably expressive form; returns the array; !!! watch out the `...` syntax !!!
 arr[5] ||= nil                          # other resize/extend, in arguably less expressive form
 
 arr.delete(obj)                         # delete an object matching via `==`; returns self
 arr.delete_at(i)                        # delete an object at index `i`; returns the value deleted, or nil if no deletion
+```
+
+Transpose a matrix (array of arrays) (intuitively, converts from array of the rows to array of the columns):
+
+```rb
+# Requires all the arrays to be the same size:
+#
+matrix.transpose
+
+# Simplest solution when the arrays are not the same size.
+# Yields nils, so it needs to be compacted, if required.
+#
+Array.new(matrix.map(&:size).max) { |i| matrix.map { |e| e[i] } }
 ```
 
 ### Iterable APIs/Useful operations
@@ -833,7 +847,7 @@ Standard tags:
 ```rb
 # @return [String]
 #
-# Other types: `nil`, `self`, `void`.
+# Other types: `nil`, `self`, `void`, `Boolean`.
 #
 def meth; 'str'; end
 
