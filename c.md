@@ -9,6 +9,7 @@
   - [Stdlib](#stdlib)
     - [Env variables](#env-variables)
   - [Linux](#linux)
+    - [Headers](#headers)
     - [User ids](#user-ids)
   - [Conveniences](#conveniences)
     - [Print a struct instances's bytes](#print-a-struct-instancess-bytes)
@@ -81,6 +82,12 @@ printf("%s\n", sudo_user);
 ```
 
 ## Linux
+
+### Headers
+
+Located under `/usr/include/linux`.
+
+Other system-dependent includes may be found under `/usr/include/x86_64-linux-gnu/` (e.g. for `#include <sys/types.h>`)
 
 ### User ids
 

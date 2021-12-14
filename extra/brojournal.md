@@ -1,3 +1,25 @@
+## Tue 14/Dec/2021
+
+- Tools
+  - Visual Studio Code
+    - [x] Search method copy functionality
+- Projects
+  - TenderJIT
+    - [x] Rebase/solve conflicts for last PR
+    - [x] Investigate/report master failure
+  - libvfio-user-rs
+    - [x] Setup chat
+    - [x] Write RedHat employee
+      - [x] Start planning
+  - [ ] First look at the project
+  - [x] Configure VSC support
+- SWE
+  - [ ] [Sebastian Lague Webcasts](https://www.youtube.com/c/SebastianLague/videos)
+    - [x] [A* Pathfinding (E01: algorithm explanation)](https://www.youtube.com/watch?v=-L-WgKMFuhE)
+      - [x] Review and store notes
+  - The Programmer's Brain
+    - [x] 6. Getting better at solving programming problems
+
 ## Mon 13/Dec/2021
 
 - Tools
@@ -18,7 +40,7 @@
       - [x] Brutal fight with the segfault
 - SWE
   - [ ] [Sebastian Lague Webcasts](https://www.youtube.com/c/SebastianLague/videos)
-    - [x] [A* Pathfinding (E01: algorithm explanation)](https://www.youtube.com/watch?v=-L-WgKMFuhE)
+    - [ ] [A* Pathfinding (E01: algorithm explanation)](https://www.youtube.com/watch?v=-L-WgKMFuhE)
 
 ## Sun 12/Dec/2021
 

@@ -280,34 +280,38 @@ Upper case commands are generally "extended" versions of the correspective lower
 
 ## Other program shortcuts
 
-MATE:
+Caja:
 
-- `Mod4 + Alt + ←/→`          Tile window top left/right
-- `Mod4 + Alt + Shift + ←/→ ` Tile window bottom left/right
-- `Alt + F8`                   Resize window
+- `F6`                      Switch between side-to-side panels
+
+Evince:
+
+- `Ctrl+L`                  Go to page
+
+Feh:
+
+- `Ctrl+Del`                Delete image
 
 Firefox:
 
 - `Ctrl+Shift+O`            Bookmarks editor
 - `Ctrl+., <number>`        Containers extension: display menu, and open new tab with given container
 
-Slack:
-
-- `→`/`T`                  When on a thread message, open the thread panel
-- `Ctrl+.`                  Open/close the right panel
-
-Evince:
-
-- `Ctrl+L`                  Go to page
-
-Caja:
-
-- `F6`                      Switch between side-to-side panels
-
 htop:
 
 - `h`: help
 - `H`: show/hide process threads
+
+MATE:
+
+- `Mod4 + Alt + ←/→`          Tile window top left/right
+- `Mod4 + Alt + Shift + ←/→ ` Tile window bottom left/right
+- `Alt + F8`                   Resize window
+
+Meld:
+
+- `Alt + ←/→`              Push diff block to the given direction
+- `Alt + Shift + ←/→`      Pull diff block from the opposite of the given direction
 
 Tilix:
 
@@ -319,6 +323,7 @@ Telnet:
 
 - `Ctrl+]` => `q`           Terminate session
 
-Feh:
+Slack:
 
-- `Ctrl+Del`                Delete image
+- `→`/`T`                  When on a thread message, open the thread panel
+- `Ctrl+.`                  Open/close the right panel
