@@ -1,8 +1,19 @@
 # Algorithms
 
-The implementations are not intended to be fully optimized.
+- [Algorithms](#algorithms)
+  - [Notes](#notes)
+  - [Generic](#generic)
+    - [All permutations of a sequence](#all-permutations-of-a-sequence)
+  - [Graphs](#graphs)
+    - [A* search](#a-search)
 
-## All permutations of a sequence
+## Notes
+
+The implementations are not intended to be optimized.
+
+## Generic
+
+### All permutations of a sequence
 
 Swap the leftmost element of each subarray with each other element, and for each swap, recurse on the subarray starting at the next position.
 
@@ -23,6 +34,56 @@ def permutations(sequence, start_position = 0, &block)
 
     # By restoring the sequence, we don't need to use a temporary array.
     sequence[start_position], sequence[new_position] = sequence[new_position], sequence[start_position]
+  end
+end
+```
+
+## Graphs
+
+### A* search
+
+Terms:
+
+- `G` = distance from start
+- `H` (heuristic) = distance from target
+- `F` = `G` + `H`
+
+Simplified interpretation:
+
+- for each iteration
+- find the node with the lowest cost (/+distance) from the open ones
+- close the node (=not searched anymore)
+- compute the neighbors, and update them if advantageous/add if not in list
+- repeat until the path to the target is found
+
+Pseudo-pseudo-code:
+
+```rb
+open_nodes = []
+closed_nodes = []
+
+open_nodes.append start_node
+
+loop do
+  # If there are multiple, choose the one closest to the target
+  current_node = find_lowest_f_cost_node_from open_nodes
+
+  open_nodes.delete current_node
+  closed_nodes.append current_node
+
+  break if current_node == target_node
+
+  current_node.neighbours.each do |neighbour_node|
+    next if !neighbour_node.traversable? || neighbour_node.closed?
+
+    neighbour_node_new_f_cost = compute_f_cost current_node, neighbour_node
+
+    if neighbour_node_new_f_cost < neighbour_node.f_cost || !neighbour_node.in?(open_nodes)
+      neighbour_node.f_cost = neighbour_node_new_f_cost
+      neighbour_node.parent = current_node
+
+      open_nodes.append(neighbour_node) if !neighbour_node.in?(open_nodes)
+    end
   end
 end
 ```
