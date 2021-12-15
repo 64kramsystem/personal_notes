@@ -1,3 +1,20 @@
+## Wed 15/Dec/2021
+
+- Projects
+  - TenderJIT
+    - [ ] Investigate [test suite segfault](https://github.com/tenderlove/tenderjit/issues/110)
+      - [x] Make `rake debug` run the whole test suite
+      - [x] Discuss issue
+    - [x] Organize notes
+- SWE
+  - [ ] [Sebastian Lague Channel](https://www.youtube.com/c/SebastianLague/videos)
+    - [x] [A* Pathfinding (E03: algorithm implementation)](https://www.youtube.com/watch?v=mZfyt03LDH4)
+    - [ ] [A* Pathfinding (E04: heap optimization)](https://www.youtube.com/watch?v=3Dw5d7PlcTM)
+- Projects
+  - libvfio-user-rs
+    - [x] `README.md`
+    - [ ] Study [vfio-user protocol](https://lists.gnu.org/archive/html/qemu-devel/2020-11/msg02458.html)
+
 ## Tue 14/Dec/2021
 
 - Tools
@@ -11,7 +28,8 @@
     - [x] Setup chat
     - [x] Write RedHat employee
       - [x] Start planning
-  - [ ] First look at the project
+  - First look at the project
+    - [ ] `README.md`
   - [x] Configure VSC support
 - SWE
   - [ ] [Sebastian Lague Webcasts](https://www.youtube.com/c/SebastianLague/videos)

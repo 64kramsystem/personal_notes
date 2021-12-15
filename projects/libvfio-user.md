@@ -3,6 +3,7 @@
 - [libvfio-user](#libvfio-user)
   - [Setup/Build/Jobs](#setupbuildjobs)
   - [General info](#general-info)
+  - [Connection Initiation](#connection-initiation)
 
 ## Setup/Build/Jobs
 
@@ -20,3 +21,8 @@ make pytest
 ## General info
 
 - API info: `include/libvfio-user.h`
+- Example of simple servers: see `README.md`
+
+## Connection Initiation
+
+Handshake: server sends `VFIO_USER_VERSION` and capabilities; client sends compatible versions/capabilities (or closes).
