@@ -1,61 +1,44 @@
 # TenderJIT
 
 - [TenderJIT](#tenderjit)
-  - [Notes to review](#notes-to-review)
-  - [Notes to review](#notes-to-review-1)
-  - [Notes to review](#notes-to-review-2)
-  - [Debug mode](#debug-mode)
-  - [Generic design](#generic-design)
+  - [TJ design](#tj-design)
   - [Useful patterns](#useful-patterns)
+  - [Debugging](#debugging)
+  - [Ruby concepts](#ruby-concepts)
 
-## Notes to review
+## TJ design
 
-Fiddle.dlwrap(ruby_value) # to temp stack value
-RB_SPECIAL_CONST_P: any of the 3 low bits set
-RB_BUILTIN_TYPE: any other type (allocated)
+The are two compilers:
 
-## Notes to review
+- instant (`handle_*`)
+- deferred: executes when a method is invoked, since it needs to figure out the receiving object.
 
-- bt backtrace
-- f frame
-- p print
-- rp ruby print
+When a request is made to compile an instruction sequence (iseq), the compiler checks to see if there is already an `ISEQCompiler` object associated with the iseq. If not, it allocates one, then calls compile on the object. The compiler will compile as many instructions in a row as it can, then will quit compilation. Depending on the instructions that were compiled, it may resume later on.
 
-```
-# Kill self; get an extensive stack trace
-# Ruby will create a core dump
-irb> Process.kill 'SEGV', $$
+Unimplemented instructions don't have a `handle` method; the compiler generates an "exit" and the machine code will pass control back to YARV
 
-# Required  to create a core dump (check why)
-$ ulimit -c unlimited
+## Useful patterns
 
-# Debug using a core dump
-$ lldb --core /path/to/core.dump ruby
-
-# Now can print the backtrace
-(lldb) bt
+```rb
+klass_addr = rb.rb_class_of(recv) # returns the pointer
+Fiddle.dlunwrap(klass_addr)       # find the class; in general, `dlunwrap` returns the object at the given address
+Fiddle.dlwrap(ruby_value)         # convert to temp stack value
 ```
 
-```
-# In theory, there can be more VMs
-p *ruby_current_vm_ptr
+## Debugging
 
-# Get the object space
-p *ruby_current_vm_ptr->objspace
+Command: `ruby -d`
 
-# In upcoming Ruby versions, there are more object pools
-p ruby_current_vm_ptr->objspace->size_pools[0].eden_heap
-```
+- The address on the right  is of the method to executed instruction belongs to
+- `NEW ISEQ Compiler` -> means recursively compiled new method
 
-## Notes to review
+The lldb helper adds `rp` (ruby print).
 
-- `yjit/yjit_codegen.c` -> code generator (equivalent of `ISEQCompiler`)
+## Ruby concepts
 
-- When a request is made to compile an instruction sequence (**iseq**), the compiler checks to see if there is already an `ISEQCompiler` object associated with the iseq. If not, it allocates one, then calls compile on the object.
-  - The compiler will compile as many instructions in a row as it can, then will quit compilation. Depending on the instructions that were compiled, it may resume later on.
-- Unimplemented instructions don't have the `handle` method
-  - When no corresponding handler function is found, the compiler will generate an "exit" and the machine code will pass control back to YARV
-- **Control Frame Pointer** has pointers to:
+Execution:
+
+- Control Frame Pointer (CFP) has pointers to:
   - current iseq
   - PC -> next instruction
   - SP -> top of the stack (next empty slot)
@@ -70,25 +53,21 @@ p ruby_current_vm_ptr->objspace->size_pools[0].eden_heap
     - so they may not represent reality
     - they need to be adjusted before returning control
 
-## Debug mode
+Types:
 
-Command: `ruby -d`
+- `RB_SPECIAL_CONST_P`: any of the 3 low bits set
+- `RB_BUILTIN_TYPE`: any other type (allocated)
 
-- The address on the right is of the method to executed instruction belongs to
-- `NEW ISEQ Compiler` -> means recursively compiled new method
+Pointers:
 
-## Generic design
+```c
+// Pointer to current VM (in theory, there can be more VMs)
+*ruby_current_vm_ptr
 
-The are two compilers:
-
-- an instant one (`handle_*`)
-- a deferred one
-
-the deferred one executes when a method is invoked, since it needs to figure out the receiving object.
-
-## Useful patterns
-
-```rb
-klass_addr = rb.rb_class_of(recv) # returns the pointer
-puts Fiddle.dlunwrap(klass_addr)  # find the class; in general, `dlunwrap` returns the object at the given address
+// Object space
+*ruby_current_vm_ptr->objspace
 ```
+
+YJIT:
+
+- `yjit/yjit_codegen.c` -> code generator (equivalent of `ISEQCompiler`)

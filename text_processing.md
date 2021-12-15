@@ -638,8 +638,9 @@ tr -cd '\0' | wc -c	# count zero chars (example with `\0`)
 ## sort
 
 ```sh
-sort -r           # reverse
-sort -V           # compare by versions! WATCH OUT! '5.8' is sorted before '5.8.0'
+sort -r           # `--reverse`
+sort -V           # `--version-sort`! WATCH OUT! '5.8' is sorted before '5.8.0'
+sort -R           # `--sort-random`: shuffle/randomize! WATCH OUT, slow! Better use the `shuf` program
 
 # `-t/--field-separator`: separator
 # `-r/--reverse`
