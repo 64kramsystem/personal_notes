@@ -1,3 +1,12 @@
+## Thu 16/Dec/2021
+
+- SWE
+  - [ ] [Sebastian Lague Channel](https://www.youtube.com/c/SebastianLague/videos)
+    - [ ] [A* Pathfinding (E04: heap optimization)](https://www.youtube.com/watch?v=3Dw5d7PlcTM)
+- Projects
+  - TenderJIT
+    - [x] Review, investigate and discuss [crash issue](https://github.com/tenderlove/tenderjit/issues/110)
+
 ## Wed 15/Dec/2021
 
 - Projects
