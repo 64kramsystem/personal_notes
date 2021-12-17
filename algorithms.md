@@ -6,6 +6,7 @@
     - [All permutations of a sequence](#all-permutations-of-a-sequence)
   - [Graphs](#graphs)
     - [A* search](#a-search)
+    - [Min/Max Heap](#minmax-heap)
 
 ## Notes
 
@@ -87,3 +88,26 @@ loop do
   end
 end
 ```
+
+### Min/Max Heap
+
+Min/max heaps are used to store comparable values, and quickly retrieve the highest priority value (min or max, depending on the heap type).
+
+Resizing a heap is complex, so the easiest implementation has a fixed size, backed by an array.
+
+All the levels except the last (which is variable) have fixed size - powers of 2; therefore, the parent/children positions of a given position can be found, respectively, via ((n - 1) / 2) and (2n + {1,2}).
+
+It's semiordered:
+
+- the values of a level are not ordered,
+- but any value of a level has lower priority than the values of the previous level.
+
+Addition:
+
+- add as last
+- while has higher priority than the parent, swap with it
+
+Removal (of the highest priority):
+
+- pop first and replace with last
+- while it's lower priority than the children, swap with the higher priority one
