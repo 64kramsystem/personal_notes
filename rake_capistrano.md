@@ -2,11 +2,21 @@
 
 - [Rake/Capistrano](#rakecapistrano)
   - [Rake](#rake)
+    - [Use other binaries as Ruby (eg. lldb)](#use-other-binaries-as-ruby-eg-lldb)
     - [Minitest](#minitest)
   - [Capistrano](#capistrano)
     - [Tasks/Actions](#tasksactions)
 
 ## Rake
+
+### Use other binaries as Ruby (eg. lldb)
+
+If one needs Rake to use another binary, eg. lldb, it's possible to [hack the `RUBY` constant](https://git.io/JDKA9):
+
+```
+RUBY='lldb ruby --' rake test                             # via env var
+FileUtils.const_set(:RUBY, "lldb #{FileUtils::RUBY} --")  # from the Ruby interpreter
+```
 
 ### Minitest
 

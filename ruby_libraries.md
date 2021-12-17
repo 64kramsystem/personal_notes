@@ -769,6 +769,14 @@ TOPLEVEL_BINDING.eval(rendered_template, template_file)
 variables.keys.each { |name| TOPLEVEL_BINDING.eval "remove_instance_variable '@#{name}'" }
 ```
 
+If one doesn't use variables, but just `ENV` references (e.g. yaml configfile), then just:
+
+```rb
+erb_template = IO.read(template_file)
+yaml_string = ERB.new(erb_template).result
+YAML.load(yaml_string)
+```
+
 ### GC (garbage collection)
 
 APIs:

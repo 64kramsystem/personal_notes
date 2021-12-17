@@ -55,7 +55,7 @@ Execution:
 
 Types:
 
-- `RB_SPECIAL_CONST_P`: any of the 3 low bits set
+- `RB_SPECIAL_CONST_P`: any of the 3 low bits set (not allocated)
 - `RB_BUILTIN_TYPE`: any other type (allocated)
 
 Pointers:

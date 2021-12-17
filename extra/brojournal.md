@@ -1,3 +1,21 @@
+## Fri 17/Dec/2021
+
+- SWE
+  - [ ] [Sebastian Lague Channel](https://www.youtube.com/c/SebastianLague/videos)
+    - [x] [A* Pathfinding (E04: heap optimization)](https://www.youtube.com/watch?v=3Dw5d7PlcTM)
+    - [x] A* Pathfinding (E06 - weights)
+  - [x] The Programmer's Brain
+    - [x] 7. Misconceptions: Bugs in thinking
+    - [ ] 8. ~~How to get better at naming things~~
+    - [ ] 9. ~~Avoiding bad code and cognitive load: Two frameworks~~
+    - [x] 10. Getting better at solving complex problems
+    - [ ] ~~Part 4. On collaborating on code~~
+- Projects
+  - TenderJIT
+    - [x] Watch today's live stream
+  - libvfio-user-rs
+    - [ ] Study [[PATCH v9] introduce vfio-user protocol specification](https://patchew.org/QEMU/20210614104608.212276-1-thanos.makatos@nutanix.com)
+
 ## Thu 16/Dec/2021
 
 - SWE
