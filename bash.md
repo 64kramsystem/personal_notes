@@ -43,6 +43,7 @@
     - [Poor man's configfile parser](#poor-mans-configfile-parser)
     - [`bash` command options](#bash-command-options)
     - [Variables printing function](#variables-printing-function)
+    - [Current shell](#current-shell)
   - [Shell colors](#shell-colors)
 
 ## Shell key bindings
@@ -589,12 +590,14 @@ ${filename##*/}                   # extract basename, eg. `"${PWD##*/}"`
 ${filename%/*/*}                  # parent dir of a file (watch out - requires at least two slashes!)
 ```
 
-Fun tricks:
+Fun tricks/other stuff:
 
 ```sh
 printf '<SAV>%.0s' {1..10}        # repeat a string
 echo "  ab  " | xargs             # strip/trim leading and trailing whitespace; compresses spaces; !! adds a newline !!
 echo $'a \n'  | perl -pe chomp    # (`a `) strip one trailing whitespace,
+
+printf "%05d\n" $n                # add leading zeros; this is a standard printf, so the standard functionalities apply
 ```
 
 ### Examples
@@ -1177,6 +1180,10 @@ function print_variables {
   echo
 }
 ```
+
+### Current shell
+
+Simplest, from terminal: `echo $0`. Don't use `$SHELL`, as it can refer to the parent.
 
 ## Shell colors
 

@@ -262,7 +262,8 @@ cat /dev/null > /proc/$pid/fd/$fd  # truncate a deleted open file!!
 ### Using GNU Parallel
 
 The number of jobs is automatically limited to the number of cores.
-Quoting is not required.
+Quoting is not required. The shell used when running a string is the current one.
+The output is displayed serialized, but the execution is parallel!
 
 ```sh
 ls -1 *.tar.* | parallel tar xvf      # if unspecified, the argument is automatically appended
@@ -569,13 +570,11 @@ References:
 
 ## Dates
 
-General format: `date +<format>`
+General format: `date +$format --date=$expression`
 
-Interpret a date: `date -d <input>`
+Interpret a date: `date -d $input`
 
 ### Formatting
-
-General format: `date $format --date=$expression`
 
 Symbols:
 
@@ -584,7 +583,7 @@ Symbols:
 - `%H:%M:%s`
 - `%Y-%m-%d`
 - `%F %T`    : same as `%Y-%m-%d %H:%M:S` (time without seconds: `%R`)
-- `+"%T.%3N"`: time with milliseconds (`%N` is nanoseconds; `.%3` prints 3 digits)
+- `%T.%3N`   : time with milliseconds (`%N` is nanoseconds; `.%3` prints 3 digits)
 - `+%s`      : date in seconds
 
 The output language is the system one; in order to change, set `LC_ALL`:
