@@ -371,7 +371,7 @@ tcptrack -i $interface port $port
 # Display all the connections on a certain network interface
 iftop [-i $interface]
 
-# Continuous connectivity test (like traceroute)
+# Continuous connectivity test (like traceroute) (performance/speed)
 #
 mtr $host
 ```

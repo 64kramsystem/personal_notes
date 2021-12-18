@@ -1,3 +1,21 @@
+## Sat 18/Dec/2021
+
+- SWE
+  - [ ] [Sebastian Lague Channel](https://www.youtube.com/c/SebastianLague/videos)
+    - [x] A* Pathfinding (E05 - units)
+- Tools
+  - Repositories syncing script
+    - [x] Improve parallel execution
+      - [x] Fight shell handling
+  - Ripping tool
+    - [x] Restructure and improve
+- Low-level Programming
+  - [ ] The Art of 64-Bit Assembly, Volume 1
+    - [x] 4: Constants, Variables, and Data Types
+- Projects
+  - libvfio-user-rs
+    - [ ] Study [[PATCH v9] introduce vfio-user protocol specification](https://patchew.org/QEMU/20210614104608.212276-1-thanos.makatos@nutanix.com)
+
 ## Fri 17/Dec/2021
 
 - SWE
