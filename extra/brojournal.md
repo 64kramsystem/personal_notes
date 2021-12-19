@@ -1,7 +1,30 @@
+## Cycle
+
+Some work on TJ; started the libvfio work, which is going to take a large part of the time.
+
+Unscheduled: Only a significant task, on tooling, which took a couple of hours.
+
+## Sun 19/Dec/2021
+
+- Projects
+  - Schedule manager
+    - [x] Add interpolations: tokens that apply functions to the line
+  - libvfio-user-rs
+    - [ ] Study [[PATCH v9] introduce vfio-user protocol specification](https://patchew.org/QEMU/20210614104608.212276-1-thanos.makatos@nutanix.com)
+    - [x] First look at the project structure
+- SWE
+  - [Sebastian Lague Channel](https://www.youtube.com/c/SebastianLague/videos)
+    - [x] Copy pending notes
+    - [x] A* Pathfinding (E07 - smooth weights)
+    - [ ] A* Pathfinding (E08 - path smoothing 1/2)
+- Low-level Programming
+- [ ] The Art of 64-Bit Assembly, Volume 1
+  - [ ] 5: Procedures
+
 ## Sat 18/Dec/2021
 
 - SWE
-  - [ ] [Sebastian Lague Channel](https://www.youtube.com/c/SebastianLague/videos)
+  - [Sebastian Lague Channel](https://www.youtube.com/c/SebastianLague/videos)
     - [x] A* Pathfinding (E05 - units)
 - Tools
   - Repositories syncing script
@@ -19,7 +42,7 @@
 ## Fri 17/Dec/2021
 
 - SWE
-  - [ ] [Sebastian Lague Channel](https://www.youtube.com/c/SebastianLague/videos)
+  - [Sebastian Lague Channel](https://www.youtube.com/c/SebastianLague/videos)
     - [x] [A* Pathfinding (E04: heap optimization)](https://www.youtube.com/watch?v=3Dw5d7PlcTM)
     - [x] A* Pathfinding (E06 - weights)
   - [x] The Programmer's Brain
@@ -37,7 +60,7 @@
 ## Thu 16/Dec/2021
 
 - SWE
-  - [ ] [Sebastian Lague Channel](https://www.youtube.com/c/SebastianLague/videos)
+  - [Sebastian Lague Channel](https://www.youtube.com/c/SebastianLague/videos)
     - [ ] [A* Pathfinding (E04: heap optimization)](https://www.youtube.com/watch?v=3Dw5d7PlcTM)
 - Projects
   - TenderJIT
@@ -52,7 +75,7 @@
       - [x] Discuss issue
     - [x] Organize notes
 - SWE
-  - [ ] [Sebastian Lague Channel](https://www.youtube.com/c/SebastianLague/videos)
+  - [Sebastian Lague Channel](https://www.youtube.com/c/SebastianLague/videos)
     - [x] [A* Pathfinding (E03: algorithm implementation)](https://www.youtube.com/watch?v=mZfyt03LDH4)
     - [ ] [A* Pathfinding (E04: heap optimization)](https://www.youtube.com/watch?v=3Dw5d7PlcTM)
 - Projects

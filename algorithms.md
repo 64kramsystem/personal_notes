@@ -7,6 +7,7 @@
   - [Graphs](#graphs)
     - [A* search](#a-search)
     - [Min/Max Heap](#minmax-heap)
+    - [Matrix smoothing (moving mean/average)](#matrix-smoothing-moving-meanaverage)
 
 ## Notes
 
@@ -111,3 +112,20 @@ Removal (of the highest priority):
 
 - pop first and replace with last
 - while it's lower priority than the children, swap with the higher priority one
+
+### Matrix smoothing (moving mean/average)
+
+Unoptimized version:
+
+- set the kernel size; must be a square with an odd side size
+- each destination element in the result is the average of kernel of the corresponding source element (including the element itself)
+  - because of the elements on the sides, surround the source matrix with copies of the respective nearest element
+
+Optimized version:
+
+- two stages: horizontal and vertical (order is not important)
+- on each stage
+  - in order to average an element, use only the two surrounding elements before and after
+    - this can be optimized because instead of recalculating the average, the previous element can be subtracted, and the new one added (take into account the division by 3)
+  - use the surround strategy, which requires only the addition of two lines (no whole surround)
+- apply one stage first, then apply the second on the result of the first
