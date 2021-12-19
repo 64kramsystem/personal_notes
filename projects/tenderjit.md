@@ -32,7 +32,24 @@ Command: `ruby -d`
 - The address on the right  is of the method to executed instruction belongs to
 - `NEW ISEQ Compiler` -> means recursively compiled new method
 
-The lldb helper adds `rp` (ruby print).
+The Ruby lldb helper adds `rp` (ruby print):
+
+```
+$ rp ((VALUE*)$r15)[0]
+bits: [    ]
+T_ARRAY: len=4 (shared) shared=0
+(const VALUE*) $2=0x600000244240 {
+  (const VALUE) [0] = 0x3
+  (const VALUE) [1] = 0x5
+}
+```
+
+`p` can also be used:
+
+```
+$ p ((struct RBasic *)$r9)->flags
+(VALUE) $8 = 0x4007
+```
 
 ## Ruby concepts
 
