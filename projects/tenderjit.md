@@ -87,4 +87,4 @@ Pointers:
 
 YJIT:
 
-- `yjit/yjit_codegen.c` -> code generator (equivalent of `ISEQCompiler`)
+- `/yjit_codegen.c` -> code generator (equivalent of `ISEQCompiler`)

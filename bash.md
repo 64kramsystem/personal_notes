@@ -973,6 +973,15 @@ BASH_XTRACEFD="5"
 set -x
 ```
 
+The `:` command can be used to add pseudo-comments that are displayed in the debug log:
+
+```sh
+: this comment appears in the log
+my_operation
+```
+
+See [here](https://johannes.truschnigg.info/writing/2021-12_colodebug) for a more sophisticated version.
+
 ### Print to stdout while setting a variable
 
 ```sh

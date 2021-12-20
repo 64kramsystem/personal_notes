@@ -166,6 +166,7 @@ Conditional jump flags:
 Storage:
 
 - `mov`            : WATCH OUT! `mov eax, $val` clears the `rax` upper bits (mov `al`/`ax` doesn't)
+- `movzx reg, op`  : move with zero extend
 - `movsd`          : DP-float to/from `xmm`
 - `push`/`pop`     : reg₁₆/₆₄, mem₁₆/₆₄; pop: const₆₄ (use `pushw` for const₁₆)
 - `pushfq`/`popfq` : rflags (eflags without `q`)
