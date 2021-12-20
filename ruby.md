@@ -18,7 +18,6 @@
   - [Special variables/Built-in constants/Other metadata](#special-variablesbuilt-in-constantsother-metadata)
     - [Verbose mode (enable warnings)](#verbose-mode-enable-warnings)
   - [Strings](#strings)
-    - [Substitution](#substitution)
   - [Classes/Metaprogramming](#classesmetaprogramming)
     - [Dynamic class instantiation](#dynamic-class-instantiation)
     - [Reflection](#reflection)
@@ -437,21 +436,6 @@ Set `$VERBOSE = true`.
 ```rb
 str.b                               # ASCII-8 (binary) copy of the string
 str.slice!(interval)                # removes and return the sliced substring, so it can be used in expressions
-```
-
-### Substitution
-
-```ruby
-# Using a non-capturing group (`?:`) will not capture it, but replace it;
-# In order to get the full match, use `$~0`.
-#
-'foo bar baz'.sub(/(bar)(?= baz)/) do |match|
-  puts match      # "bar"
-  puts $1.inspect # "bar"
-  puts $2.inspect # nil
-  "_"
-end # => 'foo _ baz'
-
 ```
 
 ## Classes/Metaprogramming

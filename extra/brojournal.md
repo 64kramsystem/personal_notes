@@ -1,3 +1,24 @@
+## Mon 20/Dec/2021
+
+- Low-level Programming
+  - [ ] The Art of 64-Bit Assembly, Volume 1
+    - [ ] 5: Procedures
+- Projects
+  - Schedule manager
+    - [x] Interpolations: Modify the planned line, not the current
+  - libvfio-user-rs
+    - [ ] Study source code
+  - TenderJIT/VSC
+    - [x] Brutal fight making the Ruby project play with VSC
+- Bash
+  - [x] Read https://johannes.truschnigg.info/writing/2021-12_colodebug
+- Tools
+  - Music play script
+    - [x] Display name also for dot paths
+    - [x] Add track randomization option
+- Admin
+  - [x] Cycle planning
+
 ## Cycle
 
 Some work on TJ; started the libvfio work, which is going to take a large part of the time.
@@ -18,8 +39,8 @@ Unscheduled: Only a significant task, on tooling, which took a couple of hours.
     - [x] A* Pathfinding (E07 - smooth weights)
     - [ ] A* Pathfinding (E08 - path smoothing 1/2)
 - Low-level Programming
-- [ ] The Art of 64-Bit Assembly, Volume 1
-  - [ ] 5: Procedures
+  - [ ] The Art of 64-Bit Assembly, Volume 1
+    - [ ] 5: Procedures
 
 ## Sat 18/Dec/2021
 

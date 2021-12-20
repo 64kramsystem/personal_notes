@@ -106,8 +106,6 @@ split(/(?<=\+)\n(?=\+)/)              # retain the separator in the splitted fie
 Substituting/matching:
 
 ```ruby
-# The closure is not supported for [g]sub!.
-#
 'foobar'.gsub(/(ba.)/, '\1\1')                        # 'foobarbar'; WATCH OUT!: the replacement string can't be manipulated, e.g. `upcase()`
 'foobar'.gsub(/(b)(a)/) { |match| $2.upcase + $1 }    # 'fooaBr'; `match` is a String
 "Saverio <a@b.c>".match(/<(.*)>/)                     # returns MatchData object; [0] = entire match; [1..] = matching groups
@@ -115,22 +113,21 @@ str[/regex/, idx]                                     # same as `str.match(/rege
 "saverio".scan(/(ver(io))/)                           # [["verio", "io"]]
 "saverio".scan(/cusumano/)                            # []
 
-# when a non-capturing group ("?:") is used, gsub nonetheless replaces the entire
-# string; this is also valid when using a block - in this case, the entire string will be
-# passed as parameter.
-# this is inconsistent with :scan, which will only extract the capturing groups.
+# The non-capturing group is: included in the match;     replaced; not captured.
+# The lookahead is            included in the match; not replaced; not captured.
 #
-# when using a block, in order to reference capturing groups, one can use the last match
-# global variables:
+# This is inconsistent with :scan, which will only extract the capturing groups.
 #
-"y:33".gsub(/(?:y:)(\d+)/) { "y:#{ $1.to_i + 1 }" }        # returns "y:34"
+"y:3:a".gsub(/(?:y):(\d):(?=\w)/) do |match|
+  puts match.inspect            # "y:3:"
+  puts $1.inspect               # "3"
+  puts $2.inspect               # nil
+  puts $3.inspect               # nil
 
-# in order to replace non-capturing groups with gsub, use the lookahead/behind, instead
-# of non-capturing groups:
-#
-"abc".gsub(/a(?=b)/, 'x')                                    # returns 'xbc'
+  "z:#{$1.to_i + 1}:"
+end # => "z:4:a"
 
-# Linux tool `tr`
+# Linux tool `tr`.
 #
 "abcZHNC".tr("ZHNC", "*")                               # return "abc****"
 ```
