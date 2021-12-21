@@ -1,3 +1,19 @@
+## Tue 21/Dec/2021
+
+- Tools
+  - Mermaid-JS
+    - [x] Review workarounds for connecting a function to a class in a class diagram
+      - [x] Open [issue](https://github.com/mermaid-js/mermaid/issues/2581)
+- Low-level Programming
+  - [ ] The Art of 64-Bit Assembly, Volume 1
+    - [x] 5: Procedures
+- Tools
+  - Firefox
+    - [x] Handle containerized sites that redirect (https://www.thechiefmeat.com/guides/containers.html)
+      - Disable redirect https://support.mozilla.org/en-US/questions/1327430 (`accessibility.blockautorefresh = false`)
+  - IntelliJ IDEs
+    - [x] First look at CLion and RubyMine
+
 ## Mon 20/Dec/2021
 
 - Low-level Programming
