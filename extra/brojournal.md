@@ -1,3 +1,13 @@
+## Wed 22/Dec/2021
+
+- Projects
+  - TenderJIT
+    - [x] Review PR
+- Low-level Programming
+  - [ ] The Art of 64-Bit Assembly, Volume 1
+    - [ ] 6: Arithmetic
+      - Fight misunderstanding of the overflow flag
+
 ## Tue 21/Dec/2021
 
 - Tools
