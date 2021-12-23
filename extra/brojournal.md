@@ -1,3 +1,9 @@
+## Thu 23/Dec/2021
+
+- Projects
+  - TenderJIT
+    - [x] Restrict temp vars instantiation to the block form
+
 ## Wed 22/Dec/2021
 
 - Projects
