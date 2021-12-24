@@ -89,9 +89,12 @@ CONDITION ? TRUE_BRANCH : FALSE_BRANCH
 print if /DELIMITER ;;$/ .. /DELIMITER ;$/
 print if /match/ .. -1                       # print all the lines after /match/ (included)
 
-# String operators (!!! DON'T USE == !!!)
+# String boolean operators (!!! DON'T USE == !!!)
 'a' eq 'a' # 1
 'a' ne 'b' # 1
+
+# String repetition operator
+'a' x 3
 ```
 
 For regexes, see the dedicated note file.
@@ -101,7 +104,10 @@ For regexes, see the dedicated note file.
 Interpolate an expression via `@{[...]}` (trick):
 
 ```sh
-echo "abc: 250" | perl -ne '/(\d+)/ && print "@{[$1 + 1]}"' # 251
+# Both return 251
+#
+echo "abc: 250" | perl -ne '/(\d+)/ && print "@{[$1 + 1]}"'  # in a string
+echo "abc: 250" | perl -pe 's/(\d+)/@{[$1 + 1]}/'            # also works in substitution, but the `e` switch is better
 ```
 
 #### Flip-flop, with examples
@@ -271,9 +277,10 @@ printf "k1: a\nk2: b\nk3: c" | perl -0777 -ne 'print join(",", m/^k[13]: (.+)$/m
 (for the flags, see the `regexes.md` document)
 
 ```sh
-# Replace with code evaluation.
+# Replace with code evaluation (expression)
+# See also [expressions](#expression-related) for a related trick.
 #
-perl -pe 's/(@\S+)/" " x length($1)/e'
+echo 250.jpg | perl -pe 's/(\d+)/"0" x (5 - length($1)) . $1/e' # 00250.jpg
 
 # Regex matches print the groups.
 #

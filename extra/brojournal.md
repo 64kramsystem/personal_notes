@@ -1,3 +1,17 @@
+## Fri 24/Dec/2021
+
+- Projects
+  - Openscripts
+    - [x] Add cbz/zip support to converter
+      - [x] Some refactorings
+      - [x] Research epic text padding strategy
+    - [x] convert_cb_archive_to_pdf: Add support for deleting the source file
+- Writings
+  - [x] Article: Generically padding strings in shell scripts
+- Tools
+  - VSC
+    - [x] Test issue with Ruby indentation
+
 ## Thu 23/Dec/2021
 
 - Projects
