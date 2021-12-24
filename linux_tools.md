@@ -64,8 +64,9 @@ ls --block-size=K   # human-readable; use K,M,G...
 
 -[i]name <pattern>                # use quotes when using wildcards in pattern; case [i]nsensitive
 -wholename <value>                # include the directory name (eg. `.git/config`)
--regextype egrep -[i]regex <regex>  # same as name, but with regex; must match the whole name
+-regextype egrep -[i]regex <regex>  # same as name, but with regex; must match the whole name (including the path, if any)
                                     # WATCH OUT: must specify the regextype (the default is minimal); if there is a -not, it must be put before it
+                                    # see section below for regex type notes.
 
 -type (f|d)                       # [f]iles, [d]irectories
 -L <path> -xtype l                # find symlinks
@@ -97,6 +98,10 @@ ls --block-size=K   # human-readable; use K,M,G...
 -exec $command {} \;              # execute command for every file found, passing the name as {}; multiple -exec can be passed
 -exec $command {} +               # execute command with as many files as possible (see https://unix.stackexchange.com/a/389706)
 ```
+
+Regexp types:
+
+- `egrep`: supports: `\w`, `[:digit:]`, not: `\d`
 
 ### Examples
 
