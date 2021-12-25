@@ -1,3 +1,9 @@
+## Sat 25/Dec/2021
+
+- Low-level Programming
+- [ ] The Art of 64-Bit Assembly, Volume 1
+  - [ ] 6: Arithmetic
+
 ## Fri 24/Dec/2021
 
 - Projects
