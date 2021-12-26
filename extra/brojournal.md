@@ -1,8 +1,28 @@
+## Cycle
+
+Messy week, due to holidays.
+
+## Sun 26/Dec/2021
+
+- Projects
+  - Schedule manager
+    - [x] Extend debug mode to Replanner class
+    - [x] Replanner: Fix for multi-digit months/years intervals
+  - Openscripts
+    - [x] convert_cb_archive_to_pdf: Fix permissions and rebase
+- Admin
+  - [ ] New year planning
+  - [ ] Cycle planning
+  - [ ] Career readings
+- Low-level Programming
+  - [ ] The Art of 64-Bit Assembly, Volume 1
+    - [x] 6: Arithmetic
+
 ## Sat 25/Dec/2021
 
 - Low-level Programming
-- [ ] The Art of 64-Bit Assembly, Volume 1
-  - [ ] 6: Arithmetic
+  - [ ] The Art of 64-Bit Assembly, Volume 1
+    - [ ] 6: Arithmetic
 
 ## Fri 24/Dec/2021
 
