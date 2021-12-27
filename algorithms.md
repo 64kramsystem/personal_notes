@@ -4,6 +4,7 @@
   - [Notes](#notes)
   - [Generic](#generic)
     - [All permutations of a sequence](#all-permutations-of-a-sequence)
+  - [Matrices](#matrices)
   - [Graphs](#graphs)
     - [A* search](#a-search)
     - [Min/Max Heap](#minmax-heap)
@@ -39,6 +40,10 @@ def permutations(sequence, start_position = 0, &block)
   end
 end
 ```
+
+## Matrices
+
+- (Row/Column)-major array storage: elements of each (R/C) are contiguous in memory
 
 ## Graphs
 

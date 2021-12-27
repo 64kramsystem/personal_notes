@@ -671,6 +671,21 @@ cal [[$month] $year]
 
 ## Images handling
 
+PDF images estraction:
+
+```sh
+# List the images in a PDF file
+#
+pdfimages -l $input
+
+# Extract the images
+#
+# -j:      write JPEG images as JPEG
+# prefix: `-` is appended automatically
+#
+pdfimages -j $input /path/to/$prefix
+```
+
 ### Imagemagick (convert)
 
 ```sh

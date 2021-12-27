@@ -54,14 +54,13 @@
 Provider configuration (e.g. `terraform.tf`):
 
 ```tf
+
 terraform {
-  required_version = "0.12.28"
+  required_version = "1.1.2"
 }
 
 provider "aws" {
-  region     = var.aws_default_region
-  access_key = var.aws_access_key_id
-  secret_key = var.aws_secret_access_key
+  region = var.aws_default_region
 }
 
 # Alternate provider, for other region. Don't forget to set the keys.
