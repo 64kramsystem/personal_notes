@@ -10,8 +10,6 @@
     - [Gemspec](#gemspec)
     - [Packaged gems/YAML gemspec](#packaged-gemsyaml-gemspec)
     - [Gem commands](#gem-commands)
-- [Format for operations (`fetch`, `list -r`...) on remote authenticated repositories.](#format-for-operations-fetch-list--r-on-remote-authenticated-repositories)
-- [`-s` appends a source; --clear-sources clears the preceding sources.](#-s-appends-a-source---clear-sources-clears-the-preceding-sources)
 
 ## Bundler
 
@@ -85,7 +83,11 @@ Gem.bin_path("passenger-enterprise-server", "passenger-status"[, <version])
 Gem.activate_bin_path(...)
 
 # Find a gem version
+# The first way is more practical, as it returns a Gem::Version, and it doesn't require finding the
+# VERSION location.
+#
 Gem.loaded_specs['activerecord'].version
+require 'zip/version'; Zip::VERSION
 
 # Compare (gem) versions!!!
 #
@@ -171,8 +173,10 @@ gem unpack $gemfile           # Unpack gem
 gem build $gemname.gemspec    # Build gem
 gem push $gemname-*.gem       # Publish a built gem
 gem fetch $gemname            # Download a gem
+gem install $gemname -- --build-flags... # Install a gem, with build flags
 
 # Format for operations (`fetch`, `list -r`...) on remote authenticated repositories.
 # `-s` appends a source; --clear-sources clears the preceding sources.
 #
 gem $operation --clear-sources -s $source $gem1 {$gem2...}
+```

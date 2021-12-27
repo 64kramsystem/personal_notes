@@ -86,7 +86,7 @@ Addressing modes (effective = end value):
 - PC-relative       | `op, symbol`                                 | WATCH OUT! The displacement is encoded, not the effective address!
 - Register-indirect | `[reg64], op`                                | Effective addr.
 - Indirect+offset   | `[reg64 ± displ]`                            | Effective addr.
-- Scaled-indexes    | `[base_reg64 + index_reg64 * scale ± displ]` | Effective addr.; scale = 1,2,4,8
+- Scaled-indexed    | `[base_reg64 + index_reg64 * scale ± displ]` | Effective addr.; scale = 1,2,4,8
 
 If `LARGEADDRESSAWARE` is disabled, other PC-relative addressing modes are available (e.g. `var[reg64]`), however, they can address only ±2 GB.
 
@@ -165,7 +165,7 @@ Conditional jump flags:
 
 Storage:
 
-- `mov`            : WATCH OUT! `mov eax, $val` clears the `rax` upper bits (mov `al`/`ax` doesn't)
+- `mov`            : WATCH OUT! `reg64/32, src32` zero extend; `reg16`/`reg8` don't.
 - `movzx reg, op`  : move with zero extend
 - `movsd`          : DP-float to/from `xmm`
 - `push`/`pop`     : reg₁₆/₆₄, mem₁₆/₆₄; pop: const₆₄ (use `pushw` for const₁₆)
@@ -173,12 +173,14 @@ Storage:
 
 Arithmetic:
 
-- `sal`/`shl` : Move the high bit into CF
-- `sar`       : Keeps the high bit as before shifting
-- `shr`       : Sets the high bit to 0
-- `imul`      : Multiply; result in `rdx`:`rax`
-- `idiv`      : Divide `rdx`:`rax`; result in `rax`, modulo in `rdx`
-- `neg`       : Two's complement negation
+- `inc`/`dec`                : WATCH OUT! They don't affect `CF`
+- `sal`/`shl`                : Move the high bit into CF
+- `sar`                      : Keeps the high bit as before shifting
+- `shr`                      : Sets the high bit to 0
+- `imul destreg, op`         : Multiply; `destreg *= op`; no 8 bit; 32bit consts are sign-extended; on overflow, `CF`+`OF` are set
+- `imul destreg, src, const` : ^^;       `destreg = src * const`
+- `idiv`                     : Divide `rdx`:`rax`; result in `rax`, modulo in `rdx`
+- `neg`                      : Two's complement negation
 
 Flags:
 
@@ -234,7 +236,7 @@ Trivial:
 
 ## Optimizations
 
-- `enter 0,0`           : Slower than `push rbp` + `mov rbp, rsp`!
+- `enter 0, 0`          : Slower than `push rbp` + `mov rbp, rsp`!
 - `xor $reg, $reg`      : Fastest way to reset a register
 - `dec rcx; jnz $label` : Faster than `loop $label`!!!
 - `mov $reg, $imm64`    : Preferrable to `lea reg, $addr`, but only for this case (see https://stackoverflow.com/a/35475959)

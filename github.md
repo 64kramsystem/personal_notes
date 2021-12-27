@@ -8,6 +8,8 @@
     - [Minimal example](#minimal-example)
   - [Rust CI action](#rust-ci-action)
   - [README.md](#readmemd)
+    - [Images](#images)
+    - [Refer to project root](#refer-to-project-root)
 
 ## Searches
 
@@ -160,4 +162,16 @@ jobs:
 
 ## README.md
 
-In order to refer to the project root, prefix the path with `/../../` (see [Stack Overflow](https://stackoverflow.com/a/40440270/210029))
+### Images
+
+Display an image (WATCH OUT! This won't be rendered from external sites):
+
+```md
+![Highlighted block rendering](/readme_images/hightlighted_block_rendering.png?raw=true)
+```
+
+Image (raw) path: `https://github.com/64kramsystem/vscode-markdown-code-blocks-asm-syntax-highlighting/blob/master/pizza/test.png?raw=true`
+
+### Refer to project root
+
+Prefix the path with `/../../` (see [Stack Overflow](https://stackoverflow.com/a/40440270/210029))

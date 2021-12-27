@@ -1,3 +1,26 @@
+## Mon 27/Dec/2021
+
+- Admin
+  - [x] Cycle planning
+  - [x] Search PDF annotation apps (Android/iOS)
+- Projects
+  - geet
+    - [x] MergePr: Push before merging
+  - libvfio-user-rs
+    - [x] Email maintainer
+  - VSC grammars extension
+    - [x] Split into two extensions
+    - [x] Cleanus documentation(s)
+  - Spreadbase
+    - [x] Review, investigate and discuss Rubyzip 3.0 PR
+- Tools
+  - Personal notes syncing script
+    - [x] Refactor and improve the commandline options
+    - [x] Minor refactoring to commit logic
+- Low-level Programming
+  - The Art of 64-Bit Assembly, Volume 1
+    - [ ] Copy notes Chapter 4
+
 ## Cycle
 
 Messy week, due to holidays.
@@ -13,6 +36,7 @@ Messy week, due to holidays.
 - Admin
   - [ ] New year planning
   - [ ] Cycle planning
+- SWE
   - [ ] Career readings
 - Low-level Programming
   - [ ] The Art of 64-Bit Assembly, Volume 1

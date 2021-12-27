@@ -23,15 +23,21 @@ npm install -g vsce
 #
 vsce package
 
-# Publish!
-#
+```
+
+Publishing. WATCH OUT!!! vsce seems to associate a given extension to the local path, so when an extension is renamed (or similar), rename the project directory!
+
+```sh
 vsce login $organization
 vsce publish
+vsce unpublish
 ```
 
 ## Associating Markdown code blocks to grammars
 
 See PRs in the [repository](https://github.com/64kramsystem/vscode-fenced-code-block-grammar-injections).
+
+When integrating into an existing project, a new language id entry needs to be added; if an existing one is recycled, the grammar will apply only to the new scope.
 
 ## Configuration
 
