@@ -5,6 +5,8 @@
   - [Basic structure](#basic-structure)
     - [Makefile for compiling](#makefile-for-compiling)
   - [Data types](#data-types)
+    - [Unions](#unions)
+    - [Structs](#structs)
   - [Addressing](#addressing)
   - [Constant operators](#constant-operators)
   - [Public interfacing](#public-interfacing)
@@ -51,7 +53,7 @@ myArr2   db  1, 2, 3         ; array, explicit form
 myByte   db  0
 
 union1   label dword         ; labels don't occupy space themselves
-union2   label dword         ; tee-hee unions
+union2   label dword         ; poor man's union (see section for MASM support)
          dd  0
 eou      equ this byte       ; like $, but can specify a type
 
@@ -99,17 +101,39 @@ Typedef: `$newtype typedef $existing_type`.
 
 Type coercion (pointed type): `$type ptr $expr`, e.g. `xmmword ptr [rbx]`.
 
-Structs:
+### Unions
 
 ```asm
-student  struct
+; Use `endu textequ <ends>` to make the end consistent with MASM general end syntax.
+;
+myUnion union
+a       byte
+b       word
+myUnion ends
+```
+
+### Structs
+
+```asm
+; `4` is the alignment - each field will be aligned as `min(alignment, field_size)`
+; `align` can also be used inside the struct, but it's inconvenient.
+student  struct 4
 Id       dword
 FullName byte 64 dup (?)
-Final    byte
+
 Grades   grades {}        ; nested struct!
+
+         union            ; anonymous union!
+a        byte
+b        word
+         ends
 student  ends
 
-John student {} ; empty declaration
+studentsArray student 4 dup ({}) ; array of students
+
+; Declaration ((trailing) fields can be omitted)
+; WATCH OUT!!! `Parent` can't be used as instance name!!
+John student {1, "abc", {1}}
 
 ; Allocated and access an array
 mov rcx, sizeof student
@@ -118,6 +142,10 @@ mov [rax].student.Final, 100
 
 ; Access a nested struct
 mov bx, John.Grades.Homework
+
+; Access an element in an array of structs (no LARGEADDRESS)
+imul ebx, i, sizeOf student
+mov eax, studentsArray.Id[rbx]
 ```
 
 ## Addressing

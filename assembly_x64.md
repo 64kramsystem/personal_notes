@@ -6,8 +6,21 @@
   - [Stack alignment/frame](#stack-alignmentframe)
   - [Addressing](#addressing)
     - [Pages (MMU)](#pages-mmu)
-  - [Registers/Flags](#registersflags)
+  - [Registers](#registers)
+  - [Flags](#flags)
   - [Instructions](#instructions)
+    - [Control flow](#control-flow)
+    - [Conditional jump flags/SetCC](#conditional-jump-flagssetcc)
+    - [Storage](#storage)
+    - [Sign-extension](#sign-extension)
+    - [Arithmetic](#arithmetic)
+      - [Multiplication](#multiplication)
+      - [Division](#division)
+    - [Flags](#flags-1)
+    - [Comparison/Bit testing/manipulation:](#comparisonbit-testingmanipulation)
+    - [Floating-point](#floating-point)
+      - [SSE](#sse)
+    - [Other](#other)
   - [Optimizations](#optimizations)
   - [Syscalls](#syscalls)
   - [Utilities](#utilities)
@@ -94,7 +107,7 @@ If `LARGEADDRESSAWARE` is disabled, other PC-relative addressing modes are avail
 
 In x64, pages are 4k; they're managed by the MMU, and can be Read/Write/Executable.
 
-## Registers/Flags
+## Registers
 
 General purpose registers:
 
@@ -111,20 +124,6 @@ General purpose registers:
 | r8..r15 |  rXd   |  rXw   |     -      |    rXb     |
 
 (r/e)ip is not considered general purpose.
-
-Flags:
-
-|   Name    | Symbol |  Bit  | Content                                                                             |
-| :-------: | :----: | :---: | ----------------------------------------------------------------------------------- |
-|   Carry   |   CF   |   0   | Previous instruction had a carry                                                    |
-|  Parity   |   PF   |   2   | Last byte has even number of 1s                                                     |
-|  Adjust   |   AF   |   4   | BCD operations                                                                      |
-|   Zero    |   ZF   |   6   | Result = 0                                                                          |
-|   Sign    |   SF   |   8   | Result < 0 (HO bit = 1)                                                             |
-| Direction |   DF   |  10   | Direction of string operations (increment or decrement)                             |
-| Overflow  |   OF   |  11   | MSB changed because added nums with same sign or subtracted nums with opposite sign |
-
-`OF`, `CF`, `SF` and `ZF` are called "condition flags".
 
 FP/SSE registers:
 
@@ -144,54 +143,105 @@ AVX registers: 16 `ymm`, 256-bit
 
 AVX-512 registers: 32 `zmm`, 512-bit
 
+## Flags
+
+|   Name    | Symbol |  Bit  | Content                                                                             |
+| :-------: | :----: | :---: | ----------------------------------------------------------------------------------- |
+|   Carry   |   CF   |   0   | Previous instruction had a carry                                                    |
+|  Parity   |   PF   |   2   | Last byte has even number of 1s                                                     |
+|  Adjust   |   AF   |   4   | BCD operations                                                                      |
+|   Zero    |   ZF   |   6   | Result = 0                                                                          |
+|   Sign    |   SF   |   8   | Result < 0 (MSB = 1)                                                                |
+| Direction |   DF   |  10   | Direction of string operations (increment or decrement)                             |
+| Overflow  |   OF   |  11   | MSB changed because added nums with same sign or subtracted nums with opposite sign |
+
+`OF`, `CF`, `SF` and `ZF` are called "condition flags".
+
 ## Instructions
 
 `SP`/`DP` = Single/Double Precision
 
+"A-ext" = (my term) AL->AX ... EAX->RAX
+"A+ext" = (my term) AL->AX, AX->DX:AX ... RAX->RDX:RAX
+
 There is only one instruction that supports a 64-bit constant (`mov reg64, imm64`).
 
-Control flow:
+### Control flow
 
 - `loop $label` : Decreases `rcx`
 - `enter 0,0`   : Prologue (same as `push rbp` + `mov rbp, rsp`) (see [performance](#optimizations))
 - `leave`       : Epilogue (same/performance as `mov rsp, rbp` + `pop rbp`)
 
-Conditional jump flags:
+### Conditional jump flags/SetCC
+
+For signed comparisons:
+
+- `SF != OF` : left < right
+- `SF == OF` : left >= right
+
+for unsigned, use `CF`. The `ZF` is added to the boolean condition, in order to handle the equality.
+
+Signed: `a`/`b`, unsigned: `g`/`l`.
 
 - `jb`  / `jae` : `CF`             / `!CF`
 - `jbe` / `ja`  : `CF || ZF`       / `!CF && !ZF`
 - `jl`  / `jge` : `SF != OF`       / `SF == OF`
 - `jle` / `jg`  : `SF != OF || ZF` / `SF == OF && !ZF`
 
-Storage:
+- `setCC op8` : Set the (8-bit) operand to 1 if `CC` flag is set (omit the `F`, e.g. `setc`); DOES NOT reset the higher bits
+              : There is one for each jCC
 
-- `mov`            : WATCH OUT! `reg64/32, src32` zero extend; `reg16`/`reg8` don't.
-- `movzx reg, op`  : move with zero extend
+### Storage
+
+- `mov`            : WATCH OUT! `reg64/32, src32` zero extend (even in the same reg); `reg16`/`reg8` don't.
 - `movsd`          : DP-float to/from `xmm`
 - `push`/`pop`     : reg₁₆/₆₄, mem₁₆/₆₄; pop: const₆₄ (use `pushw` for const₁₆)
 - `pushfq`/`popfq` : rflags (eflags without `q`)
 
-Arithmetic:
+### Sign-extension
+
+- `cwde`/`cdqe`              : Sign-extend A-ext (16/32 bits)
+- `cbw`/`cwd`/`cdq`/`cqo`    : Sign-extend A+ext (8..64 bits)
+- `movsxd dst64, src32`      : Move with sign-extension, specific 32->64
+- `movsx dst, src`           : ^^, all the rest
+- `movzx dst, src`           : Move with zero-extension (WATCH OUT! See `mov`)
+
+### Arithmetic
 
 - `inc`/`dec`                : WATCH OUT! They don't affect `CF`
 - `sal`/`shl`                : Move the high bit into CF
 - `sar`                      : Keeps the high bit as before shifting
 - `shr`                      : Sets the high bit to 0
-- `imul destreg, op`         : Multiply; `destreg *= op`; no 8 bit; 32bit consts are sign-extended; on overflow, `CF`+`OF` are set
-- `imul destreg, src, const` : ^^;       `destreg = src * const`
 - `idiv`                     : Divide `rdx`:`rax`; result in `rax`, modulo in `rdx`
 - `neg`                      : Two's complement negation
 
-Flags:
+#### Multiplication
+
+- `imul dstreg, op`         : `destreg *= op`; no 8 bit; 32bit consts are sign-extended; on overflow, `CF`+`OF` are set
+- `imul dstreg, src, const` : `destreg = src * const`
+- `[i]mul op`               : A+ext; no const
+
+WATCH OUT!! In the 2+ operand imul operations, the dstreg width is the same as the other operands!!!
+
+#### Division
+
+- `[i]div op`               : A+ext (low=quotient; high=modulo)
+
+WATCH OUT!! The op is half the size of the source (A+), so must sign/zero-extend the source, if needed! Also, the result may not fit the dest!!
+
+WATCH OUT!! Errors can be raised, e.g. division by zero
+
+### Flags
 
 - `clc`, `stc`, `cmc` : Clear/Set/Complement the Carry flag
 - `sahf`, `lahf`      : (Store AH into/Load AH from) low 8 bit flags
 
-Bit testing/manipulation:
+### Comparison/Bit testing/manipulation:
 
+- `cmp`           : Performa `sub`, discards the result, and sets `SF`/`PF`/`ZF` accordingly
+                  : WATCH OUT!! Don't forget that consts are max 32 bits!
 - `test`          : Performs `and`, discards the result, and sets `SF`/`PF`/`ZF` accordingly; can't be used to test
                     if multiple bits are set (any one set will unset ZF)
-- `setCC`         : Set the (8-bit) operand to 1 if `CC` flag is set (omit the `F`, e.g. `setc`); DOES NOT reset the higher bits
 - `bts/btr op, n` : Bit `n` set/reset
 - `bt op, reg`    : Test `reg`ᵗʰ bit (doesn't support immediate); stores bit value into CF
   ```asm
@@ -200,7 +250,7 @@ Bit testing/manipulation:
   setc  al
   ```
 
-Floating-point:
+### Floating-point
 
 - `movss`              : Move scalar SP
 - `cvtss2sd`           : Convert scalar SP to scalar DP
@@ -209,7 +259,7 @@ Floating-point:
 - `sqrtsd`             : Square root DP in `xmm`
 - `ldmxcsr`, `stmxcsr` : Load/store `mxcsr` (32-bit)
 
-SSE:
+#### SSE
 
 - `mov[ua]p[sd]`         : Move Un/Aligned packed S/DP
 - `movdqa`               : Move Double int Aligned (4 sizes)
@@ -218,7 +268,7 @@ SSE:
 - `pextrd reg, xmm, pos` : Packed Extract Double int at (xmm) Pos into reg (4 sizes)
 - `pinsrd xmm, reg, pos` : Packed Insert reg into (xmm) Pos Double int (4 sizes)
 
-Other:
+### Other
 
 - `cpuid`         : Read CPU characteristics; requires mode in `eax` -> sets the result in `rcx`/`rdx`
                     Infos here: https://exceptionshub.com/how-to-check-if-a-cpu-supports-the-sse3-instruction-set.html
