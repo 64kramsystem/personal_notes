@@ -1,3 +1,17 @@
+## Tue 28/Dec/2021
+
+- Projects
+  - Spreadbase
+    - [x] Discuss Rubyzip 3.0 PR; prepare and propose code
+- SWE
+  - [ ] Career readings
+- Low-level Programming
+  - The Art of 64-Bit Assembly, Volume 1
+    - [x] Copy notes Chapter 4
+      - [x] Fight/research nested structures
+    - [x] ~~Copy notes Chapter 5~~
+    - [ ] Copy notes Chapter 6
+
 ## Mon 27/Dec/2021
 
 - Admin
