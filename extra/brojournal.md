@@ -1,3 +1,13 @@
+## Wed 29/Dec/2021
+
+- Low-level Programming
+  - The Art of 64-Bit Assembly, Volume 1
+    - [x] 7: Low-Level Control Structures
+    - [x] 8: Advanced Arithmetic (part)
+    - [x] ~~9: Numeric Conversion~~
+    - [x] 10: Table Lookups
+    - [x] 11: SIMD Instructions (part)
+
 ## Tue 28/Dec/2021
 
 - Projects
