@@ -1,3 +1,12 @@
+## Thu 30/Dec/2021
+
+- Projects
+  - Openscripts
+    - [x] convert_cb_archive_use_trash: On deletion, use trash if available
+- Low-level Programming
+  - The Art of 64-Bit Assembly, Volume 1
+    - [ ] 12: Bit Manipulation
+
 ## Wed 29/Dec/2021
 
 - Low-level Programming
