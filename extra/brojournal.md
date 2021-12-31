@@ -1,3 +1,24 @@
+## Fri 31/Dec/2021
+
+- Projects
+  - Spreadbase
+    - [x] Design and implement Rubyzip 3.0 compatibility
+      - [x] Relase gem
+  - TenderJIT
+    - [x] Try to reproduce more stably and isolate the [segfault/conditions](https://github.com/tenderlove/tenderjit/issues/110)
+      - [x] Write discussion
+    - [x] Discuss possible other bug found
+- Low-level Programming
+  - [ ] The Art of 64-Bit Assembly, Volume 1
+    - [x] 12: Bit Manipulation
+    - [x] ~~13: Macros and the MASM Compile-Time Language~~
+    - [x] 14: The String Instructions
+      - [x] Read [CMOV vs. branching Torvalds discussion](https://yarchive.net/comp/linux/cmov.html)
+    - [x] ~~15: Managing Complex Projects~~
+    - [x] ~~16: Stand-Alone Assembly Language Programs~~
+- SWE
+  - [ ] Career readings
+
 ## Thu 30/Dec/2021
 
 - Projects
