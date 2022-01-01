@@ -1,0 +1,23 @@
+## Sat 01/Jan/2022
+
+- Admin
+  - Systems
+    - [x] Workaround Btrfs bug on background scrubbing
+- Tools
+  - [x] Create script for archival previous year files, including brojournal
+- Projects
+  - Personal notes
+    - [x] Restructure repository
+  - TenderJIT
+- JITs/Interpreters
+  - [ ] CPython Internals
+    - ~~Introduction~~
+    - ~~Getting the CPython Source Code~~
+    - ~~Setting Up Your Development Environment~~
+    - [x] Compiling CPython (part)
+    - ~~The Python Language and Grammar~~
+    - ~~Configuration and Input~~
+    - ~~Lexing and Parsing With Syntax Trees~~
+    - [x] The Compiler (part)
+    - [x] The Evaluation Loop (part)
+    - [ ] Memory Management
