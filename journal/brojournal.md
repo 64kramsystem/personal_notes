@@ -1,3 +1,9 @@
+## Sun 02/Jan/2022
+
+- JITs/Interpreters
+  - [ ] CPython Internals
+    - [x] Memory Management
+
 ## Sat 01/Jan/2022
 
 - Admin
