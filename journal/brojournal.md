@@ -1,3 +1,33 @@
+## Mon 03/Jan/2022
+
+- Projects
+  - Openscripts
+    - [x] convert_cb_archive_to_pdf: Fix output filename (remove generic `cb*` extension)
+  - Schedule manager
+    - [x] Replanner: Add support for `day+` (day plus one week)
+  - Geet
+    - [x] Allow skipping the selection menu for a given parameter (e.g. reviewers)
+  - Blog
+    - [x] add_new_book.sh: Update parameter value for skipping reviewers
+- Low-level Programming
+  - The Art of 64-Bit Assembly, Volume 1
+    - [x] Report erratum on "SIMD String Instructions" chapter
+    - [x] Add article to blog with links
+- Other
+  - [x] Publish MS laptop issues
+- Admin
+  - [x] Cycle planning
+
+## Cycle
+
+- Unscheduled
+  - TenderJIT issue investigations
+  - ASM book remaining chapters
+  - Start CPython Internals
+- Postponed
+  - Large project: TJ/JITs study
+  - Practice: Competitive programmer's core skill
+
 ## Sun 02/Jan/2022
 
 - JITs/Interpreters
