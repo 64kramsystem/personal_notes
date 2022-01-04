@@ -1,3 +1,9 @@
+## Tue 04/Jan/2022
+
+- JITs/Interpreters
+  - [ ] CPython Internals
+    - [ ] Parallelism and Concurrency
+
 ## Mon 03/Jan/2022
 
 - Projects
