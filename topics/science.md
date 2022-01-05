@@ -2,6 +2,8 @@
 
 - [Science](#science)
   - [Math](#math)
+    - [Arithmetic](#arithmetic)
+      - [Properties](#properties)
     - [Number theory](#number-theory)
     - [Trigonometry](#trigonometry)
     - [Geometry](#geometry)
@@ -14,6 +16,14 @@
     - [Falling object (gravity)](#falling-object-gravity)
 
 ## Math
+
+### Arithmetic
+
+- "Left associative": evaluates from left, e.g. (1 • 2 • 3) = ((1 • 2) • 3)
+
+#### Properties
+
+- Commutative: (A • B) = (B • A)
 
 ### Number theory
 
@@ -39,7 +49,7 @@ r2.left > r1.right && r2.right < r1.left && r2.top > r1.bottom && r2.bottom < r1
 
 Stddev: sqrt( Ε( (xᵢ-avg)² ) / n) )
 
-In words: root of the mean of the square of difference.
+In words: root of (the mean of (the square of difference)).
 
 ### Algebra
 
