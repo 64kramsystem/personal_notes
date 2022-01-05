@@ -3,6 +3,8 @@
 - [Assembly x64](#assembly-x64)
   - [Basic structure](#basic-structure)
   - [Data types](#data-types)
+    - [IEEE754](#ieee754)
+    - [Boolean representation](#boolean-representation)
   - [Stack alignment/frame](#stack-alignmentframe)
   - [Addressing](#addressing)
     - [Pages (MMU)](#pages-mmu)
@@ -22,6 +24,8 @@
       - [SSE](#sse)
     - [Other](#other)
   - [Optimizations](#optimizations)
+    - [Low-level](#low-level)
+    - [Higher level](#higher-level)
   - [Syscalls](#syscalls)
   - [Utilities](#utilities)
   - [General concepts](#general-concepts)
@@ -58,6 +62,27 @@ main:
 
 - `db`, `dw`, `dd`, `dq`
 - `resb`, `resw`, `resres`, `resq`
+
+The `word` size depends on the architecture!!
+
+Assuming a 16-bit arch, the 128-bit size is `long word`.
+
+### IEEE754
+
+Precision bits (sgn, exp, mant)
+
+- Single precision bits: 1 + 8  + 23
+- Double precision bits: 1 + 11 + 52
+
+Exponent: signed
+Mantissa: 1.0 + 0.5^(left position 1-based); there are special cases
+
+### Boolean representation
+
+"Logical systems", and advantages:
+
+- "boolean" (0, 1): the values are consistent with the ASM bit operations (except not, but can use `xor op, 1` (!)) and setCC
+- "arithmetic" (0, anything else): non-1 false values don't need conversion
 
 ## Stack alignment/frame
 
@@ -217,9 +242,10 @@ Signed: `a`/`b`, unsigned: `g`/`l`.
 
 #### Multiplication
 
+- `mul op`                  : unsigned; A+ext; no const
+- `imul op`                 : ^^, signed
 - `imul dstreg, op`         : `destreg *= op`; no 8 bit; 32bit consts are sign-extended; on overflow, `CF`+`OF` are set
 - `imul dstreg, src, const` : `destreg = src * const`
-- `[i]mul op`               : A+ext; no const
 
 WATCH OUT!! In the 2+ operand imul operations, the dstreg width is the same as the other operands!!!
 
@@ -286,10 +312,31 @@ Trivial:
 
 ## Optimizations
 
+### Low-level
+
 - `enter 0, 0`          : Slower than `push rbp` + `mov rbp, rsp`!
 - `xor $reg, $reg`      : Fastest way to reset a register
 - `dec rcx; jnz $label` : Faster than `loop $label`!!!
 - `mov $reg, $imm64`    : Preferrable to `lea reg, $addr`, but only for this case (see https://stackoverflow.com/a/35475959)
+
+Multiplications without imul:
+
+- use `lea` + indexed scaled addressing (e.g. `ebx + 2 * ebx`)
+- use shifts + additions
+
+Divisions with idiv:
+
+- use shifts
+- multiply by the reciprocal
+  ```asm
+  ; DX = AX / n (!!!); works because of the bits shift - the bits "migrate" from AX into DX!!
+  mov dx, (65536 / n)
+  mul dx
+  ```
+
+### Higher level
+
+Cycle a 2^n counter via bitmask: `inc $op; and $op, 0x11..1`.
 
 ## Syscalls
 

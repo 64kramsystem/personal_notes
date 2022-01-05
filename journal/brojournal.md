@@ -1,3 +1,32 @@
+## Wed 05/Jan/2022
+
+- Tools
+  - Work computation scripts: Holidays and new weekend handling
+    - [x] Review available holiday gems
+    - Set weekends/holidays as off by default (via `holidays` gem)
+      - [x] Calendar addition script
+      - [x] Hours computation script
+  - [x] Yearly archival script
+    - [x] Add daily
+    - [x] Add Email client archival of all folders
+      - [x] Investigate files and formats
+- SWE
+  - Career
+    - [ ] Readings
+- JITs/Interpreters
+  - [ ] CPython Internals
+    - [x] Parallelism and Concurrency
+    - [x] Objects and Types
+    - [x] The Standard Library
+    - ~~The Test Suite~~
+    - [x] Debugging
+    - [x] Benchmarking, Profiling, and Tracing
+    - ~~Next Steps~~
+    - ~~Appendix: Introduction to C for Python Programmers~~
+- Low-level Programming
+  - The Art of 64-Bit Assembly, Volume 1
+    - [ ] Copy notes Chapter 6
+
 ## Tue 04/Jan/2022
 
 - JITs/Interpreters
