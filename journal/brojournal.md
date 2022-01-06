@@ -1,3 +1,12 @@
+## Thu 06/Jan/2022
+
+- Tools
+  - [x] Update file sharing start script to use double resume
+- JITs/Interpreters
+  - [x] Read [Ruby AOT Compiler announcement](https://sorbet.org/blog/2021/07/30/open-sourcing-sorbet-compiler)
+  - [x] CPython Internals
+    - [x] Read again The Evaluation Loop
+
 ## Wed 05/Jan/2022
 
 - Tools
