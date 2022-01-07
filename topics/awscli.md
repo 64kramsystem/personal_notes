@@ -110,6 +110,7 @@ List buckets/prefixes:
 ```sh
 # What is displayed depends on what is specified.
 # The bucket can optionally be prefixed by `s3://`.
+# If a file is specified, and non is found, aws exits with error (1).
 
 aws s3 ls [--human-readable] [$bucket[$prefix]] [--recursive]
 ```

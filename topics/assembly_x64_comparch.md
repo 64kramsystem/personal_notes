@@ -11,8 +11,8 @@
   - [Registers](#registers)
   - [Flags](#flags)
   - [Instructions](#instructions)
-    - [Control flow](#control-flow)
-    - [Conditional jump flags/SetCC](#conditional-jump-flagssetcc)
+    - [Control flow/jumps/trampolines](#control-flowjumpstrampolines)
+      - [Conditional jump flags/SetCC/CmovCC](#conditional-jump-flagssetcccmovcc)
     - [Storage](#storage)
     - [Sign-extension](#sign-extension)
     - [Arithmetic](#arithmetic)
@@ -20,8 +20,7 @@
       - [Division](#division)
     - [Flags](#flags-1)
     - [Comparison/Bit testing/manipulation:](#comparisonbit-testingmanipulation)
-    - [Floating-point](#floating-point)
-      - [SSE](#sse)
+    - [Floating-point/SSE](#floating-pointsse)
     - [Other](#other)
   - [Optimizations](#optimizations)
     - [Low-level](#low-level)
@@ -191,13 +190,40 @@ AVX-512 registers: 32 `zmm`, 512-bit
 
 There is only one instruction that supports a 64-bit constant (`mov reg64, imm64`).
 
-### Control flow
+### Control flow/jumps/trampolines
 
 - `loop $label` : Decreases `rcx`
 - `enter 0,0`   : Prologue (same as `push rbp` + `mov rbp, rsp`) (see [performance](#optimizations))
 - `leave`       : Epilogue (same/performance as `mov rsp, rbp` + `pop rbp`)
 
-### Conditional jump flags/SetCC
+Interpreting jumps:
+
+```asm
+; When reading if/then, generally, the conditional is the opposite, e.g.
+;
+; if (foo == bar); then baz; end
+;
+        cmp foo, bar
+        jnz end
+        baz
+end:
+```
+
+Trampolines (64-bit jump):
+
+```asm
+; jmp [rip] (!)
+
+        jmp destPtr
+destPtr dq  ?
+
+; store into stack -> ret
+
+        push [destPtr]
+        ret
+```
+
+#### Conditional jump flags/SetCC/CmovCC
 
 For signed comparisons:
 
@@ -216,10 +242,11 @@ Signed: `a`/`b`, unsigned: `g`/`l`.
 - `setCC op8` : Set the (8-bit) operand to 1 if `CC` flag is set (omit the `F`, e.g. `setc`); DOES NOT reset the higher bits
               : There is one for each jCC
 
+- `cmovCC`    : Conditional mov (see [optimization](#optimizations))
+
 ### Storage
 
 - `mov`            : WATCH OUT! `reg64/32, src32` zero extend (even in the same reg); `reg16`/`reg8` don't.
-- `movsd`          : DP-float to/from `xmm`
 - `push`/`pop`     : reg₁₆/₆₄, mem₁₆/₆₄; pop: const₆₄ (use `pushw` for const₁₆)
 - `pushfq`/`popfq` : rflags (eflags without `q`)
 
@@ -276,23 +303,35 @@ WATCH OUT!! Errors can be raised, e.g. division by zero
   setc  al
   ```
 
-### Floating-point
+### Floating-point/SSE
 
-- `movss`              : Move scalar SP
-- `cvtss2sd`           : Convert scalar SP to scalar DP
-- `addsd`, `subsd`     : Add/sub DP in `xmm`
-- `mulsd`, `divsd`     : Multiply/divide DP in `xmm`
-- `sqrtsd`             : Square root DP in `xmm`
+SSE doesn't support 80-bits FP.
+
+- `P` : `s`/`d` precision
+- `N` : `P` + `i` (integer)
+- `A` : `u`/`a` alignment
+
+- `movss`, `movsd`     : Move SP/DP scalar to/from `xmm`
+- `movd`, `movq`       : Move 32/64-bit to/from regular registers
 - `ldmxcsr`, `stmxcsr` : Load/store `mxcsr` (32-bit)
+- `cvtsN2sN`           : Convert between floats and integers
 
-#### SSE
+- `addsP`, `subsP`
+- `mulsP`, `divsP`
+- `minsP`, `maPsP`     : Min/max, store into dest
+- `sqrtsP`             : Square root
+- `rcpss`              : Reciprocal
+- `rsqrtss`            : Reciprocal of square root
 
-- `mov[ua]p[sd]`         : Move Un/Aligned packed S/DP
+- `movApP`               : Move Un/Aligned packed S/DP
 - `movdqa`               : Move Double int Aligned (4 sizes)
-- `addp[sd]`             : Add Packed S/DP
+- `addpP`                : Add Packed S/DP
 - `paddd`                : Packed Add Double int (4 sizes)
 - `pextrd reg, xmm, pos` : Packed Extract Double int at (xmm) Pos into reg (4 sizes)
 - `pinsrd xmm, reg, pos` : Packed Insert reg into (xmm) Pos Double int (4 sizes)
+
+- `cmpsP xmm, op, imm8`  : imm8 is the comparison
+- `cmpeqsP xmm, op`, ... : Special MASM/UASM format
 
 ### Other
 
@@ -318,6 +357,7 @@ Trivial:
 - `xor $reg, $reg`      : Fastest way to reset a register
 - `dec rcx; jnz $label` : Faster than `loop $label`!!!
 - `mov $reg, $imm64`    : Preferrable to `lea reg, $addr`, but only for this case (see https://stackoverflow.com/a/35475959)
+- `cmovCC`              : CmovCC is not necessarily better than jCC - see [L. Torvald's considerations](https://yarchive.net/comp/linux/cmov.html)
 
 Multiplications without imul:
 
