@@ -1,3 +1,14 @@
+## Fri 07/Jan/2022
+
+- SWE
+  - Career
+    - [ ] Readings
+- Low-level Programming
+  - The Art of 64-Bit Assembly, Volume 1
+    - [x] Copy notes Chapter 6
+    - [ ] Copy notes Chapter 7
+      - [x] Think simplified version of TJ register saving trampoline
+
 ## Thu 06/Jan/2022
 
 - Tools
