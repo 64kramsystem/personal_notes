@@ -1,3 +1,8 @@
+## Sat 08/Jan/2022
+
+- Databases
+  - [x] Read [MySQL UUID performance](https://www.percona.com/blog/2019/11/22/uuids-are-popular-but-bad-for-performance-lets-discuss)
+
 ## Fri 07/Jan/2022
 
 - SWE
