@@ -1,6 +1,8 @@
 # Science
 
 - [Science](#science)
+  - [Computer Science](#computer-science)
+    - [Logic](#logic)
   - [Math](#math)
     - [Arithmetic](#arithmetic)
       - [Properties](#properties)
@@ -14,6 +16,12 @@
       - [Check if a number is close within the two ends of an interval](#check-if-a-number-is-close-within-the-two-ends-of-an-interval)
   - [Physics](#physics)
     - [Falling object (gravity)](#falling-object-gravity)
+
+## Computer Science
+
+### Logic
+
+"Complete boolean evaluation": when the conditions are always evaluated (as opposed to Short-Circuit).
 
 ## Math
 

@@ -25,6 +25,7 @@
   - [Optimizations](#optimizations)
     - [Low-level](#low-level)
     - [Higher level](#higher-level)
+      - [Control flow](#control-flow)
   - [Syscalls](#syscalls)
   - [Utilities](#utilities)
   - [General concepts](#general-concepts)
@@ -209,6 +210,17 @@ Interpreting jumps:
 end:
 ```
 
+When a boolean expressions has multiple conditionals, each individual comparison can be accumulated in halves of a reg8, via setCC:
+
+```asm
+; bl = eax < y && ebx > z
+        cmp eax, y
+        setl bl
+        cmp ebx, z
+        setg bh
+        and bl, bh
+```
+
 Trampolines (64-bit jump):
 
 ```asm
@@ -369,14 +381,40 @@ Divisions with idiv:
 - use shifts
 - multiply by the reciprocal
   ```asm
-  ; DX = AX / n (!!!); works because of the bits shift - the bits "migrate" from AX into DX!!
-  mov dx, (65536 / n)
-  mul dx
+        ; DX = AX / n (!!!); works because of the bits shift - the bits "migrate" from AX into DX!!
+        mov dx, (65536 / n)
+        mul dx
   ```
+
+Absolute without conditional (!):
+
+```asm
+        cdq             ; set EDX to -1 if EAX < 0, and to 0 otherwise
+        xor eax, edx    ; NOT if EAX was < 0
+        and edx, 1      ; 1 if EAX was < 0
+        add eax, edx    ; +1 if EAX was < 0 (two's complement)
+
+        mov edx, eax    ; even smaller!!!
+        neg edx
+        cmovns eax, edx
+```
 
 ### Higher level
 
 Cycle a 2^n counter via bitmask: `inc $op; and $op, 0x11..1`.
+
+#### Control flow
+
+When implementing short-circuit boolean expressions:
+
+- encode the shortest codepaths based on the distribution of the cases:
+  ```c
+  // if (a == b) often, and (c < d) rarely, first encode the (jnl) test for (c < d).
+  (a == b) && (c < d)
+  ```
+- if some comparisons are expensive, evaluate them later than inexpensive ones.
+
+If some code is rarely executed, deinline it, so that the hot path is denser.
 
 ## Syscalls
 
