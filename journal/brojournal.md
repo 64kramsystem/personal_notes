@@ -1,3 +1,24 @@
+## Cycle
+
+Skipped a day, but overall, completed the cycle.
+
+- Skipped
+  - TJ issue investigation (solved)
+
+## Sun 09/Jan/2022
+
+- Projects
+  - TenderJIT
+    - [x] Review new fixes PR
+  - Openscripts
+    - [x] Add `manage_bt` new script
+- SWE
+  - Career
+    - [x] Readings
+- Low-level Programming
+  - The Art of 64-Bit Assembly, Volume 1
+    - [ ] Copy notes Chapter 7
+
 ## Sat 08/Jan/2022
 
 - Databases
