@@ -281,7 +281,7 @@ until (( $VGAPT_MEMORY < $(free -m | sed '2q;d' | awk '{print $NF}') )); do $com
 test $expr                              # test an expression
 
 if [[ ( $expr1 ) || ( $expr2 ) ]]       # complex conditionals; parenthesis denote priority
-if { $commands; } || { $commands; }     # conditional with commands
+if { $commands; } || { $commands; }     # conditional with commands (for simple commands, braces+semicolons are not required)
 if (( lhs < rhs ))                      # arithmetic comparison (dollars are not required)
 ```
 

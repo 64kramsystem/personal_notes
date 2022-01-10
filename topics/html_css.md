@@ -6,6 +6,7 @@
     - [Snippets](#snippets)
       - [View/Hide sections](#viewhide-sections)
   - [CSS](#css)
+    - [Add styles in the HTML body](#add-styles-in-the-html-body)
 
 ## HTML
 
@@ -62,4 +63,16 @@ Usable on GitHub; additional tags like `target` and `rel` have been stripped whe
 html, body {
   margin: 0;
 }
+```
+
+### Add styles in the HTML body
+
+In HTML 5, it's possible to add styles in the body, via `scoped` attribute:
+
+```html
+<div>
+  <style type="text/css" scoped>
+    .bookshelf{ padding-left: 0px; }
+  </style>
+<!-- ... -->
 ```
