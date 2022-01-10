@@ -146,10 +146,11 @@ See [reference](https://relishapp.com/rspec/rspec-expectations/v/3-10/docs/built
 
 See [reference](https://relishapp.com/rspec/rspec-mocks/docs/setting-constraints/matching-arguments).
 
-| Argument                   | Methods              | Notes                                     |
+| Argument                   | Methods (`with`)     | Notes                                     |
 | -------------------------- | -------------------- | ----------------------------------------- |
-| Regexp/===                 | `with(/expr/)`       | Anything supporting case equality (`===`) |
+| Regexp/===                 | `/expr/`             | Anything supporting case equality (`===`) |
 | Instance of specific class | `instance_of(klazz)` |                                           |
+| Anything                   | `anything()`         | Any positional argument                   |
 
 ### Receive counts
 

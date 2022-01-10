@@ -1,3 +1,28 @@
+## Mon 10/Jan/2022
+
+- Tools
+  - [x] Fix/update internal script
+  - [ ] Review Ruby/VSC type checkers
+    - [x] Review Sorbet/VSC extension
+      - [x] Investigate Sorbet possible bug
+    - [x] Review RBS/Typeprof-IDE VSC extension
+  - [x] Extend internal script
+  - [x] Update other internal script
+    - [x] Add less digits support
+    - [x] Add general inconsistencies support
+  - [x] Find how to remove all audio from audio files
+- Blog/Admin
+  - [x] Disable Disqus ads
+- Projects
+  - Openscripts
+    - [x] gitio: Add "short" functionality (protocol stripping)
+      - [x] Minor cleanups
+- Low-level Programming
+  - The Art of 64-Bit Assembly, Volume 1
+    - [x] Copy notes Chapter 7
+    - [x] Copy notes Chapter 10
+    - [x] Copy notes Chapter 11
+
 ## Cycle
 
 Skipped a day, but overall, completed the cycle.

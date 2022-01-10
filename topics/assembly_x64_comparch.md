@@ -10,8 +10,9 @@
     - [Pages (MMU)](#pages-mmu)
   - [Registers](#registers)
   - [Flags](#flags)
+  - [Control flow patterns](#control-flow-patterns)
   - [Instructions](#instructions)
-    - [Control flow/jumps/trampolines](#control-flowjumpstrampolines)
+    - [Control flow](#control-flow)
       - [Conditional jump flags/SetCC/CmovCC](#conditional-jump-flagssetcccmovcc)
     - [Storage](#storage)
     - [Sign-extension](#sign-extension)
@@ -25,7 +26,7 @@
   - [Optimizations](#optimizations)
     - [Low-level](#low-level)
     - [Higher level](#higher-level)
-      - [Control flow](#control-flow)
+      - [Control flow](#control-flow-1)
   - [Syscalls](#syscalls)
   - [Utilities](#utilities)
   - [General concepts](#general-concepts)
@@ -90,12 +91,13 @@ Stack alignment is required by some instructions; the stack frame is useful prim
 
 When there is complete control over a workflow (e.g. leaf routine), the two can be omitted.
 
-If one doesn't know the alignment state, he can use:
+If one doesn't know the alignment state, they can use:
 
 ```asm
-; irreversible
+; irreversible; can also only mask RSP, if possible in that context:
 ;
-and rsp, 0xfffffffffffffff0
+lea rax, [rsp + 0xf]
+and rax, -0x10
 
 ; reversible
 ;
@@ -182,26 +184,11 @@ AVX-512 registers: 32 `zmm`, 512-bit
 
 `OF`, `CF`, `SF` and `ZF` are called "condition flags".
 
-## Instructions
+## Control flow patterns
 
-`SP`/`DP` = Single/Double Precision
-
-"A-ext" = (my term) AL->AX ... EAX->RAX
-"A+ext" = (my term) AL->AX, AX->DX:AX ... RAX->RDX:RAX
-
-There is only one instruction that supports a 64-bit constant (`mov reg64, imm64`).
-
-### Control flow/jumps/trampolines
-
-- `loop $label` : Decreases `rcx`
-- `enter 0,0`   : Prologue (same as `push rbp` + `mov rbp, rsp`) (see [performance](#optimizations))
-- `leave`       : Epilogue (same/performance as `mov rsp, rbp` + `pop rbp`)
-
-Interpreting jumps:
+When reading if/then (and loops), generally, the conditional is the opposite:
 
 ```asm
-; When reading if/then, generally, the conditional is the opposite, e.g.
-;
 ; if (foo == bar); then baz; end
 ;
         cmp foo, bar
@@ -209,6 +196,10 @@ Interpreting jumps:
         baz
 end:
 ```
+
+Loops can be optimized by applying the conditional jump at the end (see [optimizations section](#control-flow-1))
+
+If the loop variable has a last value of zero, use `jns` instead of `jnz`.
 
 When a boolean expressions has multiple conditionals, each individual comparison can be accumulated in halves of a reg8, via setCC:
 
@@ -220,6 +211,14 @@ When a boolean expressions has multiple conditionals, each individual comparison
         setg bh
         and bl, bh
 ```
+
+Switch/case implementation depends on the cases:
+
+- contiguous ints: jump table (linear array of addresses)
+  - can subtract indexes via scaled indexed addressing (e.g `rax * 8 - 5 * 8` if the first case is 5)
+- noncontiguous ints (few cases): jump table, with default value entries
+- noncontiguous ints (many cases): mix if/then and jump tables
+- really hard cases: use binary search via if/then
 
 Trampolines (64-bit jump):
 
@@ -234,6 +233,21 @@ destPtr dq  ?
         push [destPtr]
         ret
 ```
+
+## Instructions
+
+`SP`/`DP` = Single/Double Precision
+
+"A-ext" = (my term) AL->AX ... EAX->RAX
+"A+ext" = (my term) AL->AX, AX->DX:AX ... RAX->RDX:RAX
+
+There is only one instruction that supports a 64-bit constant (`mov reg64, imm64`).
+
+### Control flow
+
+- `loop $label` : Decreases `rcx`
+- `enter 0,0`   : Prologue (same as `push rbp` + `mov rbp, rsp`) (see [performance](#optimizations))
+- `leave`       : Epilogue (same/performance as `mov rsp, rbp` + `pop rbp`)
 
 #### Conditional jump flags/SetCC/CmovCC
 
@@ -261,6 +275,7 @@ Signed: `a`/`b`, unsigned: `g`/`l`.
 - `mov`            : WATCH OUT! `reg64/32, src32` zero extend (even in the same reg); `reg16`/`reg8` don't.
 - `push`/`pop`     : reg₁₆/₆₄, mem₁₆/₆₄; pop: const₆₄ (use `pushw` for const₁₆)
 - `pushfq`/`popfq` : rflags (eflags without `q`)
+- `xlat`           : executes `mov al, [rbx + al]`
 
 ### Sign-extension
 
@@ -319,6 +334,8 @@ WATCH OUT!! Errors can be raised, e.g. division by zero
 
 SSE doesn't support 80-bits FP.
 
+SSE instructions are granular because the underlying implementation may be optimized for the semantics of the operation required (e.g. storing floats, as opposed to a simple `mov`, may trigger preparations for FP operations).
+
 - `P` : `s`/`d` precision
 - `N` : `P` + `i` (integer)
 - `A` : `u`/`a` alignment
@@ -345,6 +362,9 @@ SSE doesn't support 80-bits FP.
 - `cmpsP xmm, op, imm8`  : imm8 is the comparison
 - `cmpeqsP xmm, op`, ... : Special MASM/UASM format
 
+- `andpd`, `orpd`, ...   : boolean operations (two ops; there are `V` versions, with three ops)
+- `ptest`                : like `test`
+
 ### Other
 
 - `cpuid`         : Read CPU characteristics; requires mode in `eax` -> sets the result in `rcx`/`rdx`
@@ -356,7 +376,7 @@ SSE doesn't support 80-bits FP.
 
 Trivial:
 
-- `add`/`sub`
+- `add`/`sub`, `adc`/`sbb`
 - `inc`/`dec`
 - `rol`/`ror`
 - `xor`, `or`, `and`, `not`
@@ -386,7 +406,7 @@ Divisions with idiv:
         mul dx
   ```
 
-Absolute without conditional (!):
+Abs(x) without conditional (!):
 
 ```asm
         cdq             ; set EDX to -1 if EAX < 0, and to 0 otherwise
@@ -403,7 +423,20 @@ Absolute without conditional (!):
 
 Cycle a 2^n counter via bitmask: `inc $op; and $op, 0x11..1`.
 
+Lookup tables: must consider that memory access may be slow, and CPU computations fast! LT are optimal when small, so that they fit in the CPU cache.
+
 #### Control flow
+
+Loops can be optimized by applying the conditional jump at the end:
+
+```asm
+        jmp loop_test ; this is not needed if the loop runs at least once
+loop_start:
+        inc eax
+loop_test:
+        cmp eax, val
+        jne loop_start
+```
 
 When implementing short-circuit boolean expressions:
 
