@@ -178,60 +178,42 @@ HEADER
 
 ### Data type conversions
 
-Common conversions. Everything is a string; "int" represents a decimal.
+- `pack(directive)`   : string/bytes array -> binary string
+- `unpack1(directive)` : binary string -> int ("1" avoids invoking `:first`)
 
-Generic methods:
+The star suffix (`*`) is for multiple chars. Reference (also for unpack): https://apidock.com/ruby/Array/pack
 
-```ruby
-# int -> a numerical string in the given base
-# IMPORTANT! There's no left padding.
-#
-int.to_s(base)
+Directives:
 
-# numerical string in the given base -> int
-#
-numerical_str.to_i(base)
+|  type  | directive |          definition           |                      input                      |       output       |
+| :----: | :-------: | :---------------------------: | :---------------------------------------------: | :----------------: |
+| string |    `B`    |       bits, big endian        |         ['1111000011110000' ].pack 'B*'         |     "\xF0\xF0      |
+| string |    `H`    |        hex, big endian        |         ['A0FF'             ].pack 'H*'         |     "\xA0\xFF"     |
+|  int   |    `C`    |      8-bit unsigned char      |         [0xFF               ].pack 'C*'         |       "\xFF"       |
+|  int   |    `Q`    | native endian qword, unsigned | "\x01\x02\x03\x04\x05\x06\x07\x08".unpack1 'Q*' | 0x0807060504030201 |
+|  int   |    `L`    | native endian dword, unsigned | "\x01\x02\x03\x04"                .unpack1 'L*' |     0x04030201     |
 
-# Array of bytes to binary string; the directive is the base of the string; some directives:
-#
-# - `B*`: binary
-# - `H*`: hex
-#
-# Reference (also for unpack): https://apidock.com/ruby/Array/pack
-#
-array.pack(directive)
+Note that:
 
-# Binary string to value
-#
-# - `Q`/`q`: native endian qword, unsigned/signed
-# - `L`    : native endian dword, unsigned
-#
-# `unpack1` avoids invoking `:first`.
-#
-binstr.unpack1(directive)
-```
+- "\x07" is represented as "\a"
+- unpack1 output is an int, so `output` is processed
 
-Specific conversions:
+Generic conversion examples (consider constraints, where specified, e.g. "codepoint"):
 
-```ruby
-bytes.each_byte.map { |b| "%02X" % b }.join   # array of bytes → hex string (see printf link below)
-bytes.pack('c*').unpack1("h*")                # ^^
-bytes.each_byte.each_slice(2) { |i, j| puts "%016b" % (256 * i + j) } # bytes → binary, padded 16 bits big endian
-bytes.each_byte.map(&:to_i)                   # array of bytes → array of ints
-arr.map(&:chr).join                           # array of ints → array of bytes
-
-"0x%016x" % bytes[loc, 8].pack("c*").unpack1("Q")  # native endian unsigned qword (array of bytes) → int -> (padded lowcase) hex string
-
-"c".ord                                       # char  → int
-int.chr                                       # int   → byte/char (ASCII-8)
-
-hex.hex                                       # hex   → int (same as `to_i(16)`)
-
-str.codepoints                                # like str.bytes, but each entry is a full codepoint
-[codepoints].pack('U*')                       # codepoints to string
-[bytes].map(&:chr).join                       # print string with printable chars and non-printable as escape sequence, from bytes;
-                                              # add :inspect at the end to have the string not automatically converted.
-```
+|       input       |          output          | code                                                   | notes                                    |
+| :---------------: | :----------------------: | ------------------------------------------------------ | ---------------------------------------- |
+|       "0Aa"       |         "304161"         | `each_byte.map { | b | "%02X" % b }.join`              |                                          |
+|       "0Aa"       |         "304161"         | `bytes_arr.pack('c*').unpack1("H*")`                   |                                          |
+|    [0x77,0x0F]    |    "0111011100001111"    | `pack("C*").unpack1("B*")`                             | padded big endian 8-bits bit string      |
+|   [0,0xF,0,0xF]   | ["0111011100001111"] * 2 | `each_slice(2).map { |a| a.pack("C*").unpack1("B*") }` | (same as previous, but in 16-bit chunks) |
+|       "0Aa"       |        [48,65,97]        | `codepoints`                                           | valid codepoints                         |
+|   [48,65,0xFF]    |         "0A\xFF"         | `map(&:chr).join`                                      | non-ASCII chars are escaped              |
+|  [48,0x80,0x81]   |     "0\u0080\u0081"      | `pack('U*')`                                           | invalid codepoints are escaped           |
+| [1,2,3,4,5,6,7,8] |    "0807060504030201"    | `"%016x" % @input.pack("c*").unpack1("Q")`             | native endian unsigned qword bytes       |
+|        "A"        |            65            | `ord`                                                  | valid codepoint                          |
+|        65         |           chr            | `A`                                                    | non-ASCII chars are escaped              |
+|      "FFFF"       |          65535           | `hex` / `to_i(16)`                                     |                                          |
+|       4095        |          "fff"           | `to_s(16)`                                             | no padding!!                             |
 
 See https://idiosyncratic-ruby.com/49-what-the-format.html for `printf`-style formatting.
 

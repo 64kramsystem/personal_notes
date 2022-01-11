@@ -21,9 +21,10 @@ The reference is [assembly_nasm.md](assembly_nasm.md).
 ```asm
 ; constants
 
-myConst1 equ 2               ; preferrably numeric; can be located _anywhere_
-myconst  =   2               ; necessarily numeric
-myConst3 textequ <"my_str">  ; textual; this is like a `#define` C macro (WATCH OUT!!)
+myConst1 equ 2                ; preferrably numeric; can be located _anywhere_
+myConst2 =   2                ; necessarily numeric
+myConst3 textequ <"my_str">   ; textual; this is like a `#define` C macro (WATCH OUT!!)
+myConst4 = 1FFFh shl myConst1 ; expressions can be used!
 
 ; pseudo-enum
 
