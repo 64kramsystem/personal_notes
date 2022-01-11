@@ -1,3 +1,17 @@
+## Tue 11/Jan/2022
+
+- Studies
+  - Ruby
+    - [x] Study `un/pack`, and rewrite noted conversions
+- Reverse engineering
+  - [x] Write on codementor.io
+- Projects
+  - Openscripts
+    - [x] manage_bt: Always try to disable the BT device, not only when it was enabled
+- Low-level Programming
+  - The Art of 64-Bit Assembly, Volume 1
+    - [x] Copy notes Chapter 12
+
 ## Mon 10/Jan/2022
 
 - Tools
@@ -10,7 +24,7 @@
   - [x] Update other internal script
     - [x] Add less digits support
     - [x] Add general inconsistencies support
-  - [x] Find how to remove all audio from audio files
+  - [x] Find how to remove all tags from audio files
 - Blog/Admin
   - [x] Disable Disqus ads
 - Projects

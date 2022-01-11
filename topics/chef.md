@@ -72,12 +72,18 @@ file '/etc/nginx/ssl/example.crt' do
   owner 'root'
 end
 
-# Notification happens when the referenced resource state is changed.
+# Subscription (pull): notification happens when the referenced resource state is changed.
 # Don't forget that the :subscribes action is the action of the enclosing resource!
 #
 service 'nginx' do
   action :nothing
   subscribes :reload, 'file[/etc/nginx/ssl/example.crt]', :immediately
+end
+
+# Notification (push).
+#
+template '/path/to/myconfig.json' do
+  notifies :restart, "service[myservice]", :immediately
 end
 ```
 

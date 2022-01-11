@@ -175,7 +175,7 @@ AVX-512 registers: 32 `zmm`, 512-bit
 |   Name    | Symbol |  Bit  | Content                                                                             |
 | :-------: | :----: | :---: | ----------------------------------------------------------------------------------- |
 |   Carry   |   CF   |   0   | Previous instruction had a carry                                                    |
-|  Parity   |   PF   |   2   | Last byte has even number of 1s                                                     |
+|  Parity   |   PF   |   2   | LO byte (BYTE!!) has even number of 1s                                              |
 |  Adjust   |   AF   |   4   | BCD operations                                                                      |
 |   Zero    |   ZF   |   6   | Result = 0                                                                          |
 |   Sign    |   SF   |   8   | Result < 0 (MSB = 1)                                                                |
@@ -287,10 +287,13 @@ Signed: `a`/`b`, unsigned: `g`/`l`.
 
 ### Arithmetic
 
+- `add`/`sub`, `adc`/`sbb`
 - `inc`/`dec`                : WATCH OUT! They don't affect `CF`
 - `sal`/`shl`                : Move the high bit into CF
-- `sar`                      : Keeps the high bit as before shifting
+- `sar`                      : Keeps the high bit as before shifting; on negative values, it's not equivalent to a division by 2!
 - `shr`                      : Sets the high bit to 0
+- `shrd/shld dest, fill, cnt` : Shifts dest bits of $cnt positions, and shifts `fill` bits (in the same direction) into the opened positions
+- `rol`/`ror`/`rcl`/`rcr`  : All those instructions set the CF accordingly!
 - `idiv`                     : Divide `rdx`:`rax`; result in `rax`, modulo in `rdx`
 - `neg`                      : Two's complement negation
 
@@ -318,17 +321,37 @@ WATCH OUT!! Errors can be raised, e.g. division by zero
 
 ### Comparison/Bit testing/manipulation:
 
-- `cmp`           : Performa `sub`, discards the result, and sets `SF`/`PF`/`ZF` accordingly
-                  : WATCH OUT!! Don't forget that consts are max 32 bits!
-- `test`          : Performs `and`, discards the result, and sets `SF`/`PF`/`ZF` accordingly; can't be used to test
-                    if multiple bits are set (any one set will unset ZF)
-- `bts/btr op, n` : Bit `n` set/reset
-- `bt op, reg`    : Test `reg`ᵗʰ bit (doesn't support immediate); stores bit value into CF
+In order to apply operations searching for set bits (e.g. bsf) to a clear bit, precede with NOT.
+
+- `xor`, `or`, `and`, `not`: Always clear CF/OF (don't forget!!) and set the SF/ZF/PF accordingly.
+- `cmp`                    : Performa `sub`, discards the result, and sets `SF`/`PF`/`ZF` accordingly
+                           : WATCH OUT!! Don't forget that consts are max 32 bits!
+- `test`                   : Performs `and`, discards the result, and sets `SF`/`PF`/`ZF` accordingly; can't be used to test
+                             if multiple bits are set (any one set will unset ZF)
+- `bts/btr/btc op, n`      : Bit `n` set/reset/complement
+- `bt op, reg`             : Test `reg`ᵗʰ bit (doesn't support immediate); stores bit value into CF
   ```asm
   mov   rax, 61             ; test bit 61
   bt    $op, rax
   setc  al
   ```
+- `bsf/bsr reg, op`       : Search the first set bit [f]orward (from LO)/[r]everse
+- `bswap reg`             : Swaps the byte order
+
+BM1 set instructions:
+
+- `bextr reg, op, ctrl` : Extract bits from op into reg, regulated by ctrl (bits 0-7: starting pos; bits 8-15: length)
+- `blsi reg, op`        : Extract lowest set bit; set zero if not found
+- `blsr reg, op`        : Clear the lowest set bit, and copy result to destination
+- `blsmsk reg, op`      : Sets all bits from LO to the lowest set bit (inclusive), and resets the others
+- `blsi + dec`          : Like blsmsk, but not including the lowest set bit
+- `tzcnt reg, op`       ; Count LO zeros up to first set bit (this equals the position of the first set bit)
+
+BM2 set has instructions to insert/extract bit sets.
+
+SSE 4.1:
+
+- `popcnt reg, op`      : Count the set bits
 
 ### Floating-point/SSE
 
@@ -372,14 +395,6 @@ SSE instructions are granular because the underlying implementation may be optim
 - `rdtsc`         : Start timing; store timestamp into `edx`:`eax`; must precede with a serializing instruction
                     (e.g. `cpuid`), in order to prevent out-of-order execution (which would hamper the timing precision)
 - `rdtscp`        : Stop timing; store timestamp into `edx`:`eax`; must be followed by a serializing instruction
-- `bswap`         : Swaps the byte order of a reg
-
-Trivial:
-
-- `add`/`sub`, `adc`/`sbb`
-- `inc`/`dec`
-- `rol`/`ror`
-- `xor`, `or`, `and`, `not`
 
 ## Optimizations
 
