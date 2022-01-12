@@ -1,3 +1,10 @@
+## Wed 12/Jan/2022
+
+- Low-level Programming
+  - The Art of 64-Bit Assembly, Volume 1 (notes)
+    - [x] Review and report another erratum
+    - [x] Copy notes Chapter 14
+
 ## Tue 11/Jan/2022
 
 - Studies
@@ -9,7 +16,7 @@
   - Openscripts
     - [x] manage_bt: Always try to disable the BT device, not only when it was enabled
 - Low-level Programming
-  - The Art of 64-Bit Assembly, Volume 1
+  - [ ] The Art of 64-Bit Assembly, Volume 1 (notes)
     - [x] Copy notes Chapter 12
 
 ## Mon 10/Jan/2022
@@ -32,7 +39,7 @@
     - [x] gitio: Add "short" functionality (protocol stripping)
       - [x] Minor cleanups
 - Low-level Programming
-  - The Art of 64-Bit Assembly, Volume 1
+  - [ ] The Art of 64-Bit Assembly, Volume 1 (notes)
     - [x] Copy notes Chapter 7
     - [x] Copy notes Chapter 10
     - [x] Copy notes Chapter 11
@@ -55,7 +62,7 @@ Skipped a day, but overall, completed the cycle.
   - Career
     - [x] Readings
 - Low-level Programming
-  - The Art of 64-Bit Assembly, Volume 1
+  - [ ] The Art of 64-Bit Assembly, Volume 1 (notes)
     - [ ] Copy notes Chapter 7
 
 ## Sat 08/Jan/2022
@@ -69,7 +76,7 @@ Skipped a day, but overall, completed the cycle.
   - Career
     - [ ] Readings
 - Low-level Programming
-  - The Art of 64-Bit Assembly, Volume 1
+  - [ ] The Art of 64-Bit Assembly, Volume 1 (notes)
     - [x] Copy notes Chapter 6
     - [ ] Copy notes Chapter 7
       - [x] Think simplified version of TJ register saving trampoline
@@ -109,7 +116,7 @@ Skipped a day, but overall, completed the cycle.
     - ~~Next Steps~~
     - ~~Appendix: Introduction to C for Python Programmers~~
 - Low-level Programming
-  - The Art of 64-Bit Assembly, Volume 1
+  - [ ] The Art of 64-Bit Assembly, Volume 1 (notes)
     - [ ] Copy notes Chapter 6
 
 ## Tue 04/Jan/2022

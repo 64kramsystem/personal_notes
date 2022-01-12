@@ -15,6 +15,7 @@
     - [Control flow](#control-flow)
       - [Conditional jump flags/SetCC/CmovCC](#conditional-jump-flagssetcccmovcc)
     - [Storage](#storage)
+    - [String operations](#string-operations)
     - [Sign-extension](#sign-extension)
     - [Arithmetic](#arithmetic)
       - [Multiplication](#multiplication)
@@ -241,6 +242,8 @@ destPtr dq  ?
 "A-ext" = (my term) AL->AX ... EAX->RAX
 "A+ext" = (my term) AL->AX, AX->DX:AX ... RAX->RDX:RAX
 
+`W`     = Width (`b`/`w`/`d`/`q`)
+
 There is only one instruction that supports a 64-bit constant (`mov reg64, imm64`).
 
 ### Control flow
@@ -276,6 +279,17 @@ Signed: `a`/`b`, unsigned: `g`/`l`.
 - `push`/`pop`     : reg₁₆/₆₄, mem₁₆/₆₄; pop: const₆₄ (use `pushw` for const₁₆)
 - `pushfq`/`popfq` : rflags (eflags without `q`)
 - `xlat`           : executes `mov al, [rbx + al]`
+- `rep`            : does not execute if `ecx` = 0
+
+### String operations
+
+WATCH OUT!! String operations respect the endianness.
+
+- `repz`           : repeat while (`ZF` || `ecx` > 0)
+- `repnz`          : repeat while (!`ZF` || `ecx` > 0)
+- `scasW`          : compare (`rdi`); see below
+
+WATCH OUT!! `repnz scasW` (find a string) exits the cycle _after_ updating `rdi` (so `rdi` is **after** the location of the string found).
 
 ### Sign-extension
 
