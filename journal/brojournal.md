@@ -1,3 +1,9 @@
+## Thu 13/Jan/2022
+
+- Reverse Engineering
+  - [x] Post mentoring request
+  - [x] Big review C64 emulation/assembly resources
+
 ## Wed 12/Jan/2022
 
 - Low-level Programming
