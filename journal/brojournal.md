@@ -1,3 +1,20 @@
+## Fri 14/Jan/2022
+
+- Tools
+  - [x] create_vsc_project: Support operating on an existing project
+- SWE
+  - Read codebases
+    - [ ] [Zinc64](https://github.com/binaryfields/zinc64)
+      - First look
+        - [x] Review and remove `ChipFactory`
+        - [x] Trace `C64` components diagram
+- Admin
+  - [ ] Test Ipad pdf editing/viewing
+- Tools
+  - [x] Fight Mermaid support for bidirectional issues
+    - [x] Open issue
+  - [x] Find alternative
+
 ## Thu 13/Jan/2022
 
 - Reverse Engineering
