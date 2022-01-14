@@ -1,14 +1,17 @@
-- [Table of contents](#table-of-contents)
-- [Flowchart and basics](#flowchart-and-basics)
-  - [Class diagrams](#class-diagrams)
-- [Styling](#styling)
- 
-## Table of contents
+# Mermaid
 
-- [Table of contents](#table-of-contents)
-- [Flowchart and basics](#flowchart-and-basics)
-  - [Class diagrams](#class-diagrams)
-- [Styling](#styling)
+- [Mermaid](#mermaid)
+  - [Limitations](#limitations)
+  - [Flowchart and basics](#flowchart-and-basics)
+    - [Class diagrams](#class-diagrams)
+  - [Styling](#styling)
+
+## Limitations
+
+PlantUML is beeeeeeeeetteeeeeeeeeeeeeeer!!!
+
+- Bidirectional edges are not supported in graphs (only in flowcharts)
+- In class diagrams, edges can't be connected to/from a class member
 
 ## Flowchart and basics
 
@@ -30,13 +33,13 @@ graph BT
 
 %% "C-style" declaration; can look cleaner, but it's not required.
 
-pt[positive_ticket<br>quantity: 1]
-pb[positive_booking]
+pt[positive_ticket<br>quantity: 1]    %% description in square brackets
+pb[positive_booking ]
 at[amending_ticket]
 ab[amending_booking]
 
-pb -- source_is --> pt
-at -- amends --> pt
+pb -- source_is --> pt    %% use double quotes to handle spaces
+at -- amends --> pt       %% use `---` for adirected edges
 ab -- amends --> pb
 ab -- source_is --> pt
 ```
