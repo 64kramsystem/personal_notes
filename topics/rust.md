@@ -2608,7 +2608,12 @@ println!("Count: {}", Rc::strong_count(&a)); // 1
 
 `RefCell` is not `Sync`; in multithreaded context, `Mutex`/`RwLock` must be used instead.
 
-`Cell` is like `RefCell`, but works only on `Copy` types, as it copies instead of borrowing.
+`Cell` is like `RefCell`, but with limitations:
+
+- it disallows borrowing immutably (so one can read only with `T: Copy`)
+- it allows writing or swapping the value
+
+it has no runtime overhead, so it's preferrable, where it's possible to use it. See [Stack Overflow](https://stackoverflow.com/a/53671414).
 
 ```rust
 enum Node {
