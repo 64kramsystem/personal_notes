@@ -1,3 +1,18 @@
+## Sat 15/Jan/2022
+
+- Admin
+  - [x] Complete Ipad review and configuration
+- SWE
+  - Read codebases
+    - [ ] [Zinc64](https://github.com/binaryfields/zinc64)
+      - [ ] Some other types
+- Studies
+  - Rust
+    - [x] `Cell` vs `RefCell`
+  - C64 ASM Programming
+    - [x] Review Run magazine
+    - [x] Fight find ASM game-oriented programming books
+
 ## Fri 14/Jan/2022
 
 - Tools
@@ -9,7 +24,7 @@
         - [x] Review and remove `ChipFactory`
         - [x] Trace `C64` components diagram
 - Admin
-  - [ ] Test Ipad pdf editing/viewing
+  - [x] Test Ipad pdf editing/viewing
 - Tools
   - [x] Fight Mermaid support for bidirectional issues
     - [x] Open issue
