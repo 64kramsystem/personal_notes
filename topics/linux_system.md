@@ -57,6 +57,12 @@
 # check if pid exists
 ps -p $pid > dev/null
 
+# x        : list all processes owned by the user
+# -o       : format specifiers; `ni`: niceness, `args`: command with args
+# --forest : tree format
+#
+ps x -o pid,ppid,ni,args --forest
+
 # pgrep/pkill use regexes.
 # character classes are a trick not to match itself (especially useful when sudo killing)
 #
@@ -66,6 +72,12 @@ sudo pkill -f '[p]rocessname'
 # process will need to be killed.
 #
 pkill --parent --pidfile $(< parent_pidfile)
+
+# Set a process priority (two ways); 19 is the lowest.
+# Without sudo permissions, the priority can only be lowered.
+#
+nice -n 19 $command
+renice -n 19 $pid
 ```
 
 ### Signals/exit codes/suspension
