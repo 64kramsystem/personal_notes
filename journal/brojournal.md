@@ -1,3 +1,39 @@
+## Mon 17/Jan/2022
+
+- Projects
+  - QEMU-pinning
+    - [x] Create wiki page with user-provided script
+    - [x] Update README with reference to script, and add new details about project status
+- Tools
+  - [x] Follow up Windows VM setup, including ebooks conversion setup
+- Studies
+  - C64 ASM Programming
+    - [x] Purchase/convert new book
+    - [ ] Machine Code Games Routines for the Commodore 64
+      - [x] Copy notes
+        - [x] Research found errata
+      - [x] First look at multiplication routines
+- Writings
+  - [x] "Machine Code Games Routines For The Commodore 64" Errata (WIP) article
+
+## Cycle notes
+
+Good cycle, although spent a lot of time on the iPad setup; also done a non-trivial amount of secondary stuff. Started systematic codebase reading for the first time; started systematic JIT studies.
+
+- Unscheduled
+  - Tools
+    - Extend internal script
+    - Update other internal script
+      - Add less digits support
+      - Add general inconsistencies support
+    - Find how to remove all tags from audio files
+    - create_vsc_project: Support operating on an existing project
+  - Blog/Admin: Disable Disqus ads
+  - Studies/Ruby: Study `un/pack`, and rewrite noted conversions
+  - Openscripts: manage_bt: Always try to disable the BT device, not only when it was enabled
+  - Reverse Engineering: Big review C64 emulation/assembly resources
+  - Admin: Test Ipad pdf editing/viewing
+
 ## Sun 16/Jan/2022
 
 - Admin
