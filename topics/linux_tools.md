@@ -27,7 +27,7 @@
     - [Formatting](#formatting)
     - [Operations](#operations)
     - [Calendar](#calendar)
-  - [Images handling](#images-handling)
+  - [PDF/Images handling](#pdfimages-handling)
     - [Imagemagick (convert)](#imagemagick-convert)
     - [Raw to JPEG conversion](#raw-to-jpeg-conversion)
   - [Formatting/diff operations](#formattingdiff-operations)
@@ -669,9 +669,9 @@ expr $highlight_start_secs - $data_start_secs
 cal [[$month] $year]
 ```
 
-## Images handling
+## PDF/Images handling
 
-PDF images estraction:
+PDF images extraction:
 
 ```sh
 # List the images in a PDF file
@@ -684,6 +684,12 @@ pdfimages -l $input
 # prefix: `-` is appended automatically
 #
 pdfimages -j $input /path/to/$prefix
+```
+
+Remove a page from a PDF doc:
+
+```sh
+pdftk $input.pdf cat 1-29 31-end output $output.pdf
 ```
 
 ### Imagemagick (convert)

@@ -1,7 +1,21 @@
+## Sun 16/Jan/2022
+
+- Admin
+  - [x] Complete Ipad configuration
+- Tools
+  - [x] PDF pages removal
+  - [x] Try many iOS PDF annotators
+- Studies
+  - C64 ASM Programming
+    - [x] 1. Introduction
+    - [x] 2. Further 6510 Theory
+  - JITs
+    - [ ] PyPy architecture (from AOSA vol.2 book)
+
 ## Sat 15/Jan/2022
 
 - Admin
-  - [x] Complete Ipad review and configuration
+  - [ ] Complete Ipad review and configuration
 - SWE
   - Read codebases
     - [ ] [Zinc64](https://github.com/binaryfields/zinc64)
