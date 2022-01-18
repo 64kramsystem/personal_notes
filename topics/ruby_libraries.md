@@ -8,7 +8,7 @@
       - [Activesupport/Inflector](#activesupportinflector)
     - [Date/time](#datetime)
       - [Date/time templated parsing](#datetime-templated-parsing)
-    - [Maths/Rational](#mathsrational)
+    - [Arithmetic/Maths/Rational](#arithmeticmathsrational)
     - [CSV](#csv)
     - [JSON](#json)
     - [XML](#xml)
@@ -259,9 +259,11 @@ Examples:
 '%YT%T%:z'          # 2014T14:20:54+00:00 (json format)
 ```
 
-### Maths/Rational
+### Arithmetic/Maths/Rational
 
 ```rb
+-1 / 2                  # WATCH OUT!!! Result is -1 !!!
+
 r = Rational(8, 9)      # no new()!!
 (r * 9).to_i == 8       # arithmetic yiels other Rational instances
 x.gcd(y)                # Greatest commond divisor (Massimo Comun Divisore, MCD)

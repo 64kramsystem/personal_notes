@@ -1,3 +1,17 @@
+## Tue 18/Jan/2022
+
+- Tools
+  - [x] Try Coderpad
+- SWE
+  - Practice
+    - [x] Solve problems: https://howigotjob.com/interview-questions/coderpad-interview-questions
+    - [x] Leetcode, a few easy problems
+- Studies
+  - C64 ASM Programming
+    - ~~3. The Birth of a Game~~
+    - [x] 4. Program Design
+    - [ ] 5. Coding the Program
+
 ## Mon 17/Jan/2022
 
 - Projects
