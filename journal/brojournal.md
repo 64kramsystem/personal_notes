@@ -1,3 +1,12 @@
+## Wed 19/Jan/2022
+
+- SWE
+  - Practice
+    - [x] Leetcode: Several easy problems
+- Studies
+  - C64 ASM Programming
+    - [ ] Setup vs64 environment
+
 ## Tue 18/Jan/2022
 
 - Tools
@@ -5,7 +14,7 @@
 - SWE
   - Practice
     - [x] Solve problems: https://howigotjob.com/interview-questions/coderpad-interview-questions
-    - [x] Leetcode, a few easy problems
+    - [x] Leetcode: a few easy problems
 - Studies
   - C64 ASM Programming
     - ~~3. The Birth of a Game~~
