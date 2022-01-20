@@ -1,3 +1,9 @@
+## Thu 20/Jan/2022
+
+- SWE
+  - Practice
+    - [x] Leetcode: A few easy problems
+
 ## Wed 19/Jan/2022
 
 - SWE
