@@ -502,6 +502,8 @@ Cmdline params:
 - `/pattern/[modifier]`     : pattern with modifier(s)
 - `s|from|to|`              : custom search delimiter
 
+Multiple operations are separated by `;`.
+
 ### Regexes
 
 Must use `-E`/`-r` to support extended regular expressions; !!! BETTER, BUT NOT CLEAR/COMPLETE !!!
@@ -510,6 +512,7 @@ Basic support:
 
 - `[...]` (character sets)
 - `*`
+- `\s`, `\S`
 - capturing groups, but require escaping (`s|ab\(c\)|\1|`); `$<n>` reference is not supported
 
 Some supported by `-E`:
@@ -560,7 +563,7 @@ Examples:
 ```sh
 # In order to handle tabs (`\t`), either use `$` quoting or parameter substitution:
 #
-sed $'s/\t/ /'
+sed $'s/\t/ /'                # Convert tabs to spaces
 sed "s/$(printf '\t')/ /"
 
 # WATCH OUT!! Newlines don't require `$` quoting:
@@ -631,9 +634,10 @@ xz -dc dump.sql.xz | cut -c 64- | head -n 10	# cut after N chars of each line
 ## tr (translate tokens)
 
 ```sh
-tr -s ' '   		    # [s]queeze all ' '
+tr -s ' '   		    # [s]queeze (compress) all ' '
 tr -d ' '   		    # [d]elete all ' '
 tr ab cd    		    # translate a..c → b..d
+tr $'\t' ' '        # convert tabs to spaces
 ```
 
 Examples:

@@ -561,7 +561,7 @@ Substitutions generally have the single (single operator) or global (double oper
 
 Parameter expansion supports internal expansion, and escape chars: `line=${line//$'\t'/ }`
 
-WATCH OUT! Replacements are greedy.
+WATCH OUT! Replacements are greedy. Also, after a replacement if performed, Bash starts from the next unreplaced substring.
 
 ```sh
 ${str:-<expr>}                    # default a parameter: set if undefined or blank
@@ -595,6 +595,7 @@ Fun tricks/other stuff:
 ```sh
 printf '<SAV>%.0s' {1..10}        # repeat a string
 echo "  ab  " | xargs             # strip/trim leading and trailing whitespace; compresses spaces; !! adds a newline !!
+echo "  a  b  c  " | tr -s ' '    # squeeze (compress) consecutive sequences of the given char
 echo $'a \n'  | perl -pe chomp    # (`a `) strip one trailing whitespace,
 
 printf "%05d\n" $n                # add leading zeros; this is a standard printf, so the standard functionalities apply
@@ -749,7 +750,8 @@ Operations; indexes are 0-based:
 
 ```sh
 copy=("${source[@]}")                # copy an array
-coordinates+=("abc")                 # append an entry
+coordinates+=("abc" "cde")           # append entries/concatenate arrays
+coordinates+=("${coord2[@]}")        # concatenate array variables
 echo ${coordinates[0]}               # access an array; last entry: -1
 unset 'coordinates[1]'               # delete an entry
 coordinates[1]=b                     # set an indexed value
