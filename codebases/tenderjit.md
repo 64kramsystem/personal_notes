@@ -1,10 +1,43 @@
 # TenderJIT
 
 - [TenderJIT](#tenderjit)
+  - [Stream 21/Jan](#stream-21jan)
   - [TJ design](#tj-design)
   - [Useful patterns](#useful-patterns)
   - [Debugging](#debugging)
   - [Ruby concepts](#ruby-concepts)
+
+## Stream 21/Jan
+
+The `EC` (Execution Context) points ("Control Frame Pointer", `cfp`) to currently executed Stack Frame (top of the Stack Frames stack)
+
+Stack Frame: also called "Control Frame" (`rb_control_frame_t`)
+
+The Call Frame Stack includes `main` on start.
+
+The `PC` always points to the instruction (in the stack) that what we're going to execute next.
+
+"Value Stack":
+
+- shared across the stack frames
+- where instructions put the values
+- the EP points to it
+- the SP refers to the next position
+
+On method call (see `getlocal` instruction):
+
+- the method is pushed on top of the Stack Frames, and the `cfp` is updated
+- the callee is pushed (self)
+- the arguments are pushed
+- 3 "magic values" are pushed on the value stack
+- the EP points at magic 3
+- the SP points to after magic 3
+
+On exit method call:
+
+- magic values are removed
+- pointers are rewound
+
 
 ## TJ design
 

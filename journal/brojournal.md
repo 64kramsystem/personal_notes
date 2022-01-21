@@ -1,3 +1,14 @@
+## Fri 21/Jan/2022
+
+- Tools/Linux
+  - [x] Find how to navigate zsh history
+- Studies
+  - JITs
+    - [x] TenderJIT stream
+- SWE
+  - Practice
+    - [x] Leetcode: 10 easy problems
+
 ## Thu 20/Jan/2022
 
 - SWE
