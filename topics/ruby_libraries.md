@@ -79,7 +79,7 @@ Addressable::URI.form_encode(p1: "&&&", "p2" => "!!!") # "p1=%26%26%26&p2=%21%21
 Useful methods:
 
 - `casecmp(str)`: case insensitive comparison
-- `center`, `ljust(int)`, `rjust(int)`
+- `center`, `ljust(int)`, `rjust(int)`: WATCH OUT! Padding == justifying to the opposite direction!!
 - `strip`, `lstrip`, `rstrip`
 - `index(substr)`, `rindex(substr)`
 - `slice(start[, end])`, `slice!`
@@ -263,6 +263,7 @@ Examples:
 
 ```rb
 -1 / 2                  # WATCH OUT!!! Result is -1 !!!
+100.divmod(3)           # [3, 1] div + mod!! WATCH OUT, it's (carry, sum = ...) when computing additions!
 
 r = Rational(8, 9)      # no new()!!
 (r * 9).to_i == 8       # arithmetic yiels other Rational instances

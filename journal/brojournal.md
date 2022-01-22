@@ -1,3 +1,14 @@
+## Sat 22/Jan/2022
+
+- System
+  - [x] Fight keyboard layout icon not showing
+- Tools
+  - [x] Remote desktop switch script: Detect output port name
+- SWE
+  - Practice
+    - [x] Leetcode: Attempt to solve in one submission, easy problems: 70%:4 60%:3 50%:4 30%:1
+    - [x] Leetcode: Solve in one submission, medium problems: 37%:1
+
 ## Fri 21/Jan/2022
 
 - Tools/Linux
@@ -7,7 +18,7 @@
     - [x] TenderJIT stream
 - SWE
   - Practice
-    - [x] Leetcode: 10 easy problems
+    - [x] Leetcode: Solve in one submission, easy problems: 10
 
 ## Thu 20/Jan/2022
 
