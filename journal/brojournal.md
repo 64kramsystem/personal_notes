@@ -1,3 +1,13 @@
+## Sun 23/Jan/2022
+
+- SWE
+  - Practice
+    - [x] Leetcode
+      - [ ] Easy 31%: 3 tests, 1 submission
+      - [ ] Easy 32%: 1 tests, 2 submissions
+      - [ ] Easy 33%: Solution looked up
+      - [ ] Easy 33%: 2 tests, 2 submissions
+
 ## Sat 22/Jan/2022
 
 - System
