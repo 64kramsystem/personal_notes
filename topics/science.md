@@ -11,6 +11,7 @@
     - [Geometry](#geometry)
     - [Statistics](#statistics)
     - [Algebra](#algebra)
+      - [Finding the square root of a number (without exponentiation functions)](#finding-the-square-root-of-a-number-without-exponentiation-functions)
     - [Convenient stuff](#convenient-stuff)
       - [Test if a positive number is a power of two](#test-if-a-positive-number-is-a-power-of-two)
       - [Check if a number is close within the two ends of an interval](#check-if-a-number-is-close-within-the-two-ends-of-an-interval)
@@ -67,6 +68,40 @@ Solve a quadratic equation:
 ax² + bx + c = 0
 
 x = (-b ± √(b² - 4ac)) / 2a
+```
+
+#### Finding the square root of a number (without exponentiation functions)
+
+Use the [Babylonian method](https://en.wikipedia.org/wiki/Methods_of_computing_square_roots#Babylonian_method); `x` is positive:
+
+```rb
+def my_sqrt(x)
+  approximation = x.to_f
+
+  while approximation - x / approximation > SIGMA             # set sigma as appropriate
+    approximation = (approximation + x / approximation) / 2
+  end
+
+  return approximation
+end
+```
+
+If one needs an approximated integer:
+
+```rb
+def my_sqrt(x)
+  approximation = x.to_f
+
+  while true
+    new_approximation = (approximation + x / approximation) / 2
+
+    if approximation.to_i == new_approximation.to_i
+      return approximation.to_i
+    else
+      approximation = new_approximation
+    end
+  end
+end
 ```
 
 ### Convenient stuff
