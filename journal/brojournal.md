@@ -1,8 +1,28 @@
+## Mon 24/Jan/2022
+
+- Open source
+  - `vscode-open-in-github` plugin
+     - [x] Diagnose and open issue about Markdown links not generated correctly
+- SWE
+  - Practice
+    - Leetcode
+      - [x] Easy 35%,  925: 2 tests, 1 submission, fancy logic
+      - [x] Easy 35%, 1805: 1 tests, 1 submission
+      - [x] Easy 36%, 1346: 3 tests (1 debug), 1 submission
+      - [ ] Easy 36%,   28: 1 tests, 2 submissions (2*slow)
+      - [x] Easy 36%,   58: 2 tests, 2 submissions
+      - [x] Easy 36%,   69: 2 tests, 3 submissions (slow -> fancy logic)
+        - Research Babylonian method
+      - [ ] Easy 38%,  507: insane
+- Open source
+  - Telegram
+    - [x] Follow up bug report
+
 ## Sun 23/Jan/2022
 
 - SWE
   - Practice
-    - [x] Leetcode
+    - Leetcode
       - [ ] Easy 31%: 3 tests, 1 submission
       - [ ] Easy 32%: 1 tests, 2 submissions
       - [ ] Easy 33%: Solution looked up

@@ -40,6 +40,18 @@ WATCH OUT!! When there are group quantifiers, only the last occurrence is captur
 
 ## Backreferences
 
+Ruby:
+
+```rb
+# In search pattern: `\1`.
+#
+# WATCH OUT! The referenced group *must* be capturing.
+#
+'aaabcc'.scan(/((\w)\2*)/) # [["aaa", "a"], ["b", "b"], ["cc", "c"]]
+```
+
+Perl:
+
 ```sh
 # In search pattern: `\g1`.
 # Example: Find the `end` of a method, by matching the `def` indentation.

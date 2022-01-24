@@ -34,8 +34,9 @@ name: Ruby CI
 on:
   push:
     branches: [ $default-branch ]
+  # Leave without values in order to to disable filtering.
+  #
   pull_request:
-    branches: [ $default-branch ]
   #
   # Other examples:
   #
@@ -57,7 +58,9 @@ jobs:
     # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idstrategy
     #
     strategy:
-      fail-fast: false # default: true
+      # Important! If true (default), failure of one job will stop all the other jobs.
+      #
+      fail-fast: false
       # In order to base the matrix on env vars, add `env: [K1=V1, ...]`, and add it to the step (see
       # below).
       #
