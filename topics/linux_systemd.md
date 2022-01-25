@@ -259,19 +259,20 @@ Wed..Sat,Tue 12-10-15 1:2:3 → Tue..Sat 2012-10-15 01:02:03
 
 ### Once-off (transient)
 
-Once-off events can be scheduled; mind that they're not second-accurate. They belong to the user (therefore need `--user` to be listed).
+Once-off events can be scheduled; mind that they're not second-accurate.
 
 ```sh
 # Execute after certain interval, with output.
-# `--unit` is the optional name; without, a long random name is set.
+#
+# `--unit`: optional name; without, a long random name is set
 #
 $ systemd-run --user --on-active=10min --unit=test-example /bin/systemctl suspend
 Running timer as unit: test-example.timer
 Will run service as unit: test-example.service
 
-# Execute at given time
+# Execute at given time, as root.
 #
-$ systemd-run --user --on-calendar=09:12 /bin/systemctl suspend
+$ systemd-run --on-calendar=09:12 /bin/systemctl suspend
 
 # Cancel
 #

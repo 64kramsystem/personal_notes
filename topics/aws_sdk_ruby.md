@@ -1,7 +1,26 @@
 # AWS SDK Ruby v3
 
 - [AWS SDK Ruby v3](#aws-sdk-ruby-v3)
+  - [Waiters](#waiters)
   - [DynamoDB](#dynamodb)
+
+## Waiters
+
+Waiters take a name, and a parameters hash with a structure equal to the related resource describe API (see example link).
+
+```rb
+# See https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ElasticLoadBalancingV2/Waiters.html
+
+targets_data = {
+  target_group_arn: registration_data.target_group_arn,
+  targets: [{id: registration_data.instance_id}],
+}
+
+lb_client.wait_until(:target_deregistered, targets_data) do |waiter|
+  waiter.delay = WAIT_INTERVAL                    # interval between attempts
+  waiter.max_attempts = WAIT_TIME / waiter.delay
+end
+```
 
 ## DynamoDB
 
