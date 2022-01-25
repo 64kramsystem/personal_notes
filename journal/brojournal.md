@@ -1,3 +1,18 @@
+## Tue 25/Jan/2022
+
+- SWE
+  - Practice
+    - Leetcode
+      - [x] Easy 38%, 1037: 1 tests, 2 submissions
+      - [x] Easy 38%,  434: 1 tests, 1 submissions
+      - [x] Easy 38%,  680: 2 tests, 1 submissions
+      - [x] Easy 39%, 1668: 1 tests, 2 submissions
+- Tools/Open source
+  - C64 ASM Programming
+    - [x] Review again all the VSC extensions
+    - [x] Open a few issues
+      - [x] Investigate workaround for resource not loaded
+
 ## Mon 24/Jan/2022
 
 - Open source

@@ -22,7 +22,6 @@ npm install -g vsce
 # Package into a vsix file.
 #
 vsce package
-
 ```
 
 Publishing. WATCH OUT!!! vsce seems to associate a given extension to the local path, so when an extension is renamed (or similar), rename the project directory!
