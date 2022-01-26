@@ -65,8 +65,8 @@ perl -i -pe 's/^(ident_file = .*)/#${1}/'
 
 ## PCRE flags
 
-- `m`: match newlines with `.`
-  - `s`: match line beginning/end with `^`/`$` when `m` is used
+- `/m`: match newlines with `.`
+  - `/s`: match line beginning/end with `^`/`$` when `m` is used
 
 WATCH OUT! There are exceptions on some languages; see the specific language.
 

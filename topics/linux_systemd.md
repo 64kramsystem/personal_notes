@@ -19,6 +19,8 @@ List all the services, and their running status: `service --status-all`. Great f
 
 Units are stored under `/etc/systemd/system`, however, it's best practice not to edit them directly, instead, use the `edit` command.
 
+If an underlying service is *not* started via Systemd, from the perspective of the latter, the former is not started; one of the consequences is that stop won't be performed. Therefore, services managed by Systemd should consistently managed through it.
+
 ## Systemctl
 
 ```sh
@@ -154,10 +156,19 @@ Environment="DISPLAY=:0" "XAUTHORITY=/home/myuser/.Xauthority"
 ExecStart=/usr/bin/bundle exec my_command
 ExecReload=/bin/kill -HUP $MAINPID
 
-# Other options: `mixed`, `process`, `none`
+# Execute a command before the killing procedure.
+# See https://www.freedesktop.org/software/systemd/man/systemd.service.html and https://www.freedesktop.org/software/systemd/man/systemd.kill.html.
+#
+ExecStop=/usr/bin/bundle exec my_stop_command
+
+# Killing procedure; by default follows `KillSignal=`, and then sends SIGKILL if necessary.
 # Better not to specify, unless required.
 #
-KillMode=control-group
+KillMode=control-group     # default; other options: `mixed`, `process`, `none`.
+
+# By default, SIGTERM; always followed by SIGCONT.
+#
+KillSignal=SIGTERM
 
 # Other options: `no` (default), `on-failure`, ...
 #
@@ -274,9 +285,9 @@ Will run service as unit: test-example.service
 #
 $ systemd-run --on-calendar=09:12 /bin/systemctl suspend
 
-# Cancel
+# Cancel. Don't forget the `.timer`!!!!
 #
-$ systemctl --user stop test-example
+$ systemctl --user stop test-example.timer
 ```
 
 ## Event triggers
