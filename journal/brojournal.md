@@ -1,3 +1,21 @@
+## Wed 26/Jan/2022
+
+- Tools
+  - [x] Fight compile VICE
+- Open source
+  - [x] Contribute to official 5.13 amdgpu incompatibility report
+- SWE
+  - Practice
+    - Leetcode
+      - [x] Easy 40%,  290: 2 tests, 2 submissions
+        - Assumed a constraint that there wasn't
+      - [x] Easy 40%,  219: 1 tests, 1 submissions
+- Studies
+  - C64 ASM Programming
+    - [ ] Machine Code Games Routines for the Commodore 64
+      - [x] 5. Coding the Program
+      - [ ] 6. Writing Your Own Routines
+
 ## Tue 25/Jan/2022
 
 - SWE
@@ -12,6 +30,8 @@
     - [x] Review again all the VSC extensions
     - [x] Open a few issues
       - [x] Investigate workaround for resource not loaded
+    - [x] Investigate ASM hello world (launcher)
+    - [x] Finalize VSC C64 ASM extension setup
 
 ## Mon 24/Jan/2022
 
@@ -90,9 +110,10 @@
     - [x] Leetcode: a few easy problems
 - Studies
   - C64 ASM Programming
-    - ~~3. The Birth of a Game~~
-    - [x] 4. Program Design
-    - [ ] 5. Coding the Program
+    - [ ] Machine Code Games Routines for the Commodore 64
+      - ~~3. The Birth of a Game~~
+      - [x] 4. Program Design
+      - [ ] 5. Coding the Program
 
 ## Mon 17/Jan/2022
 
@@ -139,8 +160,9 @@ Good cycle, although spent a lot of time on the iPad setup; also done a non-triv
   - [x] Try many iOS PDF annotators
 - Studies
   - C64 ASM Programming
-    - [x] 1. Introduction
-    - [x] 2. Further 6510 Theory
+    - [ ] Machine Code Games Routines for the Commodore 64
+      - [x] 1. Introduction
+      - [x] 2. Further 6510 Theory
   - JITs
     - [ ] PyPy architecture (from AOSA vol.2 book)
 

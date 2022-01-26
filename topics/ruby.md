@@ -318,7 +318,7 @@ end
 Flags:
 
 - `/x` : ignore whitespace and comments
-- `/s` : don't use it - not needed, and it has a different meaning
+- `/u`, `/e`, `/s`, `/n` : force encodings; don't mistake `/s` for the Perl one!
 
 ```ruby
 Regexp.union(*strings_or_regexes)         # Generates a `/a|b|.../` Regexp instance; String expressions are escaped
