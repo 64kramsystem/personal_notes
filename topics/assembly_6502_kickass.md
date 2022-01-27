@@ -21,6 +21,8 @@ main:   inc $d021
 
 ## Data definition
 
+Binary data:
+
 ```asm
 .byte $12, $34             // Other: word, dword
 .text "Hello World"
@@ -39,6 +41,13 @@ Filling:
 .fillword 2, i * $80                               // .word $0000, $0080
 
 // There are other functionalities
+```
+
+Vars/consts:
+
+```asm
+.var foo = 123                                     // the value is mandatory
+.const bar = 456
 ```
 
 ## Imports

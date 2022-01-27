@@ -22,16 +22,16 @@ so the stack top is the first available slot ($1FF).
 
 ## Addressing modes
 
-- Absolute, X, Y   : 16 bits absolute, plus optional X or Y offset   ; `op (, X|Y)`
-- Indirect         : 16 bits absolute -> 16 bits absolute            ; `[op]`
+- Absolute, X, Y   : 16 bits absolute, plus optional X or Y offset   ; `op16 (, X|Y)`
+- Indirect         : 16 bits absolute -> 16 bits absolute            ; `[op16]`
 
-- Zero page, X, Y  : Zero-page, plus optional X or Y offset          ; `op (, X|Y)`
-- Indexed indirect : Zero-page plus X offset -> 16 bits absolute     ; `[op + X]`
-- Indirect indexed : Zero-page -> 16 bits absolute -> plus Y offset  : `[op], Y`
+- Zero page, X, Y  : Zero-page, plus optional X or Y offset          ; `op8 (, X|Y)`
+- Indexed indirect : Zero-page plus X offset -> 16 bits absolute     ; `[op8 + X]`
+- Indirect indexed : Zero-page -> 16 bits absolute -> plus Y offset  : `[op8], Y`
 
 - Relative         : 8 bits relative, used by branches
 
-- Immediate        : 1 byte operand                                  : `#op`
+- Immediate        : 1 byte operand                                  : `#op8`
 - Accumulator      : single-byte function using A                    : `instrA` (e.g. `ASLA`)
 - Implied          : single-byte function
 
@@ -59,8 +59,10 @@ so the stack top is the first available slot ($1FF).
 - `ASL`(`A`), `LSR`(`A`) : Arithmetic Shift Left/Logic Shift Right (address or Accumulator); spill to carry
 - `ROL`, `ROR`           : ROtate Left/Right through carry
 
-- `INC`, `INX`, `INY` : Increment address/X/Y
+- `INC`, `INX`, `INY` : Increment address/X/Y; doesn't interact with the Carry
 - `ADC`, `SBC`        : ADd/SuBtraCt accumulator with Carry
+
+There are no unconditional jumps, so one must simulate via conditional: `CLC + BCC`.
 
 ### Illegal opcodes
 

@@ -1,3 +1,20 @@
+## Thu 27/Jan/2022
+
+- Tools
+  - [x] Separate playground projects
+- SWE
+  - Practice
+    - Leetcode
+      - [x] Easy 40%,  278: 1 test, 3 submissions
+        - Not considered that bad=1 is an edge case independently of n
+- Studies
+  - C64 ASM Programming
+    - [x] Create book listings repository
+    - [ ] Machine Code Games Routines for the Commodore 64
+      - [ ] 6. Writing Your Own Routines
+        - [x] Fight converting first routine
+          - [x] Study Kick Assembler basics
+
 ## Wed 26/Jan/2022
 
 - Tools
