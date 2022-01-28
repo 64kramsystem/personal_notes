@@ -1,3 +1,24 @@
+## Fri 28/Jan/2022
+
+- Tools
+  - VSC
+    - [x] Make Sort selection key binding conditional to selection
+- Open source
+  - VSCode Kick Assembler Studio extension
+    - [x] Diagnose/workaround debugger bug
+      - [x] Fight the bug
+      - [x] Fight extension configurations
+      - [x] Fight building the package
+    - [x] Open upstream issue
+    - [x] Create fork with workaround
+- SWE
+  - Practice
+    - Leetcode
+      - [x] Easy 41%, 1784: Confusing description
+      - [x] Easy 41%,  645: 3 tests, 1 submissions
+        - Inconsistency in the data stored; wrong storage referenced
+      - [x] Easy 42%,  205: 1 tests, 1 submissions
+
 ## Thu 27/Jan/2022
 
 - Tools
@@ -14,6 +35,8 @@
       - [ ] 6. Writing Your Own Routines
         - [x] Fight converting first routine
           - [x] Study Kick Assembler basics
+          - [x] Try alternative debugger
+          - [x] Review Kick Assembler Studio bug
 
 ## Wed 26/Jan/2022
 

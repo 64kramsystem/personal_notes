@@ -1,35 +1,67 @@
 # Visual Studio Code
 
 - [Visual Studio Code](#visual-studio-code)
-  - [Publishing extensions](#publishing-extensions)
+  - [Extensions](#extensions)
+    - [Building/Packaging/Publishing](#buildingpackagingpublishing)
+    - [Debug](#debug)
+    - [Get launch configurations](#get-launch-configurations)
   - [Associating Markdown code blocks to grammars](#associating-markdown-code-blocks-to-grammars)
   - [Configuration](#configuration)
   - [C/C++](#cc)
     - [Setting up a project](#setting-up-a-project)
     - [Define macros (symbols)](#define-macros-symbols)
 
-## Publishing extensions
+## Extensions
+
+### Building/Packaging/Publishing
+
+Run from the extension repository.
+
+Build:
 
 ```sh
-# Prerequisite; requires NodeJS v14.
+# Install the node modules in the project (under `node_modules`), and transpile; interrupt after compilation.
 #
+npm install
+```
+
+Package (requires NodeJS v14):
+
+```sh
 npm install -g vsce
-
-# Prerequisite: create organization and token (see https://code.visualstudio.com/api/working-with-extensions/publishing-extension#publishing-extensions).
-
-# Run from the extension repository.
 
 # Package into a vsix file.
 #
 vsce package
 ```
 
-Publishing. WATCH OUT!!! vsce seems to associate a given extension to the local path, so when an extension is renamed (or similar), rename the project directory!
+Publish; requires organization and token (see https://code.visualstudio.com/api/working-with-extensions/publishing-extension#publishing-extensions).
+
+WATCH OUT!!! vsce seems to associate a given extension to the local path, so when an extension is renamed (or similar), rename the project directory!
 
 ```sh
 vsce login $organization
+
 vsce publish
+
 vsce unpublish
+```
+
+### Debug
+
+Output (an object) to the console, server side:
+
+```js
+console.log(">>> " + JSON.stringify(object, null, 4));
+```
+
+### Get launch configurations
+
+See https://code.visualstudio.com/api/references/vscode-api#WorkspaceConfiguration:
+
+```js
+const launch_config = vscode.workspace.getConfiguration('launch', vscode.workspace.workspaceFolders[0].uri);
+const configurations = launch_config.get("configurations");
 ```
 
 ## Associating Markdown code blocks to grammars
