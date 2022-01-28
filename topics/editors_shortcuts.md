@@ -76,7 +76,7 @@ The VIM section requires some cleanup.
 - `F5`                        Start/Continue
 - `Shift+F5`                  Stop
 - `Ctrl+F5`                   Run without debug
-- `Shift+F9`                  Toggle breakpoint (custom)
+- `F9`                        Toggle breakpoint
 
 - `Ctrl+K, Ctrl+P`            Du(p)licate (copy) selection!! (custom)
 

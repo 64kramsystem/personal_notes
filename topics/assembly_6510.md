@@ -22,10 +22,12 @@ so the stack top is the first available slot ($1FF).
 
 ## Addressing modes
 
-- Absolute, X, Y   : 16 bits absolute, plus optional X or Y offset   ; `op16 (, X|Y)`
+(curly braces = optional)
+
+- Absolute, X, Y   : 16 bits absolute, plus optional X or Y offset   ; `op16 {, X/Y}`
 - Indirect         : 16 bits absolute -> 16 bits absolute            ; `[op16]`
 
-- Zero page, X, Y  : Zero-page, plus optional X or Y offset          ; `op8 (, X|Y)`
+- Zero page, X, Y  : Zero-page, plus optional X or Y offset          ; `op8 {, X/Y}`
 - Indexed indirect : Zero-page plus X offset -> 16 bits absolute     ; `[op8 + X]`
 - Indirect indexed : Zero-page -> 16 bits absolute -> plus Y offset  : `[op8], Y`
 
