@@ -1,3 +1,29 @@
+## Sat 29/Jan/2022
+
+- SWE
+  - Practice
+    - Leetcode
+      - [x] Easy 42%,  263: 1 tests, 2 submissions
+        - Mistakes with API
+      - [x] Easy 42%,  263: 1 tests, 1 submissions
+        - Alternative (faster) approach
+      - [x] Easy 42%,  111: 2 tests, 1 submissions
+        - Misunderstood the problem
+      - [x] Easy 42%, 1736: disaster
+        - Disaster; tried to find clever solution; the edge cases are multiple
+- Tools
+  - [x] Work accounting: Fix day type computation for `ye`sterday
+- Writings
+  - [x] Update "Machine Code Games Routines for the Commodore 64" Errata
+    - Add new erratum, and comment routine
+- Studies
+  - C64 ASM Programming
+    - [ ] Machine Code Games Routines for the Commodore 64
+      - [x] Copy notes
+      - [x] 6. Writing Your Own Routines
+      - [x] 7. Testing and Debugging
+      - [x] 8. Connections: Stringing the Game Together
+
 ## Fri 28/Jan/2022
 
 - Tools
@@ -98,10 +124,10 @@
 - SWE
   - Practice
     - Leetcode
-      - [ ] Easy 31%: 3 tests, 1 submission
-      - [ ] Easy 32%: 1 tests, 2 submissions
-      - [ ] Easy 33%: Solution looked up
-      - [ ] Easy 33%: 2 tests, 2 submissions
+      - [x] Easy 31%: 3 tests, 1 submission
+      - [x] Easy 32%: 1 tests, 2 submissions
+      - [x] Easy 33%: Solution looked up
+      - [x] Easy 33%: 2 tests, 2 submissions
 
 ## Sat 22/Jan/2022
 

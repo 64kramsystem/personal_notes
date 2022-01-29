@@ -2,12 +2,20 @@
 
 - [Commodore 64](#commodore-64)
   - [Memory map](#memory-map)
+  - [Debugging](#debugging)
   - [VICE](#vice)
 
 ## Memory map
 
-- $0801: BASIC listings start
-- $d021: Background color
+(`w` = word)
+
+- $0316/w : `BRK` interrupt vector
+- $0801   : BASIC listings start
+- $d021   : Background color
+
+## Debugging
+
+Modify the `BRK` [interrupt vector](#memory-map), and place `BRK`.
 
 ## VICE
 
