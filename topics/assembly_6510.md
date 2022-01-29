@@ -6,6 +6,8 @@
   - [Instructions](#instructions)
     - [Illegal opcodes](#illegal-opcodes)
     - [Multiplication](#multiplication)
+  - [Programming patterns](#programming-patterns)
+    - [Table-based switch/case](#table-based-switchcase)
 
 ## Architecture
 
@@ -41,8 +43,8 @@ so the stack top is the first available slot ($1FF).
 
 "transfer" = copy
 
-- `LDA`, `STA`     : LoaD/STore Accumulator
-- `TAX`, `TXA`     : Transfer X <> Accumulator
+- `LDA`, `STA`             : LoaD/STore Accumulator
+- `TAX`/`TAY`, `TXA`/`TYA` : Transfer X/Y <> Accumulator
 
 - `CLC`, `SEC`     : CLear/SEt carry
 
@@ -64,6 +66,8 @@ so the stack top is the first available slot ($1FF).
 - `INC`, `INX`, `INY` : Increment address/X/Y; doesn't interact with the Carry
 - `ADC`, `SBC`        : ADd/SuBtraCt accumulator with Carry
 
+- `BRK`               : Trigger a non-maskable interrupt; see machine memory map for the IV
+
 There are no unconditional jumps, so one must simulate via conditional: `CLC + BCC`.
 
 ### Illegal opcodes
@@ -81,4 +85,27 @@ while A != 0
 
   A = A / 2
   B = B * 2
+```
+
+## Programming patterns
+
+### Table-based switch/case
+
+```asm
+// Variable in `A`
+
+ASLA          // A *= 2*2*2
+ASLA
+ASLA
+
+STA bccA      // self-modifying code (kickass syntax)
+CLC
+BCC bccA:#$00
+
+JSR case1
+JMP end
+NOP           // padding
+NOP
+
+// ...other cases...
 ```

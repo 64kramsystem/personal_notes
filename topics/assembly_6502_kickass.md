@@ -3,6 +3,10 @@
 - [Kick Assembler (Assembly 6502)](#kick-assembler-assembly-6502)
   - [Basic structure](#basic-structure)
   - [Data definition](#data-definition)
+  - [Labels](#labels)
+    - [Self-modifying code](#self-modifying-code)
+  - [Block (locations)](#block-locations)
+  - [Expressions](#expressions)
   - [Imports](#imports)
   - [Macros](#macros)
 
@@ -15,8 +19,6 @@ BasicUpstart2(main)
 
 main:   inc $d021
 	      jmp main
-
-* = $1000 "Music"                                  // Set the current location; the label is optional
 ```
 
 ## Data definition
@@ -48,7 +50,45 @@ Vars/consts:
 ```asm
 .var foo = 123                                     // the value is mandatory
 .const bar = 456
+
+// it may be more convenient to use labels, since they can be detected by some debuggers
+foo: .byte 123
 ```
+
+## Labels
+
+### Self-modifying code
+
+```asm
+sta bccA
+clc
+bcc bccA:#$00
+```
+
+## Block (locations)
+
+Blocks define the location in memory. Labels are optional.
+
+```asm
+// Standard: block stored in the PRG.
+//
+* = $1000 "Music"
+
+// Virtual: block not stored in memory.
+//
+// WATCH OUT! If this is in the zero page, place it before anything after the ZP, otherwise, the assembler
+// will generate absolute references.
+//
+* = 2 virtual
+```
+
+## Expressions
+
+WATCH OUT! Non-integer results of integer expressions are floats; they can cause mistakes if not rounded.
+
+Math functions (subset):
+
+- `floor(x)`
 
 ## Imports
 
