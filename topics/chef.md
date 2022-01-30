@@ -66,23 +66,34 @@ group "application"
 
 ### Subscribe/notify
 
+WATCH OUT! A subscription depends on the subscribed resource *change*; it won't work as intended for resources that are in a binary state (e.g. packages).  
+When using a package configuration pattern, the subscription must be to the configfile change, not to the package.
+
 ```ruby
 file '/etc/nginx/ssl/example.crt' do
   mode  '0600'
   owner 'root'
 end
 
-# Subscription (pull): notification happens when the referenced resource state is changed.
-# Don't forget that the :subscribes action is the action of the enclosing resource!
-#
 service 'nginx' do
   action :nothing
+
+  # Don't forget that the :subscribes action is the action of the enclosing resource!
+  # Only one action per statement can be subscribed.
+  # If the subscribed resource doesn't exist, there's no side effect.
+  #
   subscribes :reload, 'file[/etc/nginx/ssl/example.crt]', :immediately
+
+  # This is rare, but a package may actually not enable the service; in this case, depending on the
+  # package (not to the config) is appropriate.
+  #
+  subscribes :enable, 'dpkg_packge[nginx]', :immediately
 end
 
 # Notification (push).
 #
 template '/path/to/myconfig.json' do
+  # An error is raised if the notified resource doesn't exist.
   notifies :restart, "service[myservice]", :immediately
 end
 ```

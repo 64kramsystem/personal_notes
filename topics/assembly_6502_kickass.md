@@ -55,7 +55,24 @@ Vars/consts:
 foo: .byte 123
 ```
 
+Hi/lo byte operators (work only with mnemonics):
+
+```asm
+lda #<VAL16     // Lower 8 bits of a 16-bits value
+lda #>VAL16     // Higher
+```
+
 ## Labels
+
+There is support for multiple ("multi") labels, which can share the same name; they're convenient for inner loops:
+
+```asm
+!loop:
+       // ...blah...
+       bcc !loop-    // `-` references the previous loop, `+` the following one
+```
+
+Unnamed labels are also valid (`!`, `bCC !-`).
 
 ### Self-modifying code
 
@@ -89,6 +106,7 @@ WATCH OUT! Non-integer results of integer expressions are floats; they can cause
 Math functions (subset):
 
 - `floor(x)`
+- `mod(a, b)` - there is no `%` operator!
 
 ## Imports
 

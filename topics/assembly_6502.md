@@ -3,10 +3,12 @@
 - [Assembly 6510](#assembly-6510)
   - [Architecture](#architecture)
   - [Addressing modes](#addressing-modes)
+  - [Flags](#flags)
   - [Instructions](#instructions)
     - [Illegal opcodes](#illegal-opcodes)
     - [Multiplication](#multiplication)
   - [Programming patterns](#programming-patterns)
+    - [16-bit operations](#16-bit-operations)
     - [Table-based switch/case](#table-based-switchcase)
 
 ## Architecture
@@ -26,12 +28,12 @@ so the stack top is the first available slot ($1FF).
 
 (curly braces = optional)
 
-- Absolute, X, Y   : 16 bits absolute, plus optional X or Y offset   ; `op16 {, X/Y}`
-- Indirect         : 16 bits absolute -> 16 bits absolute            ; `[op16]`
+- Absolute, X, Y   : 16 bits absolute, plus optional X or Y offset   ; `addr16 {, X/Y}`
+- Indirect         : 16 bits absolute -> 16 bits absolute            ; `(addr16)` - `JMP` only!
 
-- Zero page, X, Y  : Zero-page, plus optional X or Y offset          ; `op8 {, X/Y}`
-- Indexed indirect : Zero-page plus X offset -> 16 bits absolute     ; `[op8 + X]`
-- Indirect indexed : Zero-page -> 16 bits absolute -> plus Y offset  : `[op8], Y`
+- Zero page, X, Y  : Zero-page, plus optional X or Y offset          ; `addr8 {, X/Y}`
+- Indexed indirect : Zero-page plus X offset -> 16 bits absolute     ; `(addr8 + X)`
+- Indirect indexed : Zero-page -> 16 bits absolute -> plus Y offset  : `(addr8), Y`
 
 - Relative         : 8 bits relative, used by branches
 
@@ -39,11 +41,22 @@ so the stack top is the first available slot ($1FF).
 - Accumulator      : single-byte function using A                    : `instrA` (e.g. `ASLA`)
 - Implied          : single-byte function
 
+## Flags
+
+- `N`egative
+- O`V`erflow
+- `B`reak
+- `D`ecimal
+- `I`nterrupt
+- `Z`ero
+- `C`array (see `SBC` for peculiarities!)
+
 ## Instructions
 
 "transfer" = copy
 
-- `LDA`, `STA`             : LoaD/STore Accumulator
+- `LDA`                    : LoaD Accumulator; WATCH OUT!! Affects flags ZN
+- `STA`                    : STore Accumulator
 - `TAX`/`TAY`, `TXA`/`TYA` : Transfer X/Y <> Accumulator
 
 - `CLC`, `SEC`     : CLear/SEt carry
@@ -63,12 +76,11 @@ so the stack top is the first available slot ($1FF).
 - `ASL`(`A`), `LSR`(`A`) : Arithmetic Shift Left/Logic Shift Right (address or Accumulator); spill to carry
 - `ROL`, `ROR`           : ROtate Left/Right through carry
 
-- `INC`, `INX`, `INY` : Increment address/X/Y; doesn't interact with the Carry
-- `ADC`, `SBC`        : ADd/SuBtraCt accumulator with Carry
+- `INC`, `INX`, `INY` : Increment address/X/Y; doesn't support A; flags: ZN
+- `ADC`               : ADd accumulator with Carry
+- `SBC`               : SuBtraCt accumulator with Carry; WATCH OUT !!!! If the C is set, it counts as 0, if it's clear, it counts as 1 !!!!
 
 - `BRK`               : Trigger a non-maskable interrupt; see machine memory map for the IV
-
-There are no unconditional jumps, so one must simulate via conditional: `CLC + BCC`.
 
 ### Illegal opcodes
 
@@ -88,6 +100,38 @@ while A != 0
 ```
 
 ## Programming patterns
+
+### 16-bit operations
+
+Increment:
+
+```asm
+    INC lo_byte
+    BNE !+
+    INC hi_byte
+!:
+```
+
+Decrement:
+
+```asm
+    LDA lo_byte
+    BNE !+
+    DEC hi_byte
+!:  DEC lo_byte
+```
+
+Comparison:
+
+```asm
+    LDA v1_lo
+    CMP v2_lo
+    BNE not_equal
+    LDA v1_hi
+    CMP v2_hi
+    BNE not_equal
+equal:
+```
 
 ### Table-based switch/case
 
