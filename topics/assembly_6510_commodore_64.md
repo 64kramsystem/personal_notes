@@ -9,9 +9,10 @@
 
 (`w` = word)
 
-- $0316/w : `BRK` interrupt vector
-- $0801   : BASIC listings start
-- $d021   : Background color
+- $0316 (w)   : `BRK` interrupt vector
+- $0400-$07e7 : Screen memory
+- $0801       : BASIC listings start
+- $d021       : Background color
 
 ## Debugging
 

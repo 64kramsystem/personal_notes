@@ -8,7 +8,7 @@
       - [C to Rust types mapping](#c-to-rust-types-mapping)
       - [Extern functions/Build scripts](#extern-functionsbuild-scripts)
       - [C library patterns](#c-library-patterns)
-    - [Uninitialized memory (`std::mem::MaybeUninit`)](#uninitialized-memory-stdmemmaybeuninit)
+    - [Uninitialized memory (`std::mem::MaybeUninit`)/Partially initialized structs](#uninitialized-memory-stdmemmaybeuninitpartially-initialized-structs)
       - [Bidimensional array struct, uninitialized and macro'ed](#bidimensional-array-struct-uninitialized-and-macroed)
     - [Manually allocating memory](#manually-allocating-memory)
     - [std::num::NonZero*](#stdnumnonzero)
@@ -226,23 +226,36 @@ impl Drop for Repository {
 }
 ```
 
-### Uninitialized memory (`std::mem::MaybeUninit`)
+### Uninitialized memory (`std::mem::MaybeUninit`)/Partially initialized structs
 
-Safe(r) version of initialization with uninitialized values of Array and i32; the simpler but unsafe(r) versions are below.
+Safe(r) version of initialization with uninitialized values:
 
 ```rs
-let mut result: [MaybeUninit<crate::Color>; pixels_count] = unsafe { MaybeUninit::uninit().assume_init() };
-result[0] = MaybeUninit::new(crate::Color { r: 0.0, g: 0.0, b: 0.0 });
-let result = unsafe { mem::transmute::<_, [crate::Color; pixels_count]>(result) };
+// Simple data type
+//
+let mut result = MaybeUninit::<u32>::uninit();
+unsafe { result.as_mut_ptr().write(0); }
+let result = unsafe { um_u32.assume_init() };
 
-let mut x = MaybeUninit::<&i32>::uninit();
-unsafe { x.as_mut_ptr().write(&0); }
-let x = unsafe { x.assume_init() };
+// Array
+// For a more sophisticated application to bidimensional arrays, see the [subsection below](#bidimensional-array-struct-uninitialized-and-macroed).
+//
+let mut result: [MaybeUninit<u32>; array_size] = unsafe { MaybeUninit::uninit().assume_init() };
+result[0] = MaybeUninit::new(0);
+// ...other entries...
+let result = unsafe { mem::transmute::<_, [u32; array_size]>(result) };
+
+// Field-by-field initialization of a struct (extract)
+// See https://doc.rust-lang.org/std/mem/union.MaybeUninit.html#initializing-a-struct-field-by-field.
+//
+unsafe {
+  // We use a macro in order to find the address of a field from a mut point.
+  //
+  addr_of_mut!((*ptr).id).write(0);
+}
 ```
 
-For a more sophisticated application to bidimensional arrays, see the [subsection below](#bidimensional-array-struct-uninitialized-and-macroed).
-
-Other uninitialized forms:
+Simpler but unsafe(r) versions, via different semantics/APIs:
 
 ```rs
 let mut result: [[f64; $order]; $order] = usafe { mem::zeroed() };
@@ -326,9 +339,11 @@ let buffer: *mut u8 = unsafe {
 libc::munmap(buffer as *mut _, buffer_size);
 ```
 
-The alternative to `null_mut()` is (extract; see https://users.rust-lang.org/t/removing-the-libc-calls/62298/13):
+The alternative to `null_mut()` is:
 
 ```rs
+// Extract; see https://users.rust-lang.org/t/removing-the-libc-calls/62298/13
+
 let mut buffer_addr: MaybeUninit<*mut c_void> = MaybeUninit::uninit();
 
 libc::posix_memalign(buffer_addr.as_mut_ptr(), G.page_size, size);

@@ -1,3 +1,24 @@
+## Sun 30/Jan/2022
+
+- Writings
+  - Comment(s) on the apt lock post
+    - [x] Investigate and propose possible/likely solution
+  - Comment on the Linux kernel customization
+    - [x] Review and reply
+- Studies
+  - Rust
+    - [x] Review and extend `MaybeUninit` usage pattern
+- Studies
+  - C64 ASM Programming
+    - [x] Research idiomatic Kick Assembler code
+    - [ ] 9. Direct Routines
+      - [x] Fix bug
+      - [x] Extend the small memory fill routine
+        - [x] Optimize it
+      - [x] Publish the routine errata and optimization on the blog
+      - [x] Optimize the memory copy routine
+      - [x] Investigate CLC+BCC <> JMP
+
 ## Sat 29/Jan/2022
 
 - SWE
