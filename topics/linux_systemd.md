@@ -3,6 +3,7 @@
 - [Linux Systemd](#linux-systemd)
   - [Generic commands and notes](#generic-commands-and-notes)
   - [Systemctl](#systemctl)
+    - [System commands](#system-commands)
     - [Per-user](#per-user)
   - [journalctl](#journalctl)
   - [Configuring a service unit](#configuring-a-service-unit)
@@ -57,6 +58,13 @@ WATCH OUT! Even if a service is disabled, if other enabled services depend on it
 ```sh
 systemctl list-dependencies --reverse snapd.socket
 # ... now disable the dependencies ...
+```
+
+### System commands
+
+```sh
+systemctl poweroff                # shutdown the system
+systemctl suspend                 # suspend the system
 ```
 
 ### Per-user
