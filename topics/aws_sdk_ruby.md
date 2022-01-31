@@ -1,8 +1,41 @@
 # AWS SDK Ruby v3
 
 - [AWS SDK Ruby v3](#aws-sdk-ruby-v3)
+  - [EC2](#ec2)
+  - [Target groups](#target-groups)
   - [Waiters](#waiters)
   - [DynamoDB](#dynamodb)
+
+## EC2
+
+Find the instance id:
+
+```rb
+require 'aws-sdk-core'
+Aws::EC2Metadata.new.get("/latest/meta-data/instance-id")
+```
+
+## Target groups
+
+Find the target group for a given instance id:
+
+```rb
+# Find all the target group arns
+
+target_groups_data, next_page = @lb_client.describe_target_groups
+
+raise "Next page found while calling :describe_target_groups" if next_page
+
+target_group_arns = target_groups_data.target_groups.map(&:target_group_arn)
+
+# Find ther target healths for each target group, and search the matching instance id
+
+target_group_arns.map do |target_group_arn|
+  target_group_health_states = @lb_client.describe_target_health(target_group_arn: target_group_arn).target_health_descriptions
+
+  return target_group_arn if target_group_health_states.keys.include?(instance_id)
+end
+```
 
 ## Waiters
 

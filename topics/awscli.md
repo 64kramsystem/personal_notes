@@ -28,6 +28,15 @@ aws configure
 
 ### EC2
 
+Find instance id:
+
+```sh
+ec2metadata --instance-id                                         # requires `cloud-guest-utils` installed
+wget -q -O - http://169.254.169.254/latest/meta-data/instance-id
+```
+
+Snapshot operations:
+
 ```sh
 # Show private shapshot ids; use `all` for public
 #

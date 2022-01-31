@@ -1,3 +1,14 @@
+## Mon 31/Jan/2022
+
+- SWE
+  - Practice
+    - Leetcode
+      - [x] Easy 42%, 1232: 3 tests, 3 submissions
+        - [x] Didn't consider one case + trickery due to FP inaccuracy
+- Studies
+  - C64 ASM Programming
+    - [ ] 9. Direct Routines
+
 ## Sun 30/Jan/2022
 
 - Writings
