@@ -1,10 +1,34 @@
+## Tue 01/Feb/2022
+
+- Tools
+  - [x] Cosmetic and functional improvements to work computation script
+  - [x] Investigate editors resource consumption
+- SWE
+  - Practice
+    - Leetcode
+      - [x] Easy 42%,   66: 2 tests, 1 submissions
+        - Not considered array direction in result
+      - [x] Easy 42%,   35: 1 tests, 2 submissions
+        - Usual issue with `-1` referring to last array item, rather than none
+- Studies
+  - Ruby
+    - [x] Search coincise way of safely addressing arrays respect to negative indexes
+  - C64 ASM Programming
+    - [ ] 9. Direct Routines
+      - Add to project/blog
+        - [x] Add delays
+        - [x] Add Fundamental Bomb Update (09.80)
+          - [x] Fix bug, and add loop
+        - [x] Add Hail of Barbs
+          - [x] Fix bug
+
 ## Mon 31/Jan/2022
 
 - SWE
   - Practice
     - Leetcode
       - [x] Easy 42%, 1232: 3 tests, 3 submissions
-        - [x] Didn't consider one case + trickery due to FP inaccuracy
+        - Didn't consider one case + trickery due to FP inaccuracy
 - Studies
   - C64 ASM Programming
     - [ ] 9. Direct Routines

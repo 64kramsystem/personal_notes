@@ -61,7 +61,7 @@ so the stack top is the first available slot ($1FF).
 
 - `CLC`, `SEC`     : CLear/SEt carry
 
-- `JMP`
+- `JMP`            : WATCH OUT !!! With Indirect addressing, the pointer MUST NOT be stored across pages ($..FF and $..00) !!!
 - `JSR`, `RTS`     : Jump to SubRoutine, ReTurn from Subroutine
 
 - `CMP`, `CPX`, `CPY` : CoMPare accumulator/X/Y

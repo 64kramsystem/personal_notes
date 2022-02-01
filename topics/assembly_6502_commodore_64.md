@@ -2,6 +2,7 @@
 
 - [Commodore 64](#commodore-64)
   - [Memory map](#memory-map)
+  - [PETSCII](#petscii)
   - [Debugging](#debugging)
   - [VICE](#vice)
 
@@ -13,6 +14,30 @@
 - $0400-$07e7 : Screen memory
 - $0801       : BASIC listings start
 - $d021       : Background color
+
+## PETSCII
+
+Subset:
+
+|  H->  |  $0   |      $1      |   $2    |  $3   |
+| :---: | :---: | :----------: | :-----: | :---: |
+|  $0   |   @   |      p       | {space} |   0   |
+|  $1   |   a   |      q       |    !    |   1   |
+|  $2   |   b   |      r       |    "    |   2   |
+|  $3   |   c   |      s       |    #    |   3   |
+|  $4   |   d   |      t       |    $    |   4   |
+|  $5   |   e   |      u       |    %    |   5   |
+|  $6   |   f   |      v       |    &    |   6   |
+|  $7   |   g   |      w       |    '    |   7   |
+|  $8   |   h   |      x       |    (    |   8   |
+|  $9   |   i   |      y       |    )    |   9   |
+|  $A   |   j   |      z       |    *    |   :   |
+|  $B   |   k   |      [       |    +    |   ;   |
+|  $C   |   l   |   {pound}    |    ,    |   <   |
+|  $D   |   m   |      ]       |    -    |   =   |
+|  $E   |   n   |  {up_arrow}  |    .    |   >   |
+|  $F   |   o   | {back_arrow} |    /    |   ?   |
+
 
 ## Debugging
 
