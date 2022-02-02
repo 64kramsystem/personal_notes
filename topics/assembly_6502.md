@@ -32,7 +32,7 @@ so the stack top is the first available slot ($1FF).
 - Indirect         : 16 bits absolute -> 16 bits absolute            ; `(addr16)` - `JMP` only!
 
 - Zero page, X, Y  : Zero-page, plus optional X or Y offset          ; `addr8 {, X/Y}`
-- Indexed indirect : Zero-page plus X offset -> 16 bits absolute     ; `(addr8 + X)`
+- Indexed indirect : Zero-page plus X offset -> 16 bits absolute     ; `(addr8, X)`
 - Indirect indexed : Zero-page -> 16 bits absolute -> plus Y offset  : `(addr8), Y`
 
 - Relative         : 8 bits relative, used by branches

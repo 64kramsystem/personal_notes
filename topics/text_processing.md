@@ -283,8 +283,12 @@ printf "k1: a\nk2: b\nk3: c" | perl -0777 -ne 'print join(",", m/^k[13]: (.+)$/m
 echo 250.jpg | perl -pe 's/(\d+)/"0" x (5 - length($1)) . $1/e' # 00250.jpg
 
 # Regex matches print the groups.
+# A group can be excluded via non-capturing group, however, blank lines will be printed for non-matching
+# lines, so in this case, it's best to use a conditional.
 #
 echo 'a_b_c' | perl -lne 'print /(a)_(b)_(c)/' # `abc`
+echo 'abc' | perl -lne 'print /(a).(c)/' # `ac`
+echo $'xxx\nabc' | perl -ne 'print "$1$2\n" if /(a).(c)/' # `ac`
 
 # Assign regex captured groups to variables.
 # WATCH OUT! In the context of one or more variables, groups are interpreted as scalar; in order to
@@ -519,7 +523,7 @@ Some supported by `-E`:
 
 - `\w`
 - `+`
-- capturing groups (`s|ab(c)|\1|`); `$<n>` reference is not supported
+- (at least basic) capturing groups; references, also back-, are supported via `\` (but not `$`).
 
 Not supported (at all):
 

@@ -10,6 +10,7 @@
   - [Control flow](#control-flow)
   - [ALTER TABLE](#alter-table)
     - [Observe progress](#observe-progress)
+  - [Views](#views)
   - [Indexes](#indexes)
   - [Virtual columns](#virtual-columns)
   - [General built-in functions](#general-built-in-functions)
@@ -149,6 +150,19 @@ SELECT EVENT_NAME, WORK_COMPLETED, WORK_ESTIMATED FROM performance_schema.events
 The `alter table (flush)` stage empirically took from 10% to 100% of the total time before that stage.
 
 Only the last stage `log apply table` causes contention; on the longest occurrence, it took ≈2.4% of the total time (44/1858").
+
+## Views
+
+List all the views:
+
+```sql
+SHOW FULL TABLES WHERE Table_type = 'VIEW';
+
+# Includes the definition and more information; must specify the db, otherwise, also the system views
+# are included.
+#
+SELECT TABLE_SCHEMA, TABLE_NAME, VIEW_DEFINITION FROM information_schema.VIEWS WHERE TABLE_SCHEMA = 'my_db'\G
+```
 
 ## Indexes
 

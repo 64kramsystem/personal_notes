@@ -218,8 +218,9 @@ STR
 cp file{,.bak}
 
 # !!! Sequence (range) !!!
+# !! Works also with leading 0s !!!
 #
-for i in {1..10}; do :; done
+for i in {003..005}; do echo $i; done    # prints "003 004 005"
 
 # Expand a files content into parameters. !!! Don't use if escaping is required (e.g. spaces) !!!
 # This works because redirection without an input process (`< $filename`) prints the file content.

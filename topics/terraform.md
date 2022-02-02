@@ -133,6 +133,12 @@ path.module     # path of the current module
 ### Strings
 
 ```tf
+# Values are interpolated via `$`, which is also the escape character (e.g. `ec2-instance-id` below).
+#
+Resource = "arn:aws:ec2:${region}:${account_id}:instance/$${ec2-instance-id}"
+```
+
+```tf
   # Indented heredoc (`<<-`). The closing token doesn't need to be at the beginning of the line;
   # the left margin is automatically computed from the string.
   #
