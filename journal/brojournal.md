@@ -1,3 +1,22 @@
+## Wed 02/Feb/2022
+
+- SWE
+  - Practice
+    - Leetcode
+      - [x] Easy   43%,  203: 1 tests, 1 submissions, 15'
+      - [x] Easy   43%,  367: 1 tests, 1 submissions, 13'
+      - [x] Medium 88%, 1476: 2 tests, 1 submissions, 6'
+        - Typo
+- Tools
+  - [x] Follow up file sharing bug
+- Studies
+  - C64 ASM Programming
+    - [ ] 9. Direct Routines
+      - Add to project/blog
+        - [x] 256 Byte Continuous Scroll (09.085)
+          - [x] Fix bug
+        - [x] Scroll Into Lower Memory (09.086)
+
 ## Tue 01/Feb/2022
 
 - Tools
@@ -16,10 +35,10 @@
   - C64 ASM Programming
     - [ ] 9. Direct Routines
       - Add to project/blog
-        - [x] Add delays
-        - [x] Add Fundamental Bomb Update (09.80)
+        - [x] Delays (09.076)
+        - [x] Fundamental Bomb Update (09.080)
           - [x] Fix bug, and add loop
-        - [x] Add Hail of Barbs
+        - [x] Hail of Barbs (09.081)
           - [x] Fix bug
 
 ## Mon 31/Jan/2022
