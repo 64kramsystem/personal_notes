@@ -6,7 +6,8 @@
     - [Array literals](#array-literals)
     - [Equality/inclusion testing](#equalityinclusion-testing)
     - [Block-oriented processing methods](#block-oriented-processing-methods)
-    - [Ampersand prefix operator `&<object>`](#ampersand-prefix-operator-object)
+    - [Operators](#operators)
+      - [Ampersand prefix operator `&<object>`](#ampersand-prefix-operator-object)
     - [Heredoc](#heredoc)
     - [Data type conversions](#data-type-conversions)
     - [Collections destructuring in blocks](#collections-destructuring-in-blocks)
@@ -110,7 +111,16 @@ url
 "server:" + (JSON.parse(Faraday.get(construct_url)).dig('object', 'id') || '<undefined>')
 ```
 
-### Ampersand prefix operator `&<object>`
+### Operators
+
+The closed range operator is inconsistent:
+
+- `(...7).last`         -> `7`   (includes the last)
+- `(6...7).map(&:to_i)` -> `[6]` (doesn't include the last)
+
+- `(1..)` and `(1...)` have the same elements (both include Float::INFINITY), but they're not equal
+
+#### Ampersand prefix operator `&<object>`
 
 `&<object>` is turned to  `object.to_proc`.
 

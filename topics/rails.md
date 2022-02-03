@@ -52,6 +52,13 @@ arel.table                  # name of the main AREL query table
 # If in the MyTable scope, where second where doesn't need qualification.
 #
 MyTable.where(cond1).or(MyTable.where(cond2))
+
+# Ranges (don't support `>`)
+#
+column: 1..     # column >= 1
+column: 1...    # column >= 1 (!)
+column: ...7    # column < 7
+column: 1..7    # column BETWEEN 1 AND 7
 ```
 
 #### Scopes
