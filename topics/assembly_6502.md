@@ -28,17 +28,17 @@ so the stack top is the first available slot ($1FF).
 
 (curly braces = optional)
 
-- Absolute, X, Y   : 16 bits absolute, plus optional X or Y offset   ; `addr16 {, X/Y}`
-- Indirect         : 16 bits absolute -> 16 bits absolute            ; `(addr16)` - `JMP` only!
+- Absolute, X, Y   : 16 bit absolute, plus optional X/Y offset     : `addr16 {, X/Y}`
+- Indirect         : 16 bit absolute -> 16 bits absolute           : `(addr16)`        # `JMP` only!
 
-- Zero page, X, Y  : Zero-page, plus optional X or Y offset          ; `addr8 {, X/Y}`
-- Indexed indirect : Zero-page plus X offset -> 16 bits absolute     ; `(addr8, X)`
-- Indirect indexed : Zero-page -> 16 bits absolute -> plus Y offset  : `(addr8), Y`
+- Zero page, X, Y  : 8 bit absolute (ZP), plus optional X/Y offset : `addr8 {, X/Y}`   # Wraps around at $100!!
+- Indexed indirect : Zero-page plus X offset -> 16 bit addr        : `(addr8, X)`
+- Indirect indexed : Zero-page -> 16 bit addr -> plus Y offset     : `(addr8), Y`
 
-- Relative         : 8 bits relative, used by branches
+- Relative         : 8 bit relative, used by branches
 
-- Immediate        : 1 byte operand                                  : `#op8`
-- Accumulator      : single-byte function using A                    : `instrA` (e.g. `ASLA`)
+- Immediate        : 1 byte operand                                : `#op8`
+- Accumulator      : single-byte function using A                  : `instrA` (e.g. `ASLA`)
 - Implied          : single-byte function
 
 ## Flags

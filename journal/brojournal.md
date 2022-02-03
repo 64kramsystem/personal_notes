@@ -1,3 +1,24 @@
+## Thu 03/Feb/2022
+
+- SWE
+  - Practice
+    - Leetcode
+      - [x] Medium 88%, 1689: 2 tests, 1 submissions, 6'
+        - Wrong Ruby API called
+      - [x] Medium 87%, 1828: 2 tests, 1 submissions, 13'
+        - Wrong sign; tried to find fast solution (not provided!?)
+      - [ ] Medium 86%, 1769: 4 tests, 1 submissions, >20'
+        - Disaster: Mistaken requirements, then index issues, then slow; found fast solution towards the end
+- Admin
+  - [x] Review and discuss Rust Code Reading Club
+- Studies
+  - C64 ASM Programming
+    - [ ] Machine Code Games Routines for the Commodore 64
+      - [ ] 9. Direct Routines
+        - [x] Line Blank (09.087)
+          - Add to project
+        - [ ] Keyboard/Joystick
+
 ## Wed 02/Feb/2022
 
 - SWE
@@ -11,11 +32,13 @@
   - [x] Follow up file sharing bug
 - Studies
   - C64 ASM Programming
-    - [ ] 9. Direct Routines
-      - Add to project/blog
-        - [x] 256 Byte Continuous Scroll (09.085)
-          - [x] Fix bug
-        - [x] Scroll Into Lower Memory (09.086)
+    - [ ] Machine Code Games Routines for the Commodore 64
+      - [ ] 9. Direct Routines
+        - Add to project/blog
+          - [x] 256 Byte Continuous Scroll (09.085)
+            - [x] Fix bug
+          - [x] Scroll Into Lower Memory (09.086)
+    - [x] Review zero page addressing mode
 
 ## Tue 01/Feb/2022
 
@@ -33,13 +56,14 @@
   - Ruby
     - [x] Search coincise way of safely addressing arrays respect to negative indexes
   - C64 ASM Programming
-    - [ ] 9. Direct Routines
-      - Add to project/blog
-        - [x] Delays (09.076)
-        - [x] Fundamental Bomb Update (09.080)
-          - [x] Fix bug, and add loop
-        - [x] Hail of Barbs (09.081)
-          - [x] Fix bug
+    - [ ] Machine Code Games Routines for the Commodore 64
+      - [ ] 9. Direct Routines
+        - Add to project/blog
+          - [x] Delays (09.076)
+          - [x] Fundamental Bomb Update (09.080)
+            - [x] Fix bug, and add loop
+          - [x] Hail of Barbs (09.081)
+            - [x] Fix bug
 
 ## Mon 31/Jan/2022
 
@@ -50,7 +74,8 @@
         - Didn't consider one case + trickery due to FP inaccuracy
 - Studies
   - C64 ASM Programming
-    - [ ] 9. Direct Routines
+    - [ ] Machine Code Games Routines for the Commodore 64
+      - [ ] 9. Direct Routines
 
 ## Sun 30/Jan/2022
 
@@ -65,13 +90,14 @@
 - Studies
   - C64 ASM Programming
     - [x] Research idiomatic Kick Assembler code
-    - [ ] 9. Direct Routines
-      - [x] Fix bug
-      - [x] Extend the small memory fill routine
-        - [x] Optimize it
-      - [x] Publish the routine errata and optimization on the blog
-      - [x] Optimize the memory copy routine
-      - [x] Investigate CLC+BCC <> JMP
+    - [ ] Machine Code Games Routines for the Commodore 64
+      - [ ] 9. Direct Routines
+        - [x] Fix bug
+        - [x] Extend the small memory fill routine
+          - [x] Optimize it
+        - [x] Publish the routine errata and optimization on the blog
+        - [x] Optimize the memory copy routine
+        - [x] Investigate CLC+BCC <> JMP
 
 ## Sat 29/Jan/2022
 
