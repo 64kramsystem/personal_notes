@@ -1,3 +1,10 @@
+## Sat 05/Feb/2022
+
+- Studies
+  - C64 ASM Programming
+    - [ ] Machine Code Games Routines for the Commodore 64
+      - [ ] 10. Indirect Routines
+
 ## Fri 04/Feb/2022
 
 - SWE
