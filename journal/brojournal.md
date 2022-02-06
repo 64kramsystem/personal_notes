@@ -1,3 +1,12 @@
+## Sun 06/Feb/2022
+
+- SWE
+  - Practice
+    - Leetcode
+      - [x] Medium 86%, 1769: 2 tests, 1 submissions, 30'
+        - + 1 test with printout
+        - mistake: one end cycle incorrectly considered
+
 ## Sat 05/Feb/2022
 
 - Studies
