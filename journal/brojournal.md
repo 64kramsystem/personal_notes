@@ -1,3 +1,20 @@
+## Tue 08/Feb/2022
+
+- Tools
+  - [x] Review Code Reading Club tools
+    - [x] Review and report bug with official PDF maker
+- SWE
+  - Practice
+    - Leetcode
+      - [x] Medium 85%,  807: 1 tests, 1 submissions, 22.5'
+- Studies
+  - C64 ASM Programming
+    - [x] Review and copy routines to project
+      - [x] "Inverting"
+      - [x] "Attribute Flasher"
+        - [x] Fix, and add entry to blog post
+      - [x] "Alternative Sprite System"
+
 ## Mon 07/Feb/2022
 
 - SWE
