@@ -1,3 +1,15 @@
+## Wed 09/Feb/2022
+
+- System
+  - [x] Solve kernel vs. admgpu problem
+    - [x] Fight 5.4 kernel vs zfs
+    - [x] Fight find compatible 5.11 kernel
+- Studies
+  - C64 ASM Programming
+    - [ ] Machine Code Games Routines for the Commodore 64
+      - [ ] 10. Indirect Routines
+      - [ ] Appendix A: Utility Programs
+
 ## Tue 08/Feb/2022
 
 - Tools
