@@ -645,6 +645,8 @@ arr[5] ||= nil                          # other resize/extend, in arguably less 
 
 arr.delete(obj)                         # delete an object matching via `==`; returns self
 arr.delete_at(i)                        # delete an object at index `i`; returns the value deleted, or nil if no deletion
+
+[ [[1, 2], [3, 4]], [[5]] ].flatten(1)    # flatten only N levels => [[1, 2], [3, 4], [5]]
 ```
 
 Transpose a matrix (array of arrays) (intuitively, converts from array of the rows to array of the columns):
