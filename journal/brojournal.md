@@ -1,3 +1,14 @@
+## Thu 10/Feb/2022
+
+- SWE
+  - Practice
+    - Leetcode
+      - [x] Medium 85%, 1282: 1 tests, 1 submissions, ~9'
+- Studies
+  - C64 ASM Programming
+    - [ ] Machine Code Games Routines for the Commodore 64
+      - [x] Appendix A: Utility Programs (-> UDG)
+
 ## Wed 09/Feb/2022
 
 - System
@@ -8,7 +19,7 @@
   - C64 ASM Programming
     - [ ] Machine Code Games Routines for the Commodore 64
       - [ ] 10. Indirect Routines
-      - [ ] Appendix A: Utility Programs
+      - [ ] Appendix A: Utility Programs (-> UDG)
 
 ## Tue 08/Feb/2022
 

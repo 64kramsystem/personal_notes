@@ -259,6 +259,12 @@ SELECT TIMEDIFF( NOW(), CONVERT_TZ( NOW(), @@session.time_zone, '+00:00' ) );
 # Don't use `-` to substract timestamps!! Use:
 #
 TIMESTAMPDIFF(SECOND, timestamp1, timestamp2);
+
+# Adds @date to @time, and returns a DATETIME; typically used to convert DATE+TIME to DATETIME, however,
+# make sure that @date doesn't have a time, because this is an addition!
+# Also, if @time is NULL, the expression will be NULL.
+#
+TIMESTAMP(@date, @time);
 ```
 
 #### Formatting/parsing

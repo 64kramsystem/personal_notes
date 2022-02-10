@@ -63,10 +63,18 @@ column: 1..7    # column BETWEEN 1 AND 7
 
 #### Scopes
 
-```ruby
-scope :with_tag, ->(name) do
-  where(tag: name)
+```rb
+class Event
+  scope :tagged, ->(name) do
+    where(tag: name)
+  end
 end
+```
+
+In order to use scope in joins, use `merge()`:
+
+```rb
+Show.joins(:events).merge(Event.tagged('fun'))
 ```
 
 #### Group by/having
