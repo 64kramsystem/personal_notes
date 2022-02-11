@@ -1,3 +1,23 @@
+## Fri 11/Feb/2022
+
+- SWE
+  - Practice
+    - Leetcode
+      - [x] Medium 85%, 1315: 3 tests, 1 submissions, 17'
+        - Mistook some data structures (node, array) with their content (int)
+- Tools
+  - Journal copy script
+    - [x] Refactor; add support for fixed additions
+  - [x] Review https://www.dendron.so
+- Admin/System
+  - [x] Laptop: automatic BT restart on resume
+- Open Source
+  - Schedule manager
+    - [x] Move todo checking from the planner to the mover
+  - Open scripts
+    - [x] Migrate the remaining publishable scripts from the private repository
+      - [x] Make all of them generic
+
 ## Thu 10/Feb/2022
 
 - SWE

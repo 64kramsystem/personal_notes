@@ -30,6 +30,7 @@
   - [PDF/Images handling](#pdfimages-handling)
     - [Imagemagick (convert)](#imagemagick-convert)
     - [Raw to JPEG conversion](#raw-to-jpeg-conversion)
+  - [Audio operations](#audio-operations)
   - [Formatting/diff operations](#formattingdiff-operations)
   - [Encoding](#encoding)
   - [Benchmarking](#benchmarking)
@@ -743,6 +744,18 @@ for f in *.ORF; do darktable-cli "$f" "$f".jpg; done
 ```
 
 [Reference](https://askubuntu.com/a/1256073/46091).
+
+## Audio operations
+
+Bind mp3 files:
+
+```sh
+# Updated version of https://lyncd.com/2011/03/lossless-combine-mp3s; no id3 copy (mp3binder has support)
+# vbrfixc is probably not useful when the input bitrate is the same
+#
+mp3binder 1.mp3 2.mp3 --output tmp.mp3
+vbrfixc --XingFrameCrcProtectIfCan tmp.mp3 all.mp3 && rm tmp.mp3
+```
 
 ## Formatting/diff operations
 

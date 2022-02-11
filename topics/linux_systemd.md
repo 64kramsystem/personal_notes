@@ -12,7 +12,7 @@
   - [Timers (scheduled events)](#timers-scheduled-events)
     - [Systemd time format](#systemd-time-format)
     - [Once-off (transient)](#once-off-transient)
-  - [Event triggers](#event-triggers)
+  - [Event triggers (execute program on resume, etc.)](#event-triggers-execute-program-on-resume-etc)
 
 ## Generic commands and notes
 
@@ -298,11 +298,13 @@ $ systemd-run --on-calendar=09:12 /bin/systemctl suspend
 $ systemctl --user stop test-example.timer
 ```
 
-## Event triggers
+## Event triggers (execute program on resume, etc.)
 
 Run a script on suspend/hibernate/thaw/resume (the change applies immediately):
 
 ```sh
+# The standard `bin` paths are in the path during execution, so there's no need to use full paths.
+#
 cat > /lib/systemd/system-sleep/50_myscript << 'SH'
 #!/bin/bash
 set -o errexit

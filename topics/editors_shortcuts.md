@@ -68,6 +68,7 @@ The VIM section requires some cleanup.
 - `Ctrl+K, Ctrl+T`            Run test (custom)
 
 - `Ctrl+K, P`                 Copy file path
+- `Ctrl+Shift+Alt+C`          Copy file relative path (changed to also work in editor)
 
 - `Ctrl+K, S`                 Save without formatting
 
