@@ -614,7 +614,7 @@ File.unlink(file)  # optional
 file = Tempfile.new(<naming>)
 
 Tempfile.open(<naming>) { |f| operation(f) }    # Creates, operates, but doesn't immediately delete
-Tempfile.create(<naming>)                       # Opens and closes, but doesn't immediately delete
+Tempfile.create(<naming>)                       # Creates and closes, but doesn't immediately delete
 Tempfile.create(<naming>) { |f| operation(f) }  # Creates, operates, and deletes
 
 # Generates a temporary filename with `a`/`.png` prefix/extension, in the system temporary directory.

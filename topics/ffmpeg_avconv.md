@@ -175,7 +175,7 @@ ffmpeg -f x11grab -s 1920x1080 -r 10 -i :0.0 -vf scale=1280x800 -c:v libx264 -pr
 ### Build FFmpeg with libfdk-aac support
 
 ```sh
-sudo apt install libfdk-aac-dev
+sudo apt install libfdk-aac-dev libx264-dev
 
 git clone https://github.com/FFmpeg/FFmpeg.git
 
@@ -183,7 +183,7 @@ cd FFmpeg
 
 # Optional (choose the version).
 #
-git checkout origin/release/4.2
+git checkout origin/release/5.0
 
 # `-lpthread`: include pthread library
 # `-lm`: include standard C math library `libm` (see https://stackoverflow.com/q/1033898)
@@ -191,7 +191,7 @@ git checkout origin/release/4.2
 #
 ./configure \
   --extra-libs="-lpthread -lm" \
-  --enable-gpl --enable-nonfree --enable-libfdk-aac
+  --enable-gpl --enable-nonfree --enable-libfdk-aac --enable-libx264
 
 make -j $(nproc)
 
