@@ -1,10 +1,28 @@
+## Sat 12/Feb/2022
+
+- SWE
+  - Leetcode
+    - [x] Medium 84%, 1038: 2 tests, 1 submissions, 16'
+      - Typo (missing param in two fx)
+- Tools
+  - [x] Update download script
+  - [x] Add (base) leet functionality to journal script
+  - [x] Add (base) inbox handling script
+  - [x] Test all (remaining) PDF annotators
+- Open source
+  - [x] Report Ubuntu BT breakage by recent package upgrade
+- Studies
+  - C64 ASM programming
+    - [ ] Machine Code Games Routines for the Commodore 64
+      - [ ] 10. Indirect Routines
+
 ## Fri 11/Feb/2022
 
 - SWE
   - Practice
     - Leetcode
       - [x] Medium 85%, 1315: 3 tests, 1 submissions, 17'
-        - Mistook some data structures (node, array) with their content (int)
+        - Mistaken some data structures (node, array) with their content (int)
 - Tools
   - Journal copy script
     - [x] Refactor; add support for fixed additions
