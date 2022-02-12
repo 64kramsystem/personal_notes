@@ -4,6 +4,7 @@
   - [Notes](#notes)
   - [Memory map](#memory-map)
   - [Input handling {input}](#input-handling-input)
+  - [Interrupt hooking](#interrupt-hooking)
   - [PETSCII {input}](#petscii-input)
   - [Debugging {debug}](#debugging-debug)
   - [VICE](#vice)
@@ -17,16 +18,20 @@ Some chapters have tags (in the form "{tag_name}"), which are references to the 
 - Simpler: https://sta.c64.org/cbm64mem.html
 - Detailed: http://www.zimmers.net/anonftp/pub/cbm/c64/manuals/mapping-c64.txt
 
-|     hex     |     dec     | description                  | tag     |
-| :---------: | :---------: | ---------------------------- | ------- |
-|    $00c5    |     197     | Key currently pressed        | input   |
-|    $00c6    |     198     | Length of pressed key buffer | input   |
-| $0277-$0280 |   631-640   | Buffer last keys pressed     | input   |
-| $0316-$0317 |   790-791   | `BRK` interrupt vector       | debug   |
-| $0400-$07e7 |  1024-2023  | Screen memory                |         |
-|    $0801    |    2049     | BASIC listings start         |         |
+| hex         | dec         | description                  | tag     |
+| :---------- | :---------- | ---------------------------- | ------- |
+| $00c5       | 197         | Key currently pressed        | input   |
+| $00c6       | 198         | Length of pressed key buffer | input   |
+| $0277-$0280 | 631-640     | Buffer last keys pressed     | input   |
+| $0314-$0315 | 788-789     | Service interrupt vector     |         |
+| $0316-$0317 | 790-791     | `BRK` interrupt vector       | debug   |
+| $0400-$07e7 | 1024-2023   | Screen memory                |         |
+| $0801       | 2049        | BASIC listings start         |         |
 | $d000-$d001 | 53248-53249 | Sprite 0 X/Y                 | sprites |
-|    $d021    |    53281    | Background color             |         |
+| $d015       | 53269       | Sprites enabled bitmap       | sprites |
+| $d01e       | 53278       | Sprite-sprite log bitmap     | sprites |
+| $d01f       | 53279       | Sprite-background log bitmap | sprites |
+| $d021       | 53281       | Background color             |         |
 | $dc00-$dc01 | 56320-56321 | Joystick 2/1 ports           | input   |
 
 ## Input handling {input}
@@ -70,6 +75,21 @@ joystick_mapping: .byte 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         adc $d001                   // add displacement to sprite #0 y
         sta $d001
         rts
+```
+
+## Interrupt hooking
+
+The [service interrupt vector](#memory-map) runs by default 60 times per second (the frequency can be changed), and handles keyboard, cursor and clock. It can be hooked, but in order to maintain the original functionalities, jmp to the default location (`$ea31`) at the end of the hook.
+
+A typical structure is:
+
+```asm
+        dec int_counter # execute the action only #INT_COUNT
+        bne exit
+        # ... action ...
+        lda #INT_COUNT
+        sta int_counter
+exit:   jmp $ea31       # or jump to next hook, if there are multiple
 ```
 
 ## PETSCII {input}
