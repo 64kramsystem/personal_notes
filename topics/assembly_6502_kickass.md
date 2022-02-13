@@ -5,7 +5,7 @@
   - [Data definition](#data-definition)
   - [Labels](#labels)
     - [Self-modifying code](#self-modifying-code)
-  - [Block (locations)](#block-locations)
+  - [Memory handling: Block/Segments](#memory-handling-blocksegments)
   - [Expressions](#expressions)
   - [Imports](#imports)
   - [Macros](#macros)
@@ -82,7 +82,7 @@ clc
 bcc bccA:#$00
 ```
 
-## Block (locations)
+## Memory handling: Block/Segments
 
 Blocks define the location in memory. Labels are optional.
 
@@ -99,6 +99,101 @@ Blocks define the location in memory. Labels are optional.
 * = 2 virtual
 ```
 
+Zero-page labels; allow ZP forward-resolution of labels:
+
+```asm
+* = $10 virtual
+.zp {
+zpReg1: .byte 0
+zpReg2: .byte 0
+}
+```
+
+A segment is a list of memory blocks. If none is defined, a `Default` segment is created.
+
+```asm
+      .segmentdef MySegment1                // Start if defined where used
+      .segmentdef MySegment2 [start=$1000]
+
+      // The second parameter (optional) implicitly defines a named memory block.
+      .segment MySegment1 "First Block"
+      *=$4000
+      ldx #30
+l1:   inc $d021
+      dex
+      bne l1
+
+      // Start at the location defined in the declaration.
+      // This will place code in the default memory block (not `Default` segment!), since no block is specified.
+      .segment MySegment2
+      inc $d021
+      jmp *-3
+
+      // Append code
+      .segment MySegment1 "Second Block"
+      inc $d020
+      jmp *-3
+
+      // Shorthand for declaration+definition.
+      .segment MySegment3 [start=$2000]
+```
+
+More advanced segment concepts:
+
+```asm
+      // Define boundaries; if the code exceeds them, an error is raised.
+      .segment Data [start=$c000, min=$c000, max=$cfff]
+
+      // Two segments can overlap; a use case for this is to reuse some memory that is no longer needed
+      // after use (e.g. init code).
+      .segmentdef Code      [start=$1000]
+      .segmentdef InitCode  [startAfter="Code"]
+      .segmentdef Buffer    [startAfter="Code"]
+```
+
+Example multi-segment structure ([source](https://www.lemon64.com/forum/viewtopic.php?p=960735#960735)):
+
+```asm
+.segment ZeroPage[start = $2, virtual]
+.segment Code[start = $801, max = $1fff]
+.segment BSS[start = $c000, virtual, min = $c000, max = $cfff]
+
+Main:
+{
+   .const START_VAR_1     = 0
+   .const SCREEN_LOCATION = $0400
+
+   .segment ZeroPage
+   .zp
+   {
+      param_1:    .byte 0
+      param_2_lo: .byte 0
+      param_2_hi: .byte 0
+   }
+
+   .segment Code
+   BasicUpstart2(Entry)
+
+   #import "another_file.asm"
+
+   .segment BSS
+   var_2_lo: .byte 0
+   var_2_hi: .byte 0
+
+   .segment Code
+   initialised_var_1:    .byte 123
+   Entry:
+   {
+      lda START_VAR_1
+      sta zp.param_1
+      // etc
+   }
+
+   .segment BSS
+   .file[name = "my.prg", segments = "Default,Code"]
+}
+```
+
 ## Expressions
 
 WATCH OUT! Non-integer results of integer expressions are floats; they can cause mistakes if not rounded.
@@ -111,8 +206,8 @@ Math functions (subset):
 ## Imports
 
 ```asm
-import "MyLibrary.asm"
-importif STAND_ALONE "UpstartCode.asm"            // Conditional import
+#import "MyLibrary.asm"
+#importif STAND_ALONE "UpstartCode.asm"            // Conditional import
 ```
 
 ## Macros

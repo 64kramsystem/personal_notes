@@ -115,7 +115,7 @@ myvar=value                         # no spaces around equal; if value includes 
 myvar=$myvar2                       # $myvar2 doesn't require quotes
 unset myvar                         # delete myvar
 export myvar=value                  # makes available to subshells. `local export` is allowed, but doesn't work as intended; in order to export
-                                    # local variables, do it separately from assignment (or use declare)
+                                    # local variables, do it separately from declaration/assignment, or declare via `declare -x`
 local myvar1 myvar2                 # declare multiple local variables in one statement
 ((var+=1))                          # increment variable value
 ((var++)) || true                   # increment variable value. WATCH OUT!!! `|| true` is required if var=0 before the increment/decrement!!!!
@@ -128,7 +128,7 @@ eval local myvar2=\$$var_name_ref   # works both on bash/zsh; this shows how to 
 
 myvar=$(nonexiting_command 2>&1)    # the assignment value is stdout's output; for stderr we need redirection (eg. see whiptail)
 
-declare -g                          # declare variable as global (eg. from a function); without, the scope is the current one
+declare -g                          # declare variable as global (eg. from a function); without, the scope is the current one (local)
 declare -x                          # export; can add to `-g`
 ```
 

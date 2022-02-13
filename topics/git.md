@@ -158,6 +158,8 @@ commit --amend [-m <newMessage>]  # amend the last commit; content of the index 
 commit --amend -C $reference_commit
 ```
 
+For coauthorship (multiple authors), see [here](github.md#coauthorship-multiple-authors).
+
 ## Index operations
 
 ```sh

@@ -1,3 +1,20 @@
+## Sun 13/Feb/2022
+
+- SWE
+  - Leetcode
+    - [x] Medium 84%, 1637: 1 tests, 1 submissions, ~5'
+      - Used sorting API; not clear if this is intended to be forbidden or not
+- Tools
+  - [x] Journal script: Make leet option separately add the entry
+- Projects
+  - QEMU pinning
+    - [x] Review, test, and integrate contributed 6.2.0 patch
+- Studies
+  - C64 ASM Programming
+    - [ ] Machine Code Games Routines for the Commodore 64
+      - [ ] 10. Indirect Routines
+        - [ ] Fight routine with presumed multiple bugs
+
 ## Sat 12/Feb/2022
 
 - SWE
