@@ -7,6 +7,7 @@
     - [Caching](#caching)
     - [Minimal example](#minimal-example)
   - [Rust CI action](#rust-ci-action)
+  - [Coauthorship (multiple authors)](#coauthorship-multiple-authors)
   - [README.md](#readmemd)
     - [Images](#images)
     - [Refer to project root](#refer-to-project-root)
@@ -162,6 +163,10 @@ jobs:
       - name: Run Clippy
         run: cargo clippy
 ```
+
+## Coauthorship (multiple authors)
+
+Github's specification for coauthorship is to add each additional author in the commit message, in the format `Co-authored-by: Name <email>`. This is supported also by Gitlab.
 
 ## README.md
 
