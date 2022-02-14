@@ -29,11 +29,12 @@ so the stack top is the first available slot ($1FF).
 (curly braces = optional)
 
 - Absolute, X, Y   : 16 bit absolute, plus optional X/Y offset     : `addr16 {, X/Y}`
-- Indirect         : 16 bit absolute -> 16 bits absolute           : `(addr16)`        # `JMP` only!
+- Indirect         : 16 bit absolute -> 16 bits absolute           : `(addr16)`       # `JMP` only!
 
-- Zero page, X, Y  : 8 bit absolute (ZP), plus optional X/Y offset : `addr8 {, X/Y}`   # Wraps around at $100!!
-- Indexed indirect : Zero-page plus X offset -> 16 bit addr        : `(addr8, X)`
-- Indirect indexed : Zero-page -> 16 bit addr -> plus Y offset     : `(addr8), Y`
+- Zero page, X, Y  : 8 bit absolute (ZP), plus optional X/Y offset : `addr8 {, X/Y}`  # Wraps around at $100!!
+- Indexed indirect : Zero-page plus X offset -> 16 bit addr        : `(addr8, X)`     # Also called "preindexed indirect"; typically used with X=0 for
+                                                                                      # 16-bits ZP indirect addressing
+- Indirect indexed : Zero-page -> 16 bit addr -> plus Y offset     : `(addr8), Y`     # Also called "postindexed indirect"
 
 - Relative         : 8 bit relative, used by branches
 
@@ -68,7 +69,7 @@ so the stack top is the first available slot ($1FF).
 - `BEQ`, `BNE`        : Branch if (Not) EQual
 - `BCC`, `BCS`        : Branch if Carry Clear/Set
 
-- `PHA`, `PLA`     : PusH/PuLl Accumulator
+- `PHA`, `PLA`     : PusH/PuLl Accumulator (no push X/Y!)
 - `PHP`, `PLP`     : PusH/PuLl Processor status register
 - `TXS`, `TSX`     : Transfer X <> Stack pointer
 

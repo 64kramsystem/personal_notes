@@ -1,3 +1,23 @@
+## Mon 14/Feb/2022
+
+- SWE
+  - Leetcode
+    - [x] Medium 83%,  535: 2 tests, 1 submissions, 12'
+      - [x] Ruby mistake about referencing main scope local variables!
+- Tools
+  - [x] Contact PDF Expert support with suggestion about feature design
+- Open Source
+  - Kick Assembler Studio VSC plugin
+    - [x] Find test case to reproduce bug
+  - [x] Follow up discussion on Ubuntu open issue about bluetooth problem
+- Studies
+  - C64 ASM Programming
+    - [ ] Machine Code Games Routines for the Commodore 64
+      - [ ] 10. Indirect Routines
+  - Ruby/Rails
+    - The Complete Guide to Rails Performance
+      - [x] Profiling with Ruby-Prof and Stackprof
+
 ## Sun 13/Feb/2022
 
 - SWE
@@ -11,6 +31,7 @@
     - [x] Review, test, and integrate contributed 6.2.0 patch
 - Studies
   - C64 ASM Programming
+    - [x] Study segments
     - [ ] Machine Code Games Routines for the Commodore 64
       - [ ] 10. Indirect Routines
         - [ ] Fight routine with presumed multiple bugs
