@@ -6,6 +6,7 @@
     - [Minitest](#minitest)
   - [Capistrano](#capistrano)
     - [Tasks/Actions](#tasksactions)
+    - [Target hosts](#target-hosts)
 
 ## Rake
 
@@ -59,7 +60,7 @@ end
 
 In order to rewrite a task, the previous one must be cleared:
 
-```ruby
+```rb
 Rake::Task['qualified_task_name'].clear_actions
 ```
 
@@ -69,3 +70,27 @@ If other tasks' callbacks invoke the it:
 - otherwise, it's not invoked, and no error is raised.
 
 Watch out! If the task is invoked by an :after hook, the hook won't be cleared; see [this question](https://stackoverflow.com/q/22712240).
+
+### Target hosts
+
+```rb
+# on() takes also an array of names.
+#
+on [hostname1, hostname2] { |host| ... }
+
+# The host where a given action is performed is passed by on(), so that it can be used to restrict execution.
+#
+on roles(:myrole) do |host|
+  if capture("command") =~ /failure/
+    execute 'handling'
+
+    # This won't be work as intended (no scoping)!
+    #
+    # When filtering hosts via on(), don't forget use to_s(), otherwise an odd error is raised.
+    #
+    on host.to_s do
+      invoke 'my:task'
+    end
+  end
+end
+```
