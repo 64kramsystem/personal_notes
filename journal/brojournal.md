@@ -1,3 +1,14 @@
+## Tue 15/Feb/2022
+
+- SWE
+  - Leetcode
+    - [x] Medium 83%, 654, ? tests, 1 submission, ~2h
+      - Disaster: Spent 1.5+ hours on efficient solution, then 20' or so with inefficient but successful one
+- Studies
+  - C64 ASM Programming
+    - [ ] Machine Code Games Routines for the Commodore 64
+      - [ ] 10. Indirect Routines
+
 ## Mon 14/Feb/2022
 
 - SWE
