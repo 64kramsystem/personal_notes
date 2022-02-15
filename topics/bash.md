@@ -678,6 +678,8 @@ exec 200> "$filename"                                   # associate a file to a 
 
 Process substitution: creates a file (descriptor) from the command.
 
+WATCH OUT!! Failing subtituted commands don't cause P.S. to exit with error!! See https://unix.stackexchange.com/q/376114.
+
 For input file; typically used to feed output of multiple commands to another command:
 
 ```sh
@@ -730,17 +732,17 @@ myarray2=("${myarray[@]}")          # copy an array
 # More solid way of creating an array from a string.
 # `mapfile` is synonym of `readarray`.
 #
+# WATCH OUT!! If a substituted process is fallible, use an intermediate file (see [substitutions](#substitutions)).
+#
 # `-t`: remove trailing delimiter; without, each entry will include it
 #
-# in order to make the variable local, declare it as local before executing `mapfile`
-# When using this pattern, **WATCH OUT!! Don't forget `-n` on the echo!!**
-# here-string appends a newline, so it can be used only when mapfile has a newline delimiter.
+# In order to make the variable local, declare it as local before executing `mapfile`
 #
-mapfile -td. coordinates < <(echo -n "$1")
+mapfile -td. coordinates < <(echo -n "$1")           # WATCH OUT!! Don't forget `-n` on the echo!!
 mapfile -t coordinates < <(printf "a a\nb b")
-mapfile -t coordinates <<< "$myvar"
-mapfile -t coordinates </path/to/file
 mapfile -t coordinates < <(perl -pe 'chomp if eof' /path/to/file) # strip (file-)end newline
+mapfile -t coordinates <<< "$myvar"                  # WATCH OUT!! Appends newline, so can be used only with newline separator
+mapfile -td, coordinates < /path/to/file             # Redirection don't append newlines, so it can be safely used
 
 IFS=, read -ra coordinates <<< $1    # create via `read`; note how `echo -n` is not required
 
