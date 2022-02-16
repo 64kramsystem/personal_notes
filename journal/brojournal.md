@@ -1,3 +1,22 @@
+## Wed 16/Feb/2022
+
+- SWE
+  - Leetcode
+    - [x] Medium 83%, 2125: 2 tests, 1 submissions, 17'
+      - Missing `each()`!
+- Studies
+  - C64 ASM Programming
+    - [x] Machine Code Games Routines for the Commodore 64
+      - [x] 10. Indirect Routines
+        - [x] Fight simplify and optimize homing routine
+      - [x] Appendix A: Utility Programs
+      - ~Appendix B: Mini-assembler~
+      - [x] Appendix C: Advanced Machine Characteristics
+      - ~Appendix D: Laserbike~
+    - [x] Search next ASM game programming resources
+- Admin
+  - [ ] Plan next cycle
+
 ## Tue 15/Feb/2022
 
 - SWE
