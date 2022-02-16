@@ -54,6 +54,8 @@ so the stack top is the first available slot ($1FF).
 
 ## Instructions
 
+Convenient reference: https://www.pagetable.com/c64ref/6502/?tab=2#
+
 "transfer" = copy
 
 - `LDA`                    : LoaD Accumulator; WATCH OUT!! Affects flags ZN

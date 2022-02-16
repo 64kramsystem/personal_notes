@@ -694,9 +694,13 @@ For output file; typically used with tee, to both print to stdout and redirect t
 echo "abc" >(xsel -ib)
 ```
 
-Command substitution. If the command is just a filename, the command is replaced with the file content ([reference](https://wiki.bash-hackers.org/syntax/expansion/cmdsubst)):
+Command substitution:
 
 ```sh
+echo "$(command)"
+
+# Syntax to replace a filename with the file content ([reference](https://wiki.bash-hackers.org/syntax/expansion/cmdsubst)):
+#
 echo $(< "$filename")
 
 # The substitution syntax is actually optional.
