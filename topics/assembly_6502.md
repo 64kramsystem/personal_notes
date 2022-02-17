@@ -50,7 +50,7 @@ so the stack top is the first available slot ($1FF).
 - `D`ecimal
 - `I`nterrupt
 - `Z`ero
-- `C`array (see `SBC` for peculiarities!)
+- `C`array: WATCH OUT!! This works counterintuitively - see ADC/SBC
 
 ## Instructions
 
@@ -67,7 +67,7 @@ Convenient reference: https://www.pagetable.com/c64ref/6502/?tab=2#
 - `JMP`            : WATCH OUT !!! With Indirect addressing, the pointer MUST NOT be stored across pages ($..FF and $..00) !!!
 - `JSR`, `RTS`     : Jump to SubRoutine, ReTurn from Subroutine
 
-- `CMP`, `CPX`, `CPY` : CoMPare accumulator/X/Y
+- `CMP`, `CPX`, `CPY` : CoMPare accumulator/X/Y (comparison is (reg - mem), but C is (mem - reg)!!!)
 - `BEQ`, `BNE`        : Branch if (Not) EQual
 - `BCC`, `BCS`        : Branch if Carry Clear/Set
 
@@ -80,8 +80,9 @@ Convenient reference: https://www.pagetable.com/c64ref/6502/?tab=2#
 - `ROL`, `ROR`           : ROtate Left/Right through carry
 
 - `INC`, `INX`, `INY` : Increment address/X/Y; doesn't support A; flags: ZN
-- `ADC`               : ADd accumulator with Carry
-- `SBC`               : SuBtraCt accumulator with Carry; WATCH OUT !!!! If the C is set, it counts as 0, if it's clear, it counts as 1 !!!!
+- `ADC`               : ADd accumulator with Carry; WATCH OUT!!! C is set when the sum is > 255, and viceversa
+- `SBC`               : SuBtraCt accumulator with Carry; WATCH OUT!!! If the C is set, it counts as 0, and viceversa
+                        WATCH OUT!!! C is set if the result (A - M) is >= 0, and viceversa
 
 - `BRK`               : Trigger a non-maskable interrupt; see machine memory map for the IV
 
