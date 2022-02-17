@@ -1,3 +1,15 @@
+## Thu 17/Feb/2022
+
+- SWE
+  - Leetcode
+    - [x] Medium 83%, 2120: 3 tests, 1 submissions, 13'
+      - Missing `each()` again!! Typoed one variable.
+- Studies
+  - C64 ASM Programming
+    - Machine Code Games Routines for the Commodore 64
+      - [ ] Review optimized Homing Motion routine
+        - [x] Study carry/arithmetic
+
 ## Wed 16/Feb/2022
 
 - SWE

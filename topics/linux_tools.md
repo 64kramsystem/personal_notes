@@ -684,6 +684,8 @@ pdfimages -l $input
 # -j:      write JPEG images as JPEG
 # prefix: `-` is appended automatically
 #
+# The output dir must exist.
+#
 pdfimages -j $input /path/to/$prefix
 ```
 
