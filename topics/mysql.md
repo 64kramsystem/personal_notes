@@ -519,7 +519,7 @@ JSON search functions:
 -- `one`: return first match; `all`: return all.
 -- Uses the LIKE-style patterns (`%`, `_`).
 -- The return type of `all` is inconsistent; it depends on the number of elements found.
--- As of v8.0.24, MVI indexes are not used.
+-- As of v8.0.28, MVI indexes are not used.
 --
 SELECT JSON_SEARCH(client_tags, 'one', 'bar') FROM clients;
 -- "$[1]"
