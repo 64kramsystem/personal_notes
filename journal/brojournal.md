@@ -1,3 +1,14 @@
+## Fri 18/Feb/2022
+
+- SWE
+  - Leetcode
+    - [x] Medium 83%, 1409: 4 tests, 1 submissions, 18'
+      - Misnamed var, logic bug, used each instead of map
+- Studies
+  - Ruby/Rails
+    - The Complete Guide to Rails Performance
+      - [x] Profiling Ruby Memory Usage
+
 ## Thu 17/Feb/2022
 
 - SWE

@@ -710,6 +710,7 @@ ActiveSupport additions:
 ### Enumerable
 
 ```rb
+enu.filter_map { |n| n**2 if n.even? }  # yay! (falsey values are discarded)
 enu.each_cons(n)                        # each overlapping subarray of `n` items; last non-exact subarrays are not included
 enu.each_slice(n)                       # each non overlapping subarray of `n` items; last non-exact subarray is included
 ```
