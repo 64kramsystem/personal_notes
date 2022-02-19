@@ -1,3 +1,11 @@
+## Sat 19/Feb/2022
+
+- Tools
+  - [x] Fight PDF editor zooming
+- Studies: MySQL
+  - [ ] High Performance MySQL (4th ed.)
+    - [ ] 1. MySQL Architecture
+
 ## Fri 18/Feb/2022
 
 - SWE
