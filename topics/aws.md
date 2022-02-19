@@ -45,7 +45,7 @@ WHERE routine_type = 'PROCEDURE'
 -- | rds_innodb_buffer_pool_dump_now   |
 -- | rds_innodb_buffer_pool_load_abort |
 -- | rds_innodb_buffer_pool_load_now   |
--- | rds_kill                          |
+-- | rds_kill                          | # Kill a thread: `CALL mysql.rds_kill(@tid);`
 -- | rds_kill_query                    |
 -- | rds_next_master_log               |
 -- | rds_rotate_general_log            |
@@ -55,7 +55,7 @@ WHERE routine_type = 'PROCEDURE'
 -- | rds_set_fk_checks_off             |
 -- | rds_set_fk_checks_on              |
 -- | rds_show_configuration            |
--- | rds_skip_repl_error               |    # Skip slave replication errors
+-- | rds_skip_repl_error               | # Skip slave replication errors
 -- | rds_start_replication             |
 -- | rds_stop_replication              |
 -- | ...                               |
