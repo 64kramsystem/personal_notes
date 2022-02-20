@@ -35,6 +35,7 @@
     - [Operations](#operations)
     - [Concatenate operations](#concatenate-operations)
     - [Special characters](#special-characters)
+  - [Ruby](#ruby)
   - [Snippets](#snippets)
     - [Print only a particular line number](#print-only-a-particular-line-number)
     - [Extract difference between two files](#extract-difference-between-two-files)
@@ -573,6 +574,14 @@ sed "s/$(printf '\t')/ /"
 # WATCH OUT!! Newlines don't require `$` quoting:
 #
 sed 's/from/to1\nto2/'
+```
+
+## Ruby
+
+```sh
+# 0777 works like Perl.
+#
+ruby -rEnglish -0777 -ne 'puts $LAST_READ_LINE'
 ```
 
 ## Snippets

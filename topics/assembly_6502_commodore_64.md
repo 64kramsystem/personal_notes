@@ -8,6 +8,8 @@
   - [PETSCII {input}](#petscii-input)
   - [Debugging {debug}](#debugging-debug)
   - [VICE](#vice)
+    - [Monitor](#monitor)
+    - [Compilation](#compilation)
 
 ## Notes
 
@@ -18,21 +20,26 @@ Some chapters have tags (in the form "{tag_name}"), which are references to the 
 - Simpler: https://sta.c64.org/cbm64mem.html
 - Detailed: http://www.zimmers.net/anonftp/pub/cbm/c64/manuals/mapping-c64.txt
 
-| hex         | dec         | description                  | tag     |
-| :---------- | :---------- | ---------------------------- | ------- |
-| $00c5       | 197         | Key currently pressed        | input   |
-| $00c6       | 198         | Length of pressed key buffer | input   |
-| $0277-$0280 | 631-640     | Buffer last keys pressed     | input   |
-| $0314-$0315 | 788-789     | Service interrupt vector     |         |
-| $0316-$0317 | 790-791     | `BRK` interrupt vector       | debug   |
-| $0400-$07e7 | 1024-2023   | Screen memory                |         |
-| $0801       | 2049        | BASIC listings start         |         |
-| $d000-$d001 | 53248-53249 | Sprite 0 X/Y                 | sprites |
-| $d015       | 53269       | Sprites enabled bitmap       | sprites |
-| $d01e       | 53278       | Sprite-sprite log bitmap     | sprites |
-| $d01f       | 53279       | Sprite-background log bitmap | sprites |
-| $d021       | 53281       | Background color             |         |
-| $dc00-$dc01 | 56320-56321 | Joystick 2/1 ports           | input   |
+| hex         | dec         | description                        | tag     |
+| :---------- | :---------- | ---------------------------------- | ------- |
+| $00c5       | 197         | Key currently pressed              | input   |
+| $00c6       | 198         | Length of pressed key buffer       | input   |
+| $0277-$0280 | 631-640     | Buffer last keys pressed           | input   |
+| $0314-$0315 | 788-789     | Service interrupt vector           |         |
+| $0316-$0317 | 790-791     | `BRK` interrupt vector             | debug   |
+| $0334-$033b | 820-827     | empty                              |         |
+| $033c-03fb  | 828-1019    | datasette buffer (usable)          |         |
+| $03fc-03ff  | 1020-1023   | empty                              |         |
+| $0400-$07e7 | 1024-2023   | Screen memory                      |         |
+| $07f8-$07ff | 2040-2047   | Default sprite pointers (loc=n*64) | sprites |
+| $0801       | 2049        | BASIC listings start               |         |
+| $C000-$CFFF | 49152-53247 | Upper RAM                          |
+| $d000-$d001 | 53248-53249 | Sprite 0 X/Y                       | sprites |
+| $d015       | 53269       | Sprites enabled bitmap             | sprites |
+| $d01e       | 53278       | Sprite-sprite log bitmap           | sprites |
+| $d01f       | 53279       | Sprite-background log bitmap       | sprites |
+| $d021       | 53281       | Background color                   |         |
+| $dc00-$dc01 | 56320-56321 | Joystick 2/1 ports                 | input   |
 
 ## Input handling {input}
 
@@ -92,6 +99,8 @@ A typical structure is:
 exit:   jmp $ea31       # or jump to next hook, if there are multiple
 ```
 
+Use `RTI` when not calling the interrupt service.
+
 ## PETSCII {input}
 
 Subset:
@@ -122,12 +131,25 @@ Modify the `BRK` [interrupt vector](#memory-map), and place `BRK`.
 
 ## VICE
 
-The tested v3.6.1 hung after a few breakpoint triggers; v3.4 didn't.
+In order to copy/paste, source listings must be lower case.
+
+In order for VICE to load and autostart ASM programs, the setting `AutostartPrgMode` must be enabled (`=1`); otherwise, not only it won't autostart, but `RUN` will also not do anything
+
+### Monitor
+
+Just telnet to port 6510!
+
+Addresses must be in hex, and 4 digits long.
+
+- `d[isass] [<start> [<end>]]`      : disassemble
+- `ret[urn]`                        : continue machine execution
+- `s[ave] "<path>" 0 <start> <end>` : dump memory; first two bytes are `<start>`
+- `l[oad] "<path>" 0 <start>`       : load memory dump
+
+### Compilation
 
 Convenient configure: `./configure --config-cache --enable-cpuhistory --enable-external-ffmpeg --disable-rs232 --disable-ipv6 --disable-realdevice`; see the output of `./configure` for explanations about the options
 
 Packages required for compiling: see installation script.
 
 For recent versions (e.g. 3.6), must copy some GLSL files (`$repo/vice/vice/data/GLSL/`) to the data directory: `bicubic.frag`, `bicubic-interlaced.frag`, `builtin.frag`, `builtin-interlaced.frag`, `viewport.vert`
-
-In order for VICE to load and autostart ASM programs, the setting `AutostartPrgMode` must be enabled (`=1`); otherwise, not only it won't autostart, but `RUN` will also not do anything

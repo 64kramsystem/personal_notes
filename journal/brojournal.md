@@ -1,3 +1,19 @@
+## Sun 20/Feb/2022
+
+- Studies: MySQL
+  - [ ] High Performance MySQL (4th ed.)
+    - [x] 1. MySQL Architecture
+- Studies: Bash
+  - [x] Review multi-char string splitting
+- Tools
+  - [x] Update journal script logic
+    - [x] Fight regexes
+- Studies
+  - C64 ASM Programming
+    - Machine Code Games Routines for the Commodore 64
+      - [x] Test sprite vectoring routine
+      - [x] Study/Fight VICE monitor
+
 ## Sat 19/Feb/2022
 
 - Tools

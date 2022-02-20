@@ -30,7 +30,7 @@
   - [Associative arrays](#associative-arrays)
   - [Shellcheck](#shellcheck)
   - [Script operational concepts/Useful scripts](#script-operational-conceptsuseful-scripts)
-    - [Split a string](#split-a-string)
+    - [Split a string (single/multi-char delimiter)](#split-a-string-singlemulti-char-delimiter)
     - [Ask for input (keypress)](#ask-for-input-keypress)
     - [Trapping errors (hooks)](#trapping-errors-hooks)
     - [Log a script output/Enable debugging [log]](#log-a-script-outputenable-debugging-log)
@@ -884,9 +884,11 @@ run shellcheck with the options:
 
 ## Script operational concepts/Useful scripts
 
-### Split a string
+### Split a string (single/multi-char delimiter)
 
-Cheap; can use only for unspaced stuff:
+Reference: https://stackoverflow.com/a/45201229.
+
+Cheap; can use only for unspaced stuff (single-char, or multi without space):
 
 ```sh
 coordinates=(${1//$delimiter/ }) # split by `.`
@@ -925,6 +927,12 @@ while [[ -n $input ]]; do
   result+=("${input%%"$delimiter"*}")
   input=${input#*"$delimiter"}
 done
+```
+
+Split via null char (multi-char) ():
+
+```sh
+mapfile -td '' a < <(echo "$string, " | awk '{ gsub(/, /,"\0"); print; }'); unset 'a[-1]'
 ```
 
 ### Ask for input (keypress)
