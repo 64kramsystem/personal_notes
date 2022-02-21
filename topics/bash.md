@@ -762,19 +762,27 @@ coordinates+=("${coord2[@]}")        # concatenate array variables
 echo ${coordinates[0]}               # access an array; last entry: -1
 unset 'coordinates[1]'               # delete an entry
 coordinates[1]=b                     # set an indexed value
-echo "${coordinates[@]:2}"           # array slicing! ([2..-1]) (see https://stackoverflow.com/a/1336245)
-echo "${@:2}"                        # slice the `$@` variable
 echo ${#coordinates[@]}              # size (length)
+
+# Array slicing (see https://stackoverflow.com/a/1336245)
+#
+slice=("${coordinates[@]:2}")        # Interval [2..-1]
+slice=("${@:2}")                     # Syntax to for the `$@` variable
+echo "${coordinates[@]:2}"           # When printing a slice, don't use the brackets
 
 # Simple inclusion test (there is no direct way); ensure $value doesn't include metachars.
 #
 printf '%s\0' "${array[@]}" | grep -qz "^$value$"
 
-# Printing/joining arrays.
+# Print arrays.
+#
+printf '%s\n' "${array[@]}"                      # print the entries (one per line); `echo` prints all in one line
+declare -p array                                 # very convenient, although debug-style format
+
+# Joining arrays.
 #
 # The pure multi-char bash version is ugly (see https://stackoverflow.com/a/17841619 and https://dev.to/meleu/how-to-join-array-elements-in-a-bash-script-303a).
 #
-printf '%s\n' "${array[@]}"                      # print the entries (one per line); `echo` prints all in one line
 echo $(IFS=,; echo "${arr[*]}")                  # Single-char; !!! don't forget the `;` and the quotes !!!
 perl -e 'print join("--", @ARGV)' -- "${arr[@]}" # Multi-char, perl `--` is for safety, if any value starts with `-`
 printf %s "${arr[@]/#/->}"                       # Join, but also prepend the separator; works also with `arr[*]` (for interpolation)
@@ -1064,6 +1072,12 @@ if [[ $(id -u) -ne 0 ]]; then
   sudo "$0" "$@"
   exit $?
 fi
+```
+
+Graphical sudo:
+
+```sh
+pkexec env DISPLAY="$DISPLAY" XAUTHORITY="$XAUTHORITY" "$0" "$@"
 ```
 
 ### Time-related functionalities (incl. benchmarking)

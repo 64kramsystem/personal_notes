@@ -28,7 +28,6 @@
     - [Flock](#flock)
     - [Etc](#etc)
     - [StringIO](#stringio)
-    - [Profiling (ruby-prof)](#profiling-ruby-prof)
     - [Gem](#gem)
       - [Version comparisons](#version-comparisons)
     - [ERB templates](#erb-templates)
@@ -718,22 +717,6 @@ buffer.print "line\n"    # one trailing newline
 buffer.puts  "line\n"    # one trailing newline
 buffer.puts  "line\n\n"  # two trailing newlines
 buffer.puts  "line", ""  # two trailing newlines
-```
-
-### Profiling (ruby-prof)
-
-NOTE: Garbage collection should always be stopped before profiling! (Currently) GC pauses can't be detected by the profiler.
-
-```ruby
-result = RubyProf.profile do
-  # ...
-end
-
-# Different outputs (with openers)
-#
-RubyProf::GraphHtmlPrinter.new(result).print(File.open('/tmp/prof.htm', 'w'), min_percent: 5); `xdg-open /tmp/prof.htm`
-RubyProf::CallStackPrinter.new(result).print(File.open('/tmp/prof.htm', 'w')); `xdg-open /tmp/prof.htm`
-RubyProf::CallTreePrinter.new(result).print(path: '/tmp', profile: 'prof'); `qcachegrind /tmp/prof.callgrind*`
 ```
 
 ### Gem

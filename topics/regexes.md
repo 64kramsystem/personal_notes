@@ -3,6 +3,7 @@
 - [Regexes](#regexes)
   - [Character classes](#character-classes)
   - [Quantifiers (including `*`/`+`)](#quantifiers-including-)
+  - [Anchors](#anchors)
   - [Backreferences](#backreferences)
   - [PCRE flags](#pcre-flags)
   - [Complex cases](#complex-cases)
@@ -36,6 +37,16 @@ WATCH OUT!! When there are group quantifiers, only the last occurrence is captur
 ```ruby
 " a b".match(/( \w)+/)[1..] # => [" b"]
 " a b".scan(/( \w)/)        # => [" a", " b"]
+```
+
+## Anchors
+
+Reference: https://www.regular-expressions.info/refanchors.html.
+
+WATCH OUT!!! In languages where `^` matches the end of a line (e.g. Ruby), it can also match a newline character:
+
+```ruby
+"\nfoo\nbar".scan(/^[^f].+/) # => ["\nfoo", "bar"]
 ```
 
 ## Backreferences
