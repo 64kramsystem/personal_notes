@@ -1,3 +1,18 @@
+## Mon 21/Feb/2022
+
+- Tools
+  - Email client directories management
+    - [x] Implement archival functionality
+  - Subsync start script
+    - [x] Create, with snapd handling
+- Studies: Regexes
+  - [x] Investigate interesting `^` case
+- Open Source: Visual Studio Code
+  - [x] Prepare test case and report Ruby bug
+- Studies: Ruby/Rails
+  - [ ] The Complete Guide to Rails Performance
+    - [x] Copy notes
+
 ## Sun 20/Feb/2022
 
 - Studies: MySQL
