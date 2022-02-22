@@ -1,3 +1,13 @@
+## Tue 22/Feb/2022
+
+- Open Source: Visual Studio Code
+  - [x] Follow up discussion with new test case
+    - [x] Test other editors
+- Studies: C64 ASM Programming
+  - [ ] Machine Code Games Routines for the Commodore 64
+    - [x] Massive fight with diagnosing issue with VSC plugin<>x64 monitor port
+    - [x] Massive fight with sprite vectoring BASIC program port to ASM
+
 ## Mon 21/Feb/2022
 
 - Tools
