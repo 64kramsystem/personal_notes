@@ -6,7 +6,10 @@
   - [Input handling {input}](#input-handling-input)
   - [Interrupt hooking](#interrupt-hooking)
   - [PETSCII {input}](#petscii-input)
+  - [Sprites {sprites}](#sprites-sprites)
   - [Debugging {debug}](#debugging-debug)
+  - [Utility routines](#utility-routines)
+    - [Random number](#random-number)
   - [VICE](#vice)
     - [Monitor](#monitor)
     - [Compilation](#compilation)
@@ -20,26 +23,27 @@ Some chapters have tags (in the form "{tag_name}"), which are references to the 
 - Simpler: https://sta.c64.org/cbm64mem.html
 - Detailed: http://www.zimmers.net/anonftp/pub/cbm/c64/manuals/mapping-c64.txt
 
-| hex         | dec         | description                        | tag     |
-| :---------- | :---------- | ---------------------------------- | ------- |
-| $00c5       | 197         | Key currently pressed              | input   |
-| $00c6       | 198         | Length of pressed key buffer       | input   |
-| $0277-$0280 | 631-640     | Buffer last keys pressed           | input   |
-| $0314-$0315 | 788-789     | Service interrupt vector           |         |
-| $0316-$0317 | 790-791     | `BRK` interrupt vector             | debug   |
-| $0334-$033b | 820-827     | empty                              |         |
-| $033c-03fb  | 828-1019    | datasette buffer (usable)          |         |
-| $03fc-03ff  | 1020-1023   | empty                              |         |
-| $0400-$07e7 | 1024-2023   | Screen memory                      |         |
-| $07f8-$07ff | 2040-2047   | Default sprite pointers (loc=n*64) | sprites |
-| $0801       | 2049        | BASIC listings start               |         |
-| $C000-$CFFF | 49152-53247 | Upper RAM                          |
-| $d000-$d001 | 53248-53249 | Sprite 0 X/Y                       | sprites |
-| $d015       | 53269       | Sprites enabled bitmap             | sprites |
-| $d01e       | 53278       | Sprite-sprite log bitmap           | sprites |
-| $d01f       | 53279       | Sprite-background log bitmap       | sprites |
-| $d021       | 53281       | Background color                   |         |
-| $dc00-$dc01 | 56320-56321 | Joystick 2/1 ports                 | input   |
+| hex         | dec         | description                           | tag     |
+| :---------- | :---------- | ------------------------------------- | ------- |
+| $00c5       | 197         | Key currently pressed                 | input   |
+| $00c6       | 198         | Length of pressed key buffer          | input   |
+| $0277-$0280 | 631-640     | Buffer last keys pressed              | input   |
+| $0314-$0315 | 788-789     | Service interrupt vector              |         |
+| $0316-$0317 | 790-791     | `BRK` interrupt vector                | debug   |
+| $0334-$033b | 820-827     | empty                                 |         |
+| $033c-03fb  | 828-1019    | datasette buffer (usable)             |         |
+| $03fc-03ff  | 1020-1023   | empty                                 |         |
+| $0400-$07e7 | 1024-2023   | Screen memory                         |         |
+| $07f8-$07ff | 2040-2047   | Sprite shape data pointers (loc=n*64) | sprites |
+| $0801       | 2049        | BASIC listings start                  |         |
+| $C000-$CFFF | 49152-53247 | Upper RAM                             |
+| $d000-$d001 | 53248-53249 | Sprite 0 X/Y                          | sprites |
+| $d015       | 53269       | Sprites enabled bitmap                | sprites |
+| $d01e       | 53278       | Sprite-sprite log bitmap              | sprites |
+| $d01f       | 53279       | Sprite-background log bitmap          | sprites |
+| $d021       | 53281       | Background color                      |         |
+| $d027-$d02e | 53287-53294 | Sprite colors                         | sprites |
+| $dc00-$dc01 | 56320-56321 | Joystick 2/1 ports                    | input   |
 
 ## Input handling {input}
 
@@ -124,10 +128,55 @@ Subset:
 |  $E   |   n   |  {up_arrow}  |    .    |   >   |
 |  $F   |   o   | {back_arrow} |    /    |   ?   |
 
+## Sprites {sprites}
+
+A sprite is 3x21 (WxH) bytes.
+
+Basic example (not smooth):
+
+- Point the sprite 0 shape to (15 * 64 = 960);
+- Set all the bits to 1
+- Activate sprite 0
+- Cycle: increase the x and y coordinates by 3 (making sure they don't exceed 255)
+
+```bas
+10 POKE 2040,15
+20 FOR A=960 TO 1022 : POKE A,255 : NEXT
+22 POKE 53269,1
+30 X=PEEK(53248) : POKE 53248, (X+3) AND 255
+32 Y=PEEK(53249) : POKE 53249, (X+3) AND 255
+34 GOTO 30
+```
 
 ## Debugging {debug}
 
 Modify the `BRK` [interrupt vector](#memory-map), and place `BRK`.
+
+## Utility routines
+
+### Random number
+
+Source: https://www.atarimagazines.com/compute/issue72/random_numbers.php.
+
+```asm
+preset_rnd:
+        lda #$ff  // maximum frequency value
+        sta $d40e // voice 3 frequency low byte
+        sta $d40f // voice 3 frequency high byte
+        lda #$80  // noise waveform, gate bit off
+        sta $d412 // voice 3 control register
+        rts
+
+// Write a random number to A, without using any other register.
+// Need to waste some cycles, since a new value is generated every 26 cycles (see https://www.lemon64.com/forum/viewtopic.php?t=70039)
+get_rnd:
+        lda #10
+!:      sec
+        sbc #1
+        bcs !-
+        lda $d41b
+        rts
+```
 
 ## VICE
 
@@ -145,6 +194,8 @@ Addresses must be in hex, and 4 digits long.
 - `ret[urn]`                        : continue machine execution
 - `s[ave] "<path>" 0 <start> <end>` : dump memory; first two bytes are `<start>`
 - `l[oad] "<path>" 0 <start>`       : load memory dump
+- `n[ext] <count>`                  : step over
+- `z`                               : step in
 
 ### Compilation
 
