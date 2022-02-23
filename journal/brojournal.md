@@ -1,3 +1,13 @@
+## Wed 23/Feb/2022
+
+- Tools: zsh-autosuggestions
+  - [x] Find and disable right arrow for accepting a suggestion
+- Open source: VSC Kick Assembler Studio extension
+  - [x] Investigate and apply patch from mailing list
+  - [x] Test most compatible VICE version
+  - [x] Open issue about workaround information
+  - [x] Create fork with patch and document it
+
 ## Tue 22/Feb/2022
 
 - Open Source: Visual Studio Code

@@ -12,6 +12,8 @@
     - [Random number](#random-number)
   - [VICE](#vice)
     - [Monitor](#monitor)
+      - [Remote monitor (Visual Studio Code extensions) issues](#remote-monitor-visual-studio-code-extensions-issues)
+      - [Commands](#commands)
     - [Compilation](#compilation)
 
 ## Notes
@@ -182,11 +184,36 @@ get_rnd:
 
 In order to copy/paste, source listings must be lower case.
 
-In order for VICE to load and autostart ASM programs, the setting `AutostartPrgMode` must be enabled (`=1`); otherwise, not only it won't autostart, but `RUN` will also not do anything
+In order for VICE to load and autostart ASM programs, the setting `AutostartPrgMode` must be enabled (`=1`); otherwise, not only it won't autostart, but `RUN` will also not do anything.
 
 ### Monitor
 
 Just telnet to port 6510!
+
+#### Remote monitor (Visual Studio Code extensions) issues
+
+VICE v3.6.1 has a problem with Kick Assembler Studio, where, if a breakpoint is set before the debug session is started, it won't be honored (to workaround, set breakpoints after starting). Version 3.4 doesn't suffer from this problem.
+
+Debug sessions must be terminated via VSC (Shift+F5), not by closing VICE, otherwise, the monitor port will be blocked for some time. This issue can be observed via `netstat -anp|grep 6510`, and it's explained [here](https://sourceforge.net/p/vice-emu/mailman/vice-emu-mail/thread/6c74b5e5-1bde-361a-468a-1af7ff95f304%40Liss.pp.se/#msg37271531). A workaround, mentioned in the thread, is to patch VICE:
+
+```diff
+--- i/vice/src/socket.c
++++ w/vice/src/socket.c
+@@ -420,6 +420,11 @@ vice_network_socket_t *vice_network_server(
+             break;
+         }
+ 
++        struct linger sl;
++        sl.l_onoff = 1;
++        sl.l_linger = 0;
++        setsockopt(sockfd, SOL_SOCKET, SO_LINGER, &sl, sizeof(sl));
++
+         /*
+             Fix the "Address In Use" error upon reconnecting to tcp socket monitor port
+             by setting SO_REUSEPORT/ADDR options on socket before bind()
+```
+
+#### Commands
 
 Addresses must be in hex, and 4 digits long.
 
@@ -199,8 +226,8 @@ Addresses must be in hex, and 4 digits long.
 
 ### Compilation
 
-Convenient configure: `./configure --config-cache --enable-cpuhistory --enable-external-ffmpeg --disable-rs232 --disable-ipv6 --disable-realdevice`; see the output of `./configure` for explanations about the options
+Convenient configure: `./configure --config-cache --enable-cpuhistory --enable-external-ffmpeg --disable-rs232 --disable-ipv6 --disable-realdevice`; see the output of `./configure` for explanations about the options.
 
 Packages required for compiling: see installation script.
 
-For recent versions (e.g. 3.6), must copy some GLSL files (`$repo/vice/vice/data/GLSL/`) to the data directory: `bicubic.frag`, `bicubic-interlaced.frag`, `builtin.frag`, `builtin-interlaced.frag`, `viewport.vert`
+For recent versions (e.g. 3.6), must copy some GLSL files (`$repo/vice/vice/data/GLSL/`) to the data directory: `bicubic.frag`, `bicubic-interlaced.frag`, `builtin.frag`, `builtin-interlaced.frag`, `viewport.vert`.
