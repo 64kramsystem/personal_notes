@@ -1,3 +1,14 @@
+## Thu 24/Feb/2022
+
+- Admin/System
+  - [x] Investigate snapd autorestart and disable it
+- Studies: MySQL
+  - [ ] High Performance MySQL (4th ed.)
+    - [ ] 9. Replication
+- Studies: C64 ASM Programming
+  - [ ] Machine Code Games Routines for the Commodore 64
+    - [x] Interrupt-driven Tune Player
+
 ## Wed 23/Feb/2022
 
 - Tools: zsh-autosuggestions
