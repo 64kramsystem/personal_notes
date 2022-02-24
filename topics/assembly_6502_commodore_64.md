@@ -7,6 +7,9 @@
   - [Interrupt hooking](#interrupt-hooking)
   - [PETSCII {input}](#petscii-input)
   - [Sprites {sprites}](#sprites-sprites)
+  - [Sound {sound}](#sound-sound)
+    - [Voice params](#voice-params)
+    - [Voice control register](#voice-control-register)
   - [Debugging {debug}](#debugging-debug)
   - [Utility routines](#utility-routines)
     - [Random number](#random-number)
@@ -45,7 +48,11 @@ Some chapters have tags (in the form "{tag_name}"), which are references to the 
 | $d01f       | 53279       | Sprite-background log bitmap          | sprites |
 | $d021       | 53281       | Background color                      |         |
 | $d027-$d02e | 53287-53294 | Sprite colors                         | sprites |
+| $d400-$d414 | 54272-54292 | Voice 1/2/3 params (7 bytes each)     | sound   |
+| $d418       | 54296       | Volume/filter modes                   | sound   |
+| $d41b       | 54299       | Voice 3 waveform output (random!)     | sound   |
 | $dc00-$dc01 | 56320-56321 | Joystick 2/1 ports                    | input   |
+| $ea31       | 59953       | Default interrupt service routine     |         |
 
 ## Input handling {input}
 
@@ -149,6 +156,29 @@ Basic example (not smooth):
 32 Y=PEEK(53249) : POKE 53249, (X+3) AND 255
 34 GOTO 30
 ```
+
+## Sound {sound}
+
+### Voice params
+
+- V  , V+1: Frequency
+- V+2, V+3: Pulse waveform width
+- V+4     : Main control register
+- V+5     : Attack/decay
+- V+6     : Sustain/release
+
+### Voice control register
+
+Bits:
+
+- 0: 0 = Voice off, Release cycle; 1 = Voice on, Attack-Decay-Sustain cycle
+- 1: 1 = Synchronization enabled
+- 2: 1 = Ring modulation enabled
+- 3: 1 = Disable voice, reset noise generator
+- 4: 1 = Triangle waveform enabled
+- 5: 1 = Saw waveform enabled
+- 6: 1 = Rectangle waveform enabled
+- 7: 1 = Noise enabled
 
 ## Debugging {debug}
 
