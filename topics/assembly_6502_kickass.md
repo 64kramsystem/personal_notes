@@ -60,6 +60,10 @@ Hi/lo byte operators (work only with mnemonics):
 ```asm
 lda #<VAL16     // Lower 8 bits of a 16-bits value
 lda #>VAL16     // Higher
+
+// WATCH OUT!! This can't be used with the pattern lo/hi of a label (address):
+
+lda #>my_label  // Doesn't decode to (my_label + 1)!!, instead, to the hi byte of my_label
 ```
 
 ## Labels

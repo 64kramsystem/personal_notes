@@ -3,6 +3,7 @@
 - [Linux Systemd](#linux-systemd)
   - [Generic commands and notes](#generic-commands-and-notes)
   - [Systemctl](#systemctl)
+    - [Disabling and dependencies](#disabling-and-dependencies)
     - [System commands](#system-commands)
     - [Per-user](#per-user)
   - [journalctl](#journalctl)
@@ -34,7 +35,7 @@ systemctl cat $service                # print unit file
 systemctl edit --full $service        # edit unit file (--full: edit the service, instead of creating an override)
                                       # in order to create, add `--force`
                                       # in order to programmatically edit, workaround by setting `SYSTEMD_EDITOR=tee [-a]` and piping the content.
-systemctl mask $service               # "mask": disable a service, by symlinking it to /dev/null; WATCH OUT! doesn't fail if the service doesn't exis
+systemctl mask $service               # "mask": disable a service, by symlinking it to /dev/null; WATCH OUT! doesn't fail if the service doesn't exist
 # it seems that deletion must be performed manually
 
 systemctl daemon-reload               # invoke this after updating a unit
@@ -51,9 +52,11 @@ If a unit is stored with ill-formed content, it won't be found by commands, whic
 
 The `--user` is for units belonging to the user (eg. transient timers).
 
+### Disabling and dependencies
+
 A static service can't be manually enabled or disabled; use mask for that.
 
-WATCH OUT! Even if a service is disabled, if other enabled services depend on it; in this case, find and disable them:
+WATCH OUT! If a service is disabled, but other ones depend on it, it will be started; in this case, find and disable the dependending units:
 
 ```sh
 systemctl list-dependencies --reverse snapd.socket
