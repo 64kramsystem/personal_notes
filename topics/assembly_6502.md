@@ -44,13 +44,13 @@ so the stack top is the first available slot ($1FF).
 
 ## Flags
 
-- `N`egative
+- `N`egative  : MSB of the result
 - O`V`erflow
 - `B`reak
 - `D`ecimal
 - `I`nterrupt
 - `Z`ero
-- `C`array: WATCH OUT!! This works counterintuitively - see ADC/SBC
+- `C`array    : WATCH OUT!! This works counterintuitively - see ADC/SBC
 
 ## Instructions
 
@@ -70,6 +70,7 @@ Convenient reference: https://www.pagetable.com/c64ref/6502/?tab=2#
 - `CMP`, `CPX`, `CPY` : CoMPare accumulator/X/Y (comparison is (reg - mem), but C is (mem - reg)!!!)
 - `BEQ`, `BNE`        : Branch if (Not) EQual
 - `BCC`, `BCS`        : Branch if Carry Clear/Set
+- `BMI`, `BPL`        : Branch if result MInus/PLus
 
 - `PHA`, `PLA`     : PusH/PuLl Accumulator (no push X/Y!)
 - `PHP`, `PLP`     : PusH/PuLl Processor status register
@@ -80,6 +81,7 @@ Convenient reference: https://www.pagetable.com/c64ref/6502/?tab=2#
 - `ROL`, `ROR`           : ROtate Left/Right through carry
 
 - `INC`, `INX`, `INY` : Increment address/X/Y; doesn't support A; flags: ZN
+- `DEC`, `DEX`, `DEY` : Decrement address/X/Y; doesn't support A; flags: ZN
 - `ADC`               : ADd accumulator with Carry; WATCH OUT!!! C is set when the sum is > 255, and viceversa
 - `SBC`               : SuBtraCt accumulator with Carry; flags: ZCNV
                         WATCH OUT!!! If the C is set, it counts as 0, and viceversa

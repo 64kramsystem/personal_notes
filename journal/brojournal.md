@@ -1,3 +1,15 @@
+## Fri 25/Feb/2022
+
+- Studies: C64 ASM Programming
+  - [ ] Machine Code Games Routines for the Commodore 64
+    - [x] Window Projection
+    - [x] Think general loop optimization
+- Open source: Openscripts
+  - [x] inhibit_screensaver: test, remove obsolence note, and extend comments/help
+- Studies: MySQL
+  - [ ] High Performance MySQL (4th ed.)
+    - [x] 9. Replication
+
 ## Thu 24/Feb/2022
 
 - Admin/System
