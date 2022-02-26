@@ -1,3 +1,13 @@
+## Sat 26/Feb/2022
+
+- Studies: C64 ASM Programming
+  - [ ] Machine Code Games Routines for the Commodore 64
+    - [x] Projecting a Landscape
+      - [x] Fix
+      - [x] Fight with addition of element plotting
+      - [x] Implement simplification
+    - [x] Array routines
+
 ## Fri 25/Feb/2022
 
 - Studies: C64 ASM Programming

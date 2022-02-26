@@ -205,7 +205,8 @@ WATCH OUT! Non-integer results of integer expressions are floats; they can cause
 Math functions (subset):
 
 - `floor(x)`
-- `mod(a, b)` - there is no `%` operator!
+- `mod(a, b)` : there is no `%` operator! WATCH OUT! The result is 16-bit, e.g. mod(-15, $ff) = $fff1;
+                ^can use the `<` operator to reduce to 8-bit.
 
 ## Imports
 
