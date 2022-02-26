@@ -10,6 +10,7 @@
   - [Programming patterns](#programming-patterns)
     - [16-bit operations](#16-bit-operations)
     - [Table-based switch/case](#table-based-switchcase)
+    - [Arbitrary subtraction](#arbitrary-subtraction)
 
 ## Architecture
 
@@ -80,7 +81,7 @@ Convenient reference: https://www.pagetable.com/c64ref/6502/?tab=2#
 - `ASL`(`A`), `LSR`(`A`) : Arithmetic Shift Left/Logic Shift Right (address or Accumulator); spill to carry
 - `ROL`, `ROR`           : ROtate Left/Right through carry
 
-- `INC`, `INX`, `INY` : Increment address/X/Y; doesn't support A; flags: ZN
+- `INC`, `INX`, `INY` : Increment address (5/7 cycle), X/Y (2 cycles); doesn't support A; flags: ZN
 - `DEC`, `DEX`, `DEY` : Decrement address/X/Y; doesn't support A; flags: ZN
 - `ADC`               : ADd accumulator with Carry; WATCH OUT!!! C is set when the sum is > 255, and viceversa
 - `SBC`               : SuBtraCt accumulator with Carry; flags: ZCNV
@@ -159,4 +160,15 @@ NOP           // padding
 NOP
 
 // ...other cases...
+```
+
+### Arbitrary subtraction
+
+In order to perform v1 - v2, we use a 2's complement addition. Since NEG(v) = NOT(v) + 1 = (v XOR 255) + 1, we can do:
+
+```asm
+LDA #v2
+EOR           // v2 XOR 255
+SEC           // + 1
+ADC #v1       // A = v1 + ((v2 XOR 255) + 1) = v1 + NEG(v2)
 ```
