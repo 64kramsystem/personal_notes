@@ -63,12 +63,13 @@ Convenient reference: https://www.pagetable.com/c64ref/6502/?tab=2#
 - `STA`                    : STore Accumulator
 - `TAX`/`TAY`, `TXA`/`TYA` : Transfer X/Y <> Accumulator
 
-- `CLC`, `SEC`     : CLear/SEt carry
+- `CLC`, `SEC`     : CLear/SEt carry (2 cycles)
 
 - `JMP`            : WATCH OUT !!! With Indirect addressing, the pointer MUST NOT be stored across pages ($..FF and $..00) !!!
 - `JSR`, `RTS`     : Jump to SubRoutine, ReTurn from Subroutine
 
-- `CMP`, `CPX`, `CPY` : CoMPare accumulator/X/Y (comparison is (reg - mem), but C is (mem - reg)!!!)
+- `CMP`, `CPX`, `CPY` : CoMPare accumulator/X/Y (imm: 2 cycles, M: 3/6)
+                        WATCH OUT!!! Comparison is (reg - mem), but C is (mem - reg)!!!
 - `BEQ`, `BNE`        : Branch if (Not) EQual
 - `BCC`, `BCS`        : Branch if Carry Clear/Set
 - `BMI`, `BPL`        : Branch if result MInus/PLus
@@ -81,9 +82,9 @@ Convenient reference: https://www.pagetable.com/c64ref/6502/?tab=2#
 - `ASL`(`A`), `LSR`(`A`) : Arithmetic Shift Left/Logic Shift Right (address or Accumulator); spill to carry
 - `ROL`, `ROR`           : ROtate Left/Right through carry
 
-- `INC`, `INX`, `INY` : Increment address (5/7 cycle), X/Y (2 cycles); doesn't support A; flags: ZN
-- `DEC`, `DEX`, `DEY` : Decrement address/X/Y; doesn't support A; flags: ZN
-- `ADC`               : ADd accumulator with Carry; WATCH OUT!!! C is set when the sum is > 255, and viceversa
+- `INC`, `INX`, `INY` : Increment address (5/7 cycles), X/Y (2 cycles); doesn't support A; flags: ZN
+- `DEC`, `DEX`, `DEY` : Decrement address, X/Y; doesn't support A; flags: ZN
+- `ADC`               : ADd accumulator with Carry (M: 4/~6 cycles, imm.: 2); WATCH OUT!!! C is set when the sum is > 255, and viceversa
 - `SBC`               : SuBtraCt accumulator with Carry; flags: ZCNV
                         WATCH OUT!!! If the C is set, it counts as 0, and viceversa
                         WATCH OUT!!! C is set if the result (A - M) is >= 0, and viceversa
