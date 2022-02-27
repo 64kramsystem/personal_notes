@@ -139,7 +139,9 @@ Subset:
 
 ## Sprites {sprites}
 
-A sprite is 3x21 (WxH) bytes.
+A sprite is 3x21 (WxH) bytes (=24x21 pixels). The top left corner is x=24, y=50; bottom right (addressable) corner is x=255+24, y=229+21.
+
+In order to use x>255, complex manipulation is required (see https://www.lemon64.com/forum/viewtopic.php?t=15318&sid=9c1ea88879666603c6dfc064c09f5ac5).
 
 Basic example (not smooth):
 
@@ -200,7 +202,9 @@ preset_rnd:
         rts
 
 // Write a random number to A, without using any other register.
-// Need to waste some cycles, since a new value is generated every 26 cycles (see https://www.lemon64.com/forum/viewtopic.php?t=70039)
+// WATCH OUT! It hasn't been tested rigorously what's the frequency of the generated numbers; based on the formula
+// Freq = 65535 * 0.0596 = 3.9 KHz = 1 number every 256 cycles (on 1 MHz).
+//
 get_rnd:
         lda #10
 !:      sec

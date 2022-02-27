@@ -10,7 +10,7 @@
   - [Coauthorship (multiple authors)](#coauthorship-multiple-authors)
   - [README.md](#readmemd)
     - [Images](#images)
-    - [Refer to project root](#refer-to-project-root)
+    - [Link references](#link-references)
 
 ## Searches
 
@@ -180,6 +180,7 @@ Display an image (WATCH OUT! This won't be rendered from external sites):
 
 Image (raw) path: `https://github.com/64kramsystem/vscode-markdown-code-blocks-asm-syntax-highlighting/blob/master/pizza/test.png?raw=true`
 
-### Refer to project root
+### Link references
 
-Prefix the path with `/../../` (see [Stack Overflow](https://stackoverflow.com/a/40440270/210029))
+- Project root: prefix the path with `/../../` (see [Stack Overflow](https://stackoverflow.com/a/40440270/210029))
+- Current path: use the bare filename, without prefixes

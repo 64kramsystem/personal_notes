@@ -1,3 +1,24 @@
+## Sun 27/Feb/2022
+
+- Studies: C64 ASM Programming
+  - [x] Machine Code Games Routines for the Commodore 64
+    - [x] Homing Motion routine
+      - [x] Extend with sprite drawing
+      - [x] Implement optimization
+      - [x] Implement simplification
+    - [x] Fix and dump ASM for Hail of Barbs
+    - [x] Mark listings project and blog article as completed
+  - [x] Investigate SID-generated random numbers frequency
+  - [x] Fix VICE issue with keyboard
+- Open source
+  - [x] Review Crystal-lang and consider for contribution
+  - llamaSource project
+    - [x] Send PR fixing a README link
+- Admin
+  - [x] Organize the c64 resources
+  - [x] Plan cycle
+  - [x] Review potential projects/languages
+
 ## Sat 26/Feb/2022
 
 - Studies: C64 ASM Programming
