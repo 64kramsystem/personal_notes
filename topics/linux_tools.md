@@ -23,6 +23,7 @@
   - [Watch](#watch)
   - [Displaying messages](#displaying-messages)
   - [Nohup](#nohup)
+  - [xdotool](#xdotool)
   - [Dates](#dates)
     - [Formatting](#formatting)
     - [Operations](#operations)
@@ -573,6 +574,19 @@ References:
 
 - [general](https://stackoverflow.com/a/29172)
 - [</dev/null](https://stackoverflow.com/a/19956266)
+
+## xdotool
+
+Send Alt+F4 to a window:
+
+```sh
+# Search in all the workspaces.
+window_id=$(xdotool search --all --name smplayer | tail -n 1)
+# windowactivate (bring to front) is necessary.
+xdotool windowactivate --sync "$window_id" key "alt+F4"
+```
+
+See `browser-common.sh` for a complex example, and [StackOverflow](https://unix.stackexchange.com/q/87831) for discussion.
 
 ## Dates
 

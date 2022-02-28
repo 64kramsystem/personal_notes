@@ -44,6 +44,7 @@
     - [`bash` command options](#bash-command-options)
     - [Variables printing function](#variables-printing-function)
     - [Current shell](#current-shell)
+    - [Convert associative array to JSON](#convert-associative-array-to-json)
   - [Shell colors](#shell-colors)
 
 ## Shell key bindings
@@ -191,23 +192,20 @@ Assignment/passing:
 if read -t 0; then ...; fi
 
 # Assign stdin to a variable
-# `read -r`: don't interpret backslashes.
 #
-read -r <var_name>           # single line
-<var_name>="$(</dev/stdin)"  # multi-line, but will block if there is no input!
-<var_name>="$(cat)"          # (same)
+read -r myvar           # single line; `-r`: don't interpret backslashes
+myvar="$(</dev/stdin)"  # multi-line, but will block if there is no input!
+myvar="$(cat)"          # (same)
 
-# Assign heredoc to variable; will lose indentation.
-# See: https://stackoverflow.com/questions/1167746/how-to-assign-a-heredoc-value-to-a-variable-in-bash
-#
-read -r -d '' body <<STR
+# Assign a variable via heredocs.
+# See https://stackoverflow.com/q/1167746 for comments.
+myvar="$(cat << JSON
 {
   "title": "$1",
   "body": "$2",
-  "head": "$head",
-  "base": "master"
 }
-STR
+JSON
+)
 ```
 
 ## Special functions
@@ -277,13 +275,24 @@ until (( $VGAPT_MEMORY < $(free -m | sed '2q;d' | awk '{print $NF}') )); do $com
 
 ## Test conditions
 
-
 ```sh
 test $expr                              # test an expression
 
 if [[ ( $expr1 ) || ( $expr2 ) ]]       # complex conditionals; parenthesis denote priority
 if { $commands; } || { $commands; }     # conditional with commands (for simple commands, braces+semicolons are not required)
 if (( lhs < rhs ))                      # arithmetic comparison (dollars are not required)
+```
+
+WATCH OUT!! Compact conditionals effectively exit with error, when they evaluate to false:
+
+```sh
+# They can be used when there is an OR condition:
+#
+[[ -n $v_smt_on ]] && echo 2 || echo 1 # never exits
+#
+# But not without:
+#
+[[ -n $v_smt_on ]] && echo 2           # exits on false evaluation
 ```
 
 Note that the left side of a condition (or the only one on prefix operators) doesn't need to be escaped.
@@ -322,8 +331,7 @@ Ternary operator:
 #
 tern=$(( a < b ? c : d ))
 
-# Can use a compact conditional for anything else, BUT with the typical disclaimers of error exits (in
-# this case, it's impossible)
+# A compact conditional can be used otherwise (make sure the commands evaluate to true!)
 #
 tern=$( [[ -n $v_smt_on ]] && echo 2 || echo 1 )
 ```
@@ -1224,6 +1232,23 @@ function print_variables {
 ### Current shell
 
 Simplest, from terminal: `echo $0`. Don't use `$SHELL`, as it can refer to the parent.
+
+### Convert associative array to JSON
+
+From [here](https://stackoverflow.com/q/44792241):
+
+```sh
+for key in "${!hash[@]}"; do
+    printf '%s\0%s\0' "$key" "${hash[$key]}"
+done |
+  jq -Rs '
+    split("\u0000")
+    | . as $a
+    | reduce range(0; length/2) as $i
+        ({}; . + {($a[2*$i]): ($a[2*$i + 1]|fromjson? // .)})'
+```
+
+WATCH OUT!!: There is no way to directly support null.
 
 ## Shell colors
 

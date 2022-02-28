@@ -202,13 +202,17 @@ preset_rnd:
         rts
 
 // Write a random number to A, without using any other register.
-// WATCH OUT! It hasn't been tested rigorously what's the frequency of the generated numbers; based on the formula
-// Freq = 65535 * 0.0596 = 3.9 KHz = 1 number every 256 cycles (on 1 MHz).
+//
+// At least on a real machine, a new value is generated every 16/17 cycles; see https://youtu.be/-ADjfx79wNg?t=1721.
+// Therefore, a tight routine may just be JSR=6, NOP=2, LDA=4, RTS=6.
+//
+// On VICE [3.4] though, it seems that much more cycles are required, so this routine intentionally
+// wastes a lot of cycles.
 //
 get_rnd:
-        lda #10
-!:      sec
-        sbc #1
+        lda #4
+        sec
+!:      sbc #1
         bcs !-
         lda $d41b
         rts

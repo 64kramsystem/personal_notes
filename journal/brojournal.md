@@ -1,3 +1,13 @@
+## Mon 28/Feb/2022
+
+- Studies: C64 ASM Programming
+  - [x] Minor checks to SID-generated random numbers
+- Tools/Studies
+  - [x] Player script
+    - [x] Ruby: Review child processes handling
+    - [x] Fight player odd handling of Alt+F4 <> SIGINT
+    - [x] Linux: Review xdotool for programmatic Alt+F4 sending
+
 ## Sun 27/Feb/2022
 
 - Studies: C64 ASM Programming

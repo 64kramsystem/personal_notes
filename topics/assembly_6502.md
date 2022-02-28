@@ -66,7 +66,7 @@ Convenient reference: https://www.pagetable.com/c64ref/6502/?tab=2#
 - `CLC`, `SEC`     : CLear/SEt carry (2 cycles)
 
 - `JMP`            : WATCH OUT !!! With Indirect addressing, the pointer MUST NOT be stored across pages ($..FF and $..00) !!!
-- `JSR`, `RTS`     : Jump to SubRoutine, ReTurn from Subroutine
+- `JSR`, `RTS`     : Jump to SubRoutine, ReTurn from Subroutine (6 cycles)
 
 - `CMP`, `CPX`, `CPY` : CoMPare accumulator/X/Y (imm: 2 cycles, M: 3/6)
                         WATCH OUT!!! Comparison is (reg - mem), but C is (mem - reg)!!!
