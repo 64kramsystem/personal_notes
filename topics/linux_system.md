@@ -68,6 +68,7 @@ ps x -o pid,ppid,ni,args --forest
 #
 sudo pkill -f '[p]rocessname'
 
+# Kill the children.
 # Be *very* careful when choosing which pid to kill. If the process has been invoked via sudo, the child
 # process will need to be killed.
 #

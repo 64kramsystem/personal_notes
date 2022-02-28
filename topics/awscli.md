@@ -2,6 +2,7 @@
 
 - [AWS CLI](#aws-cli)
   - [Tool configuration](#tool-configuration)
+  - [General JSON parameters format](#general-json-parameters-format)
   - [Resources](#resources)
     - [EC2](#ec2)
     - [IAM](#iam)
@@ -23,6 +24,31 @@
 ```sh
 aws configure
 ```
+
+## General JSON parameters format
+
+When using JSON as parameters format, if values are not complex (e.g. include null values), just manually build the object:
+
+```sh
+local json_params
+json_params=$(cat <<JSON
+{
+  "DBParameterGroupName": "$parameter_group_name",
+  "Parameters": [
+      {
+          "ParameterName": "$parameter_name",
+          "ParameterValue": "$parameter_value",
+          "ApplyMethod": "pending-immediate"
+      }
+  ]
+}
+JSON
+)
+
+aws rds modify-db-parameter-group --cli-input-json "$json_params" > /dev/null
+```
+
+For complex cases, see the [bash guide related section](bash.md#convert-associative-array-to-json).
 
 ## Resources
 
@@ -76,6 +102,16 @@ aws rds modify-db-parameter-group \
   --db-parameter-group-name mydbparametergroup \
   --parameters "ParameterName=max_connections,ParameterValue=250,ApplyMethod=immediate" \
                "ParameterName=max_allowed_packet,ParameterValue=1024,ApplyMethod=immediate" > /dev/null
+```
+
+Reset a parameter group parameter:
+
+```sh
+# If not redirected, it runs interactively (!)
+#
+aws rds reset-db-parameter-group \
+  --db-parameter-group-name "$c_parameter_group_name" \
+  --parameters "ParameterName=$c_parameter_name,ApplyMethod=immediate" > /dev/null
 ```
 
 Find RDS instance informations:

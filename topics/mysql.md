@@ -24,6 +24,7 @@
   - [Regular expressions (regexes)](#regular-expressions-regexes)
     - [Strategies/Examples](#strategiesexamples)
   - [JSON + MVI and array storage](#json--mvi-and-array-storage)
+    - [Aggregation performance](#aggregation-performance)
   - [Fulltext indexes](#fulltext-indexes)
     - [Stopwords](#stopwords)
     - [Symbols handling](#symbols-handling)
@@ -541,8 +542,10 @@ SELECT JSON_ARRAY_INSERT(client_tags, '$[1]', 'qux') FROM clients;
 SELECT JSON_REMOVE(client_tags, '$[1]') FROM clients;
 -- ["foo", "baz"]
 
--- Removal by value can't be directly done; must search+remove (and trim)
-SELECT JSON_REMOVE(client_tags, TRIM(BOTH '"' FROM JSON_SEARCH(client_tags, 'one', 'bar'))) FROM clients;
+-- Removal by value can't be directly done; must search+remove (and unquote); removing all occurrences is currently not
+-- possible without looping.
+--
+SELECT JSON_REMOVE(client_tags, JSON_UNQUOTE(JSON_SEARCH(client_tags, 'one', 'bar'))) FROM clients;
 -- ["foo"]
 
 -- Set/replace. WATCH OUT! See result below for out-of-bounds cases.
@@ -584,7 +587,11 @@ FROM
 -- | 6     |
 -- | 70    |
 -- +-------+
+```
 
+### Aggregation performance
+
+```sql
 -- Compute the per-tag count for a given tenant.
 --
 -- 2.6" - pretty good.
@@ -911,6 +918,17 @@ FROM information_schema.routines
 WHERE routine_type = 'PROCEDURE'
       -- AND routine_schema = @database_name
       AND routine_name LIKE 'rds\_%';
+```
+
+List of FT indexes:
+
+```sql
+-- INDEX_TYPE: `BTREE`, `HASH`, `FULLTEXT`.
+-- MVI indexes can't be distinguished by type, but they have EXPRESSION set.
+--
+SELECT INDEX_NAME, INDEX_TYPE, EXPRESSION
+FROM information_schema.STATISTICS
+WHERE (TABLE_SCHEMA, TABLE_NAME) = (@db, @table)'customer_facts');
 ```
 
 ### Base structure
