@@ -85,10 +85,11 @@ With FlatPrinter:
 
 ```rb
 Benchmark.ips do |x|
+  x.config(time: 1, warmup: 1) # default test time: 5, warmup: 2
   x.report("bsearch1") { bsearch1(array, rand(array_size)) }
   x.report("bsearch2") { bsearch2(array, rand(array_size)) }
   x.compare!
-end
+end; nil
 
 # Calculating -------------------------------------
 #             bsearch1 54.917k i/100ms
@@ -99,6 +100,30 @@ end
 # Comparison:
 #             bsearch1: 782666.6 i/s
 #             bsearch2: 374303.7 i/s - 2.09x slower
+```
+
+In order to avoid running the GC, must use a custom suite:
+
+```rb
+class GCSuite
+  def warming(*); run_gc; end
+  def running(*); run_gc; end
+  def warmup_stats(*); end
+  def add_report(*); end
+
+  private
+
+  def run_gc
+    GC.enable
+    GC.start
+    GC.disable
+  end
+end
+
+Benchmark.ips do |x|
+  x.config(suite: GCSuite.new)
+  # ...
+end; nil
 ```
 
 ## Memory
