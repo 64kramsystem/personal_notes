@@ -1,3 +1,11 @@
+## Tue 01/Mar/2022
+
+- System
+  - [x] Update remote sessions script to automatically change keyboard layout
+- SWE
+  - [x] Codility: Exercises on lessons 1-4
+    - [x] Research Ruby speed on array resizing strategies
+
 ## Mon 28/Feb/2022
 
 - Studies: C64 ASM Programming
