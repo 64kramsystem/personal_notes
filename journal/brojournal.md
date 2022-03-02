@@ -1,3 +1,13 @@
+## Wed 02/Mar/2022
+
+- SWE
+  - [ ] Codility: Exercises on lessons 5
+    - [x] Incorrect: CountDiv
+    - [x] Slow?: GenomicRangeQuery
+  - Leetcode
+    - [ ] Medium 42%,  984: failed
+    - [x] Medium 73%, 1448: 2 tests, 1 submissions, 10/15'
+
 ## Tue 01/Mar/2022
 
 - System
