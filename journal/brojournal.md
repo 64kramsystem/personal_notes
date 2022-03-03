@@ -1,6 +1,23 @@
+## Thu 03/Mar/2022
+
+- SWE: Practice
+  - Leetcode
+    - [ ] Medium 71%,  979: failed
+    - [x] Easy   77%, 1304: 2 tests, 2 submissions, 12'
+    - [x] Easy   68%, 1822: 1 tests, 1 submissions, 3'
+    - [x] Easy   64%,  706: x tests, x submissions, ~25'
+      - 2 errors: typo, and inadvert shadowing
+      - headache: used slow array instantiation API
+    - [x] Easy   55%, 1275: 3 tests, 3 submissions, ~25'
+      - did not find efficient solution; read it and implemented it
+      - inverted modulo operators!!
+      - confused array with entry
+      - one-off error!
+      - missed requirement: movements can be less than 9
+
 ## Wed 02/Mar/2022
 
-- SWE
+- SWE: Practice
   - [ ] Codility: Exercises on lessons 5
     - [x] Incorrect: CountDiv
     - [x] Slow?: GenomicRangeQuery
@@ -12,7 +29,7 @@
 
 - System
   - [x] Update remote sessions script to automatically change keyboard layout
-- SWE
+- SWE: Practice
   - [x] Codility: Exercises on lessons 1-4
     - [x] Research Ruby speed on array resizing strategies
 
