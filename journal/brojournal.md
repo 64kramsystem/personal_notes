@@ -1,3 +1,19 @@
+## Fri 04/Mar/2022
+
+- SWE: Practice
+  - Leetcode
+    - [x] Medium 63%, 1344: 1 tests, 1 submissions, 11'
+    - [x] Medium 64%,   49: 2 tests, 1 submissions, 6'
+      - Faster than almost all, but suboptimal!
+      - Mistake: Forgot to invoke String#chars
+    - [ ] Medium 67%,  362: 0 tests, 0 submissions, 20'
+      - Failed in the given time; used wrong algorithm
+  - Study
+    - [ ] Cracking the Coding Interview
+      - [x] Introduction: I-VI
+- Admin
+  - [x] Research/buy exercises book
+
 ## Thu 03/Mar/2022
 
 - SWE: Practice
