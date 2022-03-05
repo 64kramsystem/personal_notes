@@ -1,3 +1,43 @@
+## Sat 05/Mar/2022
+
+- SWE: Practice
+  - Try recursion approach via Ruby pseudo-references
+  - Leetcode
+    - [x] Medium 56%,  394: 3 tests, 3 submissions, 33'
+      - Mistakes
+        - omitted returning "i" in the last statement of the recursive fx
+          - main function was not unpacking the result of the recursive fx, after updating the above
+        - did not read again the full spec; a condition was hidden in the constraints
+        - two consecutive conditions interfered with each other (should have been nested, or consider each other)
+      - Distaster after the first two mistakes
+    - [x] Medium 56%, 1405: 4 tests, 1 submissions, 19'
+      - Mistakes
+        - used hash symbol keys instead of chars
+        - used a simple break to exit outer loop, but exited inner one
+          - placed wrong conditional after hastily correcting the above
+        - checked wrong fence value: > 2 instead of >= 2
+      - Last mistake was very expensive; put debug code from the beginning!
+    - [x] Medium 56%,  116: 3 tests, 1 submissions, 18'
+      - Mistakes
+        - Missed a statement (children clearing)
+        - Didn't reverse a conditional (parents -> children) after fixing the above
+        - Missed one test case in the specification!! (lost lots of time)
+    - [x] Medium 56%, 1647: 3 tests, 2 submissions, 26'
+      - Mistakes
+        - Used Hash#keys instead of #values
+        - Omitted a branch
+        - Added (if) conditional but forgot to turn if into elsif
+        - 1 submission wasted due to not fully read the spec!
+    - [ ] Medium 57%,  462: Couldn't find efficient solution
+    - [x] Medium 57%,  348: 3 tests, 2 submissions, 18'
+      - Mistakes
+        - Used array in place of int
+        - Made a simplification before submitting, whose assumption was wrong!
+      - 1 submission has been wasted due to incomplete specification!
+  - Study
+    - [ ] Cracking the Coding Interview
+      - [ ] VII. Technical Questions
+
 ## Fri 04/Mar/2022
 
 - SWE: Practice
@@ -9,6 +49,8 @@
     - [ ] Medium 67%,  362: 0 tests, 0 submissions, 20'
       - Failed in the given time; used wrong algorithm
   - Study
+    - [ ] Codility lessons
+      - [x] 1-4
     - [ ] Cracking the Coding Interview
       - [x] Introduction: I-VI
 - Admin
