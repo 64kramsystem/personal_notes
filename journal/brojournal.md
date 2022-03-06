@@ -1,3 +1,37 @@
+## Sun 06/Mar/2022
+
+- SWE
+  - Leetcode
+    - [x] Medium 28%,  151: 1 tests, 1 submissions, 9'
+    - [x] Medium 39%,  146: 1 tests, 1 submissions, 8'
+      - This is trivial, by using Ruby's hash keys ordering
+    - [x] Medium 40%,   54: 5 tests, 1 submissions, 18'
+      - Mistakes
+        - Wrong modulo array access
+        - Typo
+        - Wrong modulo array access again
+        - Wrong bidimensional array access `[a,b]` instead of `[a][b]`
+      - Solution is simpler than the proposed ones!
+    - [x] Medium 43%,  545: 3 tests, 1 submissions, 38'
+      - Mistakes
+        - Wrong debug code!
+        - Copy pasted, then modified source, then forgot to modify copy
+        - Missed difficult implicit condition: outermost boundary nodes are never added to leaves, so they don't need to be popped
+      - Ignored correct submission with excessive output length
+    - [x] Medium 53%,   17: 1 tests, 1 submissions, 13'
+    - [x] Medium 53%,  200: 2 tests, 1 submissions, 36'
+      - Mistakes
+        - Copy paste error when refactoring a condition!!
+      - Thought an optimized approach was required, and wasted 15 minutes on it
+    - [x] Medium 54%,  692: 3 tests, 1 submissions, 8'
+      - Mistakes
+        - Wrong variable (words <> words_count)
+        - Mistaken result type of an API (Hash#sort_by -> Array<>Hash)
+- Tools
+  - Journal script
+    - [x] New leet entry format (prefilled, instead of completed)
+    - [x] Don't add anymore leet entry parent bullet points
+
 ## Sat 05/Mar/2022
 
 - SWE: Practice
