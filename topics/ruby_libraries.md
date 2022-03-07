@@ -22,6 +22,10 @@
     - [open-uri](#open-uri)
     - [File/Dir/FileUtils/Pathname](#filedirfileutilspathname)
     - [Tempfile, Tmpdir](#tempfile-tmpdir)
+    - [Concurrency](#concurrency)
+      - [Mutex](#mutex)
+      - [Thread-safe data structures (Queue)](#thread-safe-data-structures-queue)
+      - [IO.pipe for IPC](#iopipe-for-ipc)
     - [I/O and terminal](#io-and-terminal)
     - [Encryption (openssl)](#encryption-openssl)
     - [SecureRandom](#securerandom)
@@ -626,6 +630,113 @@ Dir::Tmpname.create(['a', '.png']) { }
 # Find system temporary directory
 require 'tmpdir'
 Dir.tmpdir
+```
+
+### Concurrency
+
+#### Mutex
+
+```ruby
+mutex = Mutex.new
+mutex.synchronize { }
+```
+
+#### Thread-safe data structures (Queue)
+
+`Queue`s are thread-safe FIFO queues, although very primitive.
+
+It has a `empty?` method, which is useless, since the class doesn't provide an atomic way to atomically check and pop.
+
+```ruby
+queue = Queue.new
+
+(0..9).each { |item| queue << item }
+
+threads = 3.times.map do |i|
+  Thread.new do
+    loop do
+      begin
+        sleep(rand * 0.1)
+
+        # param `non_block` (false): if false, blocks until an element is available; if true, raises
+        # a ThreadError if no elements are available.
+        #
+        value = queue.pop(true)
+
+        puts "Thread #{i}: #{value}"
+      rescue ThreadError
+        break
+      end
+    end
+  end
+end
+
+threads.each(&:join)
+```
+
+Methods:
+
+- `push(element)`
+- `pop`
+- there is no peek; must `pop` and `push`
+
+#### IO.pipe for IPC
+
+IO.pipe(s) can be used for IPC (but also inter-thread), like Golang channels. The string encoding is converted in the write/read process.
+
+IMPORTANT NOTES:
+
+- it's possible to use the write pipe in multiple forks, but must use the pseudo-non-blocking version
+  - closing a forked write pipe won't affect another forked write pipe
+
+- it's important to close the endpoints in forked processes, since even if not referenced, they will be in scope!!!
+
+- :read will receive data only if:
+  - the writer on the other process has been closed
+  - the writer on the same process has been closed
+- the pseudo-non-blocking version (:read_nonblock) will work without the two conditions above
+
+```ruby
+## PROCESSES + BLOCKING READ
+
+rd, wr = IO.pipe
+
+## fork() returns PID in the parent, and nil in the child, so the first block is the parent, the second, the child
+if parent_pid = fork
+  wr.close
+  puts "Read: #{rd.read.inspect}"
+  rd.close
+  Process.wait	# waits on the child/writer
+else
+  rd.close
+  wr.write "Message"
+  wr.close
+end
+
+## THREADS + PSEUDO-NON-BLOCKING READ
+## The pattern for pseudo-non-blocking (which blocks) is quite strange.
+
+rd, wr = IO.pipe
+
+reader_thread = Thread.new do
+  data_received = \
+    begin
+      rd.read_nonblock(100)
+    rescue IO::WaitReadable, IO::EAGAINWaitReadable
+      IO.select([rd])	# blocks until data is availabel
+      retry
+    end
+
+  puts "Read: #{data_received.inspect}"
+end
+
+write_thread = Thread.new do
+  wr.write "Message"
+  wr.flush	# this is probably a good practice
+end
+
+reader_thread.join
+write_thread.join
 ```
 
 ### I/O and terminal

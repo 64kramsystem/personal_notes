@@ -1,3 +1,31 @@
+## Mon 07/Mar/2022
+
+- SWE: Practice
+  - Study
+    - [x] Search large scale system resources
+    - [ ] Cracking the Coding Interview
+      - [x] VII. Technical Questions
+      - [x] VIII. The Offer and Beyond
+      - [x] IX.1 Arrays and Strings
+        - Solved in mind
+          - 1.7: actually programmed (in-place solution)
+      - [ ] IX.16 Moderate
+        - [x] 16.6: Solved in mind
+  - Leetcode
+    - [x] Easy      45%,  716: 3 tests, 1 submissions, 8'
+      - Found the efficient solution, but it requires linked list + binary tree APIs
+      - Mistakes
+        - Wrong API knowledge interpretation (Array#delete deletes all the elements, not 1)
+        - Improper deletion (deletion from left, rather than from right)
+    - [x] Easy      48%,    1: 1 tests, 1 submissions, 2' (more efficient solution)
+    - [x] Easy      60%,   21: 4 tests, 1 submissions, 18'
+      - Mistakes
+        - 2*debug
+        - lost lots of time on two misnamed variables
+- Studies
+  - Ruby
+    - [x] Review all data structures in the stdlib
+
 ## Sun 06/Mar/2022
 
 - SWE
