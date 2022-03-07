@@ -24,15 +24,14 @@
     - [Reflection](#reflection)
       - [Pass a method as map block parameter](#pass-a-method-as-map-block-parameter)
     - [Simulate Java annotations!!!](#simulate-java-annotations)
-  - [Concurrency](#concurrency)
-    - [Mutex](#mutex)
-    - [Thread-safe data structures](#thread-safe-data-structures)
-    - [IO.pipe for IPC](#iopipe-for-ipc)
   - [Collections](#collections)
     - [Array](#array)
+      - [Binary search operations](#binary-search-operations)
     - [Iterable APIs/Useful operations](#iterable-apisuseful-operations)
     - [Hash](#hash)
     - [Enumerable](#enumerable)
+    - [Linked lists](#linked-lists)
+    - [SortedSet](#sortedset)
   - [Basic I/O](#basic-io)
   - [Handling processes](#handling-processes)
     - [Basic handling, via `IO.popen`](#basic-handling-via-iopopen)
@@ -533,106 +532,6 @@ module Authorization
 end
 ```
 
-## Concurrency
-
-### Mutex
-
-```ruby
-mutex = Mutex.new
-mutex.synchronize { }
-```
-
-### Thread-safe data structures
-
-`Queue`s are thread-safe FIFO queues, although very primitive.
-
-It has a `empty?` method, which is useless, since the class doesn't provide an atomic way to atomically check and pop.
-
-```ruby
-queue = Queue.new
-(0..9).each { |item| queue << item }
-
-threads = 3.times.map do |i|
-  Thread.new do
-    loop do
-      begin
-        sleep(rand * 0.1)
-
-        # param `non_block` (false): if false, blocks until an element is available; if true, raises
-        # a ThreadError if no elements are available.
-        #
-        value = queue.pop(true)
-
-        puts "Thread #{i}: #{value}"
-      rescue ThreadError
-        break
-      end
-    end
-  end
-end
-
-threads.each(&:join)
-```
-
-### IO.pipe for IPC
-
-IO.pipe(s) can be used for IPC (but also inter-thread), like Golang channels. The string encoding is converted in the write/read process.
-
-IMPORTANT NOTES:
-
-- it's possible to use the write pipe in multiple forks, but must use the pseudo-non-blocking version
-  - closing a forked write pipe won't affect another forked write pipe
-
-- it's important to close the endpoints in forked processes, since even if not referenced, they will be in scope!!!
-
-- :read will receive data only if:
-  - the writer on the other process has been closed
-  - the writer on the same process has been closed
-- the pseudo-non-blocking version (:read_nonblock) will work without the two conditions above
-
-```ruby
-# PROCESSES + BLOCKING READ
-
-rd, wr = IO.pipe
-
-# fork() returns PID in the parent, and nil in the child, so the first block is the parent, the second, the child
-if parent_pid = fork
-  wr.close
-  puts "Read: #{rd.read.inspect}"
-  rd.close
-  Process.wait	# waits on the child/writer
-else
-  rd.close
-  wr.write "Message"
-  wr.close
-end
-
-# THREADS + PSEUDO-NON-BLOCKING READ
-# The pattern for pseudo-non-blocking (which blocks) is quite strange.
-
-rd, wr = IO.pipe
-
-reader_thread = Thread.new do
-  data_received = \
-    begin
-      rd.read_nonblock(100)
-    rescue IO::WaitReadable, IO::EAGAINWaitReadable
-      IO.select([rd])	# blocks until data is availabel
-      retry
-    end
-
-  puts "Read: #{data_received.inspect}"
-end
-
-write_thread = Thread.new do
-  wr.write "Message"
-  wr.flush	# this is probably a good practice
-end
-
-reader_thread.join
-write_thread.join
-```
-
 ## Collections
 
 ### Array
@@ -661,6 +560,19 @@ matrix.transpose
 # Yields nils, so it needs to be compacted, if required.
 #
 Array.new(matrix.map(&:size).max) { |i| matrix.map { |e| e[i] } }
+```
+
+#### Binary search operations
+
+```rb
+# Binary search. WATCH OUT!! `n` must be the right operand in the comparison!
+#
+[2, 3, 4, 5].bsearch_index { |n| 2 <=> n } # 0
+[2.0, 3.0, 4.0].bsearch { |n| 2 <=> n }    # 2.0
+
+# Binary insertion
+#
+(0..10).to_a.bsearch_index { |n| n > 5 } # 6 => use this index to insert
 ```
 
 ### Iterable APIs/Useful operations
@@ -701,6 +613,8 @@ hash.merge!(hash) {|_, v| fx(v)}          # !!! transform the values of a hash !
 hash = hash.map {|k, v| [fx(k), v] }.to_h # !!! transform the keys of a hash !!!
 ```
 
+Keys are compared using `#hash` and `#eql?`.
+
 ActiveSupport additions:
 
 ```ruby
@@ -715,6 +629,32 @@ enu.filter_map { |n| n**2 if n.even? }  # yay! (falsey values are discarded)
 enu.each_cons(n)                        # each overlapping subarray of `n` items; last non-exact subarrays are not included
 enu.each_slice(n)                       # each non overlapping subarray of `n` items; last non-exact subarray is included
 ```
+
+### Linked lists
+
+Ruby has no linked lists!
+
+- For linked lists with unique entries, Set/Hash can be used, although they don't have an efficient tail access
+- SortedSet can be used where possible, and it has head/tail efficient access
+- Barring a manual implementation/gem, only array can be used (`Queue` is a simple stack)
+
+### SortedSet
+
+If the elements of a collection are unique, this can be used to implement an efficient sorted linked list.
+
+```rb
+require 'set'
+set = SortedSet.new([2, 1, 5, 6, 10, 24, 3])
+
+set.include?(33)       # false
+set.first              # 1; there is not last! reverse_each().first is not efficient
+set.min, set.max       # can use these as first/last
+
+set << 33
+set.delete(33)
+```
+
+If the elements are not unique, one can create a struct which includes the value and its count (must implement `#hash` and `#eql?`)
 
 ## Basic I/O
 
