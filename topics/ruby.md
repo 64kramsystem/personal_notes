@@ -257,6 +257,7 @@ module MyModule
   # Invocation: MyModule.my_class_method.
   #
   def self.my_class_method
+    # inside here, `self` is the MyModule class
     puts per_class
   end
 
@@ -265,6 +266,7 @@ module MyModule
   # Each MyClass instance will have their own @per_instance.
   #
   def my_instance_method
+    # inside here, `self` is the includee
     @per_instance = Mutex.new unless instance_variable_defined?(:@per_instance)
     puts @per_instance.object_id
   end
@@ -291,6 +293,18 @@ module ModuleIncludingModules
     end
   end
 end
+```
+
+If one wants to avoid method clashing between the module and including class, just define a class method:
+
+```rb
+module MyModule
+  def meth; MyModule.module_meth; end
+  def self.module_meth; puts "module_meth"; end
+end
+
+include MyModule
+meth
 ```
 
 ### Refinements
