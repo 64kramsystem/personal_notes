@@ -1,16 +1,26 @@
+## Tue 08/Mar/2022
+
+- SWE: Practice
+  - [ ] Cracking the Coding Interview
+    - [ ] IX.2 Linked Lists
+      - [x] 2.1 -> 2.5.1
+        - Programmed 2.2; others solved in mind
+        - Confused by 2.3
+
 ## Mon 07/Mar/2022
 
 - SWE: Practice
   - Study
     - [x] Search large scale system resources
-    - [ ] Cracking the Coding Interview
+    - [ ] Cracking the Coding Interview (theory)
       - [x] VII. Technical Questions
       - [x] VIII. The Offer and Beyond
-      - [x] IX.1 Arrays and Strings
-        - Solved in mind
-          - 1.7: actually programmed (in-place solution)
-      - [ ] IX.16 Moderate
-        - [x] 16.6: Solved in mind
+  - [ ] Cracking the Coding Interview (exercises)
+    - [x] IX.1 Arrays and Strings
+      - Solved in mind
+        - 1.7: actually programmed (in-place solution)
+    - [ ] IX.16 Moderate
+      - [x] 16.6: Solved in mind
   - Leetcode
     - [x] Easy      45%,  716: 3 tests, 1 submissions, 8'
       - Found the efficient solution, but it requires linked list + binary tree APIs
@@ -25,6 +35,8 @@
 - Studies
   - Ruby
     - [x] Review all data structures in the stdlib
+- Tools/Reverse engineering
+  - [x] Test Ghidra with Willy the Worm
 
 ## Sun 06/Mar/2022
 
