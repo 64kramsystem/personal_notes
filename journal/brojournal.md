@@ -1,3 +1,11 @@
+## Wed 09/Mar/2022
+
+- SWE: Design
+  - [ ] Grokking the System Design Interview
+    - [x] Fight store to study on tablet
+    - [ ] Designing a URL Shortening service like TinyURL
+      - [ ] Consistent Hashing
+
 ## Tue 08/Mar/2022
 
 - SWE: Practice
