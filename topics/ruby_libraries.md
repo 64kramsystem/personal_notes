@@ -560,6 +560,7 @@ FileUtils.mkdir_p(path)                         # recursive
 
 Dir.delete(dosPath)                             # not recursive
 FileUtils.remove_dir(path, true)                # recursive
+FileUtils.rm_rf(path)                           # rm -rf!!
 
 FileUtils.touch(filename)
 FileUtils.chmod(permissions, filename)          # change permissions; can be symbolic, e.g. `+x`

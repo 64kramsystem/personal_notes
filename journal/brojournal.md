@@ -1,9 +1,18 @@
+## Thu 10/Mar/2022
+
+- Tools
+  - [x] Resume script Bluetooth handling: add disable the BT device
+- SWE: Design
+  - [ ] Grokking the System Design Interview
+    - [x] 02. Designing a URL Shortening service like TinyURL
+    - [ ] 03. Designing Pastebin
+
 ## Wed 09/Mar/2022
 
 - SWE: Design
   - [ ] Grokking the System Design Interview
     - [x] Fight store to study on tablet
-    - [ ] Designing a URL Shortening service like TinyURL
+    - [ ] 02. Designing a URL Shortening service like TinyURL
       - [ ] Consistent Hashing
 
 ## Tue 08/Mar/2022
