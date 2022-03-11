@@ -1,18 +1,33 @@
+## Fri 11/Mar/2022
+
+- SWE: Design
+  - [x] Organize resources
+  - [ ] Grokking the System Design Interview
+    - [x] 1.03. Designing Pastebin
+    - [x] Consistent Hashing
+    - [x] 1.04. Designing Instagram
+    - [x] 1.05. Designing Dropbox
+    - [x] 2. Caching.pdf
+- SWE: Practice
+  - Interview Cake
+    - [x] Front problem, solved in mind, ~8'
+      - Used different algorithm - prefix sum
+
 ## Thu 10/Mar/2022
 
 - Tools
   - [x] Resume script Bluetooth handling: add disable the BT device
 - SWE: Design
   - [ ] Grokking the System Design Interview
-    - [x] 02. Designing a URL Shortening service like TinyURL
-    - [ ] 03. Designing Pastebin
+    - [x] 1.02. Designing a URL Shortening service like TinyURL
+    - [ ] 1.03. Designing Pastebin
 
 ## Wed 09/Mar/2022
 
 - SWE: Design
   - [ ] Grokking the System Design Interview
     - [x] Fight store to study on tablet
-    - [ ] 02. Designing a URL Shortening service like TinyURL
+    - [ ] 1.02. Designing a URL Shortening service like TinyURL
       - [ ] Consistent Hashing
 
 ## Tue 08/Mar/2022
