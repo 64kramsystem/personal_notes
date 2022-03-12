@@ -1,3 +1,41 @@
+## Sat 12/Mar/2022
+
+- SWE: Career
+    - [x] Readings
+- SWE: Design
+  - [ ] Grokking the System Design Interview
+    - [x] 2. Long-Polling vs WebSockets vs Server-Sent Events
+    - [x] 1.06. Designing Facebook Messenger
+- Tools
+  - Player script
+    - [x] Refactor
+    - [x] Add sort option
+  - Journal script
+    - [x] Leet: Update template format
+- Open source
+  - ejectdisk
+    - [ ] Preliminary look into unmounting LUKS partitions
+- SWE: Practice
+  - Leetcode
+    - [x] Easy      66%,  108: 2 tests, 1 submissions, 19'32", "Convert Sorted Array to Binary Search Tree"
+      - Mistakes
+        - Inverted conditional (`<=` -> `>=`) on the condition of one recursion
+    - [x] Easy      66%,  412: 0 tests, 0 submissions, 2'20", "Fizz Buzz"
+    - [x] Easy      69%,  136: 3 tests, 1 submissions, 4', "Single Number"
+      - Mistakes
+        - Wrong Array.new() arguments (order)
+        - Wrong normalization when extracting values out of array
+    - [x] Easy      70%,  206: 1 tests, 1 submissions, 5', "Reverse Linked List" (iterative)
+    - [x] Easy      70%,  206: 4 tests, 1 submissions, 14', "Reverse Linked List" (recursive, using refs)
+      - Mistakes
+        - Recursed on the node itself again!!
+        - Wrong logic (reversed)
+        - Didn't truncate new tail
+    - [x] Easy      71%,  237: 1 tests, 1 submissions, 2', "Delete Node in a Linked List"
+    - [x] Easy      72%,  104: 2 tests, 1 submissions, 3', "Maximum Depth of Binary Tree"
+      - Mistakes
+        - Recursed on the node itself, rather than the children
+
 ## Fri 11/Mar/2022
 
 - SWE: Design

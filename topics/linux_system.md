@@ -199,7 +199,11 @@ Useful operations:
 
 ```sh
 # Get the device to whom a partition belongs (parent)
-lsblk -no pkname $partition
+lsblk -n -o PKNAME $partition
+
+# Get the device(s) tree, and mountpoints.
+#
+lsblk [/dev[partition]]
 
 # Find which filesystem (/device) a path is stored on (also symlinks)
 df $file
