@@ -199,9 +199,12 @@ Useful operations:
 
 ```sh
 # Get the device to whom a partition belongs (parent)
+#
+# WATCH OUT!! Exit with error if nothing is found!!
+#
 lsblk -n -o PKNAME $partition
 
-# Get the device(s) tree, and mountpoints.
+# Get the device(s) tree, and mountpoints (including unmounted partitions)
 #
 lsblk [/dev[partition]]
 
@@ -242,6 +245,14 @@ parted -s $disk_device resizepart $part_number_1_based 100%
 # Remove a partition
 
 parted -s $disk_device rm $part_number_1_based
+```
+
+In order to unmount encrypted partitions, see [ejectdisk](https://github.com/64kramsystem/openscripts/blob/416f4a456412210df86a574a4d19a649481133b2/ejectdisk#L76); this involves:
+
+```sh
+lsblk -n -o NAME,TYPE,MOUNTPOINT $device       # find the given device tree
+udisksctl unmount -b /dev/mapper/$luks_device  # unmount the encrypted partition(s)
+udisksctl lock -b /dev/$luks_device            # lock the LUKS device
 ```
 
 ### In-memory filesystems

@@ -1,7 +1,57 @@
+## Sun 13/Mar/2022
+
+- Open source: Openscripts
+  - [x] Complete support for LUKS encrypted partitions
+- Tools
+  - Journal script
+    - [x] Leet: Yet another update to template format
+- SWE: Practice
+  - Leetcode
+    - [x] Medium    70%,   22: 2 tests, 1 submissions, 7'29", "Generate Parentheses"
+      - Backtracking version
+    - [x] Medium    70%,   22: 2 tests, 1 submissions, 19'53", "Generate Parentheses"
+      - Mistakes
+        - Forgot to add 0 balance condition
+      - Found only the brute force solution (via bitmap)
+    - [x] Medium    71%,   78: 2 tests, 1 submissions, 2'0", "Subsets" (solution known)
+      - Mistakes
+        - Forgot to add intermediate result to global one
+    - [ ] Medium    71%,   78: 0 tests, 0 submissions, 0'0", "Subsets"
+      - Couldn't find (efficient) solution
+    - [x] Medium    72%,   46: 7 tests, 1 submissions, 16'44", "Permutations"
+      - Mistakes
+        - Forgot to add variable after changing recursive method signature
+        - Typo
+        - Wrong variable referenced
+        - Wrong start index in current_i cycle
+        - Debug
+        - Forgot to clone() the arrays put in the result
+      - Took significant time to recall the logic
+    - [x] Easy      60%,  191: 3 tests, 1 submissions, 3'49", "Number of 1 Bits"
+      - Mistakes
+        - Forgot to update `n` on each cycle
+        - One test (with extra code) lost because the specification is confusing
+    - [x] Easy      60%,  171: 1 tests, 1 submissions, 12'09", "Excel Sheet Column Number"
+    - [x] Easy      61%,  242: 1 tests, 1 submissions, 2'07", "Valid Anagram"
+    - [x] Easy      63%,  169: 2 tests, 1 submissions, 3'28", "Majority Element"
+      - Mistakes
+        - Wrong variable! Original array -> Aggregates array
+    - [x] Easy      64%,  118: 5 tests, 1 submissions, 8'18", "Pascal's Triangle"
+      - Disaster; took a few minutes trying the recursive approach, which is terrible performance-wise
+      - Mistakes
+        - Forgot comma
+        - 2x: Wrong indexing (1-based)
+        - Forgot to append `map()` to `each_cons()`
+- SWE: Career
+  - Readings
+- SWE: Design
+  - [ ] Grokking the System Design Interview
+    - [x] 1.07. Designing Twitter
+
 ## Sat 12/Mar/2022
 
 - SWE: Career
-    - [x] Readings
+  - Readings
 - SWE: Design
   - [ ] Grokking the System Design Interview
     - [x] 2. Long-Polling vs WebSockets vs Server-Sent Events
@@ -12,7 +62,7 @@
     - [x] Add sort option
   - Journal script
     - [x] Leet: Update template format
-- Open source
+- Open source: Openscripts
   - ejectdisk
     - [ ] Preliminary look into unmounting LUKS partitions
 - SWE: Practice

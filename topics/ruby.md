@@ -594,9 +594,9 @@ Array.new(matrix.map(&:size).max) { |i| matrix.map { |e| e[i] } }
 APIs:
 
 ```rb
-each_slice(size)                        # divide into slices
-each_cons(size)                         # sliding windows of size
-```
+each_slice(slice_size)                  # divide into slices; if there is a smaller window, it's included
+each_cons(window_size)                  # iterate sliding windows; if an array has size < window, no windows are iterated
+
 
 Perform COUNT/GROUP BY on an array; Ruby 2.7 implements #tally:
 
