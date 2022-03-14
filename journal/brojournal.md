@@ -1,3 +1,38 @@
+## Mon 14/Mar/2022
+
+- SWE: Career
+  - Readings
+- SWE: Practice
+  - Leetcode
+    - [x] Medium    63%,  215: 6 tests, 1 submissions, 12'31", "Kth Largest Element in an Array"
+      - Mistakes
+        - 3*Wrong variable, residual from rolling back code
+        - 2*Debug
+      - Very easy, but misunderstood the code, which resulted in lots of errors due to incomplete corrections
+        - Don't rush!!
+    - [x] Medium    64%,  238: 2 tests, 1 submissions, 9'14", "Product of Array Except Self"
+      - Mistakes
+        - `reverse()`d the wrong variable 🤦
+    - [x] Medium    64%,  347: 2 tests, 2 submissions, 10'19", "Top K Frequent Elements"
+      - Mistakes
+        - Wrong algo!!
+      - Spent some time thinking of a better than O(n log(n)) solution
+    - [x] Medium    66%,   48: 8 tests, 1 submissions, 52'04", "Rotate Image"
+      - Horror
+      - Mistakes
+        - 2*typo; forgot to change previous API invoked (each_cons)
+        - charted wrong elements
+        - flaw in algo impl
+        - for inner matrixes, the upper bound was not correct(ed)
+        - the number of elements on each side was wrong (ceil(half) -> size - 1)
+      - Remember solution (from linear algebra): transpose->reverse hor. (CW), opposite (CCW)
+    - [x] Medium    66%,  230: 1 tests, 1 submissions, 4'0", "Kth Smallest Element in a BST"
+      - Cheated by using SortedSet
+      - Fails with to unexplained error on the website, but succeeds locally, possibly because SortedSet requirement
+  - [x] DCG traversal (ratios problem): 18'30"
+- SWE: Design
+  - [ ] Grokking the System Design Interview
+
 ## Sun 13/Mar/2022
 
 - Open source: Openscripts
@@ -47,6 +82,8 @@
 - SWE: Design
   - [ ] Grokking the System Design Interview
     - [x] 1.07. Designing Twitter
+- SWE: CS
+  - [x] Study backtracking
 
 ## Sat 12/Mar/2022
 
