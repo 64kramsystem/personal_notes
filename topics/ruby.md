@@ -30,7 +30,7 @@
     - [Iterable APIs/Useful operations](#iterable-apisuseful-operations)
     - [Hash](#hash)
     - [Enumerable](#enumerable)
-    - [Linked lists](#linked-lists)
+    - [Not present: Linked list, heap](#not-present-linked-list-heap)
     - [SortedSet](#sortedset)
   - [Basic I/O](#basic-io)
   - [Handling processes](#handling-processes)
@@ -644,13 +644,15 @@ enu.each_cons(n)                        # each overlapping subarray of `n` items
 enu.each_slice(n)                       # each non overlapping subarray of `n` items; last non-exact subarray is included
 ```
 
-### Linked lists
+### Not present: Linked list, heap
 
 Ruby has no linked lists!
 
 - For linked lists with unique entries, Set/Hash can be used, although they don't have an efficient tail access
 - SortedSet can be used where possible, and it has head/tail efficient access
 - Barring a manual implementation/gem, only array can be used (`Queue` is a simple stack)
+
+Heap is also not present.
 
 ### SortedSet
 
