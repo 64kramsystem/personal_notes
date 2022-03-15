@@ -27,9 +27,9 @@
   - [Collections](#collections)
     - [Array](#array)
       - [Binary search operations](#binary-search-operations)
+    - [Enumerable](#enumerable)
     - [Iterable APIs/Useful operations](#iterable-apisuseful-operations)
     - [Hash](#hash)
-    - [Enumerable](#enumerable)
     - [Not present: Linked list, heap](#not-present-linked-list-heap)
     - [SortedSet](#sortedset)
   - [Basic I/O](#basic-io)
@@ -589,6 +589,20 @@ Array.new(matrix.map(&:size).max) { |i| matrix.map { |e| e[i] } }
 (0..10).to_a.bsearch_index { |n| n > 5 } # 6 => use this index to insert
 ```
 
+### Enumerable
+
+```rb
+# WATCH OUT!! Don't confuse `.max { }` with `.max_by {}` (or `.map {}.max`) !!!
+#
+[[1, 2], [3, 4]].max { |a, b| a <=> b }       # the block is for comparing elements
+[[1, 2], [3, 4]].max_by { |a, b| b / a.to_f } # the block is for providing a mapped value
+
+enu.count { |a| a.odd? }                # `.count {}` works as intuitive
+enu.filter_map { |n| n**2 if n.even? }  # yay! (falsey values are discarded)
+enu.each_cons(n)                        # each overlapping subarray of `n` items; last non-exact subarrays are not included
+enu.each_slice(n)                       # each non overlapping subarray of `n` items; last non-exact subarray is included
+```
+
 ### Iterable APIs/Useful operations
 
 APIs:
@@ -634,14 +648,6 @@ ActiveSupport additions:
 ```ruby
 {a: 1, b: 2}.extract!(:a)                 # => {a: 1} # destructive :slice
 {a: 1, b: 2, c: 3}.except(:a, :b)         # => {c: 3}
-```
-
-### Enumerable
-
-```rb
-enu.filter_map { |n| n**2 if n.even? }  # yay! (falsey values are discarded)
-enu.each_cons(n)                        # each overlapping subarray of `n` items; last non-exact subarrays are not included
-enu.each_slice(n)                       # each non overlapping subarray of `n` items; last non-exact subarray is included
 ```
 
 ### Not present: Linked list, heap
