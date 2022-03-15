@@ -1,3 +1,20 @@
+## Tue 15/Mar/2022
+
+- SWE: Practice
+  - Leetcode
+    - [x] Medium    62%,  122: 5 tests, 1 submissions, 21'54", "Best Time to Buy and Sell Stock II"
+      - Mistakes
+        - Used `.max {}` instead of `max_by` (or `.map {}.max`)
+        - Inadvert shadowing; typo
+        - Terms of the max profix subtraction were inverted
+      - Misunderstood the problem for Best Time I, and spent big chunk of the time
+    - [x] Medium    62%,  289: 3 tests, 1 submissions, 18'23", "Game of Life"
+      - Mistakes
+        - Forgot to add diff params
+        - Misunderstood requirement (modify original board)
+- SWE: Career
+  - Readings
+
 ## Mon 14/Mar/2022
 
 - SWE: Career
