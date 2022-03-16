@@ -28,9 +28,9 @@
     - [Array](#array)
       - [Binary search operations](#binary-search-operations)
     - [Enumerable](#enumerable)
-    - [Iterable APIs/Useful operations](#iterable-apisuseful-operations)
     - [Hash](#hash)
-    - [Not present: Linked list, heap](#not-present-linked-list-heap)
+    - [Useful Collection Operations](#useful-collection-operations)
+    - [Not present: Linked list, Heap](#not-present-linked-list-heap)
     - [SortedSet](#sortedset)
   - [Basic I/O](#basic-io)
   - [Handling processes](#handling-processes)
@@ -599,25 +599,8 @@ Array.new(matrix.map(&:size).max) { |i| matrix.map { |e| e[i] } }
 
 enu.count { |a| a.odd? }                # `.count {}` works as intuitive
 enu.filter_map { |n| n**2 if n.even? }  # yay! (falsey values are discarded)
-enu.each_cons(n)                        # each overlapping subarray of `n` items; last non-exact subarrays are not included
-enu.each_slice(n)                       # each non overlapping subarray of `n` items; last non-exact subarray is included
-```
-
-### Iterable APIs/Useful operations
-
-APIs:
-
-```rb
-each_slice(slice_size)                  # divide into slices; if there is a smaller window, it's included
-each_cons(window_size)                  # iterate sliding windows; if an array has size < window, no windows are iterated
-
-
-Perform COUNT/GROUP BY on an array; Ruby 2.7 implements #tally:
-
-```ruby
-[a:, a:, :b, :c, :c: :c]
-  .group_by(&:itself)        # => {a: [:a, :a], b: [:b], c: [:c, :c, :c]}
-  .transform_values(&:count) # => {a: 2, b: 1, c: 3}
+enu.each_cons(n)                        # each overlapping subarray of `n` items; if an array has size < window, it's *not* included
+enu.each_slice(n)                       # each non overlapping subarray of `n` items; last windows, if smaller, *is* included
 ```
 
 ### Hash
@@ -650,7 +633,17 @@ ActiveSupport additions:
 {a: 1, b: 2, c: 3}.except(:a, :b)         # => {c: 3}
 ```
 
-### Not present: Linked list, heap
+### Useful Collection Operations
+
+Perform COUNT/GROUP BY on an array (Ruby 2.7 implements `#tally`):
+
+```ruby
+[a:, a:, :b, :c, :c: :c]
+  .group_by(&:itself)        # => {a: [:a, :a], b: [:b], c: [:c, :c, :c]}
+  .transform_values(&:count) # => {a: 2, b: 1, c: 3}
+```
+
+### Not present: Linked list, Heap
 
 Ruby has no linked lists!
 

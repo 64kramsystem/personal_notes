@@ -361,9 +361,10 @@ Metacharacters:
 - `\b`: supported
 - `\s`: `[:space:]`
 - `[:xdigit:]`: hexadecimal!
-- `[^...]`: supported
-- `()` + `|`: supported
+- `[^…]`: supported
 - `{}`: supported, also for intervals (also with empty limits)
+- `()`, `|`: supported
+- `(?:…)`: not supported
 
 References:
 
