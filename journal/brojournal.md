@@ -1,3 +1,32 @@
+## Wed 16/Mar/2022
+
+- SWE: Practice
+  - Leetcode
+    - [x] Easy      55%,  350: 3 tests, 1 submissions, 6'30", "Intersection of Two Arrays II"
+      - Mistakes
+        - Misunderstood spec
+        - Used `each_with_object()` instead of `inject` where change was `+=` (pay attention!)
+    - [x] Easy      57%,  387: 1 tests, 1 submissions, 2'59", "First Unique Character in a String"
+    - [x] Easy      59%,  268: 3 tests, 1 submissions, 3'07", "Missing Number"
+      - Mistakes
+        - Missed edge case
+        - Typo
+    - [x] Medium    59%,  378: 1 tests, 1 submissions, 24'46", "Kth Smallest Element in a Sorted Matrix"
+      - Dumb solution
+    - [x] Medium    59%,  328: 3 tests, 3 submissions, 24'0", "Odd Even Linked List"
+      - Mistakes
+        - subm.: missed part of logic (not considered one of the two termination cases )
+        - typo
+        - copy/paste from previous logic
+        - subm.: didn't remove conditional after implementing new logic
+    - [ ] Medium    62%,   62: - tests, - submissions, -, "Unique Paths"
+      - Mistakes
+        - Use #size on a check, where the value was an integer!!
+      - Solved with backtracking, which is not time-acceptable
+      - With solution known: 2'39"
+    - [x] Medium    60%,  102: - tests, 1 submissions, 0'00", "Binary Tree Level Order Traversal"
+      - Mistakenly returned the nodes instead, which was not obvious, and lead to massive loss of time
+
 ## Tue 15/Mar/2022
 
 - SWE: Practice
