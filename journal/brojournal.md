@@ -1,3 +1,35 @@
+## Thu 17/Mar/2022
+
+- SWE: Practice
+  - Leetcode
+    - [ ] Easy      51%,   70: - tests, - submissions, -", "Climbing Stairs"
+      - Mistakes
+        - Increased the result on each recursion, rather than on termination
+      - Two approaches, both too slow (and the first too complex)
+      - The brute force was modeled on missing steps; by counting the steps done, caching could be performed
+    - [x] Easy      51%,  101: 5 tests, 1 submissions, 9'51", "Symmetric Tree"
+      - Mistakes
+        - Forgot `children.` in `children[0..(size/2)]`
+        - Typo
+        - Didn't realize that had to compare nodes values instead of nodes
+        - Didn't use safe navigation when extracting node values
+    - [x] Easy      53%,  202: 4 tests, 1 submissions, 9'07", "Happy Number"
+      - Mistakes
+        - Typo
+        - Accidentally appended sum, where sum was done already via inject
+        - Accidentally removed one termination condition, after moving a block of code
+    - [x] Easy      54%,  121: 4 tests, 3 submissions, 14'23", "Best Time to Buy and Sell Stock"
+      - Mistakes
+        - 2*Forgot edge cases
+        - Skipped entry on wrong side of the max prices array selection
+      - Rushed into solution
+- Open source
+  - Mydumper
+    - [ ] Investigate issue with RDS restores
+- Study
+  - Linux
+    - [ ] Further investigation LUKS programmatic handling
+
 ## Wed 16/Mar/2022
 
 - SWE: Practice
