@@ -35,11 +35,13 @@
   - [Formatting/diff operations](#formattingdiff-operations)
   - [Encoding](#encoding)
   - [Benchmarking](#benchmarking)
-  - [Mounting images](#mounting-images)
+  - [Images](#images)
+    - [Mounting images](#mounting-images)
+    - [Create an iso from a directory](#create-an-iso-from-a-directory)
   - [Create patches (diff)/restore them](#create-patches-diffrestore-them)
   - [Remote desktop](#remote-desktop)
   - [Partclone](#partclone)
-  - [Create an iso from a directory](#create-an-iso-from-a-directory)
+  - [Docker](#docker)
 
 ## ls
 
@@ -829,7 +831,9 @@ The `time` program is built-in in modern shells. For more userful functionality,
 
 If millisecond precision is required, use the [Bash built-in](bash.md#time-related-functionalities-incl-benchmarking).
 
-## Mounting images
+## Images
+
+### Mounting images
 
 Mount raw dumps:
 
@@ -884,6 +888,14 @@ fdisk -l /dev/nbd0
 while ! ls -l $partition_device > /dev/null 2>&1; do sleep 0.1 done
 
 mount "$partition_device" /mnt
+```
+
+### Create an iso from a directory
+
+```sh
+# Use [J]oliet FS and [R]ock Ridge, for better compatibility with filesystem features
+#
+mkisofs -JR -o $outfile.iso $dir
 ```
 
 ## Create patches (diff)/restore them
@@ -976,10 +988,15 @@ Restore a single partition:
 gunzip -c pizza.gz.a* | partclone.restore -d -s - -o /dev/sdc1
 ```
 
-## Create an iso from a directory
+## Docker
 
 ```sh
-# Use [J]oliet FS and [R]ock Ridge, for better compatibility with filesystem features
-#
-mkisofs -JR -o $outfile.iso $dir
+# Stop all containers
+docker stop $(docker ps -a -q)
+
+# Remove all containers
+docker rm $(docker ps -a -q)
+
+# Remove all images
+docker rmi $(docker images -a -q)
 ```
