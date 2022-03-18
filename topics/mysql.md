@@ -43,7 +43,7 @@
     - [Variables](#variables)
     - [Control flow syntax](#control-flow-syntax)
     - [Statements output and SLEEP](#statements-output-and-sleep)
-    - [Exceptions handling](#exceptions-handling)
+    - [Exceptions/handling](#exceptionshandling)
     - [Cursors (with example procedure)](#cursors-with-example-procedure)
   - [Performance/Optimization](#performanceoptimization)
     - [General optimization topics](#general-optimization-topics)
@@ -931,6 +931,19 @@ FROM information_schema.STATISTICS
 WHERE (TABLE_SCHEMA, TABLE_NAME) = (@db, @table)'customer_facts');
 ```
 
+Foreign keys:
+
+```sql
+SELECT TABLE_SCHEMA, TABLE_NAME, COLUMN_NAME, CONSTRAINT_NAME, REFERENCED_TABLE_SCHEMA, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME
+FROM information_schema.KEY_COLUMN_USAGE
+WHERE
+  # on another table, referencing $table
+  ( (TABLE_SCHEMA, TABLE_NAME) != ('$schema', '$table') AND (REFERENCED_TABLE_SCHEMA, REFERENCED_TABLE_NAME) = ('$schema', '$table') )
+  # on $table, referencing any table (including self!)
+  OR
+  ( (TABLE_SCHEMA, TABLE_NAME) = ('$schema', '$table') AND REFERENCED_TABLE_SCHEMA IS NOT NULL );
+```
+
 ### Base structure
 
 ```sql
@@ -1026,7 +1039,17 @@ In order to sleep without output, just assign to a bogus variable:
 SET v_null_output = (SELECT SLEEP(1.0));
 ```
 
-### Exceptions handling
+### Exceptions/handling
+
+Raise exceptions:
+
+```sql
+SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'An error occurred';
+SELECT CASE 2 WHEN 1 THEN 1 ELSE (VALUES ROW(1), ROW(2)) END;                       -- crashes on 8.0.23
+SELECT CASE 2 WHEN 1 THEN 1 ELSE (SELECT * FROM (VALUES ROW(1), ROW(2)) `abc`) END; -- no crash
+```
+
+Exception handling:
 
 ```sql
 DECLARE EXIT HANDLER FOR SQLEXCEPTION

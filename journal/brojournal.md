@@ -1,3 +1,16 @@
+## Fri 18/Mar/2022
+
+- Tools
+  - Journal script
+    - [x] Minor regex refactoring
+    - [x] Add support for skipping H3+ sections
+- SWE: Practice
+  - Leetcode
+    - [ ] Medium    59%,  131: - tests, - submissions, -", "Palindrome Partitioning"
+      - Misunderstood the problem
+- Admin
+  - [ ] Plan new cycle and next 6 months
+
 ## Thu 17/Mar/2022
 
 - SWE: Practice

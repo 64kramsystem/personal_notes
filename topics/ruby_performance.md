@@ -1,12 +1,21 @@
 # Ruby performance
 
 - [Ruby performance](#ruby-performance)
+  - [Array](#array)
   - [Garbage collection, with profiling helpers](#garbage-collection-with-profiling-helpers)
     - [memory_profiler](#memory_profiler)
   - [Profiling/Benchmarking](#profilingbenchmarking)
     - [ruby-prof (tracing)](#ruby-prof-tracing)
     - [benchmark/ips](#benchmarkips)
   - [Memory](#memory)
+
+## Array
+
+Methods performance (but test anyway):
+
+- if fully resizing the array on each cycle, `#fill` is faster
+- if not, `#clear` is faster
+- `#new(size, value)` is relatively fast, but allocates
 
 ## Garbage collection, with profiling helpers
 

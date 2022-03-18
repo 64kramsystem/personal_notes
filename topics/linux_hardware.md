@@ -194,10 +194,14 @@ reset_usb.py list | grep -B 1 Sams; ./reset_usb.py path /dev/bus/usb/001/008
 
 ## Keyboard
 
-Reconfigure keyboard:
-
 ```sh
+# Reconfigure keyboard
+#
 dpkg-reconfigure console-data
+
+# Set keyboard layout
+#
+setxkbmap us
 ```
 
 ## Topology
