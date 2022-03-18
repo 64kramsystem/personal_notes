@@ -39,6 +39,7 @@
     - [Live execution, via `Kernel#system`](#live-execution-via-kernelsystem)
     - [Backticks](#backticks)
     - [Definitive way of capturing Ctrl+C (trap signals)](#definitive-way-of-capturing-ctrlc-trap-signals)
+    - [Process tree handling](#process-tree-handling)
   - [YARD documentation (+Solargraph)](#yard-documentation-solargraph)
   - [Misc](#misc)
     - [Terminal](#terminal)
@@ -776,6 +777,17 @@ end
 ```
 
 Interrupt can still be regularly caught in some contexts, e.g. on `STDIN.gets`.
+
+### Process tree handling
+
+Kill a process tree:
+
+```rb
+_, _, wait_thr = Open3.popen2e("smplayer #{smplayer_actions_option}", pgroup: true)
+# ...
+pgid = Process.getpgid(wait_thr.pid)
+Process.kill '-SIGINT', pgid
+```
 
 ## YARD documentation (+Solargraph)
 

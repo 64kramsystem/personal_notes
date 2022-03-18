@@ -337,11 +337,14 @@ printf "0\n1\n2" | perl -lpe 'BEGIN { print "abc" }'      # !! doesn't work inpl
 printf "0\n1\n2" | perl -lpe 'END { print "abc" }'        # !! doesn't work inplace !!
 printf "0\n1\n2" | perl -ne 'eof && print'                # match and print last line
 
-printf "0\n1\n2" | perl -lpe '$. == 2 && print "abc"'     # print before a numbered line => `0 abc 1 2`
+printf "0\n1\n2" | perl -0777 -ne 'print $1 if /(.+)\n1$/m' # print line before a match (previous line)
+
+printf "0\n1\n2" | perl -lpe '$. == 2 && print "abc"'     # print before a numbered line (1-based)
 printf "0\n1\n2" | perl -pe '$_ .= "abc\n" if /1/'        # print after a match; !! `/regex/ && ...` doesn't work! !!
 printf "0\n1\n2" | perl -pe 'print $_; print "abc\n" if /1/' # print after a match (alternative)
 
-printf "0\n0\n0" | perl -pe '$_ .= "abc\n" if /0/ && ++$cnt == 2'  # 2nd occurrence of the pattern (!!) => 0 0 abc 0
+printf "0\n0\n0" | perl -pe '$_ .= "abc\n" if /0/ && ++$cnt == 2' # print after 2nd occurrence of the pattern
+
 ```
 
 ### Useful examples
