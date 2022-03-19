@@ -1,3 +1,11 @@
+## Sat 19/Mar/2022
+
+- Admin
+  - [x] Contact Code Curious
+  - [x] Follow up blog improvement with another dev
+- Studies: Rust
+  - [x] Rust Brain Teasers
+
 ## Fri 18/Mar/2022
 
 - Tools

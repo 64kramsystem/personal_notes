@@ -255,6 +255,8 @@ udisksctl unmount -b /dev/mapper/$luks_device  # unmount the encrypted partition
 udisksctl lock -b /dev/$luks_device            # lock the LUKS device
 ```
 
+To check the lock status of a LUKS device, see https://unix.stackexchange.com/a/695898/12814.
+
 ### In-memory filesystems
 
 ```sh
