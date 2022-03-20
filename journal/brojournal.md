@@ -1,3 +1,13 @@
+## Sun 20/Mar/2022
+
+- SWE: Practice
+  - Leetcode
+    - [ ] Medium    59%,  131: 0 tests, 0 submissions, 52'0", "Palindrome Partitioning"
+      - Can't solve via dynamic programming; too confusing
+- Competitive Programmer's Core Skills
+  - [ ] Week 5
+    - [ ] Videos
+
 ## Sat 19/Mar/2022
 
 - Admin
