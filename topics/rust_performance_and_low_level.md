@@ -32,6 +32,7 @@
 size_of::<Type>()         // memory occupation of a type
 size_of_val(&v)           // memory occupation of a variable
 unsafe { zeroed::<T>() }  // return zeroed memory for type; it's unsafe because zero(s) may not be a valid value
+forget(var)               // use when transferring ownership to a library; prevents destructors to run
 ```
 
 ### Unsafe
@@ -485,7 +486,12 @@ Run with `cargo criterion`.
 
 Structs without fields are "Zero-sized types" (ZST), and don't take any space in the resulting program.
 
-There are no guarantees about the struct underlying memory layout (unless `#[repr(C)]` is used), except that the fields are stored in the struct memory block.
+There are no guarantees about the struct underlying memory layout, except that the fields are stored in the struct memory block; to override:
+
+- `#[repr(C)]`: don't rearrange fields
+- `#[repr(packed)]`: don't pad fields
+
+Both can be used at the same time: `#[repr(C, packed)]`.
 
 Enums also don't have a guaranteed layout, except that the first byte is the tag.
 

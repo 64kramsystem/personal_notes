@@ -226,9 +226,17 @@ Watch out! The f64 doesn't support Ord (which is often required); only PartialOr
 
 #### Sorting floats
 
-This is the generic solution, supporting NaN. A collection without NaN can rely on `a.partial_cmp(b).unwrap()`.
+Convenient solutions:
 
-Required a wrapper class (and a truckload of boilerplate):
+```rs
+// Simple, if there is no NaN
+floats.sort_by(|a, b| a.partial_cmp(b).unwrap());
+
+// If NaN can be included; no exact location for NaN
+floats.sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Less));
+```
+
+Generic solution, supporting NaN; requires a wrapper class (and a truckload of boilerplate):
 
 ```rust
 // Implementation that considers NaN as greater than the other floats, and equal to itself.
