@@ -1,3 +1,20 @@
+## Mon 21/Mar/2022
+
+- Admin
+  - [ ] Plan new cycle and next 6 months
+    - [x] Organize JIT-related references
+- Studies: Rust
+  - Rust Brain Teasers
+    - [x] Copy notes
+- SWE: Practice
+  - [ ] Cracking the Coding Interview
+    - [x] Create project
+      - [x] Create convenient script for exercises
+    - [ ] IX.1 Arrays and Strings
+      - [x] 01. 1 tests,  2'40", "Is Unique"
+      - [x] 01. 1 tests,  2'39", "Is Unique" (alt.)
+      - [x] 02. 1 tests,  2'05", "Check Permutation"
+
 ## Sun 20/Mar/2022
 
 - SWE: Practice

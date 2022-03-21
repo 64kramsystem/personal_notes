@@ -32,6 +32,7 @@
     - [Flock](#flock)
     - [Etc](#etc)
     - [StringIO](#stringio)
+    - [Built-in Unit Testing](#built-in-unit-testing)
     - [Gem](#gem)
       - [Version comparisons](#version-comparisons)
     - [ERB templates](#erb-templates)
@@ -831,6 +832,21 @@ buffer.print "line\n"    # one trailing newline
 buffer.puts  "line\n"    # one trailing newline
 buffer.puts  "line\n\n"  # two trailing newlines
 buffer.puts  "line", ""  # two trailing newlines
+```
+
+### Built-in Unit Testing
+
+There are many assertions; see [stdlib doc](https://ruby-doc.org/stdlib-3.1.1/libdoc/test-unit/rdoc/Test/Unit/Assertions.html#method-i-assert_equal).
+
+```rb
+# The gem is built-in, but when running via Bundler, must include it (`test-unit`).
+
+require 'test/unit'
+
+include Test::Unit::Assertions
+
+assert       true
+assert_equal 1, 1
 ```
 
 ### Gem
