@@ -1,3 +1,36 @@
+## Tue 22/Mar/2022
+
+- Tools
+  - Journal script
+    - [x] Add support for Cracking exercise
+    - [x] Minor refactorings
+    - [x] Extract the section header (for matching) instead of hardcoding it
+  - [x] VSC: Review new history navigation (`sworkbench.editor.navigationScope`)
+- Open source
+  - Cracking the Coding Interview
+    - [x] `exercise`: Name the exercise method after the exercise name
+      - Minor refactorings and improvements
+- SWE: Practice
+  - Cracking the Coding Interview exercises
+    - [x] 1.05. 1 runs, 11'57", "One Away"
+    - [x] 1.04. 2 runs,  3'59", "Palindrome Permutation"
+      - Mistakes
+        - Nested two `if` conditionals in the wrong way
+    - [x] 1.03. 4 runs, 15'30", "URLify"
+      - Mistakes
+        - Forgot to set `is_leading_space=false`
+        - Add debug info
+        - Set `is_leading_space=false` in the wrong branch
+- Studies: Rust/Gamedev
+  - [ ] Hands-on Rust: Effective Learning through 2D Game Development
+    - ~1. Rust and Your Development Environment~
+    - ~2. First Steps with Rust~
+    - [x] 3. Build Your First Game with Rust
+- Studies: Ruby VM/JITs
+  - [x] First look at Artichoke codebase
+  - [ ] ruby-compilers.com analyses
+    - [ ] [Rubinius](https://ruby-compilers.com/rubinius)
+
 ## Mon 21/Mar/2022
 
 - Admin
@@ -7,13 +40,12 @@
   - Rust Brain Teasers
     - [x] Copy notes
 - SWE: Practice
-  - [ ] Cracking the Coding Interview
+  - [ ] Cracking the Coding Interview exercises
     - [x] Create project
       - [x] Create convenient script for exercises
-    - [ ] IX.1 Arrays and Strings
-      - [x] 01. 1 tests,  2'40", "Is Unique"
-      - [x] 01. 1 tests,  2'39", "Is Unique" (alt.)
-      - [x] 02. 1 tests,  2'05", "Check Permutation"
+    - [x] 1.01. 1 runs,  2'40", "Is Unique"
+    - [x] 1.01. 1 runs,  2'39", "Is Unique" (alt.)
+    - [x] 1.02. 1 runs,  2'05", "Check Permutation"
 
 ## Sun 20/Mar/2022
 
