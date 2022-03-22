@@ -586,6 +586,12 @@ sed 's/from/to1\nto2/'
 ruby -rEnglish -0777 -ne 'puts $LAST_READ_LINE'
 ```
 
+There's no need to use `-ne`, as this Ruby stdin processing works in a streaming fashion, but need to rescue `EOFError`:
+
+```sh
+ruby -e 'while line = $stdin.readline rescue nil; puts line; end' <<< $filename
+```
+
 ## Snippets
 
 ### Print only a particular line number

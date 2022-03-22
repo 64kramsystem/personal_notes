@@ -9,6 +9,7 @@
     - [Date/time](#datetime)
       - [Date/time templated parsing](#datetime-templated-parsing)
     - [Arithmetic/Maths/Rational](#arithmeticmathsrational)
+    - [Algorithms](#algorithms)
     - [CSV](#csv)
     - [JSON](#json)
     - [XML](#xml)
@@ -180,10 +181,14 @@ IO.read(filename, 'bom|utf-8')
 
 #### Activesupport/Inflector
 
-- `underscore` : `ActiveModel::Errors` => `active_model/errors`
-- `underscore` : `ABC`                 => `abc`                  !! WATCH OUT !!
-- `pluralize`  : `flying_jellyfish`    => `flying_jellyfishes`
-- `tableize`   : `Order`               => `orders`
+Don't forget that the gem is `active_support` (with underscore!!)
+
+- `underscore`                  : `ActiveModel::Errors` => `active_model/errors`
+- `underscore`                  : `ABC CD/E`            => `abc cd/e`            # !! WATCH OUT !!
+- `pluralize`                   : `flying_jellyfish`    => `flying_jellyfishes`
+- `tableize`                    : `Order`               => `orders`
+- `humanize`                    : `ActiveModel::Errors` => `activemodel_errors`
+- `parameterize(separator: "_")`: `My Exercise`         => `my_exercise`         # opposite of humanize()
 
 ### Date/time
 
@@ -290,6 +295,27 @@ Math::PI
 
 x.clamp(a, b)           # not really math, but convenient
 ```
+
+### Algorithms
+
+```rb
+include Containers
+
+# MinHeap works the same.
+#
+heap = MaxHeap.new([4, 5])
+heap << 10                 # Can't concatenate appends
+heap.max                   # => 10; doesn't pop
+heap.pop                   # => 10; returns nil if there are no elements
+```
+
+Other data structures:
+
+- `Queue` (implemented via doubly linked list)
+- `RubyDeque` (implemented via doubly linked list)
+- `Trie`, `RBTreeMap`, `PriorityQueue`, `Stack`, `SplayTreeMap`, `SuffixArray`
+
+There are also some algorithms, and C versions of the above; see [docs](https://kanwei.github.io/algorithms).
 
 ### CSV
 
