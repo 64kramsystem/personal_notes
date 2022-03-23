@@ -60,6 +60,8 @@ ls --block-size=K   # human-readable; use K,M,G...
 
 ## find
 
+Note: file traversal ordering is not guaranteed.
+
 ```sh
 ! (condition)                     # negates a condition
 -name xx -not -name yy            # negate search condition

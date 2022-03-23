@@ -1,3 +1,23 @@
+## Wed 23/Mar/2022
+
+- Tools
+  - Journal script
+    - [x] Integrate invocation of Cracking Interview project `exercise` script
+- SWE: Practice
+  - Cracking the Coding Interview exercises
+    - [x] 01.09. 1 runs,  2'37", "String Rotation"
+      - Mistakes
+        - Rushed and written `s1 + s2` instead of `s1 + a1`
+    - [x] 01.08. 2 runs,  5'40", "Zero Matrix"
+      - Mistakes
+        - Typo (`cols_i` <> `col_i`)
+      - UTs were time consuming to write!!
+    - [x] 01.06. 3 runs, 10'21", "String Compression"
+      - Mistakes
+        - Appended last_char instead of char
+        - Mistake due to changed code
+      - Solved at ~8', but mistakenly thought it was still broken
+
 ## Tue 22/Mar/2022
 
 - Tools
@@ -26,6 +46,8 @@
     - ~1. Rust and Your Development Environment~
     - ~2. First Steps with Rust~
     - [x] 3. Build Your First Game with Rust
+- Studies: Ruby
+  - [x] Idiomatic stdin lines reading
 - Studies: Ruby VM/JITs
   - [x] First look at Artichoke codebase
   - [ ] ruby-compilers.com analyses
