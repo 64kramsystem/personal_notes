@@ -583,13 +583,15 @@ sed 's/from/to1\nto2/'
 ```sh
 # 0777 works like Perl.
 #
-ruby -rEnglish -0777 -ne 'puts $LAST_READ_LINE'
+ruby -rEnglish -0777 -ne 'puts $LAST_READ_LINE' # print the whole input
 ```
 
-There's no need to use `-ne`, as this Ruby stdin processing works in a streaming fashion, but need to rescue `EOFError`:
+There's no need to use `-ne`, as Ruby `$stdin#each` works in a streaming fashion:
 
 ```sh
-ruby -e 'while line = $stdin.readline rescue nil; puts line; end' <<< $filename
+ruby -e '$stdin.each { |line| puts line }' <<< $filename
+# A bit uglier; can't use `while line = $stdin.readline` because it raises an `EOFError` at the EOF.
+ruby -e 'while !$stdin.eof?; line = $stdin.readline; puts line; end'
 ```
 
 ## Snippets
