@@ -1,3 +1,18 @@
+## Thu 24/Mar/2022
+
+- Open Source/Tools
+  - Cracking the Coding Interview exercises
+    - [x] `exercise`: When no params are passed, run the latest exercise
+    - [x] Add linked list node data structure
+      - [x] Add pretty printing
+        - [x] Investigate `test-unit` output to make errors pretty
+- Tools
+  - Journal script
+    - [x] Simplify Cracking Interview input format
+- SWE: Practice
+  - Cracking the Coding Interview exercises
+    - [x] 02.01. ? runs,  ?'??", "Remove Dups"
+
 ## Wed 23/Mar/2022
 
 - Tools
