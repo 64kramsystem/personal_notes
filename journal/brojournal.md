@@ -1,3 +1,21 @@
+## Fri 25/Mar/2022
+
+- SWE: Practice
+  - Cracking the Coding Interview exercises
+    - [x] 01.07. 1 runs, 22'06", "Rotate Matrix"
+      - Mistakes
+        - `each_cons` missing parameter
+        - the test case had an excess pair of outer parentheses
+      - Took 4:30 just to write the test case!!
+      - Intentionally the more difficult approach
+      - Pretty good - the logic had zero mistakes
+- Studies: Rust/Gamedev
+  - [ ] Hands-on Rust: Effective Learning through 2D Game Development
+    - [x] 4. Design a Dungeon Crawler
+    - [x] 5. Build a Dungeon Crawler
+    - [x] 6. Compose Dungeon Denizens
+    - [ ] 7. Take Turns with the Monsters
+
 ## Thu 24/Mar/2022
 
 - Open Source/Tools

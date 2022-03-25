@@ -603,6 +603,8 @@ enu.count { |a| a.odd? }                # `.count {}` works as intuitive
 enu.filter_map { |n| n**2 if n.even? }  # yay! (falsey values are discarded)
 enu.each_cons(n)                        # each overlapping subarray of `n` items; if an array has size < window, it's *not* included
 enu.each_slice(n)                       # each non overlapping subarray of `n` items; last windows, if smaller, *is* included
+
+enum.each_with_index.drop(1).each {}    # skip the first N values of an iterator; WATCH OUT! not lazy (use lazy() if needed)
 ```
 
 ### Hash
