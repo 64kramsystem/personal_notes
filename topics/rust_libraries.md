@@ -21,6 +21,7 @@
       - [Integration tests](#integration-tests)
     - [Collections](#collections)
     - [COW (clone-on-write)](#cow-clone-on-write)
+    - [TCP client/server](#tcp-clientserver)
     - [Commandline arguments (basic)](#commandline-arguments-basic)
     - [O/S, Processes](#os-processes)
     - [Blackbox (nightly)](#blackbox-nightly)
@@ -641,7 +642,18 @@ fn get_name() -> Cow<'static, str> {
     std::env::var("USER")
         .map(|v| Cow::Owned(v))                       // v.into()
         .unwrap_or(Cow::Borrowed("whoever you are"))  // "...".into()
-}```
+}
+
+// Based on the condition, we get an owned instance or a borrowed one, which we unify via Cow; the
+// alternative is to clone `name.0`, which causes an allocation.
+//
+let text: Cow<String> = if condition {
+    Cow::Owned(format!("{} : {} hp", &name.0, health.current))
+} else {
+    Cow::Borrowed(&name.0)
+};
+draw_batch.print(screen_pos, text);
+```
 
 ### TCP client/server
 

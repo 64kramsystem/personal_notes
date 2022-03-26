@@ -11,7 +11,7 @@
     - [Arithmetic/Maths/Rational](#arithmeticmathsrational)
     - [Algorithms](#algorithms)
     - [CSV](#csv)
-    - [JSON](#json)
+    - [JSON/5](#json5)
     - [XML](#xml)
       - [REXML (`rexml/document`)](#rexml-rexmldocument)
       - [XPath](#xpath)
@@ -344,7 +344,7 @@ CSV.read(csv_file)[0]                                     # Read headers. There 
 row.to_hash.merge(row) { |_, value| value.to_s }          # Simple way to convert each row nil values to blank strings
 ```
 
-### JSON
+### JSON/5
 
 ```ruby
 JSON.parse(string)                                        # Returns the tree (as Ruby objects); the root object class depends on the input (eg. Array, Hash, ...)
@@ -352,6 +352,11 @@ JSON.parse(string, object_class: OpenStruct)              # Parse into OpenStruc
 string = JSON.generate(input)                             # `input` can be a hash
 string = JSON.pretty_generate(input)
 ```
+
+JSON5 gems (only parse; use `json` gem to convert to string):
+
+- `json5`: fast to parse, but has no `load_file`
+- `rb_json5`: slow to parse, but has `load_file`
 
 ### XML
 
