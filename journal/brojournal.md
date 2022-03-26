@@ -1,3 +1,34 @@
+## Sat 26/Mar/2022
+
+- SWE: Practice
+  - Cracking the Coding Interview exercises
+    - [x] 02.04. 4 runs,  17:05", "Partition"
+      - Mistakes
+        - Flaw in appending logic
+        - Append to new list last node didn't consider first iteration, where itself was nil
+        - Didn't encode truncation logic correctly for the considered edge case
+    - [x] 02.03. 4 runs,  6'42", "Delete Middle Node"
+      - Mistakes
+        - Returned current node instead of head
+        - 2*debug (used incorrect API)
+      - The test case was wrong!! Logic was correct after 1st correction
+    - [x] 02.02. 3 runs,  6'54", "Return Kth to last"
+      - Mistakes
+        - 2 typos (`LLnode` -> `LLNode`, `Struct.new(val)` -> `Struct.new(:val)`)
+      - Recursive solution; no logical mistakes, but proceeded confusingly
+- Tools
+  - [x] Fight bug with ebooks sync on file sharing app
+  - [x] Test other pdf annotating apps
+- Studies: Ruby
+  - [x] Review libraries for handling JSON5
+- Studies: Rust/Gamedev
+  - [ ] Hands-on Rust: Effective Learning through 2D Game Development
+    - [x] 6. Compose Dungeon Denizens
+      - [x] Study source code
+    - [x] 7. Take Turns with the Monsters
+  - [ ] 8. Health and Melee Combat
+    - [x] Study chapter
+
 ## Fri 25/Mar/2022
 
 - SWE: Practice
@@ -13,8 +44,10 @@
   - [ ] Hands-on Rust: Effective Learning through 2D Game Development
     - [x] 4. Design a Dungeon Crawler
     - [x] 5. Build a Dungeon Crawler
-    - [x] 6. Compose Dungeon Denizens
+    - [ ] 6. Compose Dungeon Denizens
+      - [x] Study chapter
     - [ ] 7. Take Turns with the Monsters
+      - [ ] Study chapter
 
 ## Thu 24/Mar/2022
 

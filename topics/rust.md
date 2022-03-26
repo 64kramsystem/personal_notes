@@ -476,9 +476,9 @@ fold_first(|a, x| a + x)     // Like fold(), using the first element as initial 
 filter(|x| x % 2 == 0)       // Ruby :select
 filter_map(|x| Some(x * 2))  // AWESOME!!! Combines filter and map; None values are discarded
 [r]find(|x| x % 2 == 0)      // Ruby :find/:detect
-find_map(|x|)                // Like find(), but works with Option<T>
+find_map(|x| if ... { Some(x) } ...) // Like find(); stops when the block returns Some<T>
 [r]position(|x| x == 2)      // Ruby :[r]index(&block); None if not found
-dedup();                     // Ruby :uniq, with variations `_by(||)` and `_by_key(value)`
+dedup();                     // Ruby :uniq, with variations `_by(|a, b|)` and `_by_key(|k|)`
 rev()                        // reverse. WATCH OUT, UNINTUITIVE: since it's not inclusive, it goes from 99 to 0.
 nth(n); nth_back()           // nth element (0-based)
 last()
