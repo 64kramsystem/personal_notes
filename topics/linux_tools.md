@@ -177,13 +177,18 @@ Test if a directory contains directories:
 ! find -mindepth 1 -type d -exec false {} +
 ```
 
-Execute a command for the content of a directory.
-Using `for f in $dir/*` works, however, if there are no files, it raises an error.
+Execute a command for the content of a directory; using `for f in $dir/*` works, however, if there are no files, it raises an error.
 
 ```sh
 find $dir -name $glob -exec bash -c '
   zpool labelclear -f "$1" 2> /dev/null || true
 ' _ {} \;
+```
+
+Sort files by modification time (simplified; assumes no newlines):
+
+```sh
+find . -printf '%T@ %p\n' | sort -n | sed -z 's/.+? //'
 ```
 
 #### Search text inside multiple PDFs
@@ -712,6 +717,17 @@ Remove a page from a PDF doc:
 ```sh
 pdftk $input.pdf cat 1-29 31-end output $output.pdf
 ```
+
+Compress a pdf:
+
+```sh
+# Some sources use `-dPDFSETTINGS=/prepress` for the best quality, but the [manual](https://www.ghostscript.com/doc/VectorDevices.htm#PSPDF_IN)
+# specifies that for the best quality, the default should be used.
+#
+gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dNOPAUSE -dBATCH -sOutputFile="$2" "$1"
+```
+
+For cropping (via GUI), best to use an online tool (e.g. [Xodo](https://pdf.online/crop-pdf)); (maintained) GUI tools don't copy bookmarks (krop, pdfarranger), or don't work as intended, or they have unintended side effects (pdfcrop increases the file size).
 
 ### Imagemagick (convert)
 
