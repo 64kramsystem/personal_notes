@@ -777,7 +777,7 @@ echo ${#coordinates[@]}              # size (length)
 #
 slice=("${coordinates[@]:2}")        # Interval [2..-1]
 slice=("${@:2}")                     # Syntax to for the `$@` variable
-echo "${coordinates[@]:2}"           # When printing a slice, don't use the brackets
+echo "${coordinates[@]:2}"           # When printing a slice, don't use the round brackets
 
 # Simple inclusion test (there is no direct way); ensure $value doesn't include metachars.
 #

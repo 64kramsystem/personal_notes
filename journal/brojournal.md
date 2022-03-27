@@ -1,3 +1,36 @@
+## Sun 27/Mar/2022
+
+- Tools
+  - [x] Fight find way to crop pdfs
+- Open Source/Tools
+  - Simplify Cracking Interview
+    - [x] Update scripts to accept a number suffix, for alt. exercises
+- Open Source/Studies
+  - [x] Hands-on Rust study repository project
+    - [x] Automated warning cleanup
+    - [x] Mass-rename all the dirs following the book ordering
+    - [x] Publish repository
+- Studies: Rust/Gamedev
+  - [ ] Hands-on Rust: Effective Learning through 2D Game Development
+    - [ ] 9. Victory and Defeat
+      - [x] Study chapter
+    - [ ] 10. Fields of View
+      - [x] Study chapter
+- SWE: Practice
+  - Cracking the Coding Interview exercises
+    - [x] 02.05. 4 runs, 14'57", "Sum Lists (Follow up)"
+      - Mistakes
+        - One test case wrong - copy/paste from previous exercise
+        - Typo (`a...` -> `b...`)
+        - Forgot to invoke `#divmod`!!
+    - [x] 02.05. 3 runs, 10'14", "Sum Lists"
+      - Mistakes
+        - One test case wrong!!
+        - Didn't consider carry. Considered at the beginning, but quickly forgot in the rust
+- Studies: Ruby VM/JITs
+  - [ ] ruby-compilers.com analyses
+    - [Rubinius](https://ruby-compilers.com/rubinius)
+
 ## Sat 26/Mar/2022
 
 - SWE: Practice
