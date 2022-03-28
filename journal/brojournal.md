@@ -1,3 +1,35 @@
+## Mon 28/Mar/2022
+
+- SWE: Practice
+  - Cracking the Coding Interview exercises
+    - [x] 02.06. 5 runs,  17'30", "Palindrome"
+      - Mistakes
+        - LLnode -> LLNode
+        - Forgot to write `find_list_size`
+        - UTs: forgot call `palindrome()`
+        - Forgot to divide by 2 when computing list mid point
+      - Implemented extra no-allocation (destructive) solution
+- Studies: Rust/Gamedev
+  - [ ] Hands-on Rust: Effective Learning through 2D Game Development
+    - [x] 8. Health and Melee Combat
+      - [x] Study source code
+    - [x] 9. Victory and Defeat
+      - [x] Study source code
+    - [x] 10. Fields of View
+      - [x] Study source code
+    - [ ] 11. More Interesting Dungeons
+      - [x] Study chapter
+- Studies: Ruby VM/JITs
+  - [ ] Rhizome
+    - [ ] [Parser](doc/parser.md)
+      - [x] Make Rubinius compile
+        - [x] Update RVM llvm definitions
+        - [x] Brutal fight with fix compilation problems and crashes on Clang 13
+          - [x] Fight RVM patch format
+        - [x] Fix compilation on Clang 6.0
+        - [x] Brutal fight with missing `thread` gem (reported) error
+      - [ ] Review RVM Rubinius/Ubuntu fixes
+
 ## Sun 27/Mar/2022
 
 - Tools
