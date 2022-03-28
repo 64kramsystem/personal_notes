@@ -504,7 +504,7 @@ Cmdline params:
 
 ### Syntax
 
-- `<n><operation>[<param>]` : execute `operation` on line `n`, optionally with operation `params`
+- `<n><operation>[<param>]` : execute `operation` on line `n` (numbered), optionally with `param`
 - `<pattern> <operation>`   : execute `operation` when `pattern` matches
 - `/pattern/[modifier]`     : pattern with modifier(s)
 - `s|from|to|`              : custom search delimiter
