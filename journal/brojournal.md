@@ -1,3 +1,20 @@
+## Tue 29/Mar/2022
+
+- Open Source: RVM
+  - [x] Write proposal for fixing the Rubinius compilation issues
+- Open Source: Rubinius
+  - [x] Open PR fixing the gettid() definition issue
+    - [x] Study noexcept specifier
+    - [x] Investigate issue in details
+      - [x] Figure out new solution
+- SWE: Practice
+  - Cracking the Coding Interview exercises
+    - [x] 02.07. 2 runs, ~15'01", "Intersection"
+      - Mistakes
+        - Typo: space after `LLNode.new`
+      - Spent ~5 minutes writing UTs
+      - Logic was easy, but spent considerable time simplifying it
+
 ## Mon 28/Mar/2022
 
 - SWE: Practice
