@@ -1,3 +1,41 @@
+## Wed 30/Mar/2022
+
+- SWE: Practice
+  - Cracking the Coding Interview exercises
+    - [x] 02.08. 4 runs,  0'38", "Loop detection"
+      - Mistakes
+        - returned false instead of nil
+        - forgot to call current_node.next
+        - wrong test case!! Ruby doesn't raise an error on self-referencing declarations (`a = Set.new([a]`)
+      - Lazy: used a set
+    - [x] 02.07. 3 runs, ~11'09", "Intersection"
+      - Mistakes
+        - 2, in next logic
+      - Recursive solution; iterative is easier, but less interesting
+- Studies: Rust/Gamedev
+  - [x] Hands-on Rust: Effective Learning through 2D Game Development
+    - [ ] 11. More Interesting Dungeons
+      - [x] Study source code
+    - [ ] 12. Map Themes
+      - [x] Study chapter
+    - [ ] 13. Inventory and Power-Ups
+      - [x] Study chapter
+    - [ ] 14. Deeper Dungeons
+      - [x] Study chapter
+    - [ ] 15. Combat Systems and Loot
+      - [x] Study chapter
+    - [ ] 16. Final Steps and Finishing Touches
+      - [x] Study chapter
+- Open Source: RVM
+  - [ ] Fix Rubinius support
+    - [x] Rubinius: Default modern versions to use Ruby 2.7
+    - [x] Fix Clang requirements for modern (20.04) Ubuntu versions
+    - [x] Rubinius: Handle the configscript name in versions from 4.6 onwards
+    - [ ] Find out why v4.1 is the default version for v4
+- Open Source/Tools
+  - Cracking the Coding Interview exercises
+    - [x] LLNode: Add inspection support for circular lists
+
 ## Tue 29/Mar/2022
 
 - Open Source: RVM
@@ -14,6 +52,7 @@
         - Typo: space after `LLNode.new`
       - Spent ~5 minutes writing UTs
       - Logic was easy, but spent considerable time simplifying it
+      - Found that I misunderstood the problem (assumed the index of the intersection was the same)
 
 ## Mon 28/Mar/2022
 
