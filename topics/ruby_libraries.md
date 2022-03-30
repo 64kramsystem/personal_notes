@@ -878,6 +878,8 @@ include Test::Unit::Assertions
 
 assert       true
 assert_equal 1, 1
+assert_same  [], []   # fails; objects must be the same (nil: same as nil)
+assert_nil   1
 ```
 
 ### Gem
