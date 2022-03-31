@@ -1,3 +1,15 @@
+## Thu 31/Mar/2022
+
+- Open Source: RVM
+  - [x] Fix Rubinius support
+    - [x] Find out how default versions work, and patch to default to v4.20 + v5.0
+    - [x] Write and integrate gettid patch
+      - [x] Verify how RVM patch system works
+- Studies: Rust/Gamedev
+  - [ ] Hands-on Rust: Effective Learning through 2D Game Development
+    - [ ] 11. More Interesting Dungeons
+      - [ ] Study source code
+
 ## Wed 30/Mar/2022
 
 - SWE: Practice
