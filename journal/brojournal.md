@@ -1,3 +1,14 @@
+## Fri 01/Apr/2022
+
+- Studies: Rust/Gamedev
+  - [ ] Hands-on Rust: Effective Learning through 2D Game Development
+    - [x] 11. More Interesting Dungeons
+      - [x] Study source code
+    - [x] 12. Map Themes
+      - [x] Study source code
+- Open source
+  - [ ] Review project: https://github.com/joeyates/thunderbird
+
 ## Thu 31/Mar/2022
 
 - Open Source: RVM
