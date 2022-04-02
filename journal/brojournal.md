@@ -1,6 +1,30 @@
+## Sat 02/Apr/2022
+
+- Studies: Ruby VM/JITs
+  - [ ] Rhizome
+    - [ ] [Bytecode](doc/bytecode.md)
+      - [x] Theory
+    - [ ] [Interpreter](doc/interpreter.md)
+      - [ ] Theory
+- Studies: Rust/Gamedev, SWE: Practice
+  - [x] Hands-on Rust: Effective Learning through 2D Game Development
+    - [x] 13. Inventory and Power-Ups
+      - [x] Study source code
+    - [x] 14. Deeper Dungeons
+      - [x] Study source code
+    - [x] 15. Combat Systems and Loot
+      - [x] Study source code
+- Open source
+  - [x] Review project: https://github.com/joeyates/thunderbird
+- Admin
+  - [x] Organize books
+  - [x] Choose+Prepare next
+- Cracking the Coding Interview
+  - [x] IX.3 Stacks and Queues: Theory
+
 ## Fri 01/Apr/2022
 
-- Studies: Rust/Gamedev
+- Studies: Rust/Gamedev, SWE: Practice
   - [ ] Hands-on Rust: Effective Learning through 2D Game Development
     - [x] 11. More Interesting Dungeons
       - [x] Study source code
@@ -16,7 +40,7 @@
     - [x] Find out how default versions work, and patch to default to v4.20 + v5.0
     - [x] Write and integrate gettid patch
       - [x] Verify how RVM patch system works
-- Studies: Rust/Gamedev
+- Studies: Rust/Gamedev, SWE: Practice
   - [ ] Hands-on Rust: Effective Learning through 2D Game Development
     - [ ] 11. More Interesting Dungeons
       - [ ] Study source code
@@ -35,7 +59,7 @@
       - Mistakes
         - 2, in next logic
       - Recursive solution; iterative is easier, but less interesting
-- Studies: Rust/Gamedev
+- Studies: Rust/Gamedev, SWE: Practice
   - [x] Hands-on Rust: Effective Learning through 2D Game Development
     - [ ] 11. More Interesting Dungeons
       - [x] Study source code
@@ -47,8 +71,7 @@
       - [x] Study chapter
     - [ ] 15. Combat Systems and Loot
       - [x] Study chapter
-    - [ ] 16. Final Steps and Finishing Touches
-      - [x] Study chapter
+    - [x] 16. Final Steps and Finishing Touches
 - Open Source: RVM
   - [ ] Fix Rubinius support
     - [x] Rubinius: Default modern versions to use Ruby 2.7
@@ -88,7 +111,7 @@
         - UTs: forgot call `palindrome()`
         - Forgot to divide by 2 when computing list mid point
       - Implemented extra no-allocation (destructive) solution
-- Studies: Rust/Gamedev
+- Studies: Rust/Gamedev, SWE: Practice
   - [ ] Hands-on Rust: Effective Learning through 2D Game Development
     - [x] 8. Health and Melee Combat
       - [x] Study source code
@@ -101,6 +124,7 @@
 - Studies: Ruby VM/JITs
   - [ ] Rhizome
     - [ ] [Parser](doc/parser.md)
+      - [ ] Theory
       - [x] Make Rubinius compile
         - [x] Update RVM llvm definitions
         - [x] Brutal fight with fix compilation problems and crashes on Clang 13
@@ -121,7 +145,7 @@
     - [x] Automated warning cleanup
     - [x] Mass-rename all the dirs following the book ordering
     - [x] Publish repository
-- Studies: Rust/Gamedev
+- Studies: Rust/Gamedev, SWE: Practice
   - [ ] Hands-on Rust: Effective Learning through 2D Game Development
     - [ ] 9. Victory and Defeat
       - [x] Study chapter
@@ -165,7 +189,7 @@
   - [x] Test other pdf annotating apps
 - Studies: Ruby
   - [x] Review libraries for handling JSON5
-- Studies: Rust/Gamedev
+- Studies: Rust/Gamedev, SWE: Practice
   - [ ] Hands-on Rust: Effective Learning through 2D Game Development
     - [x] 6. Compose Dungeon Denizens
       - [x] Study source code
@@ -184,7 +208,7 @@
       - Took 4:30 just to write the test case!!
       - Intentionally the more difficult approach
       - Pretty good - the logic had zero mistakes
-- Studies: Rust/Gamedev
+- Studies: Rust/Gamedev, SWE: Practice
   - [ ] Hands-on Rust: Effective Learning through 2D Game Development
     - [x] 4. Design a Dungeon Crawler
     - [x] 5. Build a Dungeon Crawler
@@ -251,7 +275,7 @@
         - Forgot to set `is_leading_space=false`
         - Add debug info
         - Set `is_leading_space=false` in the wrong branch
-- Studies: Rust/Gamedev
+- Studies: Rust/Gamedev, SWE: Practice
   - [ ] Hands-on Rust: Effective Learning through 2D Game Development
     - ~1. Rust and Your Development Environment~
     - ~2. First Steps with Rust~
