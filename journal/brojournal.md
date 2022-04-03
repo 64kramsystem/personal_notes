@@ -1,3 +1,16 @@
+## Sun 03/Apr/2022
+
+- Studies: Ruby VM/JITs
+  - [ ] Rhizome
+    - [x] [Interpreter](doc/interpreter.md)
+      - [ ] Theory
+    - [x] [Inline caching](doc/inline-caching.md)
+      - [ ] Theory
+- SWE: Practice
+  - Code the Classics Vol.1
+    - [ ] 1. Tennis
+      - [ ] Code Reading
+
 ## Sat 02/Apr/2022
 
 - Studies: Ruby VM/JITs
@@ -20,7 +33,8 @@
   - [x] Organize books
   - [x] Choose+Prepare next
 - Cracking the Coding Interview
-  - [x] IX.3 Stacks and Queues: Theory
+  - [ ] IX.3 Stacks and Queues
+    - [ ] Theory
 
 ## Fri 01/Apr/2022
 
