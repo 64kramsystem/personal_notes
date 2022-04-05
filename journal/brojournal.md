@@ -1,3 +1,21 @@
+## Tue 05/Apr/2022
+
+- SWE: Practice
+  - Cracking the Coding Interview
+    - [x] 03.02. "Stack Min"
+      - implementation not required
+      - did not find the solution
+    - [x] 03.01. "Three in One"
+      - implementation not required
+- Open Source/Projects
+  - [ ] Plan what to do with Code the Classics
+    - [x] Review current state of Rust game engines
+- SWE: Practice
+  - Code the Classics Vol.1 (Code Reading)
+    - [ ] 4. Fixed Shooter (Myriapod)
+      - [x] Book chapter
+      - [ ] Codebase
+
 ## Sun 03/Apr/2022
 
 - Studies: Ruby VM/JITs
@@ -7,9 +25,8 @@
     - [x] [Inline caching](doc/inline-caching.md)
       - [ ] Theory
 - SWE: Practice
-  - Code the Classics Vol.1
-    - [ ] 1. Tennis
-      - [ ] Code Reading
+  - Code the Classics Vol.1 (Code Reading)
+    - [ ] 1. Tennis (Boing)
 
 ## Sat 02/Apr/2022
 
@@ -34,7 +51,7 @@
   - [x] Choose+Prepare next
 - Cracking the Coding Interview
   - [ ] IX.3 Stacks and Queues
-    - [ ] Theory
+    - [x] Theory
 
 ## Fri 01/Apr/2022
 
