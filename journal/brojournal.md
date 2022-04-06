@@ -1,3 +1,12 @@
+## Wed 06/Apr/2022
+
+- Studies: Gamedev (/Rust)
+  - [x] Understand exactly what game libraries abstract
+    - [x] Investigate batching (/SDL)
+  - [x] Review previously checked Ruby game libraries
+- Studies: Rust
+  - [x] Investigate switches for faster compile times
+
 ## Tue 05/Apr/2022
 
 - SWE: Practice

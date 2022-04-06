@@ -164,8 +164,10 @@ echo nightly > rust-toolchain
 Bevy hello world: 8.75" -> 1.25" (!!).
 
 ```sh
-# If using rust stable, remove the "-Zshare-generics=y" below.
+# The option "-Zshare-generics=y" is available only in nightly.
 # Requires lld. Source: git.io/JsfhD (includes other O/Ss).
+# Perf tests [here](https://docs.near.org/docs/community/contribute/contribute-nearcore).
+# Rust perf book chapter [here](https://nnethercote.github.io/perf-book/compile-times.html).
 
 mkdir .cargo
 cat > .cargo/config.toml << 'TOML'
