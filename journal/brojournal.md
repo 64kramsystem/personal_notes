@@ -1,3 +1,10 @@
+## Thu 07/Apr/2022
+
+- SWE: Practice
+  - Code the Classics Vol.1 (Code Reading)
+    - [ ] 4. Fixed Shooter (Myriapod)
+      - [ ] Codebase
+
 ## Wed 06/Apr/2022
 
 - Studies: Gamedev (/Rust)
