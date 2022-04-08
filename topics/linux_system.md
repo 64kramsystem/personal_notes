@@ -813,6 +813,12 @@ Test the content of fstab (not reliable for actual mounting; for example, doesn'
 mount -fav
 ```
 
+Example NTFS mount (mountpoint must exist):
+
+```fstab
+/path/to/dev /path/to/mount ntfs rw,auto,user,fmask=133,dmask=022,uid=1000,gid=1000 0 0
+```
+
 ## sysctl
 
 ```sh
