@@ -1,3 +1,9 @@
+## Fri 08/Apr/2022
+
+- Open source
+  - Mydumper
+    - [x] Investigate and fix [Clang compilation issue](https://github.com/mydumper/mydumper/issues/563)
+
 ## Thu 07/Apr/2022
 
 - SWE: Practice
