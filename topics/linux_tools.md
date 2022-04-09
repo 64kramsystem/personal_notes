@@ -42,6 +42,7 @@
   - [Remote desktop](#remote-desktop)
   - [Partclone](#partclone)
   - [Docker](#docker)
+  - [Wine](#wine)
 
 ## ls
 
@@ -1017,4 +1018,14 @@ docker rm $(docker ps -a -q)
 
 # Remove all images
 docker rmi $(docker images -a -q)
+```
+
+## Wine
+
+Install .NET:
+
+```sh
+# It's not clear if `--force` is required.
+#
+winetricks dotnet472 corefonts
 ```

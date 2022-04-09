@@ -1,3 +1,15 @@
+## Sat 09/Apr/2022
+
+- SWE: Practice
+  - Code the Classics Vol.1 (Code Reading)
+- Studies: Ruby VM/JITs
+  - [ ] Rhizome
+- SWE: Practice
+  - Cracking the Coding Interview
+    - [x] 03.03. 1 runs, ~7'00", "Stack of Plates (Follow up)"
+      - Build on top of previous
+    - [x] 03.03. 1 runs,  9'19", "Stack of Plates"
+
 ## Fri 08/Apr/2022
 
 - Open source

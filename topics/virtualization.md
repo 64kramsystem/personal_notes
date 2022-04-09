@@ -84,6 +84,8 @@ dd if=/dev/zero of=/var/tmp/zerofile bs=4096k; rm /var/tmp/zerofile
 sdelete64 -z drive:
 ```
 
+(If compacting Windows, don't forget to delete the page/hibernate files)
+
 Compact a VDI image (must be pre-zeroed):
 
 ```sh
@@ -93,7 +95,7 @@ vboxmanage modifymedium --compact $image.vdi
 Zero/compact/compress an image with dedicated tooling:
 
 ```sh
-# Zero
+# Zero+compact
 #
 sudo virt-sparsify --tmp $tmp_path $image.vdi{,.sparse}
 
@@ -102,7 +104,7 @@ sudo virt-sparsify --tmp $tmp_path $image.vdi{,.sparse}
 #
 qemu-img convert -p -c -O qcow2 $source.qcow2 $dest.qcow2
 
-# Zero, compact, and compress!!:
+# Zero, compact, and compress!!
 # If `--convert` is not specified, the same format as the source is used.
 #
 sudo virt-sparsify --convert qcow2 --compress $source.raw $dest.qcow2
@@ -228,7 +230,7 @@ rmmod nbd
 Change an image UUID:
 
 ```sh
-vboxmanage internalcommands sethduuid $image.vdi
+vboxmanage internalcommands sethduuid $image.vdi $uuid
 ```
 
 Clone a disk:
