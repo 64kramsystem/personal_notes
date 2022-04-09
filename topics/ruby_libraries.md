@@ -880,6 +880,11 @@ assert       true
 assert_equal 1, 1
 assert_same  [], []   # fails; objects must be the same (nil: same as nil)
 assert_nil   1
+
+error = assert_raises(MyError) { stack.pop }  # Error class defaults to RuntimeError
+assert_equal "Stacks Empty!", error.message
+assert_raises(MyError, "printed message") { } # WATCH OUT! The message is _not_ the one raised by the block
+assert_raises("printed message") { }          # (alternate form)
 ```
 
 ### Gem
