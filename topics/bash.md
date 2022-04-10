@@ -43,7 +43,7 @@
     - [Poor man's configfile parser](#poor-mans-configfile-parser)
     - [`bash` command options](#bash-command-options)
     - [Variables printing function](#variables-printing-function)
-    - [Current shell](#current-shell)
+    - [Current shell/OS](#current-shellos)
     - [Convert associative array to JSON](#convert-associative-array-to-json)
   - [Shell colors](#shell-colors)
 
@@ -1230,9 +1230,11 @@ function print_variables {
 }
 ```
 
-### Current shell
+### Current shell/OS
 
 Simplest, from terminal: `echo $0`. Don't use `$SHELL`, as it can refer to the parent.
+
+Os: `$OSTYPE` -> `linux-gnu`, `darwin21.0`.
 
 ### Convert associative array to JSON
 

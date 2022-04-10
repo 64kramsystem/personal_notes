@@ -1,3 +1,15 @@
+## Sun 10/Apr/2022
+
+- Open source
+  - [x] Wikipedia: Add new game engine entry
+  - [x] Create/extend mirror of Driller Data Extractor
+  - [x] Evaluate participating to https://github.com/open-telemetry/opentelemetry-ruby
+- Projects
+  - New Poor Man's Spotlight
+    - [x] Choose GUI library
+      - [x] Read https://dev.to/davidedelpapa/rust-gui-introduction-a-k-a-the-state-of-rust-gui-libraries-as-of-january-2021-40gl
+      - [x] Test the libraries
+
 ## Sat 09/Apr/2022
 
 - SWE: Practice

@@ -183,4 +183,4 @@ Image (raw) path: `https://github.com/64kramsystem/vscode-markdown-code-blocks-a
 ### Link references
 
 - Project root: prefix the path with `/../../` (see [Stack Overflow](https://stackoverflow.com/a/40440270/210029))
-- Current path: use the bare filename, without prefixes
+- Current path: use the bare filename, without prefixes; the (dynamically generated) prefix `/blob/$current_branch/` will be automatically added
