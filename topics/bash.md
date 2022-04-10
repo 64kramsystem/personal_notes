@@ -140,6 +140,11 @@ declare -x                          # export; can add to `-g`
 #
 echo $'l\'s\n'          # prints `l's` and newline
 
+# Slice a string!
+# Both indexes are zero-based (so -1 is the beforelast); the interval is inclusive.
+#
+slice=${str[*]:1:-1}
+
 # Interpolate strings in string quotes. Requires no double quotes to be in $str.
 #
 # Working:
