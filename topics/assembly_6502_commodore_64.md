@@ -18,6 +18,7 @@
       - [Remote monitor (Visual Studio Code extensions) issues](#remote-monitor-visual-studio-code-extensions-issues)
       - [Commands](#commands)
     - [Compilation](#compilation)
+    - [Work with D1541 files](#work-with-d1541-files)
 
 ## Notes
 
@@ -26,33 +27,35 @@ Some chapters have tags (in the form "{tag_name}"), which are references to the 
 ## Memory map
 
 - Simpler: https://sta.c64.org/cbm64mem.html
+  - Index of all docs on the website: https://sta.c64.org/cbmdocs.html
 - Detailed: http://www.zimmers.net/anonftp/pub/cbm/c64/manuals/mapping-c64.txt
 
-| hex         | dec         | description                           | tag     |
-| :---------- | :---------- | ------------------------------------- | ------- |
-| $00c5       | 197         | Key currently pressed                 | input   |
-| $00c6       | 198         | Length of pressed key buffer          | input   |
-| $0277-$0280 | 631-640     | Buffer last keys pressed              | input   |
-| $0314-$0315 | 788-789     | Service interrupt vector              |         |
-| $0316-$0317 | 790-791     | `BRK` interrupt vector                | debug   |
-| $0334-$033b | 820-827     | empty                                 |         |
-| $033c-03fb  | 828-1019    | datasette buffer (usable)             |         |
-| $03fc-03ff  | 1020-1023   | empty                                 |         |
-| $0400-$07e7 | 1024-2023   | Screen memory                         |         |
-| $07f8-$07ff | 2040-2047   | Sprite shape data pointers (loc=n*64) | sprites |
-| $0801       | 2049        | BASIC listings start                  |         |
+| hex         | dec         | description                           | tag        |
+| :---------- | :---------- | ------------------------------------- | ---------- |
+| $00c5       | 197         | Key currently pressed                 | input      |
+| $00c6       | 198         | Length of pressed key buffer          | input      |
+| $0277-$0280 | 631-640     | Buffer last keys pressed              | input      |
+| $0314-$0315 | 788-789     | Service interrupt vector              |            |
+| $0316-$0317 | 790-791     | `BRK` interrupt vector                | debug      |
+| $0334-$033b | 820-827     | empty                                 |            |
+| $033c-03fb  | 828-1019    | datasette buffer (usable)             |            |
+| $03fc-03ff  | 1020-1023   | empty                                 |            |
+| $0400-$07e7 | 1024-2023   | Screen memory                         |            |
+| $07f8-$07ff | 2040-2047   | Sprite shape data pointers (loc=n*64) | sprites    |
+| $0801       | 2049        | BASIC listings start                  |            |
 | $C000-$CFFF | 49152-53247 | Upper RAM                             |
-| $d000-$d001 | 53248-53249 | Sprite 0 X/Y                          | sprites |
-| $d015       | 53269       | Sprites enabled bitmap                | sprites |
-| $d01e       | 53278       | Sprite-sprite log bitmap              | sprites |
-| $d01f       | 53279       | Sprite-background log bitmap          | sprites |
-| $d021       | 53281       | Background color                      |         |
-| $d027-$d02e | 53287-53294 | Sprite colors                         | sprites |
-| $d400-$d414 | 54272-54292 | Voice 1/2/3 params (7 bytes each)     | sound   |
-| $d418       | 54296       | Volume/filter modes                   | sound   |
-| $d41b       | 54299       | Voice 3 waveform output (random!)     | sound   |
-| $dc00-$dc01 | 56320-56321 | Joystick 2/1 ports                    | input   |
-| $ea31       | 59953       | Default interrupt service routine     |         |
+| $d000-$d001 | 53248-53249 | Sprite 0 X/Y                          | sprites    |
+| $d015       | 53269       | Sprites enabled bitmap                | sprites    |
+| $d01e       | 53278       | Sprite-sprite log bitmap              | sprites    |
+| $d01f       | 53279       | Sprite-background log bitmap          | sprites    |
+| $d021       | 53281       | Background color                      |            |
+| $d027-$d02e | 53287-53294 | Sprite colors                         | sprites    |
+| $d400-$d414 | 54272-54292 | Voice 1/2/3 params (7 bytes each)     | sound      |
+| $d418       | 54296       | Volume/filter modes                   | sound      |
+| $d41b       | 54299       | Voice 3 waveform output (random!)     | sound      |
+| $dc00-$dc01 | 56320-56321 | Joystick 2/1 ports                    | input      |
+| $ea31       | 59953       | Default interrupt service routine     |            |
+| $e544       | 58692       | Clear screen routine                  | kernal_rom |
 
 ## Input handling {input}
 
@@ -269,3 +272,31 @@ Convenient configure: `./configure --config-cache --enable-cpuhistory --enable-e
 Packages required for compiling: see installation script.
 
 For recent versions (e.g. 3.6), must copy some GLSL files (`$repo/vice/vice/data/GLSL/`) to the data directory: `bicubic.frag`, `bicubic-interlaced.frag`, `builtin.frag`, `builtin-interlaced.frag`, `viewport.vert`.
+
+### Work with D1541 files
+
+Files extractor; notes:
+
+- doesn't support all file types, eg. REL
+- files with non-ASCII chars will cause errors and won't be copied
+- errors don't make c1541 exit with error
+
+```sh
+# Skip header and footer (optional, since the perl expression would filter them out anyway).
+# WATCH OUT to the space before the end of each line!
+#
+files_list=$(c1541 "$d64_file" -dir | head -n -1 | tail -n +2 | perl -lne 'print "$1 $2" if /"(.+)" +(\w+) $/')
+
+while IFS= read -r file_entry; do
+  filename=${file_entry% *}
+  extension=${file_entry//* /}
+
+  output_file=$out_dir/$filename.$extension
+
+  if [[ $extension == seq ]]; then
+    filename=$filename,s
+  fi
+
+  c1541 "$d64_file" -read "$filename" "$output_file"
+done <<< "$files_list"
+```

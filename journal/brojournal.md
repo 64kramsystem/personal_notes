@@ -1,3 +1,19 @@
+## Mon 11/Apr/2022
+
+- Tools
+  - [x] Add TOC update to Libreoffice Macros
+- Open source
+  - [x] Extract and publish Hagar the Terrible source code
+    - [x] Fight extraction of the files from the disks
+    - [x] Prepare repository
+    - [x] Extract assembly files; process PETSCII one
+- Admin
+  - [x] Summarize and buy computer graphics/optimization books
+- SWE: Practice
+  - Code the Classics Vol.1 (Code Reading)
+    - [ ] 4. Fixed Shooter (Myriapod)
+      - [ ] Codebase
+
 ## Sun 10/Apr/2022
 
 - Open source
