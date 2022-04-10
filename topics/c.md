@@ -15,7 +15,7 @@
     - [Print a struct instances's bytes](#print-a-struct-instancess-bytes)
     - [Print a stack trace on segfault](#print-a-stack-trace-on-segfault)
     - [Find the current executable filename](#find-the-current-executable-filename)
-  - [Configure/Compiler (gcc)](#configurecompiler-gcc)
+  - [Compiler/builder stuff](#compilerbuilder-stuff)
   - [Common issues](#common-issues)
     - [Error `glibconfig.h: No such file or directory`](#error-glibconfigh-no-such-file-or-directory)
     - [Error `cannot find install-sh, install.sh, or shtool in ...`](#error-cannot-find-install-sh-installsh-or-shtool-in-)
@@ -161,10 +161,20 @@ exe_filename[len] = '\0';
 
 This is the equivalent of `_pgmptr`/`GetModuleFileName` on Windows.
 
-## Configure/Compiler (gcc)
+## Compiler/builder stuff
+
+Configure compilation:
 
 - `-static`         : compile statically
 - `-Dmacro[=value]` : define a macro (e.g. for `ifdef`); the option is cumulative
+
+Specify the compiler for CMake:
+
+```sh
+# `-D`: set variables
+#
+cmake -D CMAKE_C_COMPILER=$c_compiler_full_path -D CMAKE_CXX_COMPILER=$cpp_compiler_full_path $project_path
+```
 
 ## Common issues
 

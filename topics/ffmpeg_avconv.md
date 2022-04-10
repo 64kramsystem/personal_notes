@@ -6,8 +6,9 @@
     - [Video+audio](#videoaudio)
     - [Video to animated GIF/PNG](#video-to-animated-gifpng)
   - [Stream/file operations](#streamfile-operations)
-    - [Copy/demux](#copydemux)
+    - [Demux](#demux)
     - [Lossless split (trim) m4a](#lossless-split-trim-m4a)
+    - [Extract segment](#extract-segment)
     - [Split by duration, starting on a keyframe](#split-by-duration-starting-on-a-keyframe)
     - [Concatenate videos](#concatenate-videos)
   - [Scaling](#scaling)
@@ -74,7 +75,7 @@ ffmpeg -i "$input" -plays 10 -r 1/2 "${input%.*}.apng"
 
 ## Stream/file operations
 
-### Copy/demux
+### Demux
 
 ```sh
 # `c:a copy`:    codec:audio copy
@@ -98,6 +99,15 @@ See http://uber-rob.co.uk/2014/02/splittingcutting-an-m4a-file.
 # `-t` is the length
 #
 ffmpeg -ss 0:00:42 -i in.m4a -c copy -t 1:00:00 out.m4a
+```
+
+### Extract segment
+
+```sh
+# `ss`: start
+# `t` : duration
+
+ffmpeg -ss hh:mm:ss -i $source -t hh:mm:ss -vcodec copy -acodec copy
 ```
 
 ### Split by duration, starting on a keyframe
