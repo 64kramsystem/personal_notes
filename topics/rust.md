@@ -783,8 +783,8 @@ for triangle in triangles {
 // There's also no unchecked mutable (see https://stackoverflow.com/a/30414450).
 //
 map["b"];                       // Immutable, unchecked
-map.get("a");                   // Immutable, checked
-map.get_mut("a");               // Mutable, checkd
+map.get("a");                   // Immutable, checked (Option)
+map.get_mut("a");               // Mutable, checked
 
 // Invalid! Once a key is inserted, it's owned by the hash map!
 //

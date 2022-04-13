@@ -13,7 +13,7 @@
     - [Sorting](#sorting)
       - [Sorting floats](#sorting-floats)
     - [Base I/O (reading/writing)](#base-io-readingwriting)
-      - [Spawning a process and piping to it](#spawning-a-process-and-piping-to-it)
+      - [Spawning a process (and piping to it)](#spawning-a-process-and-piping-to-it)
     - [File operations](#file-operations)
     - [Paths handling/Directories](#paths-handlingdirectories)
     - [File/directory operations](#filedirectory-operations)
@@ -358,19 +358,27 @@ let len = match reader.read(&mut buf) {
 };
 ```
 
-#### Spawning a process and piping to it
+#### Spawning a process (and piping to it)
+
+Base spawning:
+
+```rs
+Command::new("echo").args(["-n", "abc"]).output()?;
+```
+
+Piping:
 
 ```rs
 let mut child = Command::new("grep").arg("foo").stdin(Stdio::piped()).spawn()?;
 
 // The #stdin type is `process::ChildStdin`
-let mut to_child = child.stdin.take().unwrap();
+let mut child_stdin = child.stdin.take().unwrap();
 
 for word in my_words {
-  writeln!(to_child, "{}", word)?;
+  writeln!(child_stdin, "{}", word)?;
 }
 
-drop(to_child); // close grep's stdin, so it will exit
+drop(child_stdin); // close grep's stdin, so it will exit
 child.wait()?;
 ```
 
@@ -476,7 +484,8 @@ fs::canonicalize(path)          // Ruby File.expand_path
 fs::metadata(path)              // metadata, including `permissions()`, `len()`, is_dir()`; follows symlinks
 fs::set_permissions(path)
 
-// Read a directory's file basenames (stdlib doesn't have glob APIs).
+// Read a directory's file basenames non-recursively.
+// The stdlib doesn't have glob APIs; use `walkdir` crate for a full dir traversal solution.
 // WATCH OUT! The result is not sorted! `.` and `..` are not included.
 //
 // Other `DirEntry` APIs: `path()`, `metadata()`, `file_type()`
@@ -1158,10 +1167,10 @@ let mut map: AHashMap<i32, i32> = AHashMap::new();
 Perfect hashing (`const`-compatible):
 
 ```rs
-// Requires `macro` feature
+// Requires `macros` feature
 // Must be a const; variable (`let`) is not supported.
 // Enums are not supported.
-const HAZZ: phf::Map<&'static str, i32> = phf_map! {
+const HAZZ: phf::Map<&str, i32> = phf_map! {
     "loop" => 4,
     "continue" => 2,
 };

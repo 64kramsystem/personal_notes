@@ -1,3 +1,55 @@
+## Wed 13/Apr/2022
+
+- Projects
+  - [ ] New Poor Man's Spotlight
+    - [x] Implement Emoji backend
+      - [x] Implement backend registration
+      - [x] Working prototype
+      - [x] Large refactoring
+      - [x] Fight attempt to workaround issue (https://bugs.launchpad.net/ubuntu/+source/git/+bug/1852985)
+        - [x] Workaround libxft issue
+      - [x] Full implementation
+    - [x] Fight copypasta instability
+    - [x] Investigate FLTK (-rs) Browser data handling
+      - [x] Open feature request issue on fltk-rs project
+    - [x] Try Druid
+    - [x] Implement Browser data handling workaround
+    - [x] Open libxcf issue on fltk-rs project
+    - [x] EmojiSearcher: Store emoji data internally, to simulate a View pattern
+    - [x] Reset input/list on execution
+      - [x] Fight fltk(-rs) limitation on selection
+    - [x] Fix multiple events being triggered on Enter
+    - [ ] Implement file search
+      - [x] Review directory traversal solutions
+
+## Tue 12/Apr/2022
+
+- Admin
+  - [x] Review c64 ASM resources
+- Open Source
+  - Tools (Blog)
+    - [x] add_new_book.sh: Escape description symbols
+- SWE: Practice
+  - [x] Code the Classics Vol.1 (Code Reading)
+    - [x] 4. Fixed Shooter (Myriapod)
+    - [x] 5. Football Game (Soccer)
+- SWE: Practice
+  - Cracking the Coding Interview
+    - [x] 03.05. 3 runs,  7'19", "Sort Stack2"
+      - Mistakes
+        - Wrong condition (!nil? -> !empty?)
+        - Test cases mistakenly expected a top-highest stack!
+    - [x] 03.04. 2 runs,  5'27", "Queue via Stacks"
+      - Mistakes
+        - Forgot to initialize instance in test case!
+- Projects
+  - [ ] New Poor Man's Spotlight
+    - [x] Update old repository and add status to README
+    - [x] Start study FLTK
+    - [x] Implement base protype
+      - [x] Layout
+      - [x] Actions
+
 ## Mon 11/Apr/2022
 
 - Tools
@@ -12,7 +64,6 @@
 - SWE: Practice
   - Code the Classics Vol.1 (Code Reading)
     - [ ] 4. Fixed Shooter (Myriapod)
-      - [ ] Codebase
 
 ## Sun 10/Apr/2022
 
