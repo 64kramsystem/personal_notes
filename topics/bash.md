@@ -115,7 +115,7 @@ Parameter variables; WATCH OUT!! When inside a function, they refer to the funct
 myvar=value                         # no spaces around equal; if value includes spaces, it must be quoted
 myvar=$myvar2                       # $myvar2 doesn't require quotes
 unset myvar                         # delete myvar
-export myvar=value                  # makes available to subshells. `local export` is allowed, but doesn't work as intended; in order to export
+export myvar=value myvar2           # makes available to subshells. `local export` is allowed, but doesn't work as intended; in order to export
                                     # local variables, do it separately from declaration/assignment, or declare via `declare -x`
 local myvar1 myvar2                 # declare multiple local variables in one statement
 ((var+=1))                          # increment variable value
