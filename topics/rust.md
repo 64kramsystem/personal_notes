@@ -282,7 +282,7 @@ const MAX_PRIMES: u32 = 100000;     // constants; the data type is required
 
 ((1u128 << CONST_U64) - 1) as u64   // WATCH OUT the priorities! In this example, the brackets are all required!
 
-type Kilometers = i32;                     // type aliasing
+type Kilometers = i32;                     // type aliasing (typedef)
 type Result<T> = Result<T, std::io:Error>; // library example: `std::io::Result`
 
 let bool_as_int = true as i32;      // true: 1, false: 0
