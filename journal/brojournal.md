@@ -1,3 +1,18 @@
+## Thu 14/Apr/2022
+
+- Projects
+  - [ ] New Poor Man's Spotlight
+    - [x] Workaround libxft bug (https://bugs.launchpad.net/ubuntu/+source/git/+bug/1852985)
+      - [x] Discuss alternative fonts
+      - [x] Attempt font-based workaround
+      - [x] Workaround emoji issue via icons
+        - [x] Produce icons #1
+        - [x] Implement
+          - [x] Diagnose and report bug with [PngImage->SharedImage](https://github.com/fltk-rs/fltk-rs/issues/1186)
+        - [x] Produce icons #2
+    - [x] Make use of newly released FLTK-rs Browser data support
+    - [x] Massive refactoring
+
 ## Wed 13/Apr/2022
 
 - Projects
