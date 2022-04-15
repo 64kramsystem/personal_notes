@@ -116,7 +116,7 @@ myvar=value                         # no spaces around equal; if value includes 
 myvar=$myvar2                       # $myvar2 doesn't require quotes
 unset myvar                         # delete myvar
 export myvar=value myvar2           # makes available to subshells. `local export` is allowed, but doesn't work as intended; in order to export
-                                    # local variables, do it separately from declaration/assignment, or declare via `declare -x`
+                                    # local variables, do it separately from declaration, or declare via `declare -x`
 local myvar1 myvar2                 # declare multiple local variables in one statement
 ((var+=1))                          # increment variable value
 ((var++)) || true                   # increment variable value. WATCH OUT!!! `|| true` is required if var=0 before the increment/decrement!!!!
@@ -790,7 +790,8 @@ printf '%s\0' "${array[@]}" | grep -qz "^$value$"
 
 # Print arrays.
 #
-printf '%s\n' "${array[@]}"                      # print the entries (one per line); `echo` prints all in one line
+printf '%s\n' "${array[@]}"                      # print the entries (one per line); `echo` prints all in one line; WATCH OUT! doesn't
+                                                 # work with other parameters
 declare -p array                                 # very convenient, although debug-style format
 
 # Joining arrays.

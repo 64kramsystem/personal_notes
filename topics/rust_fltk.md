@@ -120,6 +120,19 @@ List of (1-) selectable entries.
 let mut browser = browser::HoldBrowser::default().with_size(WINDOW_WIDTH, WINDOW_HEIGHT - 25);
 browser.add("First");
 browser.add("Second");
+
+if let Some(entry_data) = entry_data {
+    self.browser.add_with_data(&entry_text, entry_data);
+} else {
+    self.browser.add(&entry_text);
+}
+
+// WATCH OUT! The entry must already exist!
+// `SharedImage` is best used when sending images across the app, since set_icon() does not support
+// trait objects, so `Box<dyn ImageExt>` can't be used.
+//
+let shared_image = SharedImage::from_image(PngImage::from_data(image_bytes).unwrap());
+self.browser.set_icon(self.browser.size(), icon);
 ```
 
 ## Layouts

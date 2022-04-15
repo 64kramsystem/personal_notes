@@ -1,3 +1,34 @@
+## Fri 15/Apr/2022
+
+- Projects
+  - [ ] New Poor Man's Spotlight
+    - [x] Generalize icon images type to SharedImage (due to released fltk-rs fix)
+- Studies
+  - Rust
+    - [x] Investigate trait objects <> generics on fltk API
+- Open Source
+  - Rust
+    - [x] Report compiler bug on `cargo doc`
+    - [x] Review `fltk-rs` docs build, and open an issue to switch to stable Rust
+  - Tools (Blog)
+    - [x] Add add new article script
+      - [x] Add tags
+    - [x] Add update last article script
+  - Rust/Gamedev
+    - [x] Review Bevy current status (and new manual)
+      - [ ] Report system test on [official issue](https://github.com/bevyengine/bevy/issues/3606)
+- SWE: Practice
+  - Cracking the Coding Interview
+    - [x] IX.3 Stacks and Queues
+      - [x] 03.06. 3 runs,  8'18", "Animal Shelter"
+        - Mistakes
+          - typo: `raise` missing parentheses
+          - typo: asserts missing comma
+          - copypasta: didn't change "cat" after copying (to "dog")
+- Studies: Computer Graphics
+  - [ ] Computer Graphics from Scratch (Rasterization only)
+    - [x] 7. Filled Triangles
+
 ## Thu 14/Apr/2022
 
 - Projects
@@ -64,6 +95,9 @@
     - [x] Implement base protype
       - [x] Layout
       - [x] Actions
+- Studies: Computer Graphics
+  - [ ] Computer Graphics from Scratch (Rasterization only)
+    - [x] 6. Lines
 
 ## Mon 11/Apr/2022
 
