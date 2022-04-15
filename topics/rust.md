@@ -1190,6 +1190,12 @@ enum Option<T> {
 let some_number = Some(5);
 let absent_number: Option<i32> = None;
 
+// map(): map the content, only if it's Some.
+//
+let (with, without) = (Some(2), None::<i32>);
+with.map(|n| 2 * n); // Some(4)
+without.map(|n| 2 * n); // None
+
 // Convenient pattern. Companion APIs:
 //
 // - `unwrap_or`:         eagerly evaluated
@@ -1200,9 +1206,14 @@ opt.unwrap_or_else( |err | {
   std::process::exit(1);
 });
 
-// Chain operations, stopping at None.
+// Chain operations (results in Option<T>), stopping at None.
+// slow_function() must return Option.
 //
-opt.and(value).and_then(|| slow_function());
+opt.and(value).and_then(slow_function);
+
+// Other convenient chain - process only if Some; use a default is None.
+//
+opt.map(function).unwrap_or_else(default)
 
 // Extract a value, raising an error if None. Since `expect()` consumes the value, use `as_ref()`/
 // `as_mut()` in order to borrow.
@@ -1222,12 +1233,6 @@ y == Some(2);
 //
 let mut x = Some(2);    // works also on None
 let old = x.replace(5);
-
-// map(): map the content, only if it's Some.
-//
-let (with, without) = (Some(2), None::<i32>);
-with.map(|n| 2 * n); // Some(4)
-without.map(|n| 2 * n); // None
 ```
 
 ### Result/Error
