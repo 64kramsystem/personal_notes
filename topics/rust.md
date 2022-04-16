@@ -724,7 +724,7 @@ col.resize_with(new_len, || expr);      // resize, via function (e.g. when T is 
 (sl1, sl2) = coll.split_at(split_point);     // immutable
 (sl1, sl2) = coll.split_at_mut(split_point); // mutable: the two arrays are subarrays of the source
 coll2 = coll.split_off(split_point);         // mutable: the returned (sub)array is removed from the source
-join("str");                                 // join using str; doesn't join `char` collections
+join("str");                                 // join using str; for char[], must `iter().collect()`
 concat();                                    // join without separator
 
 col.len();
@@ -991,6 +991,8 @@ s.replace_range(range, repl);
 
 // There are some other APIs
 ```
+
+if one has to perform matching/slicing, possibly regexes are much more convenient.
 
 Char APIs:
 

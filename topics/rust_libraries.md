@@ -50,8 +50,9 @@
     - [Enum utils, e.g. iterate (`strum`)](#enum-utils-eg-iterate-strum)
     - [Convenience macros for operator overloading (`auto_ops`)](#convenience-macros-for-operator-overloading-auto_ops)
     - [Indented Heredoc-like strings (`indoc`)](#indented-heredoc-like-strings-indoc)
-    - [User directories (`directories`)](#user-directories-directories)
+    - [User directories (`dirs`)](#user-directories-dirs)
     - [Error conveniences (`failure`, `thiserror`)](#error-conveniences-failure-thiserror)
+    - [Clipboard management (`cli-clipboard`, `copypasta`)](#clipboard-management-cli-clipboard-copypasta)
     - [De/serialization](#deserialization)
       - [`serde`/`bincode`](#serdebincode)
       - [Guaranteed endianness storage (`byteorder`)](#guaranteed-endianness-storage-byteorder)
@@ -408,7 +409,7 @@ file.seek(SeekFrom::Current(0))?; // get current position
 For paths handling, use `std::path::Path`, with several conveniences:
 
 ```rust
-// PathBuf is the owned type.
+// PathBuf/OsString = owned, Path/OsStr = borrowed
 //
 let p: PathBuf = PathBuf::from("/path/to/file");
 let p: PathBuf = Path::new(ASSETS_PATH).join("triangles.obj");
@@ -432,34 +433,17 @@ let p: &OsStr         = path.as_os_str();
 let p: Option<&str>   = path.to_str();
 let p: String         = path.to_string_lossy().into_owned();
 
-// The rigorous conversions are quite ugly.
-// OsString doesn't implement fmt::Display, however, it implements fmt::Debug.
+// The conversions are quite ugly (without the "quite"). The simplest way is to go through &str
 //
-pathbuf
-  .into_os_string() // OsString
-  .into_string()    // Result<String, OsString>
-  .unwrap();
+any
+  .unwrap()         // where necessary
+  .to_str()
+  .unwrap()
+  .to_string()
 
-pathbuf
-  .file_name()      // Option<&OsStr>
-  .unwrap()         // &OsStr
-  .to_owned()       // OsString
-  .into_string()
-  .unwrap();
-
-// From borrowed version, as_os_str().to_str() is an alternative, although, it may be conceptually
-// simpler just to go through to_owned().
-//
-path
-  .as_os_str()      // &OsStr
-  .to_str()         // Option<&str>
-  .unwrap()         // &str
-  .into_string();   // String
-
-// If tests need to be performed (e.g. on file_name()), then the most convenient thing is to go through
-// &str:
-//
-if pathbuf.file_name().unwrap().to_str().unwrap().start_with("js0") { /* */ }
+// WATCH OUT! Splitting chains can be tricky in some contexts, due to temporary values.
+// One can go through OsString, which is even uglier, and it doesn't implement fmt::Display (but it
+// implements fmt::Debug).
 ```
 
 ### File/directory operations
@@ -468,6 +452,7 @@ There are some other APIs, e.g. for traversing directories.
 
 ```rust
 path.exists()                   // test if file/dir exists
+path.is_dir()                   // test if is directory; also: is_file(), is_symlink()
 
 fs::remove_file(path)
 fs::remove_dir_all(path)        // (rm -r)
@@ -855,31 +840,41 @@ fastrand::seed(7);
 
 ### Regular expressions (`regex`)
 
+Remember that capture 0 is the whole string (as standard).
+
 ```rust
 let re = Regex::new(r"(\d{4})(\d{2})").unwrap();
 let text = "201203, 201301, 201407";
 
 re.is_match(text); // true
 
-// WATCH OUT!: the capture 0 is the whole string (as standard).
-
-for cap in re.captures_iter(text) {
-    println!("Whole: '{}', $1: '{}', $2: '{}'", &cap[0], &cap[1], &cap[2]);
+// If the regex doesn't match, None is returned.
+//
+if let Some(captures) = re.captures("pizza{2}") {
+    // use `c.map(|m| m.as_str())` if the captures are NOT guaranteed
+    println!("{:?}", captures.get(0).unwrap().as_str());
 }
 
 // COOL!!!! Convert to Vec<_>, and pattern match.
 //
-let value = captures
-  .iter()
-  .skip(1)                       // skip global capture
-  .map(|c| c.unwrap().as_str())  // use `c.map(|m| m.as_str())` if the captures are NOT guaranteed
-  .collect::<Vec<_>>();
+let values = re
+        .captures(text)
+        .unwrap()
+        .iter()
+        .skip(1)                         // skip global capture
+        .map(|c| c.unwrap().as_str())
+        .collect::<Vec<_>>();
 
 // If the captures are not guaranteed, must handle the `Option<_>`
 //
 if let [v1, n1, v2, n2, v3, n3] = values.as_slice() {
-  FaceWithNormal((*v1, *n1), (*v2, *n2), (*v3, *n3))
+    FaceWithNormal((*v1, *n1), (*v2, *n2), (*v3, *n3))
 } else { unreachable!() }
+
+// The is also a captures_iter(), although it's a bit odd
+for cap in re.captures_iter(text) {
+    println!("Month: {} Day: {} Year: {}", &cap[2], &cap[3], &cap[1]);
+}
 ```
 
 Match multiple regexes:
@@ -1544,7 +1539,7 @@ let expected_string = indoc! {"
 "};
 ```
 
-### User directories (`directories`)
+### User directories (`dirs`)
 
 Aside the temporary directory, there's not builtin way in Rust to find the home (and related) user directories.
 
@@ -1555,10 +1550,12 @@ Generic create search: https://crates.io/search?q=home
 //
 let tmpdir: PathBuf = std::env::temp_dir();
 
-// `directories` crate
+// `dirs` crate
 //
-UserDirs::new().home_dir();
-UserDirs::new().desktop_dir();
+dirs::home_dir();                     // Returns Option<PathBuf>
+dirs::desktop_dir();
+
+dirs::home_dir().unwrap().join(path); // home
 ```
 
 ### Error conveniences (`failure`, `thiserror`)
@@ -1590,6 +1587,13 @@ pub struct JsonError {
     column: usize,
 }
 ```
+
+### Clipboard management (`cli-clipboard`, `copypasta`)
+
+There are (at least) two crates:
+
+- `cli-clipboard`: for terminal programs
+- `copypasta`: for GUI programs; did *not* work correctly
 
 ### De/serialization
 
