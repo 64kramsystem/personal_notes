@@ -1,3 +1,23 @@
+## Sat 16/Apr/2022
+
+- Open source
+  - fltk-rs
+    - [x] Investigate and ask issue with HoldBrowser Enter callback
+      - [x] Build and test a C++ FLTK program
+    - [x] Brutal fight to figure out why multiple events are fired/triggered in some circumstances
+- Studies: Rust/GUI
+  - [x] Summarize and copy fltk(-rs) notes
+- Studies: Rust
+  - [x] Investigate common serialization formats and crates
+  - [ ] Review O/S string data types and conversions
+- SWE: Practice
+  - [x] Competitive programming contest
+- Projects
+  - [ ] New Poor Man's Spotlight
+    - [ ] Implement file search
+      - [x] Base version of search, without patterns, unwired
+        - [ ] Brutal fight file paths
+
 ## Fri 15/Apr/2022
 
 - Projects
