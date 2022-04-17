@@ -33,7 +33,6 @@
     - [Regexes](#regexes)
     - [Operators/variables](#operatorsvariables)
     - [Operations](#operations)
-    - [Concatenate operations](#concatenate-operations)
     - [Special characters](#special-characters)
   - [Ruby](#ruby)
   - [Snippets](#snippets)
@@ -500,7 +499,9 @@ awk '{$1=$2=""; print $0}'
 
 Cmdline params:
 
-- `-i` : in-place editing
+- `-i`      : in-place editing
+- `-E`/`-r` : extended regexes
+- `-e`      : execute
 
 ### Syntax
 
@@ -509,7 +510,7 @@ Cmdline params:
 - `/pattern/[modifier]`     : pattern with modifier(s)
 - `s|from|to|`              : custom search delimiter
 
-Multiple operations are separated by `;`.
+In order to execute multiple operations, use multiple `-e` parameters.
 
 ### Regexes
 
@@ -558,12 +559,6 @@ Operations with matches:
 - delete: `/<pattern>/ d`
 - insert (add before): `/<pattern>/ i newstring` (in order to add leading spaces, must escape the first)
 - add (add after): `/<pattern>/ a newstring`
-
-### Concatenate operations
-
-Examples:
-
-- `/ntp/ s/^/# /` : comment out a line matching `ntp`
 
 ### Special characters
 

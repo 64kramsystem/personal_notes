@@ -55,6 +55,7 @@
     - [Clipboard management (`cli-clipboard`, `copypasta`)](#clipboard-management-cli-clipboard-copypasta)
     - [De/serialization](#deserialization)
       - [`serde`/`bincode`](#serdebincode)
+      - [TOML, simplest parsing (`toml`)](#toml-simplest-parsing-toml)
       - [Guaranteed endianness storage (`byteorder`)](#guaranteed-endianness-storage-byteorder)
 
 ## Standard library
@@ -292,15 +293,13 @@ impl PartialOrd for SortableFloat {
 (there APIs other than the described)
 
 ```rust
-// Convenience
+// Convenience, when using io module methods.
 use std::io::prelude::*;
 
-// std::io::Read
-//
-read(filename)?                        // binary content; filename can be relative
-read_to_string(filename)?              // valid UTF-8
-read_to_end(&mut buffer)?              // read until the EOF; binary
-read_exact(&mut buf)?
+fs::read(path)?                        // binary content; filename can be relative
+fs::read_to_string(path)?              // valid UTF-8
+io::read_to_end(&mut buffer)?          // read until the EOF; binary
+io::read_exact(&mut buf)?
 take(n)                                // create an adapter reading at most n bytes
 
 // std::io::Write
@@ -422,7 +421,9 @@ let p: Option<&OsStr> = path.file_stem(); // Filename without extension/path. Mu
 
 // Convenient APIs
 //
-pb.pop()                                  // Remove the last child
+pathbuf.pop()                                  // Remove the last child (but doesn't return it)
+path.strip_prefix("parent")?                   // Can be used to find out a path relative to another
+path.parent()?                                 // Find the parent path
 
 // Conversions (methods available to both Path/PathBuf):
 //
@@ -444,6 +445,8 @@ any
 // WATCH OUT! Splitting chains can be tricky in some contexts, due to temporary values.
 // One can go through OsString, which is even uglier, and it doesn't implement fmt::Display (but it
 // implements fmt::Debug).
+
+Path::new(os_str.unwrap());  // Convert OsStr to Path
 ```
 
 ### File/directory operations
@@ -1602,7 +1605,7 @@ There are (at least) two crates:
 Serde basics:
 
 ```rs
-// serde = {version = "1.0", features = ["derive"]}
+// serde = {version = "1.0.136", features = ["derive"]}
 // serde_json = "1.0"
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -1633,6 +1636,87 @@ pub fn deserialize<V: DeserializeOwned>(bindata: &[u8]) -> Result<V, bincode::Er
 
 pub fn deserialize_b<'d, V: Deserialize<'d>>(bindata: &'d [u8]) -> Result<V, bincode::Error> {
     bincode::deserialize(bindata)
+}
+```
+
+#### TOML, simplest parsing (`toml`)
+
+For simple parsing (no comments, etc.), use `toml`.
+
+Prelude:
+
+```rs
+// Convenient copy/paste
+let config_filename = dirs::home_dir().unwrap().join(CONFIG_BASENAME); // `dirs` crate
+let config_str = fs::read_to_string(config_filename).unwrap();
+
+// For the examples
+let doc_str = r#"
+    mystr = "abc"
+    myarr = ["1", "2"]
+"#;
+```
+
+Most general approach, using `serde`:
+
+```rs
+#[derive(Deserialize)]
+struct Doc {
+    mystr: String,      // Use Option when an entry may not be present
+    myarr: Vec<String>, // If a field, the error is not bad, but better to raise a manual one
+}
+
+let doc: Doc = toml::from_str(doc_str).unwrap();
+
+println!("{:?}", doc.mystr);
+println!("{:?}", doc.myarr);
+```
+
+Parse using `Value`:
+
+```rs
+let doc = doc_str.parse::<Value>().unwrap();
+
+let mystr: &str = doc["mystr"].as_str().unwrap();
+let myarr: Vec<&str> = doc["myarr"]
+    .as_array()                // Parses as Vec<Value>
+    .unwrap()
+    .iter()
+    .map(|v| v.as_str().unwrap())
+    .collect();
+```
+
+If a structure entries are only of one type, one can parse into a single data type:
+
+```rs
+// Assumes a document made only of `strings = array` entries.
+//
+// Using HashMap<&str, Value> is possible to add flexibility, but it defeats the simplicity of this approach.
+//
+let doc: HashMap<&str, Vec<&str>> = toml::from_str(&doc_str).unwrap();
+
+let myarr = &doc["myarr"];
+```
+
+Finally, the full-blown deserialized approach:
+
+```rs
+#[derive(Deserialize)]
+struct Config {
+    mystr: String,
+    myarr: Vec<String>,
+}
+
+fn main() {
+    let str = r#"
+        mystr = "abc"
+        myarr = ["1", "2"]
+    "#;
+
+    let config: Config = toml::from_str(str).unwrap();
+
+    println!("{:?}", config.mystr);
+    println!("{:?}", config.myarr);
 }
 ```
 

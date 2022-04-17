@@ -1,3 +1,28 @@
+## Sun 17/Apr/2022
+
+- Study
+  - [x] Git
+    - [x] Experiment with non-interactive interactive rebase
+- Projects
+  - [x] New Poor Man's Spotlight (first release)
+    - [x] Brutal fight with odd interactive rebase behavior
+    - [x] Implement configuration parsing
+      - [x] Investigate TOML parsing
+      - [x] Add configuration loading
+    - [x] Write file search support (but not file search)
+      - [x] Add async support for searches
+      - [x] Implement search id
+      - [x] Add support for stopping the current search
+    - [x] Implement file search
+      - [x] Test stop conditional performance (no difference on 32k files)
+      - [x] Brutal fight with routine to generate short names
+      - [x] Implement search
+    - [x] Bug fixes
+      - [x] Input doesn't respond (properly) anymore to tapping enter
+      - [x] Tapping Enter multiple times on the input without selection caused panic
+      - [x] Minor refactorings
+    - [x] Implement File searcher execution
+
 ## Sat 16/Apr/2022
 
 - Open source

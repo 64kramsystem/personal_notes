@@ -724,7 +724,7 @@ col.resize_with(new_len, || expr);      // resize, via function (e.g. when T is 
 (sl1, sl2) = coll.split_at(split_point);     // immutable
 (sl1, sl2) = coll.split_at_mut(split_point); // mutable: the two arrays are subarrays of the source
 coll2 = coll.split_off(split_point);         // mutable: the returned (sub)array is removed from the source
-join("str");                                 // join using str; for char[], must `iter().collect()`
+join("str");                                 // join using str; for char[], see String [chapter](#stringslicechar-related-apisconversions)
 concat();                                    // join without separator
 
 col.len();
@@ -766,9 +766,9 @@ map.insert("b", 10);            // Overwrites the existing value
 // If the value to insert is a function (or relatively expensive), use `or_insert_with(Fn)`, which executes
 // only if the value is going to be inserted.
 //
-let value_ref: &u32 = map.entry(key).or_insert(50);
-*value_ref = 100;
-map.entry(key).or_insert_with(Vec::new);
+map.entry(key).and_modify(|v| *v += 1).or_insert(50);      // modify if existing; insert otherwise
+let entry_ref = map.entry(key).or_insert(50); *entry += 1; // ^^ alternative
+map.entry(key).or_insert_with(Vec::new);                   // insert (expensive) if not existing
 
 // Modify a map in a loop.
 //
@@ -792,7 +792,8 @@ let key = String::from("abc");
 map.insert(key, 20);
 println!("{}", key)
 
-// Iterate a map
+// Iterate a map.
+// In order to iterate and modify, use `keys().cloned().collect::<Vec<_>>()`
 //
 for (book, review) in &book_reviews { /* ... */ };
 
@@ -800,6 +801,7 @@ for (book, review) in &book_reviews { /* ... */ };
 //
 map.keys();    // Iterator
 map.values();  // Iterator
+map.contains_key(key);
 
 // Keys may need a bit of treatment in order to be collected. For example, if the map has String keys,
 // the &String references will need to be converted to slices:
@@ -988,11 +990,20 @@ s.find(pattern)                         // find position; accepts char, slice, S
 s.contains(pattern)
 s.replace(pattern, repl)                // Ruby :gsub; with `...n` variation
 s.replace_range(range, repl);
-
-// There are some other APIs
 ```
 
-if one has to perform matching/slicing, possibly regexes are much more convenient.
+Slicing is tricky, as there are different to interpret a string:
+
+- byte-based (Rust range addressing default)
+- char unit-based (`char[]`)
+- grapheme-cluster-based (requires create)
+
+```rs
+// Slice per char unit.
+// Different approaches (and discussion) [here](https://users.rust-lang.org/t/how-to-get-a-substring-of-a-string/1351)
+//
+"ab¢de".chars().skip(2).take(2).collect::<String>()
+```
 
 Char APIs:
 
@@ -3008,7 +3019,7 @@ Primitive types have special atomic structs that are very efficient, e.g. (simpl
 // - AtomicU128 (only in nightly)
 // - AtomicPtr<T>: shared value of the unsafe pointer type *mut T
 
-let current_cycle = Arc::new(AtomicU32::new(0));
+let current_cycle = Arc::new(AtomicU32::new(0)); // Arc is required
 
 {
     let current_cycle = current_cycle.clone();

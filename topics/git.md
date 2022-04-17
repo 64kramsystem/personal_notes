@@ -375,6 +375,7 @@ git commit --allow-empty -m "Initial (empty) commit"
 git rebase -i --root
 
 # Programmatically run an interactive rebase. Example: edit all the commits of a branch:
+# WATCH OUT! The command runs on a file, so `-i` (in-place editing) is mandatory!
 #
 GIT_SEQUENCE_EDITOR="sed -i -re 's/^pick /e /'" git rebase -i "$(git merge-base HEAD master)"
 ```
