@@ -170,6 +170,8 @@ impl PMSpotlightApp {
     }
 
     fn fltk_event_move_from_input_to_list(input: &mut Input, sender: Sender<MessageEvent>) {
+        // WATCH OUT!! Only one handle() is supported per widget.
+        //
         input.handle(move |input, _| {
             if let Some(focused) = focus() {
                 if focused.is_same(input) {
