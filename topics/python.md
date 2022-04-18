@@ -20,6 +20,7 @@
     - [I/O](#io)
   - [Snippets](#snippets)
     - [Read a CSV from stdin, and compute averages](#read-a-csv-from-stdin-and-compute-averages)
+    - [Leetcode imports](#leetcode-imports)
 
 ## General syntax
 
@@ -43,6 +44,7 @@ float(str)
 ```python
 type(instance).__name__      # get class name
 isinstance(instance, class)  # check instance class
+Klass()                      # instantiate a class
 ```
 
 ### Collections
@@ -59,6 +61,7 @@ next(iterable)              # return the next entry; can be used to skip one
 #### Lists
 
 ```python
+list[:]
 len(list)                   # size/length/count of a list
 list.append(value)          # append an item
 list[-1] if list else None  # safe get
@@ -202,4 +205,12 @@ for run_data in map(str.rstrip, sys.stdin):
 
 for threads, run_times in sorted(all_run_times.items()):
   print(f'{threads},{sum(run_times) / len(run_times)}')
+```
+
+### Leetcode imports
+
+```py
+from typing import List
+import collections
+import bisect
 ```

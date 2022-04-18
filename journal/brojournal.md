@@ -1,3 +1,23 @@
+## Mon 18/Apr/2022
+
+- Projects
+  - New Poor Man's Spotlight (tweaks)
+    - [x] EmojiSearcher: Exit after execution
+    - [x] Remove dependency on regex crate (use manual char manipulation)
+    - [x] File searcher: Also ignore 1-char length patterns
+    - [x] File searcher: Ignore nonexisting search paths
+    - [x] Add window icon
+      - [x] Fight issue with Desktop env theming
+    - [x] Update README for old and new projects
+- Admin
+  - [x] Update Github pinned projects
+- SWE: Practice
+  - [x] Study solution to the hard problem
+    - https://leetcode.com/problems/maximum-score-of-a-node-sequence
+    - https://leetcode.com/contest/biweekly-contest-76
+    - [x] Fight Python script version/imports
+    - [x] Investigate Python <> Ruby performance
+
 ## Sun 17/Apr/2022
 
 - Study

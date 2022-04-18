@@ -8,6 +8,7 @@
   - [Multithreading](#multithreading)
   - [Widgets](#widgets)
     - [Hold browser](#hold-browser)
+  - [Window icon](#window-icon)
   - [Layouts](#layouts)
     - [Pack](#pack)
   - [FLTK (C++): Sample program, and compilation](#fltk-c-sample-program-and-compilation)
@@ -228,6 +229,17 @@ if let Some(entry_data) = entry_data {
 let shared_image = SharedImage::from_image(PngImage::from_data(image_bytes).unwrap());
 self.browser.set_icon(self.browser.size(), icon);
 ```
+
+## Window icon
+
+Set this *before* showing the window:
+
+```rs
+let win_icon = PngImage::from_data(ICON).unwrap();
+win.set_icon(Some(win_icon));
+```
+
+Only a few formats are supported; GIF isn't.
 
 ## Layouts
 

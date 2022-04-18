@@ -310,7 +310,7 @@ f64::from_bits(u64)                           // transmute from u64 (for bit-wis
 f64::is_sign_positive()                       // important! we can't use `-0.0 >= 0.0` for comparison (if sign is important)
 
 integer.to_string();                      // integer to string
-char.to_digit(RADIX).unwrap();            // (parse) ASCII char to numeric
+char.to_digit(RADIX).unwrap();            // (parse) convert (ASCII) char to number
 char::from_digit(4, 10);                  // (number, radix)
 1_u8 as char;                             // only u8 can be casted to char
 std::char::from_u32(1_u32);               // cast u32 to char (not available for other data types)
@@ -483,6 +483,7 @@ rev()                        // reverse. WATCH OUT, UNINTUITIVE: since it's not 
 nth(n); nth_back()           // nth element (0-based)
 last()
 take(n); skip(n)             // iterator taking/skipping the first n elements
+next()                       // Ruby :first
 take_while(||)               // stops iteration, by returning always false after the first false
 skip_while(||)               // start iteration on the first true, returning all the others
 enumerate()                  // iterator (index, &value) (Ruby :each_with_index)
@@ -952,6 +953,7 @@ s1 == s2;                               // String comparison (all comparisons su
 s += &s2;                               // concatenate via overloaded operator; can take &str or &String
 s.push_str(&str);                       // concatenate (append) strings
 s.push('c');
+s.pop();                                // remove last character and returns it
 s.insert(pos, 'c');                     // insert; use also as Ruby unshift()
 s.insert_str(pos, slice)                // ^^ same, for slice
 s.to_lowercase(); s.to_uppercase();
@@ -969,17 +971,20 @@ s.trim_end_matches("suffix");           // chomp suffix (but repeated)! also acc
 s.as_bytes();                           // byte slice (&[u8]) of the string contents
 s.into_bytes();                         // convert to Vec[u8]
 sl.bytes()
-sl.chars()
 sl.char_indices()                       // Iterator over chars and byte position
 
-// splits; there is a `rsplit*` version for each
-// in order to use the slice methods, do `collect()`
+// WATCH OUT! Remember that this is a (special) iterator (`Chars`), and that APIs like `len()` require `collect::<Vec<_>>()` first.
+//
+sl.chars()
+
+// Splits; there is a `rsplit*` version for each (which iterates from the right).
+// In order to convert to string and/or use slice, do `collect()`.
 //
 sl.split("sep")
-sl.split_mut("sep")                      // returns mutable slices
+sl.split_mut("sep")                     // returns mutable slices
 sl.split(char::is_numeric);
-sl.split(|c: char| c.is_numeric()).collect();
-sl.splitn(max_splits, "sep").collect::Vec<T>(); // splits from left by separator to Vec, long `max_splits` maximum
+sl.split(|c: char| c.is_numeric());
+sl.splitn(max_splits, "sep");           // performs maximum `max_splits`
 sl.split_at(i)
 sl.split_terminator(pattern)            // doesn't produce an empty string if separator is last char; has `r` variation
 sl.split_whitespace(); sl.split_ascii_whitespace()
@@ -999,10 +1004,23 @@ Slicing is tricky, as there are different to interpret a string:
 - grapheme-cluster-based (requires create)
 
 ```rs
-// Slice per char unit.
 // Different approaches (and discussion) [here](https://users.rust-lang.org/t/how-to-get-a-substring-of-a-string/1351)
+
+// Slice per char unit (extract a substring at given index)
 //
 "ab¢de".chars().skip(2).take(2).collect::<String>()
+
+// Split a string at a given character, then convert a substring of the second to a number:
+//
+let mut split: Split<char> = "/foo/bar{1}".rsplitn(2, '{');
+
+let mut depth = split.next().unwrap().to_string();
+depth.pop();
+depth = depth
+    .parse()
+    .expect("Expected number between braces in path '{}'");
+
+let path = split.next().unwrap().to_string();
 ```
 
 Char APIs:
