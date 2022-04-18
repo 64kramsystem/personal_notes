@@ -91,6 +91,10 @@ Both `:find_each` and `:find_in_batches` have a default batch size of 1000.
 
 ```ruby
 instance.update_columns({a: 'b'})   # skips all the logic, except serialization
+
+# Use SQL as set value of a column
+#
+Model.update_all(attribute: Arel.sql('other_attribute - interval 1 day'))
 ```
 
 ### Migrations

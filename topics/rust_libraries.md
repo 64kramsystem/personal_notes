@@ -13,7 +13,7 @@
     - [Sorting](#sorting)
       - [Sorting floats](#sorting-floats)
     - [Base I/O (reading/writing)](#base-io-readingwriting)
-      - [Spawning a process (and piping to it)](#spawning-a-process-and-piping-to-it)
+      - [Spawning a process (and piping to it) (executing commands)](#spawning-a-process-and-piping-to-it-executing-commands)
     - [File operations](#file-operations)
     - [Paths handling/Directories](#paths-handlingdirectories)
     - [File/directory operations](#filedirectory-operations)
@@ -51,6 +51,7 @@
     - [Convenience macros for operator overloading (`auto_ops`)](#convenience-macros-for-operator-overloading-auto_ops)
     - [Indented Heredoc-like strings (`indoc`)](#indented-heredoc-like-strings-indoc)
     - [User directories (`dirs`)](#user-directories-dirs)
+    - [Traverse filesystem (`walkdir`)](#traverse-filesystem-walkdir)
     - [Error conveniences (`failure`, `thiserror`)](#error-conveniences-failure-thiserror)
     - [Clipboard management (`cli-clipboard`, `copypasta`)](#clipboard-management-cli-clipboard-copypasta)
     - [De/serialization](#deserialization)
@@ -358,12 +359,16 @@ let len = match reader.read(&mut buf) {
 };
 ```
 
-#### Spawning a process (and piping to it)
+#### Spawning a process (and piping to it) (executing commands)
 
-Base spawning:
+Base spawning/executing:
 
 ```rs
 Command::new("echo").args(["-n", "abc"]).output()?;
+
+// Replace the current process with a new one (Linux-only; see https://stackoverflow.com/a/53479765):
+//
+Command::new("xdg-open").args([filename]).exec();
 ```
 
 Piping:
@@ -1560,6 +1565,33 @@ dirs::desktop_dir();
 
 dirs::home_dir().unwrap().join(path); // home
 ```
+
+### Traverse filesystem (`walkdir`)
+
+The walker is recursive by default.
+
+```rs
+let walker = WalkDir::new(search_path) // raises an error if search_path doesn't exist
+    .min_depth(1)                      // if not specified, the base dir is included
+    .max_depth(max)
+    .into_iter()
+    .filter_entry(|e| {                // only one filter_entry() call is allowed
+        if self.stop_search {          // no measurable performance hit
+            return false;
+        };
+        // filter out entries; WATCH OUT! don't exclude directories whose content need to be filtered,
+        // otherwise, they'll be skipped entirely.
+        !self.skip_entry(e)
+    });
+
+// Perform inclusion filtering here.
+//
+walker
+    .into_iter()
+    .filter_map(|e| Self::include_entry(&e.unwrap(), pattern))
+```
+
+See [pm-spotlight](https://github.com/64kramsystem/pm-spotlight/blob/d99f6798/src/search/file_searcher.rs#L95) for example of skipping/including entries.
 
 ### Error conveniences (`failure`, `thiserror`)
 

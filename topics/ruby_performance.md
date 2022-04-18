@@ -1,7 +1,10 @@
 # Ruby performance
 
 - [Ruby performance](#ruby-performance)
-  - [Array](#array)
+  - [Collections](#collections)
+    - [Array filling/clearing](#array-fillingclearing)
+    - [Unique array values](#unique-array-values)
+    - [Max value](#max-value)
   - [Garbage collection, with profiling helpers](#garbage-collection-with-profiling-helpers)
     - [memory_profiler](#memory_profiler)
   - [Profiling/Benchmarking](#profilingbenchmarking)
@@ -9,13 +12,23 @@
     - [benchmark/ips](#benchmarkips)
   - [Memory](#memory)
 
-## Array
+## Collections
+
+### Array filling/clearing
 
 Methods performance (but test anyway):
 
 - if fully resizing the array on each cycle, `#fill` is faster
 - if not, `#clear` is faster
 - `#new(size, value)` is relatively fast, but allocates
+
+### Unique array values
+
+DON'T use `Set.new(array)` - it's twice as slow as `array.uniq`.
+
+### Max value
+
+Using `[val1, val2].max` is as fast as using a conditional.
 
 ## Garbage collection, with profiling helpers
 
