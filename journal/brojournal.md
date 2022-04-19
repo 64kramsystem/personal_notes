@@ -1,3 +1,21 @@
+## Tue 19/Apr/2022
+
+- Projects
+  - New Poor Man's Spotlight (tweaks)
+    - [x] Add wildcard support to skip paths
+      - [x] Refactor
+    - [x] Review and add stripping
+    - [x] Review and update fltk-rs version
+    - [x] File searcher: Add wildcard support to pattern
+    - [x] Add support for "alternate execute"
+      - [x] File searcher: Add alternate execution (copy canonical path)
+- Admin
+  - [x] Flush pool
+- SWE: Practice
+  - [x] Investigate Ruby Set source code: how it compares to Array.uniq
+- Studies: Rust
+- [x] Investigate OsStr/Path types and filenames handling
+
 ## Mon 18/Apr/2022
 
 - Projects
