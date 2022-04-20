@@ -15,7 +15,7 @@
     - [Base I/O (reading/writing)](#base-io-readingwriting)
       - [Spawning a process (and piping to it) (executing commands)](#spawning-a-process-and-piping-to-it-executing-commands)
     - [File operations](#file-operations)
-    - [Paths handling/Directories](#paths-handlingdirectories)
+    - [Directories/filenames/paths handling](#directoriesfilenamespaths-handling)
     - [File/directory operations](#filedirectory-operations)
     - [Testing](#testing)
       - [Integration tests](#integration-tests)
@@ -406,15 +406,16 @@ file.seek(SeekFrom::Start(i64))?; // also: SeekFrom::{End,Current}
 file.seek(SeekFrom::Current(0))?; // get current position
 ```
 
-### Paths handling/Directories
+### Directories/filenames/paths handling
 
 (for user paths/directories, see the crates section)
 
-For paths handling, use `std::path::Path`, with several conveniences:
+OsStr and Path are strings type that can handle invalid UTF-8 filenames (first is owned):
+
+- `PathBuf`/`Path`: full pathnames; it has utility methods;
+- `OsString`/`OsStr`: single part of a filename.
 
 ```rust
-// PathBuf/OsString = owned, Path/OsStr = borrowed
-//
 let p: PathBuf = PathBuf::from("/path/to/file");
 let p: PathBuf = Path::new(ASSETS_PATH).join("triangles.obj");
 let p: PathBuf = Path::new('/path').to_owned();
@@ -429,6 +430,7 @@ let p: Option<&OsStr> = path.file_stem(); // Filename without extension/path. Mu
 pathbuf.pop()                                  // Remove the last child (but doesn't return it)
 path.strip_prefix("parent")?                   // Can be used to find out a path relative to another
 path.parent()?                                 // Find the parent path
+std::fs::canonicalize(path)                    // Absolute path (Ruby expand_path)
 
 // Conversions (methods available to both Path/PathBuf):
 //
@@ -854,7 +856,14 @@ Remember that capture 0 is the whole string (as standard).
 let re = Regex::new(r"(\d{4})(\d{2})").unwrap();
 let text = "201203, 201301, 201407";
 
+// The match is by substring, unless specified.
+//
 re.is_match(text); // true
+
+// Flags are specified inside the expression.
+// Other flag: `m`, `s`, `x` (and other minor ones)
+//
+Regex::new(r"(?i)\w+").unwrap();
 
 // If the regex doesn't match, None is returned.
 //

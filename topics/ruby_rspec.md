@@ -168,7 +168,7 @@ See [reference](https://relishapp.com/rspec/rspec-mocks/v/3-10/docs/configuring-
 - `and_raise`
 - `and_throw`
 - `and_yield`
-- `and_call_original`
+- `and_call_original` : call the original method after the expectation
 - `and_wrap_original`
 
 #### Conditional stubbing

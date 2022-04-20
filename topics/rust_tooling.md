@@ -2,7 +2,8 @@
 
 - [Rust Tooling](#rust-tooling)
   - [Cargo/Rustup](#cargorustup)
-    - [Interaction between Visual Studio Code and multiple-project workspace](#interaction-between-visual-studio-code-and-multiple-project-workspace)
+    - [Workspaces](#workspaces)
+      - [Interaction between Visual Studio Code and multiple-project workspace](#interaction-between-visual-studio-code-and-multiple-project-workspace)
     - [Debugging information](#debugging-information)
     - [Features](#features)
     - [Conditional build (ifdef-like)](#conditional-build-ifdef-like)
@@ -75,10 +76,19 @@ version = "0.15"
 
 # There are 4 profiles: `dev`, `release`, `test`, and `bench`
 [profile.release]
-strip = "symbols"
+strip = true         # highest stripping (equivalent to "symbols")
 ```
 
+WATCH OUT! Version "X.Y.Z" is not exact match - it's pessimistic ("^X.Y.Z").
+
+See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+The cargo configuration file (see custom configs below) `toml` extension is optional; it's searched in many locations: https://doc.rust-lang.org/cargo/reference/config.html.
+
+### Workspaces
+
 Workspace: manage multiple projects.
+
 Using cargo from root requires the member name; otherwise, each member can be treated as an individual project.
 
 ```toml
@@ -95,15 +105,9 @@ Using cargo from root requires the member name; otherwise, each member can be tr
 members = ["playground", "rust_programming_by_example"]
 ```
 
-Versioning is pessimistic by default.
+Members must have compatible dependencies, so projects can't be unrelated; without workspaces, it's possible to share artifacts by sharing the target dir (`[build] target-dir = "/path/to/target`).
 
-See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-At the root, `Cargo.lock`, managed by Cargo, manages the dependency versions.
-
-The cargo configuration file (see custom configs below) `toml` extension is optional; it's search in many locations: https://doc.rust-lang.org/cargo/reference/config.html.
-
-### Interaction between Visual Studio Code and multiple-project workspace
+#### Interaction between Visual Studio Code and multiple-project workspace
 
 The alternative to creating a formal Cargo workspace is to:
 
