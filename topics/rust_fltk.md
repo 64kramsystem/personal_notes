@@ -28,6 +28,7 @@ let mut input = input::Input::default().with_size(0, 25);
 let mut browser = HoldBrowser::default_fill();
 
 pack.end();
+window.make_resizable(true);
 window.end();
 window.show();
 

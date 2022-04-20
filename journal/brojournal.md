@@ -1,3 +1,13 @@
+## Wed 20/Apr/2022
+
+- Studies: Rust
+  - [x] Review workspaces
+- Projects: Port Rusty Roguelike to Bevy
+  - [x] Review projects status
+  - [x] Restructure the repository
+  - [x] Update the README
+  - [x] Preliminary test Bevy 0.7
+
 ## Tue 19/Apr/2022
 
 - Projects
