@@ -83,7 +83,7 @@ WATCH OUT! Version "X.Y.Z" is not exact match - it's pessimistic ("^X.Y.Z").
 
 See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-The cargo configuration file (see custom configs below) `toml` extension is optional; it's searched in many locations: https://doc.rust-lang.org/cargo/reference/config.html.
+The cargo configuration file (see custom configs below) `toml` extension is optional; it's searched in many locations (https://doc.rust-lang.org/cargo/reference/config.html), also recursively (also if outside the workspace).
 
 ### Workspaces
 
@@ -109,9 +109,9 @@ Members must have compatible dependencies, so projects can't be unrelated; witho
 
 #### Interaction between Visual Studio Code and multiple-project workspace
 
-The alternative to creating a formal Cargo workspace is to:
+As of Apr/2022, the alternative to creating a formal Cargo workspace is to:
 
-- don't add the workspace root directory to the VSC workspace
+- don't add the workspace root directory to the VSC workspace (WATCH OUT!!)
 - add each project (sub) directory to VSC
 - create one `.vscode/launch.json` for each project
 - if there are required files in the root, create a temp directory with symlinks, and add it to VSC and the .gitignore
@@ -162,6 +162,8 @@ rustup override unset # raise error if none is set
 #
 echo nightly > rust-toolchain
 ```
+
+The `rust-toolchain` is not read outside a workspace (ie. directory including it). It can't be specified in the Cargo configuration.
 
 ### Fast builds
 
