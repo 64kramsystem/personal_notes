@@ -2,7 +2,7 @@
 
 - [Linux hardware](#linux-hardware)
   - [Hardware info](#hardware-info)
-  - [Graphic cards/drivers](#graphic-cardsdrivers)
+  - [Graphic cards/drivers (Vulkan)](#graphic-cardsdrivers-vulkan)
   - [Securely erase an SSD](#securely-erase-an-ssd)
   - [SMART monitoring (values)](#smart-monitoring-values)
   - [Disable SMT (hyperthreading)](#disable-smt-hyperthreading)
@@ -41,7 +41,7 @@ Disk infos:
 hdparm -I $device
 ```
 
-## Graphic cards/drivers
+## Graphic cards/drivers (Vulkan)
 
 AMD card can use two Vulkan backends: RADV and AMDVLK; RADV is typically better. Can choose them via:
 

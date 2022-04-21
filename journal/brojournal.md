@@ -1,3 +1,27 @@
+## Thu 21/Apr/2022
+
+- Open Source
+  - QEMU-pinning
+    - [x] Review and update fork to v7.0.0
+- Writings
+  - [x] Update blog post with email suggestion
+  - [x] Blog util script update_article: allow passing a filename
+- Admin
+  - [x] Review leetcode premium and join
+- Tools
+  - [x] Journal leet addition script: Yet Another Entry Layout Reorder
+- SWE: Practice
+  - Leetcode
+    - [x] Medium    94%: 1 tests, 1 submissions, 2'35", "1265. Print Immutable Linked List in Reverse"
+- Studies: Rust/Gamedev
+  - [ ] Bevy
+    - [x] Fight setup workspace/CodeLLB dynamic library issue
+  - [ ] Bevy cheatbook
+    - [x] Update previous hello world
+- Projects: Port Rusty Roguelike to Bevy
+  - [ ] Start conversion
+    - [ ] Brutal fight with system former `#config()` API
+
 ## Wed 20/Apr/2022
 
 - Studies: Rust

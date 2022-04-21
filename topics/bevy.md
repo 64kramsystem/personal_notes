@@ -23,7 +23,7 @@
     - [Assets](#assets)
       - [Custom asset events/hooks](#custom-asset-eventshooks)
       - [Textures/sprites](#texturessprites)
-    - [UI Layout](#ui-layout)
+    - [UI/Layout](#uilayout)
     - [Text](#text)
   - [Input handling](#input-handling)
     - [Keyboard](#keyboard)
@@ -40,51 +40,61 @@
     - [Display the framerate](#display-the-framerate)
     - [Exit the application](#exit-the-application)
     - [Transformations](#transformations)
+  - [Plugins](#plugins-1)
 
-This is a merge of the Bevy book and the Bevy Cookbook.
+Notes from the [Bevy Cheat Book](https://bevy-cheatbook.github.io).
 
 ## Setup
 
 ```toml
 bevy = {
-  version = "0.5.0",
+  version = "0.7.0",
+  default-features = true, # Set to false to reduce base plugins
   features = [
-    # Increase compilation speed by using dynamic linking, but disable for release!
-    #
-    "dynamic",
-    # Enable if required; by default, only png/hdr/mp3 formats are supported.
-    #
-    "jpeg", "tga", "bmp", "dds", "flac", "ogg", "wav"
+    # Default (subset)
+
+    "png", "hdr", "vorbis" # Other: "jpeg", "tga", "bmp", "flac", "wav", "mp3", "zstd"
+    "bevy_gilrs",          # Gamepad input support
+    "bevy_gltf",
+
+    "rendering",           # Includes many + 2d ("bevy_sprite") + 3d ("bevy_pbr", "bevy_gltf")
+                           # ^^ + UI ("bevy_ui", "bevy_text")
+    "filesystem_watcher",  # Asset hot-reloading
+    "bevy_audio",          # Disable if using "bevy_kira_audio"
+
+    # Optional (subset)
+
+    "dynamic"              # Speedup compilation via dynamic linking (disable for release!)
+                           # WATCH OUT! Out of the box, it's incompatible with VSC's CodeLLDB.
+    "serialize",           # `serde` support
   ]
 }
 ```
 
-Run with an alternate renderer backend:
-
-```sh
-# As of Sep/2021, the OpenGL backend is currently broken.
-#
-BEVY_WGPU_BACKEND=gl cargo run --release
-```
+See [other plugins](https://bevy-cheatbook.github.io/setup/bevy-config.html).
 
 ## Hello world
 
 ```rust
-// The system() trait is `prelude::IntoSystem`
 use bevy::prelude::*;
 
+// Without Component, Query<> will raise an error "the trait bound `Name: bevy::prelude::Component` is not satisfied"
+//
+#[derive(Component)]
 struct Person;
+
+#[derive(Component)]
 struct Name(String);
 
 fn add_people(mut commands: Commands) {
-  commands
-    .spawn()
-    .insert(Person)
-    .insert(Name("Foo".to_string()));
-  commands
-    .spawn()
-    .insert(Person)
-    .insert(Name("Bar".to_string()));
+    commands
+        .spawn()
+        .insert(Person)
+        .insert(Name("Foo".to_string()));
+    commands
+        .spawn()
+        .insert(Person)
+        .insert(Name("Bar".to_string()));
 }
 
 struct GreetTimer(Timer);
@@ -92,36 +102,38 @@ struct GreetTimer(Timer);
 // Use a timed greeter; without a timer, this is executed continuously (see DefaultPlugins note).
 //
 fn greet_people_timed(time: Res<Time>, mut timer: ResMut<GreetTimer>, query: Query<&Name, With<Person>>) {
-  if timer.0.tick(time.delta()).just_finished() {
-    for name in query.iter() {
-      println!("Hello {}!", name.0);
+    if timer.0.tick(time.delta()).just_finished() {
+        for name in query.iter() {
+            println!("Hello {}!", name.0);
+        }
     }
-  }
 }
 
 pub struct HelloPlugin;
 
 impl Plugin for HelloPlugin {
-  fn build(&self, app: &mut AppBuilder) {
-    app.insert_resource(GreetTimer(Timer::from_seconds(2.0, true)))
-      .add_startup_system(add_people.system())
-      .add_system(greet_people_timed.system());
-  }
+    fn build(&self, app: &mut App) {
+        app.insert_resource(GreetTimer(Timer::from_seconds(2.0, true)))
+            .add_startup_system(add_people)
+            .add_system(greet_people_timed);
+    }
 }
 
-App::build()
-  // WindowDescriptor stores the window properties.
-  //
-  .insert_resource(WindowDescriptor { title: "Hello W!".to_string(), width: 1280., height: 720., ..Default::default() })
-  // The DefaultPlugins group includes the basic features to run a game; it makes a window popup because
-  // it includes WindowPlugin and WinitPlugin. Since it also includes an event loop, the systems will
-  // run in an infinite loop.
-  //
-  .add_plugins(DefaultPlugins)
-  // In this plugin, we bundle the main setup.
-  //
-  .add_plugin(HelloPlugin)
-  .run();
+fn main() {
+    App::new()
+        // WindowDescriptor stores the window properties.
+        //
+        .insert_resource(WindowDescriptor { title: "Hello W!".to_string(), width: 1280., height: 720., ..Default::default() })
+        // The DefaultPlugins group includes the basic plugins to run a game; it makes a window popup
+        // because it includes WindowPlugin and WinitPlugin. Since it also includes an event loop, the
+        // systems will run in an infinite loop.
+        //
+        .add_plugins(DefaultPlugins)
+        // In this plugin, we bundle the main setup.
+        //
+        .add_plugin(HelloPlugin)
+        .run();
+}
 ```
 
 ## Architecture concepts
@@ -809,7 +821,9 @@ commands.spawn_bundle(SpriteBundle {
 });
 ```
 
-### UI Layout
+### UI/Layout
+
+In order to use a UI, don't forget to spawn a UI camera (`UiCameraBundle`).
 
 Since the Y starts at the bottom, the UI flows from there; use `FlexDirection::ColumnReverse` to flow from the top.
 
@@ -1147,3 +1161,14 @@ App::build().add_system(bevy::input::system::exit_on_esc_system.system())
 - Convert cursor to world coordinates: see https://bevy-cheatbook.github.io/cookbook/cursor2world.html#convert-cursor-to-world-coordinates.
 - Custom camera projection: see https://bevy-cheatbook.github.io/cookbook/custom-projection.html.
 - Pan+Orbit camera: see https://bevy-cheatbook.github.io/cookbook/pan-orbit-camera.html.
+
+## Plugins
+
+- `bevy_ecs_tilemap`: for conveniently/efficiently handling tilemaps
+- `bevy_ecs_ldtk`: specialized `bevy_ecs_tilemap` for LDTK
+- `bevy_kira_audio`: more advanced audio
+- `leafwing_input_manager`: more advanced input
+- `bevy_asset_loader`: convenient synchronous assets loading
+- `benimator`: spritesheets
+- `heron`: physics (high level, via Rapier)
+- `bevy_rapier`: physics (lower level, via Rapier)
