@@ -1,3 +1,25 @@
+## Fri 22/Apr/2022
+
+- Studies: Rust/Gamedev
+  - [ ] Bevy
+    - [x] Review and update existing notes
+      - [x] Review and update personal notes
+      - [x] Review [migration guide to 0.6](https://bevyengine.org/learn/book/migration-guides/0.5-0.6)
+      - [x] Review [migration guide to 0.7](https://bevyengine.org/learn/book/migration-guides/0.6-0.7)
+    - [ ] Review specific topics/questions
+      - [x] Review custom game loop
+    - [x] Fight fix dynamic linking in VSC
+      - [x] Publish article
+- Open source
+  - Blog tools
+    - [x] `add_new_article.sh`: Fix title double quotes not fully escaped
+    - [x] `update_article.sh`: Fix last post search
+- Projects: Port Rusty Roguelike to Bevy
+  - [x] Port first step: `06_EntitiesComponentsAndSystems_01_playerecs`
+    - [x] Implement custom game loop
+    - [x] Reorganize projects layout
+    - [x] Port (fight several things)
+
 ## Thu 21/Apr/2022
 
 - Open Source
