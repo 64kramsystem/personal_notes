@@ -7,6 +7,7 @@
     - [Components/bundles](#componentsbundles)
     - [Resources](#resources)
     - [Systems](#systems)
+      - [Stages](#stages)
       - [Events](#events)
       - [System Chaining](#system-chaining)
     - [Queries](#queries)
@@ -15,7 +16,6 @@
       - [Recursive entities](#recursive-entities)
     - [Plugins](#plugins)
     - [States](#states)
-    - [Stages](#stages)
     - [Run criteria](#run-criteria)
   - [Rendering](#rendering)
     - [Transforms](#transforms)
@@ -35,16 +35,23 @@
       - [Fixed timestep](#fixed-timestep)
     - [Math](#math)
   - [Utils](#utils)
+    - [Running a custom game loop](#running-a-custom-game-loop)
     - [Track Assets Loading](#track-assets-loading)
     - [List All Resource Types](#list-all-resource-types)
     - [Display the framerate](#display-the-framerate)
     - [Exit the application](#exit-the-application)
     - [Transformations](#transformations)
-  - [Plugins](#plugins-1)
+  - [3rd party plugins](#3rd-party-plugins)
 
 Notes from the [Bevy Cheat Book](https://bevy-cheatbook.github.io).
 
 ## Setup
+
+WATCH OUT!
+
+- Rust edition 2021 is required.
+- In order to debug from VSC, add to `launch.json`:
+  - `"env": { "LD_LIBRARY_PATH": "${workspaceFolder}/target/debug/deps:${env:HOME}/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib" }`
 
 ```toml
 bevy = {
@@ -64,8 +71,7 @@ bevy = {
 
     # Optional (subset)
 
-    "dynamic"              # Speedup compilation via dynamic linking (disable for release!)
-                           # WATCH OUT! Out of the box, it's incompatible with VSC's CodeLLDB.
+    "dynamic"              # Speedup compilation via dynamic linking (disable for release!) (see VSC note above)
     "serialize",           # `serde` support
   ]
 }
@@ -76,7 +82,7 @@ See [other plugins](https://bevy-cheatbook.github.io/setup/bevy-config.html).
 ## Hello world
 
 ```rust
-use bevy::prelude::*;
+use bevy::{prelude::*, window::PresentMode};
 
 // Without Component, Query<> will raise an error "the trait bound `Name: bevy::prelude::Component` is not satisfied"
 //
@@ -123,7 +129,13 @@ fn main() {
     App::new()
         // WindowDescriptor stores the window properties.
         //
-        .insert_resource(WindowDescriptor { title: "Hello W!".to_string(), width: 1280., height: 720., ..Default::default() })
+        .insert_resource(WindowDescriptor {
+            title: "Hello W!".to_string(),
+            width: 1280.,
+            height: 720.,
+            present_mode: PresentMode::Immediate, // enable/disable vsync here
+            ..Default::default()
+        })
         // The DefaultPlugins group includes the basic plugins to run a game; it makes a window popup
         // because it includes WindowPlugin and WinitPlugin. Since it also includes an event loop, the
         // systems will run in an infinite loop.
@@ -146,14 +158,16 @@ Components:
 // ECS design: Don't add Xp as a field to Player - decouple it, so that it can be reused!
 // Use wrapper structs for simple data types ("newtype" pattern)
 //
+#[derive(Component)]
 struct PlayerXp(u32);
 
 // Use empty structs to mark entities (and query them)
 //
+#[derive(Component)]
 struct Enemy;
 ```
 
-Component Bundles are like templates for entities with common components:
+Bundles are like templates for entities with common components:
 
 ```rust
 // WATCH OUT! Don't forget the Bundle attribute, otherwise, if a bundle is accidentally used as component,
@@ -176,12 +190,12 @@ struct PlayerBundle {
 
 ### Resources
 
-Resources can be global or local; try to use globals as little as possible (components make a better design, as they can be shared).  
-Any type (struct/enum) can be used.
+Resources can be global or local; try to use globals as little as possible (components make a better design, as they can be shared).
 
 Definition:
 
 ```rust
+// Any type (struct/enum) can be used.
 // Use `Default` attribute for simple ones:
 //
 #[derive(Default)]
@@ -189,16 +203,19 @@ struct StartingLevel(usize);
 
 // More complex types:
 //
-struct ComplexResource {
-  // ... fields ...
-}
-impl FromWorld for ComplexResource {
-  fn from_world(world: &mut World) -> Self {
-    // This gives full access to anything in the ECS; e.g. mutating other resources:
-    let mut x = world.get_resource_mut::<MyOtherResource>().unwrap();
+struct ComplexResource { /* ... fields ... */ }
 
-    ComplexResource { /* ... */ }
-  }
+impl FromWorld for ComplexResource {
+    fn from_world(world: &mut World) -> Self {
+        // This gives full access to anything in the ECS; e.g. mutating other resources:
+        //
+        // Infallible methods: `resource[_mut]()`
+        // Fallible:           `get_resource[_mut]()`
+        //
+        let mut x = world.resource_mut::<MyOtherResource>();
+
+        ComplexResource { /* ... */ }
+    }
 }
 ```
 
@@ -207,13 +224,12 @@ Instantiation:
 ```rust
 // At app creation (extract):
 //
-App::build()
-  // if it implements `Default` or `FromWorld`
-  .init_resource::<ComplexResource>()
-  // if not, or if you want to set a specific value
-  .insert_resource(StartingLevel(3))
+App::new()
+    .init_resource::<ComplexResource>() // if it implements `Default` or `FromWorld`
+    .insert_resource(StartingLevel(3))  // if not, or if you want to set a specific value
 
-// From inside a system:
+// Use from a system.
+// If a resource of the given type exists on insertion, it's overwritten.
 //
 commands.insert_resource(GoalsReached { main_goal: false, bonus: false });
 commands.remove_resource::<MyResource>();
@@ -227,23 +243,27 @@ Usage:
 fn complex_system(res: ResMut<ResourceA>) { /* ... */ }
 
 // Local - different systems will access a different instance.
+// See [systems](#systems) for starting a system with a preset local.
 //
 fn my_system1(mut local: Local<MyState>) { /* ... */ }
 fn my_system2(mut local: Local<MyState>) { /* ... */ }
+
+// If need to match a resource, use as_ref()/as_mut().
 ```
 
 ### Systems
 
-Systems are functions executed by the engine. Access (R/W) to the world from a given system is determined via function parameters.  
-Don't forget that they run concurrently!
+Systems are functions executed by the engine. Access (R/W) to the world from a given system is determined via function parameters.
+
+WATCH OUT!! Don't forget that they run concurrently!
 
 ```rust
 // Tuples can be used to organize complex parameters:
 //
 fn complex_system(
-  start: Res<StartingLevel>         // access resource
-  (a, mut b): (Res<ResourceA>, ResMut<ResourceB>),
-  mut c: Option<ResMut<ResourceC>>, // resource that may not exist
+    start: Res<StartingLevel>                        // access resource
+    (a, mut b): (Res<ResourceA>, ResMut<ResourceB>), // compact access to multiple resources
+    mut c: Option<ResMut<ResourceC>>,                // resource that may not exist
 ) {
   // ...
 }
@@ -252,32 +272,78 @@ fn complex_system(
 Systems are run by adding them when building the app:
 
 ```rust
-App::build()
-  .add_startup_system(init_menu.system())  // run it only once at launch
-  .add_system(move_player.system())        // run it every frame update
+App::new()
+    .add_startup_system(init_menu)  // run it only once at launch
+    .add_system(move_player)        // run it every frame update
 ```
 
 Bevy handles resources contention by looking at the system signatures.
 
+A startup system can run with a preset local:
+
+```rs
+fn my_system(mut cmd: Commands, config: &MyConfig) { /* ... */ }
+
+App::new()
+    .add_system(move |cmd: Commands| {
+        my_system(cmd, &config);
+    })
+    .run();
+```
+
 It's possible to specify the systems ordering by using labels.
 
 ```rust
-App::build()
-  .add_system_set(
-    SystemSet::new()
-      .label("input")
-      .with_system(keyboard_input.system())
-      .with_system(gamepad_input.system())
-  )
-
-  .add_system(update_map.system().label("map"))
-
-
+App::new()
+    .add_system_set(
+        SystemSet::new()
+            .label("input")
+            .with_system(keyboard_input)
+            .with_system(gamepad_input)
+    )
+    .add_system(update_map.label("map"))
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[derive(SystemLabel)]
 enum MySystems { InputSet, Movement }
 
+App::new()
+    // A group ("set") of systems
+    //
+    .add_system_set(
+      SystemSet::new()
+        .label(MySystems::InputSet)
+        .with_system(keyboard_input)
+        .with_system(gamepad_input)
+    )
+
+    // Strings can be used, but type system advantages are lost.
+    //
+    .add_system(debug_movement.label("temp-debug"))
+
+    .add_system(input_parameters.before("input"))
+
+    // before() and after() can be used on the same system.
+    //
+    .add_system(
+        player_movement
+            .label("player_movement")
+            .after("input")
+            .after("map")
+    )
+```
+
+Labels and labelled items are M:N.
+
+#### Stages
+
+Each frame goes through stages; Bevy has 5: `First`, `PreUpdate`, `Update`, `PostUpdate`, `Last`.
+
+By default, user-defined systems are placed in `Update`; if systems are added to the other stages, beware of interactions with Bevy's internal ones.
+
+See https://bevy-cheatbook.github.io/programming/stages.html.0
+
+```rs
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[derive(StageLabel)]
 enum MyStages { Prepare, Cleanup }
@@ -286,43 +352,19 @@ enum MyStages { Prepare, Cleanup }
 #[derive(StageLabel)]
 struct DebugStage;
 
-App::build()
-  // A group ("set") of systems
-  //
-  .add_system_set(
-    SystemSet::new()
-      .label(MySystems::InputSet)
-      .with_system(keyboard_input.system())
-      .with_system(gamepad_input.system())
-  )
-
-  // Strings can be used, but type system advantages are lost.
-  //
-  .add_system(debug_movement.system().label("temp-debug"))
-
-  .add_system(input_parameters.system().before("input"))
-
-  // before() and after() can be used on the same system.
-  //
-  .add_system(
-    player_movement.system()
-      .label("player_movement")
-      .after("input")
-      .after("map")
-  )
-  // Add custom stages. `CoreStage` is a Bevy enum.
-  //
-  .add_stage_before(CoreStage::Update, MyStages::Prepare, SystemStage::parallel())
-  .add_stage_after(CoreStage::Update, DebugStage, SystemStage::parallel())
+App::new()
+    // Add custom stages. `CoreStage` is a Bevy enum.
+    //
+    .add_stage_before(CoreStage::Update, MyStages::Prepare, SystemStage::parallel())
+    .add_stage_after(CoreStage::Update, DebugStage, SystemStage::parallel())
 ```
-
-Labels and labelled items are M:N.
 
 #### Events
 
 Systems can communicate via a message queue - the `Event`s system.
 
-WATCH OUT!! Events persists only until the end of the next frame (= max 2 frames).  
+WATCH OUT!! Events persists only until the end of the next frame (= max 2 frames).
+
 Additionally, due to the async nature, a system may receive the event only on the next frame ("1-frame-lag" problem); if this is a problem, must explicitly order systems.
 
 ```rust
@@ -331,22 +373,22 @@ struct LevelUpEvent(Entity);
 // Generate an event, via EventWriter<T>.
 //
 fn player_level_up(mut levelup: EventWriter<LevelUpEvent>, query: Query<(Entity, &PlayerXp)>) {
-  for (entity, xp) in query.iter() {
-    if xp.0 > 1000 { levelup.send(LevelUpEvent(entity)); }
-  }
+    for (entity, xp) in query.iter() {
+        if xp.0 > 1000 { levelup.send(LevelUpEvent(entity)); }
+    }
 }
 
 // Read an event, via EventReader<T>.
 //
 fn debug_levelups(mut levelup: EventReader<LevelUpEvent>) {
-  for ev in levelup.iter() {
-    eprintln!("Entity {:?} leveled up!", ev.0);
-  }
+    for ev in levelup.iter() {
+        eprintln!("Entity {:?} leveled up!", ev.0);
+    }
 }
 
 // Don't forget to register (custom) events!
 //
-App::build().add_event::<LevelUpEvent>()
+App::new().add_event::<LevelUpEvent>()
 ```
 
 #### System Chaining
@@ -355,17 +397,17 @@ Systems can be chained, so that the output of one is the input of the next.
 
 ```rust
 fn net_receive(mut netcode: ResMut<MyNetProto>) -> std::io::Result<()> {
-  netcode.receive_updates()?;
-  Ok(())
+    netcode.receive_updates()?;
+    Ok(())
 }
 
 fn handle_io_errors(In(result): In<std::io::Result<()>>) {
-  if let Err(e) = result { eprintln!("I/O error occurred: {}", e); }
+    if let Err(e) = result { eprintln!("I/O error occurred: {}", e); }
 }
 
 // WATCH OUT! Chaining must be registered:
 //
-App::build().add_system(net_receive.system().chain(handle_io_errors.system()))
+App::new().add_system(net_receive.chain(handle_io_errors))
 ```
 
 WATCH OUT!
@@ -380,46 +422,48 @@ Used to access entity components. WATCH OUT! Bundles must be queried via compone
 
 ```rust
 fn check_zero_health(
-  // Find entities that have (`Health` & `Transform`) components, and are optionally a `Player`.
-  // Entity is the entity id (not required).
-  // With/out<T> are (optional) filters: the entities must include an Ally, but not an Enemy.
-  // For an Or filter example, see [Change detection](#change-detection).
-  mut query: Query<
-    (Entity, &Health, &mut Transform, Option<&Player>),
-    (With<Ally>, Without<Enemy>)
-  >
+    // Find entities that have (`Health` & `Transform`) components, and are optionally a `Player`.
+    // Entity is the entity id (not required).
+    // With/out<T> are (optional) filters: the entities must include an Ally, but not an Enemy.
+    // For an Or filter example, see [Change detection](#change-detection).
+    mut query: Query<
+        (Entity, &Health, &mut Transform, Option<&Player>),
+        (With<Ally>, Without<Enemy>)
+    >
 ) {
-  // Iterate all matching entities
-  for (eid, health, mut transform, player) in query.iter_mut() {
-    if health.hp <= 0.0 { transform.translation = Vec3::ZERO; }
-    if let Some(player) = player { /* the current entity is the player! */ }
-  }
+    // Iterate all matching entities
+    for (eid, health, mut transform, player) in query.iter_mut() {
+        if health.hp <= 0.0 { transform.translation = Vec3::ZERO; }
+        if let Some(player) = player { /* the current entity is the player! */ }
+    }
 }
 
 // Components for a specific entity.
 //
 if let Ok((health, mut transform)) = query.get_mut(entity) {
-  // do something with the components
+    // do something with the components
 } else {
-  // the entity does not have the components from the query
+    // the entity does not have the components from the query
 }
 
-// Retrieve an entity that is guaranteed to be unique.
+// Retrieve an entity that is guaranteed to be unique; panics if not found
 //
 fn query_player(mut q: Query<(&Player, &mut Transform)>) {
-  let (player, mut transform) = q.single_mut().expect("...");
+    let (player, mut transform) = q.single_mut(); // single(): immutable
 }
 ```
 
-When it's not possible for systems to query due to mutability conflicts, query sets can be used; they prevent conflicting resources to be accessed at the same time.  
-A set can have up to 4 queries.
+When it's not possible for systems to query due to mutability conflicts, query sets can be used; they prevent conflicting resources to be accessed at the same time.
 
 ```rust
 fn reset_health(
-  // access the health of enemies and the health of players (some entities could be both!)
+  // A set can have up to 4 queries.
+  //
+  // Access the health of enemies and the health of players (some entities could be both!).
+  //
   mut q: QuerySet<(
-    Query<&mut Health, With<Enemy>>,
-    Query<&mut Health, With<Player>>
+    QueryState<&mut Health, With<Enemy>>,
+    QueryState<&mut Health, With<Player>>
   )>,
 ) {
   for mut health in q.q0_mut().iter_mut() { /* ... */ }
@@ -440,22 +484,22 @@ If triggering `Changed` for unchanged variables is undesirable, modify the code 
 // Print the stats of friendly players when they change:
 //
 fn debug_stats_change(
-  query: Query<
-    (&Health, &PlayerXp),
-    (Without<Enemy>, Or<(Changed<Health>, Changed<PlayerXp>)>),
-  >,
+    query: Query<
+        (&Health, &PlayerXp),
+        (Without<Enemy>, Or<(Changed<Health>, Changed<PlayerXp>)>),
+    >,
 ) {
-  for (health, xp) in query.iter() {
-    eprintln!("hp: {}+{}, xp: {}", health.hp, health.extra, xp.0);
-  }
+    for (health, xp) in query.iter() {
+        eprintln!("hp: {}+{}, xp: {}", health.hp, health.extra, xp.0);
+    }
 }
 
 // Detect new enemies and print their health:
 //
 fn debug_new_hostiles(query: Query<(Entity, &Health), Added<Enemy>>) {
-  for (entity, health) in query.iter() {
-    eprintln!("Entity {:?} is now an enemy! HP: {}", entity, health.hp);
-  }
+    for (entity, health) in query.iter() {
+        eprintln!("Entity {:?} is now an enemy! HP: {}", entity, health.hp);
+    }
 }
 ```
 
@@ -467,50 +511,50 @@ Commands add/remove/update stuff"
 
 ```rust
 fn spawn_player(mut commands: Commands) {
-  // Manage resources
-  //
-  commands.insert_resource(GoalsReached { main_goal: false, bonus: false });
-  commands.remove_resource::<MyResource>();
+    // Manage resources
+    //
+    commands.insert_resource(GoalsReached { main_goal: false, bonus: false });
+    commands.remove_resource::<MyResource>();
 
-  // Create a new entity using `spawn`
-  // WATCH OUT! insert_bundle() adds all the components of a bundle, while insert(Bundle) inserts the
-  // bundle as a single component!
-  //
-  let entity_id = commands.spawn()
-    .insert(ComponentA)                 // add a component
-    .insert_bundle(MyBundle::default()) // add a bundle
-    .id();                              // get the Entity ID
+    // Create a new entity using `spawn`
+    // WATCH OUT! insert_bundle() adds all the components of a bundle, while insert(Bundle) inserts the
+    // bundle as a single component!
+    //
+    let entity_id = commands.spawn()
+        .insert(ComponentA)                 // add a component
+        .insert_bundle(MyBundle::default()) // add a bundle
+        .id();                              // get the Entity ID
 
-  // Shorthand for creating an entity with a bundle.
-  //
-  commands.spawn_bundle(PlayerBundle {
-    name: PlayerName("Henry".into()),
-    _p: Player,
-  });
+    // Shorthand for creating an entity with a bundle.
+    //
+    commands.spawn_bundle(PlayerBundle {
+        name: PlayerName("Henry".into()),
+        _p: Player,
+    });
 
-  // Since tuples are bundles, they can be used with spawn_bundle().
-  //
-  let other = commands.spawn_bundle((
-    ComponentA::default(),
-    ComponentB::default(),
-  )).id();
+    // Since tuples are bundles, they can be used with spawn_bundle().
+    //
+    let other = commands.spawn_bundle((
+        ComponentA::default(),
+        ComponentB::default(),
+    )).id();
 
-  // Add/remove components of an existing entity.
-  //
-  commands.entity(entity_id)
-    .insert(ComponentB)
-    .remove::<ComponentA>()
-    .remove_bundle::<MyBundle>();
+    // Add/remove components of an existing entity.
+    //
+    commands.entity(entity_id)
+        .insert(ComponentB)
+        .remove::<ComponentA>()
+        .remove_bundle::<MyBundle>();
 
-  // Despawn an entity.
-  //
-  commands.entity(other).despawn();
+    // Despawn an entity.
+    //
+    commands.entity(other).despawn();
 }
 
 fn make_all_players_hostile(mut commands: Commands, query: Query<Entity, With<Player>>) {
-  for entity in query.iter() {
-    commands.entity(entity).insert(Enemy); // add an `Enemy` component to the entity
-  }
+    for entity in query.iter() {
+        commands.entity(entity).insert(Enemy); // add an `Enemy` component to the entity
+    }
 }
 ```
 
@@ -524,9 +568,9 @@ commands.entity(parent).push_children(&[child]);
 // Alternative:
 //
 commands.spawn_bundle(MyParentBundle::default())
-  .with_children(|parent| {
-    parent.spawn_bundle(MyChildBundle::default());
-  });
+    .with_children(|parent| {
+        parent.spawn_bundle(MyChildBundle::default());
+    });
 
 // Despawn a whole hierarchy:
 //
@@ -539,23 +583,23 @@ Querying; use the `Parent`/`Children` reserved components:
 // Query parent, from children:
 //
 fn camera_with_parent(q_child: Query<(&Parent, &Transform), With<Camera>>, q_parent: Query<&GlobalTransform>) {
-  for (parent, child_transform) in q_child.iter() {
-    // `parent` contains the Entity ID we can use to query components from the parent:
-    //
-    let parent_global_transform = q_parent.get(parent.0);
-  }
+    for (parent, child_transform) in q_child.iter() {
+        // `parent` contains the Entity ID we can use to query components from the parent:
+        //
+        let parent_global_transform = q_parent.get(parent.0);
+    }
 }
 
 // Query children, from parent:
 //
 fn process_squad_damage(q_parent: Query<(&MySquadDamage, &Children)>, q_child: Query<&MyUnitHealth>) {
-  for (squad_dmg, children) in q_parent.iter() {
-    // `children` is a collection of Entity IDs:
-    //
-    for &child in children.iter() {
-      let health = q_child.get(child);
+    for (squad_dmg, children) in q_parent.iter() {
+        // `children` is a collection of Entity IDs:
+        //
+        for &child in children.iter() {
+          let health = q_child.get(child);
+        }
     }
-  }
 }
 ```
 
@@ -563,17 +607,17 @@ For transforms, there is special support.
 
 ### Plugins
 
-Plugins are convenient to group things to add to the app builder, e.g. physics, input handling etc.:
+Plugins are convenient to group things to add to the app, e.g. physics, input handling etc.:
 
 ```rust
 pub struct HelloPlugin;
 
 impl Plugin for HelloPlugin {
-  fn build(&self, app: &mut AppBuilder) {
-    app.insert_resource(GreetTimer(Timer::from_seconds(2.0, true)))
-      .add_startup_system(add_people.system())
-      .add_system(greet_people_timed.system());
-  }
+    fn build(&self, app: &mut App) {
+        app.insert_resource(GreetTimer(Timer::from_seconds(2.0, true)))
+          .add_startup_system(add_people)
+          .add_system(greet_people_timed);
+    }
 }
 
 app.add_plugin(Plugin)
@@ -585,27 +629,26 @@ Plugins can be grouped:
 struct MyPluginGroup;
 
 impl PluginGroup for MyPluginGroup {
-  fn build(&mut self, group: &mut PluginGroupBuilder) {
-    group
-      .add(FooPlugin)
-      .add(BarPlugin);
-  }
+    fn build(&mut self, group: &mut PluginGroupBuilder) {
+        group
+          .add(FooPlugin)
+          .add(BarPlugin);
+    }
 }
 ```
 
 It's possible to register plugin groups while excluding certain plugins:
 
 ```ruby
-App::build()
-  .add_plugins_with(DefaultPlugins, |plugins| {
-    plugins.disable::<LogPlugin>()
-  })
+App::new()
+    .add_plugins_with(DefaultPlugins, |plugins| {
+        plugins.disable::<LogPlugin>()
+    })
 ```
 
 ### States
 
-States are the global app states.  
-It's convenient to use plugins to group systems to use with states.
+States are the global app states. It's convenient to use plugins to group systems to use with states.
 
 WATCH OUT! Since states are internally implemented via run criteria, they will conflict with other run criteria uses, e.g. fixed timestep.
 
@@ -615,60 +658,60 @@ Setup:
 #[derive(Debug, Clone, Eq, PartialEq, Hash)]
 enum AppState { MainMenu, InGame, Paused }
 
-App::build()
-  // add the first app state to the stack
-  .add_state(AppState::MainMenu)
+App::new()
+    // add the first app state to the stack
+    .add_state(AppState::MainMenu)
 
-  // systems outside of system sets will run regardless of the state
-  .add_system(play_music.system())
+    // systems outside of system sets will run regardless of the state
+    .add_system(play_music)
 
-  // Different state callbacks /////////////////////////////////////////////////
+    // Different state callbacks /////////////////////////////////////////////////
 
-  // when entering the state (equivalent of startup systems)
-  .add_system_set(
-    SystemSet::on_enter(AppState::MainMenu).with_system(setup_menu.system())
-  )
+    // when entering the state (equivalent of startup systems)
+    .add_system_set(
+        SystemSet::on_enter(AppState::MainMenu).with_system(setup_menu)
+    )
 
-  // on state active
-  .add_system_set(
-    SystemSet::on_update(AppState::MainMenu).with_system(handle_ui_buttons.system())
-  )
+    // on state active
+    .add_system_set(
+        SystemSet::on_update(AppState::MainMenu).with_system(handle_ui_buttons)
+    )
 
-  // on pause, e.g. things to do when becoming inactive
-  .add_system_set(
-    SystemSet::on_pause(AppState::InGame).with_system(hide_enemies.system())
-  )
+    // on pause, e.g. things to do when becoming inactive
+    .add_system_set(
+        SystemSet::on_pause(AppState::InGame).with_system(hide_enemies)
+    )
 
-  // player idle animation while paused
-  .add_system_set(
-    SystemSet::on_inactive_update(AppState::InGame).with_system(player_idle.system())
-  )
+    // player idle animation while paused
+    .add_system_set(
+        SystemSet::on_inactive_update(AppState::InGame).with_system(player_idle)
+    )
 
-  // on state both active and paused
-  .add_system_set(
-    SystemSet::on_in_stack_update(AppState::InGame).with_system(animate_water.system())
-  )
+    // on state both active and paused
+    .add_system_set(
+        SystemSet::on_in_stack_update(AppState::InGame).with_system(animate_water)
+    )
 
-  // when resuming from pause
-  .add_system_set(
-    SystemSet::on_resume(AppState::InGame).with_system(reset_player.system())
-  )
+    // when resuming from pause
+    .add_system_set(
+        SystemSet::on_resume(AppState::InGame).with_system(reset_player)
+    )
 
-  // on exit (e.g. cleanup)
-  .add_system_set(
-    SystemSet::on_exit(AppState::MainMenu).with_system(close_menu.system())
-  )
+    // on exit (e.g. cleanup)
+    .add_system_set(
+        SystemSet::on_exit(AppState::MainMenu).with_system(close_menu)
+    )
 ```
 
 Match:
 
 ```rust
 fn play_music(app_state: Res<State<AppState>>) {
-  match app_state.current() {
-    AppState::MainMenu => { /* ... */ }
-    AppState::InGame => { /* ... */ }
-    AppState::Paused => { /* ... */ }
-  }
+    match app_state.current() {
+        AppState::MainMenu => { /* ... */ }
+        AppState::InGame => { /* ... */ }
+        AppState::Paused => { /* ... */ }
+    }
 }
 ```
 
@@ -684,8 +727,8 @@ app_state.pop().unwrap();
 // Direct set.
 //
 fn enter_game(mut app_state: ResMut<State<AppState>>) {
-  // Can fail if we are already in the target state or if another state change is already queued
-  app_state.set(AppState::InGame).unwrap();
+    // Can fail if we are already in the target state or if another state change is already queued
+    app_state.set(AppState::InGame).unwrap();
 }
 ```
 
@@ -693,20 +736,12 @@ fn enter_game(mut app_state: ResMut<State<AppState>>) {
 
 ```rust
 fn esc_to_menu(mut keys: ResMut<Input<KeyCode>>, mut app_state: ResMut<State<AppState>>) {
-  if keys.just_pressed(KeyCode::Escape) {
-    app_state.set(AppState::MainMenu).unwrap();
-    keys.reset(KeyCode::Escape);
-  }
+    if keys.just_pressed(KeyCode::Escape) {
+        app_state.set(AppState::MainMenu).unwrap();
+        keys.reset(KeyCode::Escape);
+    }
 }
 ```
-
-### Stages
-
-Each frame goes through stages; Bevy has 5: `First`, `PreUpdate`, `Update`, `PostUpdate`, `Last`.
-
-By default, user-defined systems are placed in `Update`; if systems are added to the other stages, beware of interactions with Bevy's internal ones.
-
-See https://bevy-cheatbook.github.io/programming/stages.html.
 
 ### Run criteria
 
@@ -733,7 +768,7 @@ WATCH OUT! GT is synced with T in the `PostUpdate` stage, so be careful.
 Set the background color:
 
 ```rs
-App::build().insert_resource(ClearColor(Color::rgb(0.4, 0.4, 0.4)))
+App::new().insert_resource(ClearColor(Color::rgb(0.4, 0.4, 0.4)))
 
 // In system form
 pub fn set_background(mut commands: Commands) {
@@ -752,7 +787,7 @@ Load/access assets:
 struct UiFont(Handle<Font>);
 
 struct SpriteSheets {
-  map_tiles: Handle<TextureAtlas>,
+    map_tiles: Handle<TextureAtlas>,
 }
 
 struct ExtraAssets(Vec<HandleUntyped>);
@@ -870,7 +905,7 @@ Update it:
 
 ```rs
 pub fn update_scoreboard(score: Res<Score>, mut query: Query<&mut Text, With<Scoreboard>>) {
-    let mut scoreboard_text = query.single_mut().unwrap();
+    let mut scoreboard_text = query.single_mut();
     scoreboard_text.sections[1].value = format!("{}", score.0);
 }
 ```
@@ -1058,22 +1093,23 @@ Use to run systems at fixed interval.
 ```rust
 use bevy::core::FixedTimestep;
 
-App::build()
-  .add_system_set(
-    SystemSet::new()
-      .with_run_criteria(FixedTimestep::step(1.0)) // 1 Hz
-      .with_system(system_1.system())
-  )
-  .add_system_set(
-    SystemSet::new()
-      .with_run_criteria(FixedTimestep::step(0.5)) // 2 Hz
-      .with_system(system_2.system())
-  )
+App::new()
+    .add_system_set(
+        SystemSet::new()
+            .with_run_criteria(FixedTimestep::step(1.0)) // 1 Hz
+            .with_system(system_1)
+    )
+    .add_system_set(
+        SystemSet::new()
+            .with_run_criteria(FixedTimestep::step(0.5)) // 2 Hz
+            .with_system(system_2)
+    )
 ```
 WATCH OUT!
 
 - events persist 2 frames, so if the fixed timestep is too slow, it will miss them;
 - timing is not exact, due to the inexact run criteria underlying nature;
+- since states are internally implemented via run criteria, they will conflict with other run criteria uses, e.g. fixed timestep.
 - etc.etc.!.
 
 See https://bevy-cheatbook.github.io/features/fixed-timestep.html (and referred examples) for more details.
@@ -1085,6 +1121,53 @@ const_vec2!   // create a const Vec2; also for: Mat2/3/4, Quat, Vec3/3a/4
 ```
 
 ## Utils
+
+### Running a custom game loop
+
+```rs
+#[derive(Component)]
+struct Number(u32);
+
+fn add_number(mut commands: Commands) {
+    commands.spawn().insert(Number(42));
+}
+
+fn print_number(query: Query<&Number>) {
+    println!("Number: {}!", query.single().0);
+}
+
+fn manual_runner(mut app: App) {
+    loop {
+        app.update();
+        sleep(Duration::from_secs(1));
+    }
+}
+
+fn main() {
+    App::new()
+        .add_startup_system(add_number)
+        .add_system(print_number)
+        .set_runner(manual_runner)
+        .run();
+}
+```
+
+Shorter version, seemingly working, waiting for confirmation:
+
+```rs
+let mut app = App::new();
+app.add_startup_system(add_number).add_system(print_number);
+
+// These operations are what App#run() does.
+//
+app = std::mem::replace(&mut app, App::empty());
+app.runner = Box::new(|_| {});
+
+loop {
+    app.update();
+    sleep(Duration::from_secs(1));
+}
+```
 
 ### Track Assets Loading
 
@@ -1118,17 +1201,17 @@ List all the types that have been added (by the dev, not by Bevy) as resources:
 
 ```rust
 fn print_resources(archetypes: &Archetypes, components: &Components) {
-  // `get_short_name()` removes the path information, e.g `bevy_audio::audio::Audio` -> `Audio`;
-  // in order to see the path, just use `info.name()`.
-  let mut resources = archetypes
-    .resource()
-    .components()
-    .map(|id| components.get_info(id).unwrap())
-    .map(|info| TypeRegistration::get_short_name(info.name()))
-    .collect::<Vec<_>>();
+    // `get_short_name()` removes the path information, e.g `bevy_audio::audio::Audio` -> `Audio`;
+    // in order to see the path, just use `info.name()`.
+    let mut resources = archetypes
+        .resource()
+        .components()
+        .map(|id| components.get_info(id).unwrap())
+        .map(|info| TypeRegistration::get_short_name(info.name()))
+        .collect::<Vec<_>>();
 
-  resources.sort();
-  resources.iter().for_each(|name| println!("{}", name));
+    resources.sort();
+    resources.iter().for_each(|name| println!("{}", name));
 }
 ```
 
@@ -1137,9 +1220,9 @@ fn print_resources(archetypes: &Archetypes, components: &Components) {
 ```rust
 use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
 
-App::build()
-  .add_plugin(LogDiagnosticsPlugin::default())
-  .add_plugin(FrameTimeDiagnosticsPlugin::default())
+App::new()
+    .add_plugin(LogDiagnosticsPlugin::default())
+    .add_plugin(FrameTimeDiagnosticsPlugin::default())
 ```
 
 ### Exit the application
@@ -1148,12 +1231,12 @@ App::build()
 use bevy::app::AppExit;
 
 fn exit_system(mut exit: EventWriter<AppExit>) {
-  exit.send(AppExit);
+    exit.send(AppExit);
 }
 
 // For prototyping, Bevy provides a system, to exit on pressing the Esc key:
 //
-App::build().add_system(bevy::input::system::exit_on_esc_system.system())
+App::new().add_system(bevy::input::system::exit_on_esc_system)
 ```
 
 ### Transformations
@@ -1162,7 +1245,7 @@ App::build().add_system(bevy::input::system::exit_on_esc_system.system())
 - Custom camera projection: see https://bevy-cheatbook.github.io/cookbook/custom-projection.html.
 - Pan+Orbit camera: see https://bevy-cheatbook.github.io/cookbook/pan-orbit-camera.html.
 
-## Plugins
+## 3rd party plugins
 
 - `bevy_ecs_tilemap`: for conveniently/efficiently handling tilemaps
 - `bevy_ecs_ldtk`: specialized `bevy_ecs_tilemap` for LDTK

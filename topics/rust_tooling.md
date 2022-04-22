@@ -45,7 +45,7 @@ cargo-features = ["strip"]
 name = "rust"
 version = "0.1.0"
 authors = ["Saverio Miroddi <saverio.etc@etc.com>"]
-edition = "2018"
+edition = "2021"                                           # WATCH OUT! Inappropriate edition may confusingly break projects
 
 # Customize the binary target.
 [[bin]]
@@ -105,7 +105,7 @@ Using cargo from root requires the member name; otherwise, each member can be tr
 members = ["playground", "rust_programming_by_example"]
 ```
 
-Members must have compatible dependencies, so projects can't be unrelated; without workspaces, it's possible to share artifacts by sharing the target dir (`[build] target-dir = "/path/to/target`).
+Members must have compatible dependencies, so projects can't be unrelated; without workspaces, it's possible to share artifacts by sharing the target dir (`.cargo/config` -> `[build] target-dir = "/path/to/target`; can be relative).
 
 #### Interaction between Visual Studio Code and multiple-project workspace
 
