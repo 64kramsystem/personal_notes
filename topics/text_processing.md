@@ -371,11 +371,10 @@ print $1 if /^Host: (.*)/
 print /^Host: (.*)/
 ```
 
-Print the next line after a match (alternatives):
+Print the line after (following) a match:
 
 ```sh
-printf 'a\nb1' | perl -ne '/a/ && print readline =~ /b(\d)/'  # => 1
-printf 'a\nb\nc\nd\n' | perl -pe '$_ = readline'              # => b\nd
+printf 'a\nb1' | perl -ne '/a/ && print readline =~ /b(\d)/'  # => 1 (with known content of following line)
 ```
 
 Print progress:
@@ -457,6 +456,15 @@ exit
 - capturing groups are not supported (see [APIs](#apis))
 - `\b` is not supported - use `\y`
 
+Match using an environment variable:
+
+```sh
+# Watch out, there may be edge cases: https://stackoverflow.com/a/19075707.
+#
+MYVAR=b
+echo $'a\nb\nc\n' | MYVAR="^$MYVAR$" awk '$0 ~ ENVIRON["MYVAR"] { print }'
+```
+
 ### APIs
 
 ```sh
@@ -482,9 +490,13 @@ echo 'abc.txt:12:XXX' | awk -F: '{ system("echo git blame "$1" -L "$2","$2) }' #
 ### Useful examples
 
 ```sh
-# Print a line after a match
+# Print a line after (following) a match
 #
-printf '1\n2' | awk '/1/ { getline; print }' # 2
+echo $'1\n2' | awk '/1/ { getline; print }' # 2
+
+# Print a line preceding a match
+#
+echo $'1\n2' | awk '/2/ { print prev } { prev = $0 }' #1
 
 # Add a line to Nth line (0-based)
 #

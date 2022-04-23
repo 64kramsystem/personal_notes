@@ -279,7 +279,7 @@ App::new()
 
 Bevy handles resources contention by looking at the system signatures.
 
-A startup system can run with a preset local:
+A system can run with a preset resource:
 
 ```rs
 fn my_system(mut cmd: Commands, config: &MyConfig) { /* ... */ }

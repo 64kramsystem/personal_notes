@@ -5,6 +5,8 @@
   - [Generic](#generic)
     - [All permutations of a sequence](#all-permutations-of-a-sequence)
   - [Matrices](#matrices)
+  - [Sort](#sort)
+    - [Counting sort](#counting-sort)
   - [Graphs](#graphs)
     - [A* search](#a-search)
     - [Min/Max Heap](#minmax-heap)
@@ -44,6 +46,12 @@ end
 ## Matrices
 
 - (Row/Column)-major array storage: elements of each (R/C) are contiguous in memory
+
+## Sort
+
+### Counting sort
+
+Don't forget counting sort, which is linear! And don't forget that the array must include the **number** of entries, not the **presence**!!
 
 ## Graphs
 

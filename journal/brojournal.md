@@ -1,3 +1,26 @@
+## Sat 23/Apr/2022
+
+- Studies: Computer Graphics
+  - [ ] Computer Graphics from Scratch (Rasterization only)
+    - [x] 8. Shaded Triangles
+    - [ ] 9. Perspective Projection
+- Admin
+  - [x] Review Vulkan books
+- SWE: Practice
+  - Leetcode
+    - [ ] Medium    91%: - tests, - submissions, -, "1874. Minimize Product Sum of Two Arrays"
+      - Confusing spec: the solutions rely anyway on a form of sorting
+- Studies: Rust/Gamedev
+  - [x] Review Rust GPU libraries
+  - [ ] Bevy
+    - [x] Review design of Legion scheduler and translation
+    - [x] Investigate more idiomatic ways for used Bevy patterns
+- Projects: Port Rusty Roguelike to Bevy
+  - [x] Add convenience script to manage porting new steps
+    - [x] Fight perl/awk
+  - [x] Update README
+  - [x] Search and add Rusty Roguelike license
+
 ## Fri 22/Apr/2022
 
 - Studies: Rust/Gamedev
