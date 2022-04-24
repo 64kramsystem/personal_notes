@@ -299,9 +299,12 @@ x.clamp(a, b)           # not really math, but convenient
 ### Algorithms
 
 ```rb
+# DON'T FORGET!!
+#
 include Containers
 
 # MinHeap works the same.
+# WATCH OUT!! This gem's heap implementation is *very* slow: adding 10k elements took 2.6", against 0.06" of the standard sort.
 #
 heap = MaxHeap.new([4, 5])
 heap << 10                 # Can't concatenate appends

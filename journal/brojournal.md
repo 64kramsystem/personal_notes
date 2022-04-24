@@ -1,3 +1,34 @@
+## Sun 24/Apr/2022
+
+- Study: Perl
+  - [x] Review scalar/list contexts
+- Studies: Rust/Gamedev
+  - Bevy
+    - [x] System sets/ordering
+    - [x] `ParamSet`s
+    - [x] Review run criteria/states issue
+      - https://bevy-cheatbook.github.io/features/fixed-timestep.html#caveats
+      - https://bevy-cheatbook.github.io/programming/states.html#combining-with-other-run-criteria
+      - https://github.com/IyesGames/iyes_loopless
+      - https://github.com/bevyengine/rfcs/pull/45
+    - [x] Study States
+- Projects: Port Rusty Roguelike to Bevy
+  - [x] Add "compare current" functionality to util script
+  - [x] Use World to simplify setp 06/01 input handling
+  - [x] Use World to mimick source projects "non-systems"
+    - [x] Consider conversion to full-system-based design
+  - [x] Port `06_EntitiesComponentsAndSystems_02_dungeonecs`
+  - [x] Port `07_TurnBasedGames_01_wandering`
+  - [x] Port `07_TurnBasedGames_02_turnbased`
+    - [x] Fight modeling states/system sets
+- SWE: Practice
+  - Leetcode
+    - [x] Medium    92%: 2 tests, 2 submissions, 8'13", "1874. Minimize Product Sum of Two Arrays"
+      - Mistakes
+        - The max heap solution is fast enough, but the library's implementation is very slow!
+      - Solved with count sort
+    - [x] Investigate `algorithms` library heap speed
+
 ## Sat 23/Apr/2022
 
 - Studies: Computer Graphics
@@ -12,7 +43,7 @@
       - Confusing spec: the solutions rely anyway on a form of sorting
 - Studies: Rust/Gamedev
   - [x] Review Rust GPU libraries
-  - [ ] Bevy
+  - Bevy
     - [x] Review design of Legion scheduler and translation
     - [x] Investigate more idiomatic ways for used Bevy patterns
 - Projects: Port Rusty Roguelike to Bevy
