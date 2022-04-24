@@ -7,11 +7,13 @@
     - [Components/bundles](#componentsbundles)
     - [Resources](#resources)
     - [Systems](#systems)
+      - [System sets and ordering](#system-sets-and-ordering)
       - [Stages](#stages)
       - [Events](#events)
       - [System Chaining](#system-chaining)
     - [Queries](#queries)
       - [Change detection](#change-detection)
+    - [World](#world)
     - [Commands](#commands)
       - [Recursive entities](#recursive-entities)
     - [Plugins](#plugins)
@@ -248,7 +250,11 @@ fn complex_system(res: ResMut<ResourceA>) { /* ... */ }
 fn my_system1(mut local: Local<MyState>) { /* ... */ }
 fn my_system2(mut local: Local<MyState>) { /* ... */ }
 
-// If need to match a resource, use as_ref()/as_mut().
+// If need to match a resource, use as_deref[_mut]()
+//
+fn system(key: Option<Res<Key>>) {
+  if let Some(key) = key.as_deref() { /* ... */ }
+}
 ```
 
 ### Systems
@@ -291,45 +297,31 @@ App::new()
     .run();
 ```
 
-It's possible to specify the systems ordering by using labels.
+#### System sets and ordering
+
+A SystemSet is a group of systems. Ordering is accomplished via labels (either enums (safer) or strings (less safe)) and `before()`/`after()` APIs.
 
 ```rust
+#[derive(Debug, Clone, PartialEq, Eq, Hash, SystemLabel)]
+enum MySystemSet { InputSet, MovementSet }
+
 App::new()
     .add_system_set(
         SystemSet::new()
-            .label("input")
+            .label(InputSet)
             .with_system(keyboard_input)
             .with_system(gamepad_input)
     )
-    .add_system(update_map.label("map"))
-
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-#[derive(SystemLabel)]
-enum MySystems { InputSet, Movement }
-
-App::new()
-    // A group ("set") of systems
-    //
     .add_system_set(
-      SystemSet::new()
-        .label(MySystems::InputSet)
-        .with_system(keyboard_input)
-        .with_system(gamepad_input)
-    )
-
-    // Strings can be used, but type system advantages are lost.
-    //
-    .add_system(debug_movement.label("temp-debug"))
-
-    .add_system(input_parameters.before("input"))
-
-    // before() and after() can be used on the same system.
-    //
-    .add_system(
-        player_movement
-            .label("player_movement")
-            .after("input")
-            .after("map")
+        SystemSet::new()
+            .label(MovementSet)
+            // SystemSet-level ordering.
+            //
+            .after(InputSet)
+            .with_system(player_movement)
+            // System-level ordering. before()/after() can be called on any system instance.
+            //
+            .with_system(blah.after(blah2))
     )
 ```
 
@@ -448,8 +440,10 @@ if let Ok((health, mut transform)) = query.get_mut(entity) {
 
 // Retrieve an entity that is guaranteed to be unique; panics if not found
 //
+// APIs: [get_]single[_mut](): combinations of ir/refutable and im/mutable.
+//
 fn query_player(mut q: Query<(&Player, &mut Transform)>) {
-    let (player, mut transform) = q.single_mut(); // single(): immutable
+    let (player, mut transform) = q.single_mut();
 }
 ```
 
@@ -457,13 +451,11 @@ When it's not possible for systems to query due to mutability conflicts, query s
 
 ```rust
 fn reset_health(
-  // A set can have up to 4 queries.
+  // Allow access to Health in both queries. There is a limit to the queries; it may be 7.
   //
-  // Access the health of enemies and the health of players (some entities could be both!).
-  //
-  mut q: QuerySet<(
-    QueryState<&mut Health, With<Enemy>>,
-    QueryState<&mut Health, With<Player>>
+  mut q: ParamSet<(
+    Query<&mut Health, With<Enemy>>,
+    Query<&mut Health, With<Player>>
   )>,
 ) {
   for mut health in q.q0_mut().iter_mut() { /* ... */ }
@@ -505,9 +497,25 @@ fn debug_new_hostiles(query: Query<(Entity, &Health), Added<Enemy>>) {
 
 WATCH OUT 1-frame lag; for `Added`, [stages](#stages) may be required.
 
+### World
+
+It's possible to interact directly with Bevy's storage, `World`, via App#world:
+
+```rs
+// This is a realworld where access was outside a system by design; World access is necessary, because App doesn't support removing resources.
+//
+app.world.remove_resource::<VirtualKeyCode>();
+
+// Insert a component/bundle
+//
+world.spawn()
+    .insert(foo)
+    .insert_bundle((bar, baz))
+```
+
 ### Commands
 
-Commands add/remove/update stuff"
+Commands add/remove/update stuff:
 
 ```rust
 fn spawn_player(mut commands: Commands) {
@@ -650,7 +658,7 @@ App::new()
 
 States are the global app states. It's convenient to use plugins to group systems to use with states.
 
-WATCH OUT! Since states are internally implemented via run criteria, they will conflict with other run criteria uses, e.g. fixed timestep.
+WATCH OUT! Since states are internally implemented via run criteria, they will conflict with other run criteria uses, e.g. fixed timestep. In order to work this around, use the [iyes_loopless crate](https://github.com/IyesGames/iyes_loopless).
 
 Setup:
 
@@ -667,14 +675,14 @@ App::new()
 
     // Different state callbacks /////////////////////////////////////////////////
 
+    // on state active (use this as base)
+    .add_system_set(
+        SystemSet::on_update(AppState::MainMenu).with_system(handle_ui_buttons)
+    )
+
     // when entering the state (equivalent of startup systems)
     .add_system_set(
         SystemSet::on_enter(AppState::MainMenu).with_system(setup_menu)
-    )
-
-    // on state active
-    .add_system_set(
-        SystemSet::on_update(AppState::MainMenu).with_system(handle_ui_buttons)
     )
 
     // on pause, e.g. things to do when becoming inactive

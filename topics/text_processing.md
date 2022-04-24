@@ -8,6 +8,7 @@
     - [Expression-related](#expression-related)
       - [Flip-flop, with examples](#flip-flop-with-examples)
     - [Priority](#priority)
+    - [Context: scalar vs. list](#context-scalar-vs-list)
     - [Special variables](#special-variables)
     - [Data types/conversions](#data-typesconversions)
       - [Context](#context)
@@ -145,6 +146,30 @@ printf 'Line 1\nLine 2' | perl -lne 'print; print scalar(readline)'
 # In cases like flip-flop, either use parenteses, or the low-priority operators `and`/`or`.
 #
 /start/ .. /end/ and print "match!"
+```
+
+### Context: scalar vs. list
+
+Functions can have two contexts: scalar and list, where they return respectively a single value and an array.
+
+The context is implied, but variables can change it:
+
+- `@name`: list
+- `$name`: scalar
+
+or the function `scalar` can be used to enforce it.
+
+Example:
+
+```perl
+# Wrong: list context; prints until EOF.
+#
+/foo/ && print readline
+
+# Correct versions.
+#
+/foo/ && print scalar(readline)
+/foo/ && print $l = readline
 ```
 
 ### Special variables
@@ -374,7 +399,8 @@ print /^Host: (.*)/
 Print the line after (following) a match:
 
 ```sh
-printf 'a\nb1' | perl -ne '/a/ && print readline =~ /b(\d)/'  # => 1 (with known content of following line)
+printf 'a\nb1\nc' | perl -ne '/a/ && print scalar(readline)'     # => b1; scalar is crucial!! otherwise, readline reads until EOF
+printf 'a\nb1\nc' | perl -ne '/a/ && print readline =~ /b(\d)/'  # => 1 (with known content of following line)
 ```
 
 Print progress:
@@ -495,6 +521,7 @@ echo 'abc.txt:12:XXX' | awk -F: '{ system("echo git blame "$1" -L "$2","$2) }' #
 echo $'1\n2' | awk '/1/ { getline; print }' # 2
 
 # Print a line preceding a match
+/# Alternative solution: filter via tac, and print following line :)
 #
 echo $'1\n2' | awk '/2/ { print prev } { prev = $0 }' #1
 
