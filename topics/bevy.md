@@ -7,8 +7,8 @@
     - [Components/bundles](#componentsbundles)
     - [Resources](#resources)
     - [Systems](#systems)
-      - [System sets and ordering](#system-sets-and-ordering)
       - [Stages](#stages)
+      - [System sets and ordering](#system-sets-and-ordering)
       - [Events](#events)
       - [System Chaining](#system-chaining)
     - [Queries](#queries)
@@ -297,36 +297,6 @@ App::new()
     .run();
 ```
 
-#### System sets and ordering
-
-A SystemSet is a group of systems. Ordering is accomplished via labels (either enums (safer) or strings (less safe)) and `before()`/`after()` APIs.
-
-```rust
-#[derive(Debug, Clone, PartialEq, Eq, Hash, SystemLabel)]
-enum MySystemSet { InputSet, MovementSet }
-
-App::new()
-    .add_system_set(
-        SystemSet::new()
-            .label(InputSet)
-            .with_system(keyboard_input)
-            .with_system(gamepad_input)
-    )
-    .add_system_set(
-        SystemSet::new()
-            .label(MovementSet)
-            // SystemSet-level ordering.
-            //
-            .after(InputSet)
-            .with_system(player_movement)
-            // System-level ordering. before()/after() can be called on any system instance.
-            //
-            .with_system(blah.after(blah2))
-    )
-```
-
-Labels and labelled items are M:N.
-
 #### Stages
 
 Each frame goes through stages; Bevy has 5: `First`, `PreUpdate`, `Update`, `PostUpdate`, `Last`.
@@ -351,11 +321,59 @@ App::new()
     .add_stage_after(CoreStage::Update, DebugStage, SystemStage::parallel())
 ```
 
+#### System sets and ordering
+
+A SystemSet is a group of systems. Ordering is accomplished via labels (either enums (safer) or strings (less safe)) and `before()`/`after()` APIs.
+
+WATCH OUT!! `after()/before()` don't constrain execution - only ordering. In other words, if a system must run on a certain state only, the system set must still specify the state stage callback (e.g. `on_update()`) - see below.
+
+```rust
+// All the derives are required!
+//
+#[derive(Debug, Clone, PartialEq, Eq, Hash, SystemLabel)]
+enum MySystemSet { InputSet, MovementSet }
+
+App::new()
+    .add_system_set(
+        SystemSet::new()
+            .label(InputSet)
+            .with_system(keyboard_input)
+            .with_system(gamepad_input)
+    )
+    .add_system_set(
+        SystemSet::new()
+            .label(MovementSet)
+            // SystemSet-level ordering.
+            //
+            .after(InputSet)
+            .with_system(player_movement)
+            // System-level ordering. before()/after() can be called on any system instance.
+            //
+            .with_system(blah.after(blah2))
+    )
+    .add_system_set(
+        SystemSet::on_update(TurnState::MonsterTurn)
+            .label(MonsterThinks)
+            .with_system(monster_thinks)
+    )
+    .add_system_set(
+        // Example of user bug! The system set must be constrained: (`on_update(TurnState::MonsterTurn)`),
+        // otherwise, it will run on any state.
+        SystemSet::new()
+            .after(Monster)
+            .with_system(monster_moves)
+    )
+```
+
+Labels and labelled items are M:N, so labels can be shared!
+
 #### Events
 
 Systems can communicate via a message queue - the `Event`s system.
 
 WATCH OUT!! Events persists only until the end of the next frame (= max 2 frames).
+
+Important: every reader tracks the events it has read independently, so one can handle the same events from multiple systems.
 
 Additionally, due to the async nature, a system may receive the event only on the next frame ("1-frame-lag" problem); if this is a problem, must explicitly order systems.
 
@@ -508,9 +526,30 @@ app.world.remove_resource::<VirtualKeyCode>();
 
 // Insert a component/bundle
 //
+cmd.spawn()
+    .insert(foo)
+    .insert_bundle((bar, baz))
 world.spawn()
     .insert(foo)
     .insert_bundle((bar, baz))
+
+// In order to find if an entity has a component, one can:
+//
+// - use Query
+// - use World
+//
+// Sstems that receive world are called "exclusive", and block all the other ones; also, accessing
+// World can be incompatible with querying some resources.
+```rs
+pub fn movement(mut events: EventReader<Move>, query: Query<&Player>) {
+    for &Move { entity, .. } in events.iter() {
+        if query.get(entity).is_ok() { /* ... */ }
+    }
+}
+
+pub fn movement(world: &World) {
+  if let Some(player) = world.entity(entity).get::<Player>() { /* ... */ }
+}
 ```
 
 ### Commands
@@ -740,7 +779,7 @@ fn enter_game(mut app_state: ResMut<State<AppState>>) {
 }
 ```
 
-(Double check; may not be necessary anymore) WATCH OUT!! Key-initiated state changes require Input to be reset:
+WATCH OUT!! Key-initiated state changes require `Input` to be reset:
 
 ```rust
 fn esc_to_menu(mut keys: ResMut<Input<KeyCode>>, mut app_state: ResMut<State<AppState>>) {
