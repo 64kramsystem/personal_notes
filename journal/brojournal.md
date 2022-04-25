@@ -1,3 +1,23 @@
+## Mon 25/Apr/2022
+
+- Studies: Rust/Gamedev
+  - Bevy/Arguably Better Breakout
+    - [x] Upgrade to Bevy v0.6 and test
+- Projects: Port Rusty Roguelike to Bevy
+  - [x] Clean warnings in source project
+  - [x] Minor cleanups to port steps
+  - [x] Port `07_TurnBasedGames_03_intent`
+    - [x] Brutal fight with getting component for entity
+  - [x] Brutal fight with system sets ordering/states filtering
+  - [x] Fix multiple keypresses bug
+  - [x] Fix/Improve cargo configuration structure
+  - [x] Fight fix player_input system not filtering out enemies
+  - [ ] Brutal fight with fix ghosting (to backport)
+    - [x] Review Legion cycles per tick/systems ordering
+- Open Source: Bevy Cheatbook
+  - [x] Open PR for missing trait required in labels chapter
+    - [x] Fight improper rendering of ```[`PartialEq`][std::PartialEq]```
+
 ## Sun 24/Apr/2022
 
 - Study: Perl

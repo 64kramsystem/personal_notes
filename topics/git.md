@@ -285,9 +285,10 @@ Diff/Patching:
 # $end_commit defaults to HEAD.
 # Use `$commit~..$commit` to transfer a single commit.
 # One patch per commit is created.
+# `--reject`: in case of problems, partially apply the applicable patches, instead of not applying any
 #
 format-patch [--stdout] $start_commit~[..$end_commit]
-am $patchfile
+am [--reject] $patchfile
 
 # "Transfer" one or more commits between two repositories.
 #
@@ -301,10 +302,10 @@ git -C ~/code/riscv_images format-patch --stdout $start_commit[..$end_commit] |
 # specified in one way or another (they're mandatory, but `format-patch` has no configuration entries).
 #
 # - diff: suitable for standard patch import; with prefix, import using "patch -p1"
-# - apply: [check] instead of apply
+# - apply: `--check`: check instead of apply; `--reject`: see `am`
 #
 diff --no-prefix
-apply [--check] $patchfile
+apply [--check] [--reject] $patchfile
 ```
 
 ## Metadata

@@ -105,7 +105,7 @@ Using cargo from root requires the member name; otherwise, each member can be tr
 members = ["playground", "rust_programming_by_example"]
 ```
 
-Members must have compatible dependencies, so projects can't be unrelated; without workspaces, it's possible to share artifacts by sharing the target dir (`.cargo/config` -> `[build] target-dir = "/path/to/target`; can be relative).
+Members must have compatible dependencies, so projects can't be unrelated; without workspaces, it's possible to share artifacts by sharing the target dir (`.cargo/config` -> `[build] target-dir = "/path/to/target`; if relative, it refers to the `.cargo` parent directory).
 
 #### Interaction between Visual Studio Code and multiple-project workspace
 

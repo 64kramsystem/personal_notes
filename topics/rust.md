@@ -1274,7 +1274,11 @@ Result:
 // !!!!!! WATCH OUT! The Result error enum is `Err`, not `Error` !!!!!!
 
 // Return the (Option<>) source that caused the error, when there has been a chain.
+//
 err.source();
+
+// Check if a result is Ok and discard the content.
+if result.is_ok() { /* ... */ }
 
 // Pattern for ignoring an error, useful in some cases
 //
