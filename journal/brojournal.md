@@ -1,3 +1,14 @@
+## Tue 26/Apr/2022
+
+- Open Source: Bevy Cheatbook
+  - [x] PR for missing trait required in labels chapter
+    - [x] Update PR
+- Studies: Rust/Gamedev
+  - Bevy
+    - [x] Study `iyes_loopless` crate
+- Projects: Port Rusty Roguelike to Bevy
+  - [x] Fight fix flushing, by implementing `iyes_loopless` crate
+
 ## Mon 25/Apr/2022
 
 - Studies: Rust/Gamedev

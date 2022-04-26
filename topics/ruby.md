@@ -212,10 +212,10 @@ Generic conversion examples (consider constraints, where specified, e.g. "codepo
 
 |       input       |          output          | code                                                   | notes                                    |
 | :---------------: | :----------------------: | ------------------------------------------------------ | ---------------------------------------- |
-|       "0Aa"       |         "304161"         | `each_byte.map { | b | "%02X" % b }.join`              |                                          |
+|       "0Aa"       |         "304161"         | `each_byte.map { [b] "%02X" % b }.join`                |                                          |
 |       "0Aa"       |         "304161"         | `bytes_arr.pack('c*').unpack1("H*")`                   |                                          |
 |    [0x77,0x0F]    |    "0111011100001111"    | `pack("C*").unpack1("B*")`                             | padded big endian 8-bits bit string      |
-|   [0,0xF,0,0xF]   | ["0111011100001111"] * 2 | `each_slice(2).map { |a| a.pack("C*").unpack1("B*") }` | (same as previous, but in 16-bit chunks) |
+|   [0,0xF,0,0xF]   | ["0111011100001111"] * 2 | `each_slice(2).map { [a] a.pack("C*").unpack1("B*") }` | (same as previous, but in 16-bit chunks) |
 |       "0Aa"       |        [48,65,97]        | `codepoints`                                           | valid codepoints                         |
 |   [48,65,0xFF]    |         "0A\xFF"         | `map(&:chr).join`                                      | non-ASCII chars are escaped              |
 |  [48,0x80,0x81]   |     "0\u0080\u0081"      | `pack('U*')`                                           | invalid codepoints are escaped           |
@@ -224,6 +224,8 @@ Generic conversion examples (consider constraints, where specified, e.g. "codepo
 |        65         |           chr            | `A`                                                    | non-ASCII chars are escaped              |
 |      "FFFF"       |          65535           | `hex` / `to_i(16)`                                     |                                          |
 |       4095        |          "fff"           | `to_s(16)`                                             | no padding!!                             |
+
+(brackets are used as block vars due to an issue with the VSC plugin)
 
 See https://idiosyncratic-ruby.com/49-what-the-format.html for `printf`-style formatting.
 
@@ -603,7 +605,7 @@ Array.new(matrix.map(&:size).max) { |i| matrix.map { |e| e[i] } }
 
 enu.count { |a| a.odd? }                # `.count {}` works as intuitive
 enu.filter_map { |n| n**2 if n.even? }  # yay! (falsey values are discarded)
-enu.each_cons(n)                        # each overlapping subarray of `n` items; if an array has size < window, it's *not* included
+enu.each_cons(n)                        # each overlapping subarray of `n` items; WATCH OUT!! if an array has size < window, it's *not* included
 enu.each_slice(n)                       # each non overlapping subarray of `n` items; last windows, if smaller, *is* included
 
 enum.each_with_index.drop(1).each {}    # skip the first N values of an iterator; WATCH OUT! not lazy (use lazy() if needed)

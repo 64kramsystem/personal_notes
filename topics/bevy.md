@@ -303,32 +303,35 @@ Each frame goes through stages; Bevy has 5: `First`, `PreUpdate`, `Update`, `Pos
 
 By default, user-defined systems are placed in `Update`; if systems are added to the other stages, beware of interactions with Bevy's internal ones.
 
-See https://bevy-cheatbook.github.io/programming/stages.html.0
+ECS flushing is performed between stages, so they are currently (Apr/22) the easiest way to flush.
+
+See https://bevy-cheatbook.github.io/programming/stages.html
 
 ```rs
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-#[derive(StageLabel)]
-enum MyStages { Prepare, Cleanup }
-
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-#[derive(StageLabel)]
+// All the derives are required! Strings can also be used, but they're less safe.
+//
+#[derive(Debug, Clone, PartialEq, Eq, Hash, StageLabel)]
 struct DebugStage;
 
 App::new()
-    // Add custom stages. `CoreStage` is a Bevy enum.
+    // Add custom stages (`CoreStage` is a Bevy enum.)
+    // add_stage_before(), and SystemStage::single_threaded() are also supported.
     //
-    .add_stage_before(CoreStage::Update, MyStages::Prepare, SystemStage::parallel())
     .add_stage_after(CoreStage::Update, DebugStage, SystemStage::parallel())
+    // Associate systems/sets to stages
+    //
+    .add_system_to_stage(DebugStage, debug_player_hp)
+    .add_system_set_to_stage(DebugState, movement)
 ```
 
 #### System sets and ordering
 
-A SystemSet is a group of systems. Ordering is accomplished via labels (either enums (safer) or strings (less safe)) and `before()`/`after()` APIs.
+A SystemSet is a group of systems. Ordering is accomplished via labels, and `before()`/`after()` APIs.
 
 WATCH OUT!! `after()/before()` don't constrain execution - only ordering. In other words, if a system must run on a certain state only, the system set must still specify the state stage callback (e.g. `on_update()`) - see below.
 
 ```rust
-// All the derives are required!
+// All the derives are required! Strings can also be used, but they're less safe.
 //
 #[derive(Debug, Clone, PartialEq, Eq, Hash, SystemLabel)]
 enum MySystemSet { InputSet, MovementSet }
