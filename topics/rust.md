@@ -34,6 +34,7 @@
     - [Method overloading (workaround)](#method-overloading-workaround)
     - [Unions](#unions)
   - [Generics](#generics)
+    - [Const Generics](#const-generics)
   - [Traits](#traits)
     - [Basics (and Generics #2)](#basics-and-generics-2)
     - [Approaches to collections and static/dynamic dispatching](#approaches-to-collections-and-staticdynamic-dispatching)
@@ -1822,6 +1823,21 @@ impl<T, U> Point<T, U> {
     &self.x
   }
 }
+```
+
+### Const Generics
+
+Awesome!! This code is using an unstable const generic feature, in order to use an enum:
+
+```rs
+#![feature(adt_const_params)]
+
+#[derive(PartialEq, Eq)]
+pub enum GameStep { AwaitingInput, MovePlayer }
+
+pub fn next_step<const T: GameStep>() { insert_resource(T); }
+
+app.with_system(next_step::next_step::<{ AwaitingInput }>)
 ```
 
 ## Traits

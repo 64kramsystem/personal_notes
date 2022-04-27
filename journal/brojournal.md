@@ -1,3 +1,21 @@
+## Wed 27/Apr/2022
+
+- Admin
+  - [x] Review Crystal multithreading discussions
+- Studies
+  -  Rust
+    - [x] Const generics
+  - Bevy
+    - [x] Review `iyes_loopless` resource-based conditionals
+- Projects: Port Rusty Roguelike to Bevy
+  - [x] Backport `iyes_loopless` logic to 07.02 (and remove 07.01)
+  - [x] Implement state machine using const generics
+  - [x] Implement rendering based on resource-based conditionals
+- SWE: Practice
+  - Leetcode
+- Studies: Computer Graphics
+  - [ ] Computer Graphics from Scratch (Rasterization only)
+
 ## Tue 26/Apr/2022
 
 - Open Source: Bevy Cheatbook
