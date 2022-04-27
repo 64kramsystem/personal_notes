@@ -7,18 +7,19 @@
     - [Components/bundles](#componentsbundles)
     - [Resources](#resources)
     - [Systems](#systems)
-      - [Stages](#stages)
+      - [Stages (BROKEN!!)](#stages-broken)
+    - [States (BROKEN!!)](#states-broken)
       - [System sets and ordering](#system-sets-and-ordering)
-      - [Events](#events)
+      - [Handling state via `iyes_loopless` crate](#handling-state-via-iyes_loopless-crate)
+    - [Run criteria](#run-criteria)
       - [System Chaining](#system-chaining)
+      - [Events](#events)
     - [Queries](#queries)
       - [Change detection](#change-detection)
     - [World](#world)
     - [Commands](#commands)
       - [Recursive entities](#recursive-entities)
     - [Plugins](#plugins)
-    - [States](#states)
-    - [Run criteria](#run-criteria)
   - [Rendering](#rendering)
     - [Transforms](#transforms)
     - [Background](#background)
@@ -297,7 +298,9 @@ App::new()
     .run();
 ```
 
-#### Stages
+#### Stages (BROKEN!!)
+
+WATCH OUT!! Bevy's states/stages are poorly implemented, and should not be used (together); see the [`iyes_loopless` section](#handling-state-via-iyes_loopless-crate).
 
 Each frame goes through stages; Bevy has 5: `First`, `PreUpdate`, `Update`, `PostUpdate`, `Last`.
 
@@ -324,7 +327,106 @@ App::new()
     .add_system_set_to_stage(DebugState, movement)
 ```
 
+### States (BROKEN!!)
+
+WATCH OUT!! Bevy's states/stages are poorly implemented, and should not be used (together); see the [`iyes_loopless` section](#handling-state-via-iyes_loopless-crate).
+
+States are the global app states. It's convenient to use plugins to group systems to use with states.
+
+Setup:
+
+```rust
+#[derive(Debug, Clone, Eq, PartialEq, Hash)]
+enum AppState { MainMenu, InGame, Paused }
+
+App::new()
+    // add the first app state to the stack
+    .add_state(AppState::MainMenu)
+
+    // systems outside of system sets will run regardless of the state
+    .add_system(play_music)
+
+    // Different state callbacks /////////////////////////////////////////////////
+
+    // on state active (use this as base)
+    .add_system_set(
+        SystemSet::on_update(AppState::MainMenu).with_system(handle_ui_buttons)
+    )
+
+    // when entering the state (equivalent of startup systems)
+    .add_system_set(
+        SystemSet::on_enter(AppState::MainMenu).with_system(setup_menu)
+    )
+
+    // on pause, e.g. things to do when becoming inactive
+    .add_system_set(
+        SystemSet::on_pause(AppState::InGame).with_system(hide_enemies)
+    )
+
+    // player idle animation while paused
+    .add_system_set(
+        SystemSet::on_inactive_update(AppState::InGame).with_system(player_idle)
+    )
+
+    // on state both active and paused
+    .add_system_set(
+        SystemSet::on_in_stack_update(AppState::InGame).with_system(animate_water)
+    )
+
+    // when resuming from pause
+    .add_system_set(
+        SystemSet::on_resume(AppState::InGame).with_system(reset_player)
+    )
+
+    // on exit (e.g. cleanup)
+    .add_system_set(
+        SystemSet::on_exit(AppState::MainMenu).with_system(close_menu)
+    )
+```
+
+Match:
+
+```rust
+fn play_music(app_state: Res<State<AppState>>) {
+    match app_state.current() {
+        AppState::MainMenu => { /* ... */ }
+        AppState::InGame => { /* ... */ }
+        AppState::Paused => { /* ... */ }
+    }
+}
+```
+
+Change; all the current state's systems complete before moving to the next system (there's no limit to the number of state changes within a frame):
+
+```rust
+// Switch via stack.
+// Go into the pause screen, and back into the game.
+//
+app_state.push(AppState::Paused).unwrap();
+app_state.pop().unwrap();
+
+// Direct set.
+//
+fn enter_game(mut app_state: ResMut<State<AppState>>) {
+    // Can fail if we are already in the target state or if another state change is already queued
+    app_state.set(AppState::InGame).unwrap();
+}
+```
+
+WATCH OUT!! Key-initiated state changes require `Input` to be reset:
+
+```rust
+fn esc_to_menu(mut keys: ResMut<Input<KeyCode>>, mut app_state: ResMut<State<AppState>>) {
+    if keys.just_pressed(KeyCode::Escape) {
+        app_state.set(AppState::MainMenu).unwrap();
+        keys.reset(KeyCode::Escape);
+    }
+}
+```
+
 #### System sets and ordering
+
+WATCH OUT!! Bevy's states/stages are poorly implemented, and should not be used (together); see the [`iyes_loopless` section](#handling-state-via-iyes_loopless-crate).
 
 A SystemSet is a group of systems. Ordering is accomplished via labels, and `before()`/`after()` APIs.
 
@@ -370,6 +472,84 @@ App::new()
 
 Labels and labelled items are M:N, so labels can be shared!
 
+#### Handling state via `iyes_loopless` crate
+
+This crate doesn't have problems with mixing states/stages; states can be used as a mean to perform commands flushing.
+
+WATCH OUT!! iyes_loopless's state changes flush the frame! Consider this especially in relation to events.
+
+Example of state management:
+
+```rs
+// Resource-based conditional function; requires `.run_if(on_rendering_signal)`.
+// See the system set declaration below for the non-function-based alternative.
+//
+// It's discouraged to mutable access unless one is certain of what they're doing; this is a fairly
+// simple case, so there's no harm.
+//
+fn on_rendering_signal(mut commands: Commands, render: Option<Res<DoRender>>) -> bool {
+    if render.is_some() {
+        commands.remove_resource::<DoRender>();
+        true
+    } else {
+        false
+    }
+}
+
+// System set that runs on each frame.
+app.add_system_set(
+    ConditionSet::new()
+        .run_if_resource_exists::<DoRender>()      // run_if() must be invoked before with_system().
+        .with_system(map_render::map_render)
+        .with_system(entity_render::entity_render)
+        .into()
+);
+
+// System running on a specific state
+app.add_system(
+    player_input::player_input.run_in_state(AwaitingInput),
+);
+
+// SystemSet (`ConditionSet`) running on a specific state
+app.add_system_set(
+    ConditionSet::new()
+        .run_in_state(MovePlayer)
+        .with_system(movement::movement)
+        // Typically, a state change system is needed.
+        .with_system(next_step::next_step)
+        .into(),
+);
+```
+
+### Run criteria
+
+Run criteria allow low-level systems running specification. See: https://bevy-cheatbook.github.io/programming/run-criteria.html.
+
+#### System Chaining
+
+Systems can be chained, so that the output of one is the input of the next.
+
+```rust
+fn net_receive(mut netcode: ResMut<MyNetProto>) -> std::io::Result<()> {
+    netcode.receive_updates()?;
+    Ok(())
+}
+
+fn handle_io_errors(In(result): In<std::io::Result<()>>) {
+    if let Err(e) = result { eprintln!("I/O error occurred: {}", e); }
+}
+
+// WATCH OUT! Chaining must be registered:
+//
+App::new().add_system(net_receive.chain(handle_io_errors))
+```
+
+WATCH OUT!
+
+- for passing data around, it's best to use Events;
+- coupling systems by chaining them may limit the parallelization;
+- if a system requires wide mutable access, it may limit the parallelization.
+
 #### Events
 
 Systems can communicate via a message queue - the `Event`s system.
@@ -403,31 +583,6 @@ fn debug_levelups(mut levelup: EventReader<LevelUpEvent>) {
 //
 App::new().add_event::<LevelUpEvent>()
 ```
-
-#### System Chaining
-
-Systems can be chained, so that the output of one is the input of the next.
-
-```rust
-fn net_receive(mut netcode: ResMut<MyNetProto>) -> std::io::Result<()> {
-    netcode.receive_updates()?;
-    Ok(())
-}
-
-fn handle_io_errors(In(result): In<std::io::Result<()>>) {
-    if let Err(e) = result { eprintln!("I/O error occurred: {}", e); }
-}
-
-// WATCH OUT! Chaining must be registered:
-//
-App::new().add_system(net_receive.chain(handle_io_errors))
-```
-
-WATCH OUT!
-
-- for passing data around, it's best to use Events;
-- coupling systems by chaining them may limit the parallelization;
-- if a system requires wide mutable access, it may limit the parallelization.
 
 ### Queries
 
@@ -523,11 +678,12 @@ WATCH OUT 1-frame lag; for `Added`, [stages](#stages) may be required.
 It's possible to interact directly with Bevy's storage, `World`, via App#world:
 
 ```rs
-// This is a realworld where access was outside a system by design; World access is necessary, because App doesn't support removing resources.
+// This is a realworld case where access was outside a system by design; World access is necessary,
+// because App doesn't support removing resources.
 //
 app.world.remove_resource::<VirtualKeyCode>();
 
-// Insert a component/bundle
+// Insert a component/bundle.
 //
 cmd.spawn()
     .insert(foo)
@@ -541,8 +697,6 @@ world.spawn()
 // - use Query
 // - use World
 //
-// Sstems that receive world are called "exclusive", and block all the other ones; also, accessing
-// World can be incompatible with querying some resources.
 ```rs
 pub fn movement(mut events: EventReader<Move>, query: Query<&Player>) {
     for &Move { entity, .. } in events.iter() {
@@ -550,9 +704,14 @@ pub fn movement(mut events: EventReader<Move>, query: Query<&Player>) {
     }
 }
 
-pub fn movement(world: &World) {
+// Systems with mutable World access are called "exclusive", and block all the other ones; also, accessing
+// World can be incompatible with querying some resources.
+// Exclusive system must be registered with `exclusive_system()`.
+//
+pub fn excl_movement(world: &World) {
   if let Some(player) = world.entity(entity).get::<Player>() { /* ... */ }
 }
+add_system(excl_movement.exclusive_system())
 ```
 
 ### Commands
@@ -695,107 +854,6 @@ App::new()
         plugins.disable::<LogPlugin>()
     })
 ```
-
-### States
-
-States are the global app states. It's convenient to use plugins to group systems to use with states.
-
-WATCH OUT! Since states are internally implemented via run criteria, they will conflict with other run criteria uses, e.g. fixed timestep. In order to work this around, use the [iyes_loopless crate](https://github.com/IyesGames/iyes_loopless).
-
-Setup:
-
-```rust
-#[derive(Debug, Clone, Eq, PartialEq, Hash)]
-enum AppState { MainMenu, InGame, Paused }
-
-App::new()
-    // add the first app state to the stack
-    .add_state(AppState::MainMenu)
-
-    // systems outside of system sets will run regardless of the state
-    .add_system(play_music)
-
-    // Different state callbacks /////////////////////////////////////////////////
-
-    // on state active (use this as base)
-    .add_system_set(
-        SystemSet::on_update(AppState::MainMenu).with_system(handle_ui_buttons)
-    )
-
-    // when entering the state (equivalent of startup systems)
-    .add_system_set(
-        SystemSet::on_enter(AppState::MainMenu).with_system(setup_menu)
-    )
-
-    // on pause, e.g. things to do when becoming inactive
-    .add_system_set(
-        SystemSet::on_pause(AppState::InGame).with_system(hide_enemies)
-    )
-
-    // player idle animation while paused
-    .add_system_set(
-        SystemSet::on_inactive_update(AppState::InGame).with_system(player_idle)
-    )
-
-    // on state both active and paused
-    .add_system_set(
-        SystemSet::on_in_stack_update(AppState::InGame).with_system(animate_water)
-    )
-
-    // when resuming from pause
-    .add_system_set(
-        SystemSet::on_resume(AppState::InGame).with_system(reset_player)
-    )
-
-    // on exit (e.g. cleanup)
-    .add_system_set(
-        SystemSet::on_exit(AppState::MainMenu).with_system(close_menu)
-    )
-```
-
-Match:
-
-```rust
-fn play_music(app_state: Res<State<AppState>>) {
-    match app_state.current() {
-        AppState::MainMenu => { /* ... */ }
-        AppState::InGame => { /* ... */ }
-        AppState::Paused => { /* ... */ }
-    }
-}
-```
-
-Change; all the current state's systems complete before moving to the next system (there's no limit to the number of state changes within a frame):
-
-```rust
-// Switch via stack.
-// Go into the pause screen, and back into the game.
-//
-app_state.push(AppState::Paused).unwrap();
-app_state.pop().unwrap();
-
-// Direct set.
-//
-fn enter_game(mut app_state: ResMut<State<AppState>>) {
-    // Can fail if we are already in the target state or if another state change is already queued
-    app_state.set(AppState::InGame).unwrap();
-}
-```
-
-WATCH OUT!! Key-initiated state changes require `Input` to be reset:
-
-```rust
-fn esc_to_menu(mut keys: ResMut<Input<KeyCode>>, mut app_state: ResMut<State<AppState>>) {
-    if keys.just_pressed(KeyCode::Escape) {
-        app_state.set(AppState::MainMenu).unwrap();
-        keys.reset(KeyCode::Escape);
-    }
-}
-```
-
-### Run criteria
-
-Run criteria allow low-level systems running specification. See: https://bevy-cheatbook.github.io/programming/run-criteria.html.
 
 ## Rendering
 

@@ -734,6 +734,17 @@ Open3.popen3([env,] command) do |stdin, stdout, stderr, wait_thread|
 end
 ```
 
+A convenient way to execute and capture the output is `capture3`:
+
+```ruby
+stdout, stderr, status = Open3.capture3(extra_env_vars, command)
+
+$stdout.puts stdout
+$stderr.puts stderr
+
+exit status.exitstatus if !status.success?
+```
+
 ### Live execution, via `Kernel#system`
 
 This way, stdout/stderr content is printed straight away.
