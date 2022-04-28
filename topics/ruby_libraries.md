@@ -47,6 +47,7 @@
   - [Solargraph](#solargraph)
   - [Databases](#databases)
     - [SQLite 3](#sqlite-3)
+    - [Mysql2](#mysql2)
 
 ## APIs/Stdlib
 
@@ -83,14 +84,15 @@ Addressable::URI.form_encode(p1: "&&&", "p2" => "!!!") # "p1=%26%26%26&p2=%21%21
 
 Useful methods:
 
-- `casecmp(str)`: case insensitive comparison
+- `casecmp(str)`                      : case insensitive comparison
 - `center`, `ljust(int)`, `rjust(int)`: WATCH OUT! Padding == justifying to the opposite direction!!
 - `strip`, `lstrip`, `rstrip`
 - `index(substr)`, `rindex(substr)`
 - `slice(start[, end])`, `slice!`
 - `start_with?`
-- `lcomp`: doesn't exist; use `str.gsub(/^(Regexp.escape(expr))+/)`
-- `% *values`: equal to `sprintf(str, *values)`
+- `lcomp`                             : doesn't exist; use `str.gsub /^(Regexp.escape(expr))+/`
+- `% *values`                         : equal to `sprintf(str, *values)`
+- `each_slice`                        : doesn't exist; use `str.scan /.{1,n}/`
 
 Splitting:
 
@@ -472,16 +474,17 @@ os.delete_field(:surname)     # remove a field
 #
 class SubStruct < Struct.new(:a, :b); end
 
-# Struct Form with explicit class naming.
+# Struct - form with explicit class naming.
 # It seems that this doesn't accept scoping (= forces the Struct module)
 #
 klazz = Struct.new('MyStruct', :a, :b) do
   def mymethod; end
 end
 klazz.new('aval', 'bval')
-Struct::MyStruct
 
-klazz.members # returns the defined members ([:a, :b], in this case)
+klazz.members # defined members ([:a, :b])
+klazz.to_a    # values array    (['aval', 'bval'])
+klazz.to_h    # values hash     ({a: 'aval', b: 'bval'})
 
 # Struct with implicit name modules.
 # Struct::MyStruct won't exist, in this case.
@@ -1114,4 +1117,13 @@ db.transaction; db.execute(...); db.commit
 db.execute "SELECT name FROM mysql_master WHERE type = 'table'"  # get table names
 
 db.extend(SQLite::Pragmas); db.table_info(table_name)  # table metadata
+```
+
+### Mysql2
+
+```rb
+@client = Mysql2::Client.new(host: HOST, username: USER, password: PWD)
+# Queries return hashes by default.
+# The #query returned class is a proxy.
+@client.query(sql, as: :array).map { |c1, c2| ... }
 ```
