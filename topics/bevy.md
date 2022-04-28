@@ -474,9 +474,7 @@ Labels and labelled items are M:N, so labels can be shared!
 
 #### Handling state via `iyes_loopless` crate
 
-This crate doesn't have problems with mixing states/stages; states can be used as a mean to perform commands flushing.
-
-WATCH OUT!! iyes_loopless's state changes flush the frame! Consider this especially in relation to events.
+This crate doesn't have problems with mixing states/stages.
 
 Example of state management:
 
@@ -552,13 +550,11 @@ WATCH OUT!
 
 #### Events
 
-Systems can communicate via a message queue - the `Event`s system.
+Systems can communicate via a message queue - the `Event`s system. Every reader tracks the events it has read independently, so one can handle the same events from multiple systems.
 
-WATCH OUT!! Events persists only until the end of the next frame (= max 2 frames).
+WATCH OUT!! W/R don't enforce ordering, so if the two W/R systems are not ordered, events may be read on the next frame ("1-frame-lag" problem). Events persists only until the end of the next frame.
 
-Important: every reader tracks the events it has read independently, so one can handle the same events from multiple systems.
-
-Additionally, due to the async nature, a system may receive the event only on the next frame ("1-frame-lag" problem); if this is a problem, must explicitly order systems.
+It's possible to manually manage events (see [here](https://bevy-cheatbook.github.io/patterns/manual-event-clear.html)).
 
 ```rust
 struct LevelUpEvent(Entity);
@@ -647,6 +643,8 @@ Use query filters:
 - `Changed<T>`: some as `Added` or component mutably accessed (`DerefMut` access, not necessarily changed; not query only)
 
 If triggering `Changed` for unchanged variables is undesirable, modify the code upstream to set a variable (`DerefMut`) only if the value changed.
+
+Removal is trickier to detect; see [here](https://bevy-cheatbook.github.io/programming/removal-detection.html).
 
 ```rust
 // Print the stats of friendly players when they change:

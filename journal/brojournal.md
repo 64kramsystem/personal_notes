@@ -1,3 +1,20 @@
+## Thu 28/Apr/2022
+
+- Studies: Rust/Gamedev
+  - [x] Bevy cheatbook
+    - [x] Chapter 9: Bevy Programming Framework
+    - Skipped all the unread chapters
+- SWE: Practice
+  - Leetcode
+    - [x] Medium    90%: 2 tests, 1 submissions, 4'48", "1570. Dot Product of Two Sparse Vectors" (Naive sol.)
+      - Mistakes
+        - Misunderstood the class structure
+    - [x] Medium    90%: 1 tests, 1 submissions, ~2'06", "1570. Dot Product of Two Sparse Vectors" (Hash sol.)
+    - [x] Medium    90%: 1 tests, 1 submissions, ~3'56", "1570. Dot Product of Two Sparse Vectors" (Array pairs sol)
+- Projects: Port Rusty Roguelike to Bevy
+  - [ ] Use stages to handle commands flushing
+    - [x] Update and verify on 07.03
+
 ## Wed 27/Apr/2022
 
 - Admin
