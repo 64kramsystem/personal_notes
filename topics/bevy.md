@@ -7,8 +7,8 @@
     - [Components/bundles](#componentsbundles)
     - [Resources](#resources)
     - [Systems](#systems)
-      - [Stages (BROKEN!!)](#stages-broken)
-    - [States (BROKEN!!)](#states-broken)
+      - [Stages](#stages)
+    - [States](#states)
       - [System sets and ordering](#system-sets-and-ordering)
       - [Handling state via `iyes_loopless` crate](#handling-state-via-iyes_loopless-crate)
     - [Run criteria](#run-criteria)
@@ -298,7 +298,7 @@ App::new()
     .run();
 ```
 
-#### Stages (BROKEN!!)
+#### Stages
 
 WATCH OUT!! Bevy's states/stages are poorly implemented, and should not be used (together); see the [`iyes_loopless` section](#handling-state-via-iyes_loopless-crate).
 
@@ -327,7 +327,7 @@ App::new()
     .add_system_set_to_stage(DebugState, movement)
 ```
 
-### States (BROKEN!!)
+### States
 
 WATCH OUT!! Bevy's states/stages are poorly implemented, and should not be used (together); see the [`iyes_loopless` section](#handling-state-via-iyes_loopless-crate).
 
@@ -454,7 +454,7 @@ App::new()
             .with_system(player_movement)
             // System-level ordering. before()/after() can be called on any system instance.
             //
-            .with_system(blah.after(blah2))
+            .with_system(sys.after(other_sys))
     )
     .add_system_set(
         SystemSet::on_update(TurnState::MonsterTurn)
@@ -474,7 +474,10 @@ Labels and labelled items are M:N, so labels can be shared!
 
 #### Handling state via `iyes_loopless` crate
 
-This crate doesn't have problems with mixing states/stages.
+This crate doesn't have problems with mixing states/stages; it allows proper implementation of states management:
+
+- a Stage is added for each (atomic) system set, so that each works on a committed world view
+- ConditionState's are used to manage game state (by filtering system sets)
 
 Example of state management:
 
@@ -509,12 +512,11 @@ app.add_system(
 );
 
 // SystemSet (`ConditionSet`) running on a specific state
-app.add_system_set(
+app.add_system_set_to_stage(
+    MovePlayer,
     ConditionSet::new()
         .run_in_state(MovePlayer)
         .with_system(movement::movement)
-        // Typically, a state change system is needed.
-        .with_system(next_step::next_step)
         .into(),
 );
 ```
@@ -615,7 +617,7 @@ if let Ok((health, mut transform)) = query.get_mut(entity) {
 // APIs: [get_]single[_mut](): combinations of ir/refutable and im/mutable.
 //
 fn query_player(mut q: Query<(&Player, &mut Transform)>) {
-    let (player, mut transform) = q.single_mut();
+    if let Ok(player, mut transform) = q.single_mut() { /* ... */ }
 }
 ```
 
@@ -1264,10 +1266,10 @@ Shorter version, seemingly working, waiting for confirmation:
 let mut app = App::new();
 app.add_startup_system(add_number).add_system(print_number);
 
-// These operations are what App#run() does.
+// Same strategy used by App#run() to give ownership of the App instance, minus the runner extraction,
+// which in this context is not used.
 //
 app = std::mem::replace(&mut app, App::empty());
-app.runner = Box::new(|_| {});
 
 loop {
     app.update();

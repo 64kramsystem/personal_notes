@@ -1,3 +1,24 @@
+## Fri 29/Apr/2022
+
+- Studies
+  - Bevy
+    - [x] Study Bevy's App/runner/Schedule
+- Projects: Port Rusty Roguelike to Bevy
+  - [x] util/rusty_roguelike_step.sh: Update for new .cargo/target locations
+  - [x] Use stages to handle commands flushing
+    - [x] Make sure that multiple stages are run for each update()
+    - [x] Restructure 07.03 to match the source project's turn system
+    - [x] Backport to 07.02
+  - [x] Try removing the `ecs.runner` extraction
+  - [x] Port `08_HealthSimpleMelee_01_health`
+- SWE: Practice
+  - Leetcode
+    - [x] Medium    84%: 1 tests, 1 submissions, 6'15", "1490. Clone N-ary Tree"
+    - [x] Medium    87%: 3 tests, 1 submissions, 9'55", "2181. Merge Nodes in Between Zeros"
+      - Mistakes
+        - Missed specification to remove zeros
+        - Wrong termination condition for zero-deleting pass
+
 ## Thu 28/Apr/2022
 
 - Studies: Rust/Gamedev
