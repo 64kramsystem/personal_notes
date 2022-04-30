@@ -1,3 +1,16 @@
+## Sat 30/Apr/2022
+
+- SWE: Practice
+  - [x] Competitive programming contest
+- Projects: Port Rusty Roguelike to Bevy
+  - [x] rusty_roguelike_step.sh: Add reset functionality
+  - [x] Port `08_HealthSimpleMelee_02_combat`
+  - [x] Port `08_HealthSimpleMelee_03_healing`
+  - [x] Port `09_WinningAndLosing_01_gauntlet`
+  - [x] Port `09_WinningAndLosing_02_losing`
+    - [x] Fight translate game over logic
+    - [x] Review resources clearing (events etc.)
+
 ## Fri 29/Apr/2022
 
 - Studies
