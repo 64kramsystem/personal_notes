@@ -1,7 +1,23 @@
+## Sun 01/May/2022
+
+- Tools
+  - [x] Scripting
+- [ ] Computer Graphics from Scratch (Rasterization only)
+  - [x] 9. Perspective Projection
+  - [ ] 10. Describing and Rendering a Scene
+- Open Source: RVM
+  - [ ] Rubinius support PR: double check
+    - [x] v4.7
+    - [x] v5.0
+      - Fails ~15% of the time, when rvm runs `gem wrappers regenerate` post-compilation
+  - [ ] Review installation from branch bug (and documentation error)
+    - [x] Find fix
+
 ## Sat 30/Apr/2022
 
 - SWE: Practice
   - [x] Competitive programming contest
+    - [x] Separately test latest rev of exercise 3
 - Projects: Port Rusty Roguelike to Bevy
   - [x] rusty_roguelike_step.sh: Add reset functionality
   - [x] Port `08_HealthSimpleMelee_02_combat`
