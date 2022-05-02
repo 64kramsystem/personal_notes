@@ -1,3 +1,27 @@
+## Mon 02/May/2022
+
+- Studies: Computer Graphics
+  - [ ] Computer Graphics from Scratch (Rasterization only)
+    - [ ] 10. Describing and Rendering a Scene
+- Open Source: RVM
+  - [x] Submit issue/PR for fixing bug in installation from branch
+  - [x] Submit issue/PR for documentation issue
+  - [ ] Rubinius support PR: double check
+    - [x] Fight patchsets now being read on installation
+      - RVM is unstable when they're symlinks
+    - [x] Fight downloaded Rubygems checksum issue (https://rubygems.org/rubygems/rubygems-3.0.9.tgz)
+      - Likely bug in RVM, that stores the checksum for partially downloaded files
+  - [x] Fight find most recent 4.x stable
+    - None is stable (!)
+- SWE: Practice
+  - Leetcode
+  - [ ] Review competition (https://leetcode.com/contest/biweekly-contest-77)
+    - [x] Review const* time solution for https://leetcode.com/problems/count-unguarded-cells-in-the-grid
+- Projects: Port Rusty Roguelike to Bevy
+  - [x] Port `09_WinningAndLosing_03_winning`
+  - [x] rusty_roguelike_step.sh: Convenient additions to (next mode)
+  - [x] Port `10_WhatCanISee_01_fov`
+
 ## Sun 01/May/2022
 
 - Tools
