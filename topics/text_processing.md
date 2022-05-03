@@ -181,6 +181,7 @@ Special variables can be modified, depending on the type, on each cycle, or in t
 - `$/`: separator; see examples.
 - `$ENV`: env variables; don't forget that they need to be exported!!
 - `@ARGV`: arguments (not including command)
+- `$ARGV`: filename being processed
 
 ### Data types/conversions
 
