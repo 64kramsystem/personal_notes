@@ -1,3 +1,30 @@
+## Tue 03/May/2022
+
+- Projects: Port Rusty Roguelike to Bevy
+  - [x] Port `10_WhatCanISee_02_eyesight`
+  - [x] Port `10_WhatCanISee_03_memory`
+  - [x] Port `11_MoreInterestingDungeons_01_traits`
+  - [x] Port `11_MoreInterestingDungeons_02_traits_rooms`
+  - [x] Port `11_MoreInterestingDungeons_03_cellular`
+  - [x] Port `11_MoreInterestingDungeons_04_output_harness`
+  - [x] Port `11_MoreInterestingDungeons_05_drunkard`
+  - [x] Port `11_MoreInterestingDungeons_06_prefab`
+  - [x] Port `12_MapTheming`
+  - [x] Port `13_InventoryAndPowerUps_01_potions_and_scrolls`
+  - [x] Port `13_InventoryAndPowerUps_02_carrying_items`
+- SWE: Practice
+  - Leetcode
+    - [x] Medium    82%: 4 tests, 1 submissions, 13'19", "2130. Maximum Twin Sum of a Linked List"
+      - Mistakes
+        - Forgot to pass parameter after adding a new one
+        - Wrong API: `Array#unshift` instead of `#shift`
+        - Wrong place for post-recursion logic
+      - Thought in-place solution first, then went for very stupid solution; try better
+    - [x] Medium    83%: 1 tests, 1 submissions, 5'35", "2161. Partition Array According to Given Pivot"
+      - Mistakes
+        - Typo
+      - Thought of an in-place solution for a while, then just went for the st00pid simple
+
 ## Mon 02/May/2022
 
 - Studies: Computer Graphics
