@@ -1,3 +1,11 @@
+## Wed 04/May/2022
+
+- Projects: Port Rusty Roguelike to Bevy
+  - [ ] Port `14_DeeperDungeons_more_levels`
+- Studies: Computer Graphics
+  - [ ] Computer Graphics from Scratch (Rasterization only)
+    - [ ] 10. Describing and Rendering a Scene
+
 ## Tue 03/May/2022
 
 - Projects: Port Rusty Roguelike to Bevy
