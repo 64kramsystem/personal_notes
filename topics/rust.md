@@ -1126,6 +1126,11 @@ if x > 5 {
   println!("{}", x);
 }
 
+// Fancy if->Some(v) else->None
+//
+(a == b).then(|| value)
+(a == b).then_some(value) // unstable
+
 // If with (multiple) assignment.
 //
 let (a, b) =
@@ -1143,16 +1148,18 @@ if let Coin::Quarter(state) = coin {
   count += 1;
 }
 
-// While let: same. In this case, with stacked Option<T>.
-//
-while let Some(Some(value)) = optional_values_vec.pop() {
-  println!("current value: {}", value);
-}
-
 // In order to compose a complex expression with pattern matching, use `matches!`
 //
 if matches!(coin, Coin::Quarter(x) if x > 2) && random_event() {
   // Can use a guard (above), but can't use the value here (makes sense)!
+}
+```
+
+While let: same. In this case, with stacked Option<T>:
+
+```rs
+while let Some(Some(value)) = optional_values_vec.pop() {
+  println!("current value: {}", value);
 }
 ```
 
