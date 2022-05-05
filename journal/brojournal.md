@@ -1,3 +1,10 @@
+## Thu 05/May/2022
+
+- Studies: Computer Graphics
+  - [ ] Computer Graphics from Scratch (Rasterization only)
+    - [x] 10. Describing and Rendering a Scene
+    - [ ] 11. Clipping
+
 ## Wed 04/May/2022
 
 - Projects: Port Rusty Roguelike to Bevy

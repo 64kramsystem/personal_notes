@@ -714,6 +714,14 @@ pub fn excl_movement(world: &World) {
 add_system(excl_movement.exclusive_system())
 ```
 
+In order to clear entities/resources:
+
+```rs
+app.world.clear_entities();
+// Clear resources; see for future functionality: https://github.com/bevyengine/bevy/pull/3212/files
+for column in app.world.archetypes.resource_mut().unique_components.values_mut() { column.clear(); }
+```
+
 ### Commands
 
 Commands add/remove/update stuff:

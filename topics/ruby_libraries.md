@@ -623,6 +623,10 @@ File opening/closing (flags):
 #
 f = File.open(@file, File::CREAT | File::WRONLY | File::APPEND) { } # append to file, creating if non existent
 f.close
+
+# WATCH OUT!! The flags are not the same as the standard ruby; 'w' != WRONLY
+
+File::CREAT | File::WRONLY | File::TRUNC     # use this as 'w' replacement
 ```
 
 File locking, via flock:
