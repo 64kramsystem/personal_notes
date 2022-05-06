@@ -1,7 +1,18 @@
+## Fri 06/May/2022
+
+- Studies: Computer Graphics
+  - [ ] Computer Graphics from Scratch (Rasterization-oriented)
+    - [x] 11. Clipping
+    - [x] 12. Hidden Surface Removal
+    - [ ] 3. Light
+- Studies: Rust
+  - Rust for Rustaceans
+    - [ ] Chapter 1: Foundations
+
 ## Thu 05/May/2022
 
 - Studies: Computer Graphics
-  - [ ] Computer Graphics from Scratch (Rasterization only)
+  - [ ] Computer Graphics from Scratch (Rasterization-oriented)
     - [x] 10. Describing and Rendering a Scene
     - [ ] 11. Clipping
 
@@ -10,7 +21,7 @@
 - Projects: Port Rusty Roguelike to Bevy
   - [ ] Port `14_DeeperDungeons_more_levels`
 - Studies: Computer Graphics
-  - [ ] Computer Graphics from Scratch (Rasterization only)
+  - [ ] Computer Graphics from Scratch (Rasterization-oriented)
     - [ ] 10. Describing and Rendering a Scene
 
 ## Tue 03/May/2022
@@ -43,7 +54,7 @@
 ## Mon 02/May/2022
 
 - Studies: Computer Graphics
-  - [ ] Computer Graphics from Scratch (Rasterization only)
+  - [ ] Computer Graphics from Scratch (Rasterization-oriented)
     - [ ] 10. Describing and Rendering a Scene
 - Open Source: RVM
   - [x] Submit issue/PR for fixing bug in installation from branch
@@ -68,7 +79,7 @@
 
 - Tools
   - [x] Scripting
-- [ ] Computer Graphics from Scratch (Rasterization only)
+- [ ] Computer Graphics from Scratch (Rasterization-oriented)
   - [x] 9. Perspective Projection
   - [ ] 10. Describing and Rendering a Scene
 - Open Source: RVM
@@ -147,7 +158,7 @@
 - SWE: Practice
   - Leetcode
 - Studies: Computer Graphics
-  - [ ] Computer Graphics from Scratch (Rasterization only)
+  - [ ] Computer Graphics from Scratch (Rasterization-oriented)
 
 ## Tue 26/Apr/2022
 
@@ -214,7 +225,7 @@
 ## Sat 23/Apr/2022
 
 - Studies: Computer Graphics
-  - [ ] Computer Graphics from Scratch (Rasterization only)
+  - [ ] Computer Graphics from Scratch (Rasterization-oriented)
     - [x] 8. Shaded Triangles
     - [ ] 9. Perspective Projection
 - Admin
@@ -401,7 +412,7 @@
           - typo: asserts missing comma
           - copypasta: didn't change "cat" after copying (to "dog")
 - Studies: Computer Graphics
-  - [ ] Computer Graphics from Scratch (Rasterization only)
+  - [ ] Computer Graphics from Scratch (Rasterization-oriented)
     - [x] 7. Filled Triangles
 
 ## Thu 14/Apr/2022
@@ -471,7 +482,7 @@
       - [x] Layout
       - [x] Actions
 - Studies: Computer Graphics
-  - [ ] Computer Graphics from Scratch (Rasterization only)
+  - [ ] Computer Graphics from Scratch (Rasterization-oriented)
     - [x] 6. Lines
 
 ## Mon 11/Apr/2022
