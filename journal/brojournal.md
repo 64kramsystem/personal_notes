@@ -1,3 +1,13 @@
+## Sat 07/May/2022
+
+- Studies: Computer Graphics
+  - [ ] Computer Graphics from Scratch (Rasterization-oriented)
+    - [ ] 3. Light
+- SWE: Practice
+  - Leetcode
+    - [ ] Review solutions of last problem
+      - [x] SC=O(1): https://is.gd/M56F5h
+
 ## Fri 06/May/2022
 
 - Studies: Computer Graphics
