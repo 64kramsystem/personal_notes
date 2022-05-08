@@ -1,3 +1,18 @@
+## Sun 08/May/2022
+
+- Open Source
+  - [x] User issue: Help with Markdown ASM integration
+- Studies: Rust
+  - Rust for Rustaceans
+    - [x] Chapter 1: Foundations
+- Studies: Computer Graphics
+  - [x] Computer Graphics from Scratch (Rasterization-oriented)
+    - [x] 3. Light
+    - [x] 13. Shading
+    - [x] 14. Textures
+    - [x] 15. Extending the Rasterizer
+    - [x] 16. Linear Algebra
+
 ## Sat 07/May/2022
 
 - Studies: Computer Graphics
