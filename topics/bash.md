@@ -198,9 +198,9 @@ if read -t 0; then ...; fi
 
 # Assign stdin to a variable
 #
-read -r myvar           # single line; `-r`: don't interpret backslashes
-myvar="$(</dev/stdin)"  # multi-line, but will block if there is no input!
-myvar="$(cat)"          # (same)
+read -r myvar           # single line (WATCH OUT!!); `-r`: don't interpret backslashes
+myvar=$(</dev/stdin)    # multi-line, but will block if there is no input!
+myvar=$(cat)            # (same)
 
 # Assign a variable via heredocs.
 # See https://stackoverflow.com/q/1167746 for comments.
