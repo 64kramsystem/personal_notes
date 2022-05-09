@@ -1,10 +1,32 @@
+## Mon 09/May/2022
+
+- Projects: Port Rusty Roguelike to Bevy
+  - [ ] Port `14_DeeperDungeons_more_levels`
+    - [x] Failed attempt to follow up; requires redesign
+- Studies: Computer Graphics
+  - Computer Graphics from Scratch (Rasterization-oriented)
+    - [x] Copy linear algebra notes
+- Studies: Latex
+  - [x] Express (some) linear algebra formulas in Rust
+- SWE: Practice
+  - Leetcode
+    - [x] Medium    82%: ≈6 tests, 1 submissions, ≈20'0", "2130. Maximum Twin Sum of a Linked List" (SC=O(1) solution)
+      - Mistakes
+        - Disaster, primarily, missed next() invocations
+        - Had to debug twice
+- Admin
+  - [x] Flush pool/plan next cycle
+- Tools
+  - [x] Stop/start services script: Add travis monitoring script
+
 ## Sun 08/May/2022
 
 - Open Source
   - [x] User issue: Help with Markdown ASM integration
 - Studies: Rust
-  - Rust for Rustaceans
+  - [ ] Rust for Rustaceans
     - [x] Chapter 1: Foundations
+    - [ ] Chapter 2: Types
 - Studies: Computer Graphics
   - [x] Computer Graphics from Scratch (Rasterization-oriented)
     - [x] 3. Light

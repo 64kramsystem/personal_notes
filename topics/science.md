@@ -12,6 +12,9 @@
     - [Statistics](#statistics)
     - [Algebra](#algebra)
       - [Finding the square root of a number (without exponentiation functions)](#finding-the-square-root-of-a-number-without-exponentiation-functions)
+    - [Linear Algebra](#linear-algebra)
+      - [Vectors](#vectors)
+      - [Matrices](#matrices)
     - [Convenient stuff](#convenient-stuff)
       - [Test if a positive number is a power of two](#test-if-a-positive-number-is-a-power-of-two)
       - [Check if a number is close within the two ends of an interval](#check-if-a-number-is-close-within-the-two-ends-of-an-interval)
@@ -103,6 +106,34 @@ def my_sqrt(x)
   end
 end
 ```
+
+### Linear Algebra
+
+#### Vectors
+
+Vector length is called "magnitude":
+
+  $$ |\vec{V}| = \sqrt{x^2 + y^2 + z^2} $$
+
+The dot product is often used to indicate the angle between two vectors; algebraic formula:
+
+  $$ \langle \vec{V},\vec{W} \rangle = V_x * W_x + V_y * W_y + V_z * W_z $$
+
+Dot product, geometic formula:
+
+  $$ |\vec{V}| \cdot |\vec{W}| \cdot cos(\alpha) $$
+
+The cross product is used to find the normal vector of a surface (two vectors); it's complex.
+
+#### Matrices
+
+The product of two matrices V*W = X is (informal):
+
+  $$ X_{r,c} = |Vrow_r| \cdot |Wcol_c| $$
+
+Vcols must equal Wcols; result dimensions are (Vrows, Wcols).
+
+Since the operation matrix * vector = vector, it transforms the vector.
 
 ### Convenient stuff
 
