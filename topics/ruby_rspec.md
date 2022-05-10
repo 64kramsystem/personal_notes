@@ -14,7 +14,9 @@
       - [Conditional stubbing](#conditional-stubbing)
   - [Testing modules](#testing-modules)
   - [Transactions](#transactions)
-  - [Custom matcher](#custom-matcher)
+  - [Customizations](#customizations)
+    - [Custom matcher](#custom-matcher)
+    - [Custom expectation](#custom-expectation)
 
 ## Structure examples
 
@@ -126,7 +128,7 @@ See [reference](https://relishapp.com/rspec/rspec-expectations/v/3-10/docs/built
  | Target       | Methods                                              | Notes                                             |
  | ------------ | ---------------------------------------------------- | ------------------------------------------------- |
  | Class (type) | `be_a`, `be_an`, `be_a_kind_of`, `be_an_instance_of` |                                                   |
- |              | `be` `<|<=|==|=>|>` `expected`                       |                                                   |
+ |              | `be` `< / <= / == / => / >` `expected`               |                                                   |
  |              | `be_within(span).of(reference)`                      | Time/Floats                                       |
  |              | `be === expected`                                    |                                                   |
  |              | `eq(expected)`                                       |                                                   |
@@ -261,12 +263,16 @@ describe Klazz, "non-transactional examples" do
 end
 ```
 
-## Custom matcher
+## Customizations
 
-```ruby
+### Custom matcher
+
+Implementation via subclass:
+
+```rb
 class LooksLike < String
   def failure_message
-    "#{ @me } different from #{ @another }"
+    "#{@me} different from #{@another}"
   end
 
   def matches?(another)
@@ -282,4 +288,43 @@ def look_like(string)
 end
 
 expect("abcd").to look_like("abcd")
+```
+
+Implementation via module:
+
+```rb
+module ListMatcher
+  extend RSpec::Matchers::DSL
+
+  matcher :match_list do |expected_list|
+    match do |actual_list|
+      expected_list = ListParser.parse(expected_list).sort
+      actual_list = ListParser.parse(actual_list).sort
+
+      actual_list == expected_list
+    end
+  end
+end
+
+# Put in the example group
+include ListMatcher
+
+expect(actual_list).to match_list(expected_list)
+```
+
+### Custom expectation
+
+```rb
+module NewExpectation
+  def expect_instance_list(instance, source_name)
+    list = instance.reload.attributes["#{source_name}_list"]
+
+    expect(list)
+  end
+end
+
+# Put in the example group
+include NewExpectation
+
+expect_instance_list(instance, "product").to eql("foo")
 ```
