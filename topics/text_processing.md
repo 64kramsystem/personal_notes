@@ -96,6 +96,9 @@ print if /match/ .. -1                       # print all the lines after /match/
 
 # String repetition operator
 'a' x 3
+
+# Negative hashmap test
+!$myhash{"mykey"}
 ```
 
 For regexes, see the dedicated note file.

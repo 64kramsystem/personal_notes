@@ -343,7 +343,7 @@ end
 
 Flags:
 
-- `/m` : like Perl (there's no need for `/s`!)
+- `/m` : match newlines with `.`, like Perl (there's no need for `/s`!)
 - `/x` : ignore whitespace and comments
 - `/u`, `/e`, `/s`, `/n` : force encodings; don't mistake `/s` for the Perl one!
 

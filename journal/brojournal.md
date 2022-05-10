@@ -1,3 +1,26 @@
+## Tue 10/May/2022
+
+- Tools/MySQL
+  - [x] Review cluster management/monitoring solutions
+- SWE: Practice
+  - Leetcode
+    - [x] Medium    85%: 3 tests, 1 submissions, 10'55", "2265. Count Nodes Equal to Average of Subtree"
+      - Mistakes
+        - Forgot invoking Array#sum
+        - Didn't fully read spec, assuming that a subtree doesn't include the head
+    - Trivial solution, with `SC=O(n^2)`, without sliding average
+- Open source: Openscripts
+  - [x] Copy `ll_node.rb` to openscripts
+- Tools
+  - [x] Search/open script: open files at the given lines
+    - [x] Publish solution on ag's Github issue
+- Blog: User comments
+  - [x] Review comment: https://saveriomiroddi.github.io/Linux-associating-file-types-to-applications/#comment-5852020103
+    - [x] Fix the article
+- Open source
+  - VSC Markdown grammars syntax highlight
+    - [x] Further help user request
+
 ## Mon 09/May/2022
 
 - Projects: Port Rusty Roguelike to Bevy
