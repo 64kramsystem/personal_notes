@@ -591,7 +591,8 @@ fn check_zero_health(
     // Find entities that have (`Health` & `Transform`) components, and are optionally a `Player`.
     // Entity is the entity id (not required).
     // With/out<T> are (optional) filters: the entities must include an Ally, but not an Enemy.
-    // For an Or filter example, see [Change detection](#change-detection).
+    // For an Or filter example, see [Change detection](#change-detection). In order to specify multiple
+    // With/out conditions, pass multiple With/out.
     mut query: Query<
         (Entity, &Health, &mut Transform, Option<&Player>),
         (With<Ally>, Without<Enemy>)
@@ -618,6 +619,16 @@ if let Ok((health, mut transform)) = query.get_mut(entity) {
 //
 fn query_player(mut q: Query<(&Player, &mut Transform)>) {
     if let Ok(player, mut transform) = q.single_mut() { /* ... */ }
+}
+
+// Test if an entity has a component
+//
+pub fn movement(mut events: EventReader<Move>, query: Query<&Player>) {
+    for &Move { entity, .. } in events.iter() {
+        // Check if the Player has Move.
+        //
+        if query.get(entity).is_ok() { /* ... */ }
+    }
 }
 ```
 
@@ -678,31 +689,30 @@ WATCH OUT 1-frame lag; for `Added`, [stages](#stages) may be required.
 It's possible to interact directly with Bevy's storage, `World`, via App#world:
 
 ```rs
+let world = app.world;
+
 // This is a realworld case where access was outside a system by design; World access is necessary,
 // because App doesn't support removing resources.
 //
-app.world.remove_resource::<VirtualKeyCode>();
+world.remove_resource::<VirtualKeyCode>();
 
-// Insert a component/bundle.
+// Queries
 //
-cmd.spawn()
-    .insert(foo)
-    .insert_bundle((bar, baz))
+world.query();          // Doesn't support <With<T>>
+world.query_filtered(); // Supports <With<T>>
+
+// Insert a component/bundle; both inserts return EntityMut, which can be conveniently used to separately
+// add other components.
+// De/spawning flushes the world!
+//
 world.spawn()
     .insert(foo)
     .insert_bundle((bar, baz))
 
-// In order to find if an entity has a component, one can:
+// Add a component to an entity (usual `[get_]entity[_mut]` format).
 //
-// - use Query
-// - use World
-//
-```rs
-pub fn movement(mut events: EventReader<Move>, query: Query<&Player>) {
-    for &Move { entity, .. } in events.iter() {
-        if query.get(entity).is_ok() { /* ... */ }
-    }
-}
+world.entity_mut(entity)
+    .insert(foo)
 
 // Systems with mutable World access are called "exclusive", and block all the other ones; also, accessing
 // World can be incompatible with querying some resources.
@@ -717,9 +727,9 @@ add_system(excl_movement.exclusive_system())
 In order to clear entities/resources:
 
 ```rs
-app.world.clear_entities();
+world.clear_entities();
 // Clear resources; see for future functionality: https://github.com/bevyengine/bevy/pull/3212/files
-for column in app.world.archetypes.resource_mut().unique_components.values_mut() { column.clear(); }
+for column in world.archetypes.resource_mut().unique_components.values_mut() { column.clear(); }
 ```
 
 ### Commands
@@ -736,6 +746,7 @@ fn spawn_player(mut commands: Commands) {
     // Create a new entity using `spawn`
     // WATCH OUT! insert_bundle() adds all the components of a bundle, while insert(Bundle) inserts the
     // bundle as a single component!
+    // Both inserts return EntityMut, which can be conveniently used to separately add other components.
     //
     let entity_id = commands.spawn()
         .insert(ComponentA)                 // add a component

@@ -1,3 +1,10 @@
+## Wed 11/May/2022
+
+- [x] Projects: Port Rusty Roguelike to Bevy (base port)
+  - [x] Port `14_DeeperDungeons_more_levels`
+  - [x] Port `15_Loot_01_loot_tables`
+  - [x] Port `15_Loot_02_better_combat`
+
 ## Tue 10/May/2022
 
 - Tools/MySQL
@@ -23,7 +30,7 @@
 
 ## Mon 09/May/2022
 
-- Projects: Port Rusty Roguelike to Bevy
+- [ ] Projects: Port Rusty Roguelike to Bevy (base port)
   - [ ] Port `14_DeeperDungeons_more_levels`
     - [x] Failed attempt to follow up; requires redesign
 - Studies: Computer Graphics
@@ -88,7 +95,7 @@
 
 ## Wed 04/May/2022
 
-- Projects: Port Rusty Roguelike to Bevy
+- [ ] Projects: Port Rusty Roguelike to Bevy (base port)
   - [ ] Port `14_DeeperDungeons_more_levels`
 - Studies: Computer Graphics
   - [ ] Computer Graphics from Scratch (Rasterization-oriented)
@@ -96,7 +103,7 @@
 
 ## Tue 03/May/2022
 
-- Projects: Port Rusty Roguelike to Bevy
+- [ ] Projects: Port Rusty Roguelike to Bevy (base port)
   - [x] Port `10_WhatCanISee_02_eyesight`
   - [x] Port `10_WhatCanISee_03_memory`
   - [x] Port `11_MoreInterestingDungeons_01_traits`
@@ -140,7 +147,7 @@
   - Leetcode
   - [ ] Review competition (https://leetcode.com/contest/biweekly-contest-77)
     - [x] Review const* time solution for https://leetcode.com/problems/count-unguarded-cells-in-the-grid
-- Projects: Port Rusty Roguelike to Bevy
+- [ ] Projects: Port Rusty Roguelike to Bevy (base port)
   - [x] Port `09_WinningAndLosing_03_winning`
   - [x] rusty_roguelike_step.sh: Convenient additions to (next mode)
   - [x] Port `10_WhatCanISee_01_fov`
@@ -165,7 +172,7 @@
 - SWE: Practice
   - [x] Competitive programming contest
     - [x] Separately test latest rev of exercise 3
-- Projects: Port Rusty Roguelike to Bevy
+- [ ] Projects: Port Rusty Roguelike to Bevy (base port)
   - [x] rusty_roguelike_step.sh: Add reset functionality
   - [x] Port `08_HealthSimpleMelee_02_combat`
   - [x] Port `08_HealthSimpleMelee_03_healing`
@@ -179,7 +186,7 @@
 - Studies
   - Bevy
     - [x] Study Bevy's App/runner/Schedule
-- Projects: Port Rusty Roguelike to Bevy
+- [ ] Projects: Port Rusty Roguelike to Bevy (base port)
   - [x] util/rusty_roguelike_step.sh: Update for new .cargo/target locations
   - [x] Use stages to handle commands flushing
     - [x] Make sure that multiple stages are run for each update()
@@ -208,7 +215,7 @@
         - Misunderstood the class structure
     - [x] Medium    90%: 1 tests, 1 submissions, ~2'06", "1570. Dot Product of Two Sparse Vectors" (Hash sol.)
     - [x] Medium    90%: 1 tests, 1 submissions, ~3'56", "1570. Dot Product of Two Sparse Vectors" (Array pairs sol)
-- Projects: Port Rusty Roguelike to Bevy
+- [ ] Projects: Port Rusty Roguelike to Bevy (base port)
   - [ ] Use stages to handle commands flushing
     - [x] Update and verify on 07.03
 
@@ -221,7 +228,7 @@
     - [x] Const generics
   - Bevy
     - [x] Review `iyes_loopless` resource-based conditionals
-- Projects: Port Rusty Roguelike to Bevy
+- [ ] Projects: Port Rusty Roguelike to Bevy (base port)
   - [x] Backport `iyes_loopless` logic to 07.02 (and remove 07.01)
   - [x] Implement state machine using const generics
   - [x] Implement rendering based on resource-based conditionals
@@ -238,7 +245,7 @@
 - Studies: Rust/Gamedev
   - Bevy
     - [x] Study `iyes_loopless` crate
-- Projects: Port Rusty Roguelike to Bevy
+- [ ] Projects: Port Rusty Roguelike to Bevy (base port)
   - [x] Fight fix flushing, by implementing `iyes_loopless` crate
 
 ## Mon 25/Apr/2022
@@ -246,7 +253,7 @@
 - Studies: Rust/Gamedev
   - Bevy/Arguably Better Breakout
     - [x] Upgrade to Bevy v0.6 and test
-- Projects: Port Rusty Roguelike to Bevy
+- [ ] Projects: Port Rusty Roguelike to Bevy (base port)
   - [x] Clean warnings in source project
   - [x] Minor cleanups to port steps
   - [x] Port `07_TurnBasedGames_03_intent`
@@ -275,7 +282,7 @@
       - https://github.com/IyesGames/iyes_loopless
       - https://github.com/bevyengine/rfcs/pull/45
     - [x] Study States
-- Projects: Port Rusty Roguelike to Bevy
+- [ ] Projects: Port Rusty Roguelike to Bevy (base port)
   - [x] Add "compare current" functionality to util script
   - [x] Use World to simplify setp 06/01 input handling
   - [x] Use World to mimick source projects "non-systems"
@@ -309,7 +316,7 @@
   - Bevy
     - [x] Review design of Legion scheduler and translation
     - [x] Investigate more idiomatic ways for used Bevy patterns
-- Projects: Port Rusty Roguelike to Bevy
+- [ ] Projects: Port Rusty Roguelike to Bevy (base port)
   - [x] Add convenience script to manage porting new steps
     - [x] Fight perl/awk
   - [x] Update README
@@ -331,7 +338,7 @@
   - Blog tools
     - [x] `add_new_article.sh`: Fix title double quotes not fully escaped
     - [x] `update_article.sh`: Fix last post search
-- Projects: Port Rusty Roguelike to Bevy
+- [ ] Projects: Port Rusty Roguelike to Bevy (base port)
   - [x] Port first step: `06_EntitiesComponentsAndSystems_01_playerecs`
     - [x] Implement custom game loop
     - [x] Reorganize projects layout
@@ -357,7 +364,7 @@
     - [x] Fight setup workspace/CodeLLB dynamic library issue
   - [ ] Bevy cheatbook
     - [x] Update previous hello world
-- Projects: Port Rusty Roguelike to Bevy
+- [ ] Projects: Port Rusty Roguelike to Bevy (base port)
   - [ ] Start conversion
     - [ ] Brutal fight with system former `#config()` API
 
@@ -365,7 +372,7 @@
 
 - Studies: Rust
   - [x] Review workspaces
-- Projects: Port Rusty Roguelike to Bevy
+- [ ] Projects: Port Rusty Roguelike to Bevy (base port)
   - [x] Review projects status
   - [x] Restructure the repository
   - [x] Update the README

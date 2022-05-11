@@ -79,7 +79,10 @@ version = "0.15"
 strip = true         # highest stripping (equivalent to "symbols")
 ```
 
-WATCH OUT! Version "X.Y.Z" is not exact match - it's pessimistic ("^X.Y.Z").
+Versioning:
+
+- "~X.Y.Z": Pessimistic versioning
+- "X.Y.Z", "^X.Y.Z": WATCH OUT!! 1. They're the same 2. They're not pessimistic, e.g. "^1.2.0" can upgrade to 1.3.0 (but not to 2.0.0)
 
 See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

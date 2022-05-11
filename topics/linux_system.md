@@ -127,7 +127,7 @@ chown $name $file...                        # change owner
 chgrp $name $file...                        # change group
 chmod [ugoa][-+][rwx] $file...              # change permissions; [u]ser [g]group [o]thers [a]ll
 
-chage [-m $min] [-M $max] [-W $warn] [-I $inactive_days] $login # change password properties
+chage [-m $min] [-M $max] [-W $warn] [-I $inactive_days] [-E $expire_date] $login # change password properties
 chage -l $login                             # show info
 
 passwd -d                                   # set a blank password
@@ -144,10 +144,10 @@ usermod -d $new_home -m $user
 Snippets:
 
 ```sh
-chmod -R go-rx .ssh                         # setup SSH permissions
-chage -d $(date +%Y-%m-%d) $user            # set the change date to today!
-chage -d $(date +%Y-%m-%d -d '3 months') $user # set the change date to 3 months from now
-chage -I 0 $user                            # expire password
+chmod -R go-rx .ssh                     # setup SSH permissions
+chage -d $(date +%Y-%m-%d) $user        # set the last changed date to today, and the mandatory change date to (today + max days)
+chage -I 0 $user                        # expire password
+chage -E -1 $user                       # disable account expiry
 ```
 
 User name/home/sudo:

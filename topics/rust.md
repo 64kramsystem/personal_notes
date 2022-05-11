@@ -656,7 +656,7 @@ vec.push(1);                            // Push at the end
 vec.pop();                              // Pop from the end
 
 vec.extend([1, 2, 3].iter().copied());  // Append (concatenate) an array
-vec.extend(&[1, 2, 3]);                 // Append (borrowing version)
+vec.extend(&[1, 2, 3]);                 // Append (borrowing version) an array/vec
 vec[range].copy_from_slice(&source);    // memcpy; see array example
 
 // Convert vector to array. If type annotations are required, use the second form:

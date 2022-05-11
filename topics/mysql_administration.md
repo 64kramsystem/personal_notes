@@ -42,6 +42,8 @@ SHOW GRANTS for @user\G
 -- *************************** 2. row ***************************
 -- Grants for user@%: GRANT APPLICATION_PASSWORD_ADMIN, ... ON *.* TO `user`@`1.2.3.4` WITH GRANT OPTION
 
+-- Must specify host pattern, if the user has it.
+--
 DROP USER @user;
 ```
 
