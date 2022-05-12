@@ -1,3 +1,20 @@
+## Thu 12/May/2022
+
+- Studies: Rust
+  - [x] Read https://shopify.engineering/porting-yjit-ruby-compiler-to-rust
+- Open source: Schedule manager
+  - [x] Remove `{{date}}` on archived entry
+  - [x] Find workaround for Timecop bug
+    - [x] Publish example and workaround on Timecop Github issue
+- SWE: Practice
+  - Leetcode
+    - [x] Medium    82%: 4 tests, 1 submissions, 6'39", "2268. Minimum Number of Keypresses"
+      - Mistakes
+        - Not taken frequency into account
+        - Debug run
+        - Excess each_char(), due to having added code without adjusting the code after
+      - [x] Publish solution
+
 ## Wed 11/May/2022
 
 - [x] Projects: Port Rusty Roguelike to Bevy (base port)
