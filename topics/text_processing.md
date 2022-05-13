@@ -835,12 +835,46 @@ More complex filters, with string operations:
 
 ```sh
 aws rds describe-db-instances | jq '
-  .DBInstances[] |                                     # Get `DBInstance` key from root hash, and iterate the array values
-  {DBInstanceIdentifier,DBInstanceStatus} |            # For convenience, filter those two keys only, from each array entry
-  select(.DBInstanceIdentifier | contains("00")) |     # Select only the entries whose `DBInstanceIdentifier` value includes "00"
-  select(.DBInstanceStatus != "available")             # Select only the entries whose `DBInstanceStatus` value != "available"
+  # Extract a key`s value from a hash.
+  #
+  # Extract the value of the `DBInstance` key from the root hash, and wrap it into an array; without
+  # `[]`, the result is not wrapped, and it can`t be iterated.
+  #
+  # Example source: {DBInstance => [...]}
+  #
+  .DBInstances[] |
+
+  # Hash filtering by key name.
+  #
+  # For convenience, filter specified keys, from an array.
+  #
+  # Example source: [{ DBInstanceIdentifier => ..., DBInstanceStatus => ..., Ignored => ...}, ...]
+  #
+  {DBInstanceIdentifier,DBInstanceStatus} |
+
+  # Hash filtering by value substring matching.
+  #
+  # Select only the entries whose `DBInstanceIdentifier` value includes "00".
+  #
+  # Example source: [{ DBInstanceIdentifier => "xx001", ...}, ...]
+  #
+  select(.DBInstanceIdentifier | contains("00")) |
+
+  # String (in)equality.
+  #
+  # Select only the entries whose `DBInstanceStatus` value != "available"
+  #
+  # Example source: [{ DBInstanceStatus => "available", ...}, ...]
+  #
+  select(.DBInstanceStatus != "available")
+'
+
+jq '
+  select(.id | test("a."))          # Regex filter
 '
 ```
+
+Note that grep may be more convenient, when applying a filter on a field and then collecting it.
 
 ### Functions
 

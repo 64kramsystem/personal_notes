@@ -787,7 +787,16 @@ write_thread.join
 ### I/O and terminal
 
 ```ruby
-require 'io/console'; $stdin.getch              # Read a single char
+# Read a single char
+#
+require 'io/console' # stdlib
+$stdin.getch
+
+# Get the terminal size (this gem is the most reliable metho)
+#
+require 'tty-screen'
+TTY::Screen.width    # => 280; aliases: columns/col
+TTY::Screen.height   # => 51;  aliases: rows/lines
 ```
 
 ### Encryption (openssl)

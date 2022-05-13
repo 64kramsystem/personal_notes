@@ -1,3 +1,27 @@
+## Fri 13/May/2022
+
+- SWE: Practice
+  - Leetcode
+    - [?] Medium    82%: 4 tests, 1 submissions, 33'17", "2149. Rearrange Array Elements by Sign" (in-place)
+      - Mistakes
+        - syntax (forgot remove block var), after changing loop type
+        - didn't think about a condition
+        - same condition as above, was still wrong
+      - Problem is not clear if it's expected for the rearrangement to happen in place; this approach is too slow
+    - [x] Medium    82%: 3 tests, 1 submissions, 1'32", "2149. Rearrange Array Elements by Sign" (with support arrays)
+      - Mistakes
+        - forgot the `end` of one conditional
+        - accidentally added return of original array
+- Writings: Rusty Roguelike port mdbook (without refinements)
+  - [x] Study mdBook
+- Studies
+  - Misc sysadmin stuff
+    - [x] Github: download latest release
+    - [x] Check if GH can host multiple GH pages for a single account
+    - [x] jq
+- Misc
+  - Method chaining: "function(al) composition" (https://softwareengineering.stackexchange.com/q/359274/363129)
+
 ## Thu 12/May/2022
 
 - Studies: Rust
