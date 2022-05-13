@@ -167,7 +167,7 @@ SELECT TABLE_SCHEMA, TABLE_NAME, VIEW_DEFINITION FROM information_schema.VIEWS W
 
 ## Indexes
 
-Functional indexes: 
+Functional indexes:
 
 ```sql
 KEY `idx_year_to_date`( (YEAR(to_date)) );
@@ -432,7 +432,7 @@ SELECT REGEXP_REPLACE('a b b c', 'b', 'X') `replace`;
 
 ### Strategies/Examples
 
-Since capturing groups are not supported, using `REGEXP_REPLACE` can be the simplest option in some cases.  
+Since capturing groups are not supported, using `REGEXP_REPLACE` can be the simplest option in some cases.
 Note that MySQL supports XPath, so input data like this is best handle throught that.
 
 Extract a substring from a multi-line match:
@@ -506,21 +506,38 @@ CREATE TABLE clients (
 )
 SELECT 1 `id`, '["foo", "bar", "baz"]' `client_tags`;
 
--- The max length of (CHAR) each entry is 512!
+-- The max length of (CHAR) each entry is 512.
+-- Use [UN]SIGNED for INTs.
+--
 ALTER TABLE clients ADD KEY client_tags ( (CAST(client_tags -> '$' AS CHAR(16) ARRAY)) );
-
-EXPLAIN FORMAT=TREE SELECT * FROM clients WHERE 'foo' MEMBER OF (client_tags -> '$')\G
--- -> Filter: json'"foo"' member of (cast(json_extract(client_tags,_utf8mb4'$') as char(64) array))  (cost=0.35 rows=1)
---     -> Index lookup on clients using client_tags (cast(json_extract(client_tags,_utf8mb4'$') as char(64) array)=json'"foo"')  (cost=0.35 rows=1)
 ```
 
-JSON search functions:
+JSON search functions. WATCH OUT!! Searches must be performed on `<column> -> $`, otherwise, the index can't be used!
 
 ```sql
--- `one`: return first match; `all`: return all.
+-- Boolean search of single term. Sample plan:
+--
+-- -> Filter: json'"foo"' member of (cast(json_extract(client_tags,_utf8mb4'$') as char(64) array))  (cost=0.35 rows=1)
+--     -> Index lookup on clients using client_tags (cast(json_extract(client_tags,_utf8mb4'$') as char(64) array)=json'"foo"')  (cost=0.35 rows=1)
+--
+SELECT 'foo' MEMBER OF (client_tags -> '$') FROM clients;
+
+-- Boolean (AND) search of multiple terms.
+--
+SELECT COUNT(*) FROM clients WHERE JSON_CONTAINS(client_tags -> '$', '["foo", "bar"]'); # 1
+SELECT COUNT(*) FROM clients WHERE JSON_CONTAINS(client_tags -> '$', '["foo", "bax"]'); # 0
+
+-- Boolean (OR) search of multiple terms.
+--
+SELECT COUNT(*) FROM clients WHERE JSON_OVERLAPS(client_tags -> '$', '["foo", "bax"]'); # 1
+
+-- Path search.
+-- Doesn't use index, as of v8.0.28; see https://dev.mysql.com/doc/refman/8.0/en/create-index.html#create-index-multi-valued -> "Using multi-valued Indexes"
+--
 -- Uses the LIKE-style patterns (`%`, `_`).
+--
+-- `one`: return first match; `all`: return all.
 -- The return type of `all` is inconsistent; it depends on the number of elements found.
--- As of v8.0.28, MVI indexes are not used.
 --
 SELECT JSON_SEARCH(client_tags, 'one', 'bar') FROM clients;
 -- "$[1]"
@@ -564,29 +581,52 @@ SELECT JSON_REPLACE(client_tags, '$[5]', 'qux') FROM clients;
 -- ["foo", "bar", "baz"]
 ```
 
-Convert an array to a table:
+Convert an array to a table, from single string:
 
 ```sql
--- Operation a single string
---
 SELECT *
 FROM
   JSON_TABLE(
-    '[5, 6, 70]', -- JSON doc
-    "$[*]"        -- JSON path
+    '[5, 6, 70]', -- JSON source doc
+    "$[*]"        -- JSON source path; leave like this
     COLUMNS(
-      Value VARCHAR(16) PATH "$" -- Mapping; if the data type is CHAR, must specify the size, otherwise↵
-                                 -- CHAR(1) is used, and data is truncated!
+      value VARCHAR(16) -- Definition of the generated column; if the data type is CHAR, must↵
+                        -- specify the size, otherwise CHAR(1) is used, and data is truncated!
+                        -- WATCH OUT the collation! Uses the default; can add COLLATE is needed.
+      PATH "$"          -- Path of in the source doc; '$' is for a flat array; an example for
+                        -- an array of objects is '$.key1'
       ERROR ON ERROR
     )
-  ) data;
+  ) sub;                -- Phony alias; required
 -- +-------+
--- | Value |
+-- | value |
 -- +-------+
 -- | 5     |
 -- | 6     |
 -- | 70    |
 -- +-------+
+```
+
+Convert an array to a table, from the column of a table, with transformation:
+
+```sql
+SELECT DISTINCT
+  kwd
+FROM
+  src
+  -- The reference guide uses `,` for the (cartesian) join.
+  --
+  JOIN JSON_TABLE(
+    -- Transform a string of space-delimited keywords into a JSON array.
+    --
+    CONCAT(
+      '["',
+      REPLACE(src.keywords, " ", '", "'), -- ")
+      '"]'
+    ),
+    '$[*]' COLUMNS(kwd VARCHAR(64) PATH "$" ERROR ON ERROR)
+  ) sub
+;
 ```
 
 ### Aggregation performance

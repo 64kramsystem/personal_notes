@@ -11,6 +11,7 @@
   - [README.md](#readmemd)
     - [Images](#images)
     - [Link references](#link-references)
+  - [Releases](#releases)
 
 ## Searches
 
@@ -184,3 +185,11 @@ Image (raw) path: `https://github.com/64kramsystem/vscode-markdown-code-blocks-a
 
 - Project root: prefix the path with `/../../` (see [Stack Overflow](https://stackoverflow.com/a/40440270/210029))
 - Current path: use the bare filename, without prefixes; the (dynamically generated) prefix `/blob/$current_branch/` will be automatically added
+
+## Releases
+
+Download the latest release of a repo (filtered by a certain file extension):
+
+```sh
+curl -sSL https://api.github.com/repos/rust-lang/mdBook/releases/latest | jq --raw-output '.assets[] | .browser_download_url' | grep 'linux-gnu.tar.gz$'
+```
