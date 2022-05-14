@@ -1,3 +1,9 @@
+## Sat 14/May/2022
+
+- Studies: Rust
+  - [ ] Rust for Rustaceans
+    - [ ] Chapter 2: Types
+
 ## Fri 13/May/2022
 
 - SWE: Practice
