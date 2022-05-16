@@ -3,7 +3,7 @@
 - [Rust Tooling](#rust-tooling)
   - [Cargo/Rustup](#cargorustup)
     - [Workspaces](#workspaces)
-      - [Interaction between Visual Studio Code and multiple-project workspace](#interaction-between-visual-studio-code-and-multiple-project-workspace)
+    - [Visual Studio Code/Rust Analyzer](#visual-studio-coderust-analyzer)
     - [Debugging information](#debugging-information)
     - [Features](#features)
     - [Conditional build (ifdef-like)](#conditional-build-ifdef-like)
@@ -110,7 +110,7 @@ members = ["playground", "rust_programming_by_example"]
 
 Members must have compatible dependencies, so projects can't be unrelated; without workspaces, it's possible to share artifacts by sharing the target dir (`.cargo/config` -> `[build] target-dir = "/path/to/target`; if relative, it refers to the `.cargo` parent directory).
 
-#### Interaction between Visual Studio Code and multiple-project workspace
+### Visual Studio Code/Rust Analyzer
 
 As of Apr/2022, the alternative to creating a formal Cargo workspace is to:
 
@@ -120,6 +120,14 @@ As of Apr/2022, the alternative to creating a formal Cargo workspace is to:
 - if there are required files in the root, create a temp directory with symlinks, and add it to VSC and the .gitignore
 
 Trying to add the root to VSC causes problems, firstly, it seems that it's not possible to specify the directory from where Cargo is executed (in `launch.json`), so it runs from the root and fails (since there's no formal workspace).
+
+A trick to avoid contention between Rust Analyzer and terminal builds is to specify a separate target dir:
+
+```json
+"rust-analyzer.server.extraEnv": {
+    "CARGO_TARGET_DIR": "target-ra"
+}
+```
 
 ### Debugging information
 
@@ -174,7 +182,10 @@ Bevy hello world: 8.75" -> 1.25" (!!).
 
 ```sh
 # The option "-Zshare-generics=y" is available only in nightly.
-# Requires lld. Source: git.io/JsfhD (includes other O/Ss).
+#
+# The lld linker is considerably faster than the Rust one; the "mold" linker is even faster.
+#
+# Source: git.io/JsfhD (includes other O/Ss).
 # Perf tests [here](https://docs.near.org/docs/community/contribute/contribute-nearcore).
 # Rust perf book chapter [here](https://nnethercote.github.io/perf-book/compile-times.html).
 

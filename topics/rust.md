@@ -15,6 +15,7 @@
       - [Shared Vec/array methods](#shared-vecarray-methods)
     - [Hash maps](#hash-maps)
   - [Arithmetic/math APIs](#arithmeticmath-apis)
+      - [HashSet](#hashset)
   - [Strings](#strings)
     - [String/Slice/Char-related APIs/conversions](#stringslicechar-related-apisconversions)
     - [Internal representation (bytes/chars/graphemes)](#internal-representation-bytescharsgraphemes)
@@ -889,6 +890,16 @@ x.overflowing_shl(y);            // WATCH OUT! This is not the intuitive 1-bit l
 // Round to specific number of decimals (ugly!!; also see #printing)
 //
 (f * 100.0).round() / 100.0;
+```
+
+#### HashSet
+
+HashSet is based on HashMap, but it doesn't take space for the values, due to compiler's optimization.
+
+```rs
+// Convenient constructor
+//
+HashSet::from(["Foo", "Bar"])
 ```
 
 ## Strings

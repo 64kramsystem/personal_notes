@@ -12,6 +12,7 @@
     - [Images](#images)
     - [Link references](#link-references)
   - [Releases](#releases)
+  - [Pages](#pages)
 
 ## Searches
 
@@ -193,3 +194,7 @@ Download the latest release of a repo (filtered by a certain file extension):
 ```sh
 curl -sSL https://api.github.com/repos/rust-lang/mdBook/releases/latest | jq --raw-output '.assets[] | .browser_download_url' | grep 'linux-gnu.tar.gz$'
 ```
+
+## Pages
+
+Multiple project per account: https://stackoverflow.com/q/15563685/210029.

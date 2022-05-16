@@ -1,3 +1,34 @@
+## Mon 16/May/2022
+
+- Admin
+  - [x] Cycle planning
+- Tools
+  - [ ] Phone setup
+    - [x] Write script patching phone boot rom
+    - [ ] Merge installation notes
+  - Rust
+    - [x] Try Split Rust Analyzer target dir
+    - [x] Try mold linker
+- Open source/Tools: Schedule Manager
+  - [x] Reworker: Add support for higher-level closing entries
+  - [x] Replanner: Replan to the same time bracket
+- Studies: Rust
+  - Rust for Rustaceans
+    - [x] Ask design question about trait objects
+  - [ ] Fight check if it's possible to use `$HOME` in config.toml
+- SWE: Practice
+  - Leetcode
+    - [ ] Medium    81%: 3 tests, 0 submissions, 20'0", "1329. Sort the Matrix Diagonally"
+      - Mistakes
+        - Misunderstood definition of diago
+        - Forgot return var
+        - Forgot initialize var after copy/paste
+- [ ] Projects: Port Soccer to Fyrox
+  - [x] Collect/Review Fyrox material
+  - [ ] Study cheat book
+    - [ ] 2.1. Getting started
+      - [x] Check out Rust ECS libraries (notable: HECS)
+
 ## Sun 15/May/2022
 
 - Studies: Rust
