@@ -1279,16 +1279,11 @@ fn main() {
 }
 ```
 
-Shorter version, seemingly working, waiting for confirmation:
+Shorter version:
 
 ```rs
 let mut app = App::new();
 app.add_startup_system(add_number).add_system(print_number);
-
-// Same strategy used by App#run() to give ownership of the App instance, minus the runner extraction,
-// which in this context is not used.
-//
-app = std::mem::replace(&mut app, App::empty());
 
 loop {
     app.update();

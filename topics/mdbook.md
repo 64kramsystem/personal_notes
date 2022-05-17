@@ -2,6 +2,7 @@
 
 - [mdBook](#mdbook)
   - [Basics](#basics)
+  - [Configuration](#configuration)
   - [Book structure](#book-structure)
     - [`src/SUMMARY.md`](#srcsummarymd)
   - [Continuous integration](#continuous-integration)
@@ -11,13 +12,26 @@
 ```sh
 mdbook init hello-book # asks some questions
 cd hello-book
-mdbook serve --open
 
 mdbook build           # build
 mdbook watch           # watch and rebuild on change
 
+# This will also automatically update the browser pages on change!
+#
+# WATCH OUT!! If a .gitignore file is not present, changes will not be detected!! (see
+# https://github.com/rust-lang/mdBook/issues/1186).
+#
+mdbook serve --open
+
 # Generate command autocompletions (!)
 mdbook completions bash > ~/.local/share/bash-completion/completions/mdbook
+```
+
+## Configuration
+
+```toml
+[build]
+build-dir = "book"
 ```
 
 ## Book structure
@@ -26,6 +40,8 @@ mdbook completions bash > ~/.local/share/bash-completion/completions/mdbook
 - `src/SUMMARY.md`: TOC; manually updated.
 
 `src`'s directory tree structure is replacted in the generated HTML.
+
+The first (topmost) chapter is displayed by default.
 
 ### `src/SUMMARY.md`
 
