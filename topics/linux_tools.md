@@ -713,7 +713,7 @@ pdfimages -l $input
 pdfimages -j $input /path/to/$prefix
 ```
 
-Remove a page from a PDF doc:
+Extract pages/remove a page from a PDF doc:
 
 ```sh
 pdftk $input.pdf cat 1-29 31-end output $output.pdf

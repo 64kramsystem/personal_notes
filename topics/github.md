@@ -197,4 +197,7 @@ curl -sSL https://api.github.com/repos/rust-lang/mdBook/releases/latest | jq --r
 
 ## Pages
 
-Multiple project per account: https://stackoverflow.com/q/15563685/210029.
+It's possible to have only one subdomain per account, however, it's possible to have unlimited page sites in the path (e.g. `myaccount.github.io/mypages`):
+
+- create a repository and go to `settings -> pages`
+- the site root can be either the project root or `docs/`, but nothing else

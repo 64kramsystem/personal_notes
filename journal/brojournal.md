@@ -1,3 +1,11 @@
+## Tue 17/May/2022
+
+- Writings: Learn Bevy's ECS by ripping off someone else's project
+  - [x] Test and prepare github pages
+  - [x] Introduction chapter
+  - [ ] 06.01
+    - [x] Base structure
+
 ## Mon 16/May/2022
 
 - Admin
