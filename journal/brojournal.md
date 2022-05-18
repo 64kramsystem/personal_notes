@@ -1,3 +1,12 @@
+## Wed 18/May/2022
+
+- Writings: Learn Bevy's ECS by ripping off someone else's project
+  - [x] Update project: Remove unnecessary Bevy App ownership workaround
+  - [x] Add README to book repository
+  - [ ] 06.01
+    - [ ] World and systems
+    - [ ] Components and resources
+
 ## Tue 17/May/2022
 
 - Writings: Learn Bevy's ECS by ripping off someone else's project
