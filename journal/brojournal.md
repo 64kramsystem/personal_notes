@@ -1,3 +1,9 @@
+## Thu 19/May/2022
+
+- Studies: Rust
+  - Rust for Rustaceans
+  - [ ] Chapter 2: Types
+
 ## Wed 18/May/2022
 
 - Writings: Learn Bevy's ECS by ripping off someone else's project

@@ -1190,6 +1190,10 @@ Docs:
 ### Query hints
 
 ```sql
+# Force index
+SELECT /*+ INDEX(t1 my_index) */
+FROM t1
+
 # Join order; reference: https://dev.mysql.com/doc/refman/8.0/en/optimizer-hints.html#optimizer-hints-join-order.
 
 SELECT /*+ JOIN_ORDER(t2, t1) */ COUNT(*)
