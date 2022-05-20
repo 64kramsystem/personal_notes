@@ -1,8 +1,21 @@
+## Fri 20/May/2022
+
+- Projects: Port Soccer to Fyrox
+  - [x] Study cheat book
+    - [x] 2.1. Getting started
+    - 2.2. Scene
+    - 2.10. Tutorials
+    - (others)
+  - [x] Study/experiment 2d example
+    - [x] Ask questions
+    - [x] Discussion/Brutal fight with window issue
+
 ## Thu 19/May/2022
 
 - Studies: Rust
   - Rust for Rustaceans
-  - [ ] Chapter 2: Types
+    - [ ] Chapter 2: Types
+    - [ ] Chapter 3: Designing Interfaces
 
 ## Wed 18/May/2022
 

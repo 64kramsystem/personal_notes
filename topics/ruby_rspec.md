@@ -6,6 +6,7 @@
   - [Setup/configuration](#setupconfiguration)
     - [Add helpers to example groups (`describe`)](#add-helpers-to-example-groups-describe)
     - [Hooks and execution params](#hooks-and-execution-params)
+  - [Available variables](#available-variables)
   - [Mocks](#mocks)
     - [Matchers](#matchers)
     - [Matching arguments](#matching-arguments)
@@ -118,6 +119,11 @@ end
 
 describe MyClass, :myconfig, myparam: 10 do ...
 ```
+
+## Available variables
+
+- `subject`
+- `described_class`
 
 ## Mocks
 
