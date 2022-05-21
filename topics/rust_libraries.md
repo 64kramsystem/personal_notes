@@ -1425,15 +1425,17 @@ asserting(&"test condition").that(&1).is_equal_to(&2);
 
 ### Static/global variables (`lazy_static`, `once_cell`, `thread_local!`)
 
-Static variables can be defined inside a function (c-style) or at the root level; they need a constant expression/etc. They are unsafe when mutable.
-
-The difference from const is that they're associated only one memory location.
+Static variables can be defined inside a function (c-style) or at the root level; they need a constant expression/etc. They are unsafe when mutable. The difference from const is that they're associated only one memory location.
 
 ```rust
 static HELLO_WORLD: u32 = 1000;
 ```
 
 Global variables; also, allows initializing static variables with any function.
+
+The simplest built-in solution, if supported by the architecture, is using [atomics](rust.md#atomic-primitive-type-wrappers); `Mutex`es are currently (May/2022) not supported, since `Mutex` is not const.
+
+More sophisticated solutions, require crates:
 
 ```rust
 lazy_static::lazy_static! {
@@ -1447,11 +1449,13 @@ lazy_static::lazy_static! {
 
 In order to mutably access, a `Mutex` (or `RWLock`) needs to be wrapped around.
 
-Same, with another crate, `once_cell` (also in unstable, as `SyncLazy`):
+The crate `once_cell` can also be used (it may be merge in stdlib in the future).
 
 ```rust
 static ARRAY: Lazy<Mutex<Vec<u8>>> = Lazy::new(|| Mutex::new(vec![]));
 ```
+
+In unstable there is `SyncLazy`.
 
 Thread-local variables:
 

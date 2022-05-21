@@ -1,3 +1,24 @@
+## Sat 21/May/2022
+
+- Open Source
+  - [x] Examine RustDesk source code
+- Writings: Learn Bevy's ECS by ripping off someone else's project
+  - [ ] 06.01
+    - [x] Minor cosmetic improvements to existing chapters
+    - [x] Considerably expand the systems section
+    - [x] Write the Resources section
+    - [x] Write Keyboard Input chapters
+  - [x] Fight add Google Analytics
+- SWE: Practice
+  - Leetcode
+    - [x] Medium    81%: - tests, 1 submissions, -, "339. Nested List Weight Sum"
+      - Very bad and confusing Ruby problem design
+    - [x] Medium    81%: 1 tests, 1 submissions, 6'0", "1329. Sort the Matrix Diagonally"
+      - Mistakes (none)
+- Projects: Projects: Port Soccer to Fyrox
+  - [x] Base structure, with menu display
+    - [x] Brutal fight with nodes graph
+
 ## Fri 20/May/2022
 
 - Projects: Port Soccer to Fyrox

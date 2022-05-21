@@ -3,6 +3,7 @@
 - [mdBook](#mdbook)
   - [Basics](#basics)
   - [Configuration](#configuration)
+    - [Google analytics](#google-analytics)
   - [Book structure](#book-structure)
     - [`src/SUMMARY.md`](#srcsummarymd)
   - [Continuous integration](#continuous-integration)
@@ -32,6 +33,26 @@ mdbook completions bash > ~/.local/share/bash-completion/completions/mdbook
 ```toml
 [build]
 build-dir = "book"
+```
+
+### Google analytics
+
+In order to add analytics, add code to `theme/head.hbs`. WATCH OUT!! See Google analytics for the latest snippet code.
+
+```sh
+$ mkdir theme                # `src` dir sibling
+$ SITE_TAG=G-0000000000      # set here
+$ cat > theme/head.hbs <<JS
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=$SITE_TAG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){window.dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', '$SITE_TAG');
+</script>
+JS
 ```
 
 ## Book structure

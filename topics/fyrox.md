@@ -2,7 +2,7 @@
 
 - [Fyrox](#fyrox)
   - [Hello world](#hello-world)
-  - [Misc concepts](#misc-concepts)
+  - [Misc notes and concepts](#misc-notes-and-concepts)
   - [GameState methods](#gamestate-methods)
   - [Pool](#pool)
   - [Scene](#scene)
@@ -35,7 +35,15 @@ fn main() {
 }
 ```
 
-## Misc concepts
+## Misc notes and concepts
+
+IMPORTANT! In order to perform blocking resource loading, use `block_on()`; all the code in this guide assumes that the dev will add it where required:
+
+```rs
+let resource = block_on(resource_manager.request_*(path)).unwrap();
+```
+
+3d:
 
 - pitch: look up!
 - yam: look side!
@@ -121,7 +129,7 @@ fn load_scene(resource_manager: ResourceManager) -> Scene {
     let mut parent_scene = Scene::new();
 
     // Request child scene and block until it loading.
-    let scene_resource: Model = block_on(resource_manager.request_model("path/to/your/scene.rgs")).unwrap();
+    let scene_resource: Model = resource_manager.request_model("path/to/your/scene.rgs");
 
     // Create an instance of the scene in the parent scene.
     // This can also be, say, a car. If the car prefab is modified, the instances in all the scenes
@@ -235,14 +243,19 @@ Other operations:
 let node: Node = CameraBuilder::new(BaseBuilder::new()).build_node();
 scene.graph.add_node(node)
 
-// Attach a node, when builders can't be used.
+// Attach and link a node to another.
 //
-let weapon = block_on(resource_manager.request_model("path/to/weapon.fbx"))
-    .unwrap()
+// When a node is linked to another, it becomes child of both the root node and the linkee node, however,
+// its properties become relative the the linkee node.
+//
+// Use a `builder...build(graph)` to get a Handle<Node>.
+//
+let weapon: Handle<Node> = resource_manager.request_model("path/to/weapon.fbx")
     .instantiate_geometry(scene);
 scene.graph.link_nodes(weapon, camera);
 
-// Remove node (including the children)
+// Remove node (including the children). If the node is linked to another, it's removed from the children
+// of both nodes.
 //
 scene.graph.remove_node(handle)
 
@@ -293,6 +306,8 @@ CameraBuilder::new(BaseBuilder::new())
     }))
     .build(graph)
 ```
+
+This makes it easier to create nodes for 2d games. Use it as root node, and attach/detach sprite nodes are required; the only transform they need is a local scale to the sprite size.
 
 ## Transforms
 
@@ -451,13 +466,12 @@ fn init(engine: &mut Engine) -> Self {
   let camera = build_camera(&mut scene.graph);
 
   // Load scene.
-  block_on(engine.resource_manager.request_model("examples/data/2d/scene.rgs"))
-      .unwrap()
-      .instantiate_geometry(&mut scene);
+  engine.resource_manager.request_model("examples/data/2d/scene.rgs")
+    .instantiate_geometry(&mut scene);
 
   let scene: Handle<Scene> = engine.scenes.add(scene);
 
-  Self { /* ... */ }
+  Self { scene, /* ... */ }
 }
 
 fn on_tick(&mut self, engine: &mut Engine, _dt: f32, _: &mut ControlFlow) {
