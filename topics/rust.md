@@ -760,6 +760,7 @@ let mut map = HashMap::new();
 
 map.insert("b", 10);
 map.insert("b", 10);            // Overwrites the existing value
+map.remove("b");
 
 // Entry API: `entry()` gets the value for in-place modification.
 //
@@ -1464,6 +1465,17 @@ match point {
     //
     Point { x: x_val @ 3..=7 } => println!("Found an x in range: {}", id_variable),
 };
+
+// Hardcode destucturing.
+//
+if let KeyboardInputEvent {
+    input:
+        KeyboardInput {
+            virtual_keycode: Some(key_code),
+            ..
+        },
+    ..
+} = event
 
 // Borrowing matcher. Also mut!
 //
@@ -3107,8 +3119,26 @@ pub(crate) fn new_shape_id() -> u32 {
 
 Some APIs (return the previous value):
 
-- `fetch_add(value, ordering)`:                add to the current value, and return the previous
-- `compare_and_swap(current, value, ordering`: if the existing value equals `current`, set to `value`
+```rs
+// Add to the current value, and return the previous
+//
+ab.fetch_add(value, ordering);
+
+// Replace the old value with a new one, and return the old one.
+//
+let old: bool = ab.swap(new, ordering);
+
+// If the existing value equals `current`, set to `new`; the two orderings are:
+//
+// - success: ordering for the read-modify-write operation if the comparison with `current` succeeds
+// - failure: ordering for the load operation if the comparison fail
+//
+// Returns Ok(old)/Err(old), in case of success/failure
+//
+// There is a faster version, but weaker guarantees (`compare_exchange_weak()`).
+//
+let result: Option<bool> = ab.compare_exchange(current, new, success_ord, failure_ord);
+```
 
 **WATCH OUT**: Check out the [CPP reference](https://en.cppreference.com/w/cpp/atomic/memory_order) to understand memory orderings. The most conservative ordering, `Ordering::SeqCst` has still performance good enough to be used as default, according to Programming Rust 2nd ed.
 

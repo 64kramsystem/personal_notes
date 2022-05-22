@@ -193,7 +193,7 @@ mkdir .cargo
 cat > .cargo/config.toml << 'TOML'
 [target.x86_64-unknown-linux-gnu]
 linker = "/usr/bin/clang"
-rustflags = ["-Clink-arg=-fuse-ld=lld", "-Zshare-generics=y"]
+rustflags = ["-Clink-arg=-fuse-ld=/path/to/mold", "-Zshare-generics=y"]
 TOML
 ```
 

@@ -1,3 +1,34 @@
+## Sun 22/May/2022
+
+- Projects: Port Soccer to Fyrox
+  - [x] Correct scene graph design
+  - [x] Complete menu drawing
+  - [x] Fight Fyrox problem with input handling
+    - [x] discuss issue
+- Study: Rust
+  - [x] Review how mdbook examples work
+- Open Source: Improve Fyrox book documentation
+  - [x] Add some code snippets to Data management subchapter
+  - [x] Fix two code snippets in `platformer/part1.md`
+- Open Source: RustDesk
+  - [x] Cleanup global boolean unsafe code (first PR: `KEYBOARD_HOOKED`)
+  - [x] Investigate and help deb package bug
+- SWE: Practice
+  - Leetcode
+    - [x] Medium    81%: 1 tests, 1 submissions, 11'39", "797. All Paths From Source to Target"
+      - Mistakes: none
+      - Actually written code for cyclical graph
+- Writings: Learn Bevy's ECS by ripping off someone else's project
+  - [ ] 06.01
+    - [x] Add Entities section (to existing "Components and Resources")
+    - [x] Add introduction to system sets
+- Admin
+  - [x] Flush pool, and plan next cycle
+- Study: Rust/CS
+  - [ ] Hands-On Concurrency with Rust
+    - [ ] 6. Atomics - the Primitives of Synchronization
+      - [x] Research linearizability
+
 ## Sat 21/May/2022
 
 - Open Source
@@ -15,7 +46,7 @@
       - Very bad and confusing Ruby problem design
     - [x] Medium    81%: 1 tests, 1 submissions, 6'0", "1329. Sort the Matrix Diagonally"
       - Mistakes (none)
-- Projects: Projects: Port Soccer to Fyrox
+- Projects: Port Soccer to Fyrox
   - [x] Base structure, with menu display
     - [x] Brutal fight with nodes graph
 
