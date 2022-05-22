@@ -6,7 +6,9 @@
     - [Google analytics](#google-analytics)
   - [Book structure](#book-structure)
     - [`src/SUMMARY.md`](#srcsummarymd)
-  - [Continuous integration](#continuous-integration)
+  - [Code snippets](#code-snippets)
+    - [Testing](#testing)
+      - [Continuous integration](#continuous-integration)
 
 ## Basics
 
@@ -103,7 +105,42 @@ A book can be divided in more sections, which are like individual "sub-books"; t
 # Part IV
 ```
 
-## Continuous integration
+## Code snippets
+
+Example:
+
+````
+```rust,noplayground
+# extern crate mycrate
+# fn main() {
+println!("Hello!");
+# }
+```
+````
+
+The `main()` function is not required.
+
+The `#`-prefixed lines are not displayed to the user, but they're included in the compilation.
+
+A playground button is automatically added.
+
+There are many attributes, some are:
+
+- `no_run`       : compiled but not run (implies `noplayground`)
+- `noplayground`
+- `compile_fail` : compilation should fail
+
+### Testing
+
+Test code snippets via:
+
+```sh
+mdbook test -L ~/code/$crate/target/debug/deps`
+```
+
+However, this doesn't play well with developer builds (which, for example, include multiple versions); probably, the best strategy is to perform a clean compile, and copy the dependencies to a local subdirectory.
+
+#### Continuous integration
 
 Example build:
 
@@ -113,4 +150,50 @@ mkdir bin
 curl -sSL "$(curl -sSL https://api.github.com/repos/rust-lang/mdBook/releases/latest | jq --raw-output '.assets[] | .browser_download_url' | grep 'linux-gnu.tar.gz$')" | tar -xz --directory=bin
 
 bin/mdbook build
+```
+
+Github action (with everything compiled):
+
+```yml
+name: Test Code
+
+env:
+  CARGO_TERM_COLOR: always
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Update
+        run: sudo apt update
+
+      - name: Update Rust
+        run: rustup update
+
+      - name: Install Dependencies
+        run: sudo apt-get install libasound2-dev libudev-dev pkg-config xorg-dev libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
+
+      - name: Install fyrox
+        run: git clone https://github.com/FyroxEngine/Fyrox
+
+      - name: Build fyrox
+        run: cd Fyrox && cargo build && cd ..
+
+      - name: Setup mdBook
+        uses: peaceiris/actions-mdbook@v1
+        with:
+          mdbook-version: "latest"
+
+      - name: Test Code
+        run: mdbook test -L ./Fyrox/target/debug/deps
 ```

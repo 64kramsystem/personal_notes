@@ -14,6 +14,7 @@
   - [Events](#events)
     - [Window events](#window-events)
     - [Input](#input)
+      - ["Just pressed" functionality](#just-pressed-functionality)
   - [Window configuration](#window-configuration)
   - [More sophisticated hello world (2d)](#more-sophisticated-hello-world-2d)
 
@@ -110,7 +111,7 @@ Other APIs:
 let (ticket, mut obj): Ticket<T>, T = pool.take_reserve(handle) // Format: [try_]take_reserve()
 // ...mess with obj...
 pool.put_back(ticket, obj)
-pool.forget_ticket(ticket)                                      // Put back
+pool.forget_ticket(ticket)                                      // Remove from the pool
 
 // Get a handle from a ref/
 //
@@ -238,6 +239,10 @@ fn create_node(scene: &mut Scene) -> Handle<Node> {
 Other operations:
 
 ```rs
+// Root node.
+//
+scene.graph[scene.graph.get_root()]
+
 // Add a node manually.
 //
 let node: Node = CameraBuilder::new(BaseBuilder::new()).build_node();
@@ -307,7 +312,7 @@ CameraBuilder::new(BaseBuilder::new())
     .build(graph)
 ```
 
-This makes it easier to create nodes for 2d games. Use it as root node, and attach/detach sprite nodes are required; the only transform they need is a local scale to the sprite size.
+On a fixed-screen 2d game, on can use the camera as root node, and attach/detach sprite nodes are required; the only transform they need is a local scale to the sprite size. It's still easier though, to use the background texture as root node.
 
 ## Transforms
 
@@ -343,11 +348,9 @@ WindowEvent::Resized(size) => {
 
 ### Input
 
-Using the default game loop:
+Base handling of keyboard and mouse; doesn't handle "just pressed" functionality:
 
 ```rs
-// Typical type.
-//
 struct InputController {
     move_forward: bool,
     move_backward: bool,
@@ -360,28 +363,12 @@ struct InputController {
 fn on_window_event(&mut self, engine: &mut Engine, event: WindowEvent) {
     if let WindowEvent::KeyboardInput { input, .. } = event {
         if let Some(key_code) = input.virtual_keycode {
+            // The logic here is for simplicity; see note above the code block.
+            //
             match key_code {
                 VirtualKeyCode::W => {
-                    if input.state == ElementState::Pressed {
-                        println!("W");
-                    }
+                    if input.state == ElementState::Pressed { /* ... */ }
                 }
-                VirtualKeyCode::S => {
-                    if input.state == ElementState::Pressed {
-                        println!("S");
-                    }
-                }
-                VirtualKeyCode::A => {
-                    if input.state == ElementState::Pressed {
-                        println!("A");
-                    }
-                }
-                VirtualKeyCode::D => {
-                    if input.state == ElementState::Pressed {
-                        println!("D");
-                    }
-                }
-                _ => (),
             }
         }
     }
@@ -389,8 +376,6 @@ fn on_window_event(&mut self, engine: &mut Engine, event: WindowEvent) {
 
 fn on_device_event(&mut self, _engine: &mut Engine, _device_id: DeviceId, event: DeviceEvent) {
     if let DeviceEvent::MouseMotion { delta } = event {
-        println!("Mouse: {:?}", delta);
-
         // Clamp the pitch, in order to prevent the camera from turning upside down.
         //
         self.controller.yaw -= delta.0;
@@ -431,6 +416,119 @@ event_loop.run(move |event, _, control_flow| {
         Event::WindowEvent { event, .. } => { /* keyboard */ }
         Event::DeviceEvent { event, .. } => { /* mouse */ }
         _ => (),
+    }
+}
+```
+
+#### "Just pressed" functionality
+
+Properly handling keyboard event requires some trickery, due to input handling not being available in `on_tick()`. Solution:
+
+```rs
+pub struct Game {
+    input: InputController,
+    // ...
+}
+
+impl GameState for Game {
+    fn on_tick(&mut self, engine: &mut Engine, _dt: f32, _control_flow: &mut ControlFlow) {
+        // ...
+
+        match &self.menu_state {
+            NumPlayers => {
+                if self.input.is_key_just_pressed(Space) { /* ... */ }
+            }
+        },
+
+        self.input.flush_event_received_state();
+    }
+
+    fn on_window_event(&mut self, _engine: &mut Engine, event: WindowEvent) {
+        if let WindowEvent::KeyboardInput { input, .. } = event {
+            if let Some(key_code) = input.virtual_keycode {
+                use ElementState::*;
+
+                match input.state {
+                    Pressed => self.input.key_down(key_code),
+                    Released => self.input.key_up(key_code),
+                }
+            }
+        }
+    }
+}
+
+#[derive(Default)]
+pub struct InputController {
+    // The value is a tuple of previous and last state (true = pressed).
+    // Once an entry is added, it's never removed - on key released, the value is set as (false, false).
+    //
+    key_states: HashMap<VirtualKeyCode, (bool, bool)>,
+    // Fyrox doesn't expose input handling APIs in the `on_tick()` function; since in some cases (key
+    // kept pressed) it can take several frames to receive the next event, we need a way to understand
+    // how to interpret the state in between - we do it through this variable; see `is_key_just_pressed()`.
+    //
+    event_received: bool,
+}
+
+// WATCH OUT!!! It's **crucial** to invoke `flush_event_received_state()` at the end of `on_tick()`,
+// otherwise, the "just pressed" functionality won't work.
+//
+impl InputController {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn flush_event_received_state(&mut self) {
+        self.event_received = false
+    }
+
+    pub fn key_down(&mut self, key: VirtualKeyCode) {
+        self.key_states
+            .entry(key)
+            .and_modify(|v| *v = (v.1, true))
+            // If it wasn't tracked, we assume that it was not pressed before tracking started.
+            .or_insert((false, true));
+
+        self.event_received = true;
+    }
+
+    pub fn key_up(&mut self, key: VirtualKeyCode) {
+        self.key_states
+            .entry(key)
+            .and_modify(|v| *v = (v.1, false))
+            // If it wasn't tracked, we assume that it was pressed before tracking started.
+            .or_insert((true, false));
+
+        self.event_received = true;
+    }
+
+    pub fn is_key_pressed(&self, key: VirtualKeyCode) -> bool {
+        let key_state = self.key_states.get(&key).unwrap_or(&(false, false));
+        key_state.1
+    }
+
+    // Although is_key_pressed would also do in some cases, e.g. menus, this is still a user-friendly
+    // choice, since the alternate API may generate too many keystrokes.
+    //
+    pub fn is_key_just_pressed(&self, key: VirtualKeyCode) -> bool {
+        let key_state = self.key_states.get(&key).unwrap_or(&(false, false));
+
+        let (previously_pressed, currently_pressed) = *key_state;
+
+        // This logic can be compacted, however, it's kept extended for clarity.
+        //
+        if !currently_pressed {
+            false
+        } else {
+            if !self.event_received {
+                // If no events have been received, we assume that the state has not changed; for this
+                // reason, "just pressed" is necessarily false.
+                //
+                false
+            } else {
+                !previously_pressed && currently_pressed
+            }
+        }
     }
 }
 ```
