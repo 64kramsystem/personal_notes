@@ -1184,11 +1184,15 @@ while IFS='= ' read -r key value || [[ -n $key ]]; do   # `-n`: include the last
 done < "$configuration_file"
 ```
 
-A useful functionality is to interpret all values starting with `$`:
+Convenient extra functionalities:
 
 ```sh
+    # Interpret values starting with `$` as references to other variables
     if [[ $value == \$* ]]; then
       eval declare -g $key=$value
+    # Interpret values starting with `(` as arrays
+    elif [[ $value == '('* ]]; then
+      eval declare -ga "$key"="$value"
     else
       declare -g $key="$value"
     fi

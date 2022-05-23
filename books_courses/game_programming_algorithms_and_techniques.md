@@ -1,6 +1,6 @@
-# Game Programming Algorithm and Techniques
+# Game Programming Algorithms and Techniques
 
-- [Game Programming Algorithm and Techniques](#game-programming-algorithm-and-techniques)
+- [Game Programming Algorithms and Techniques](#game-programming-algorithms-and-techniques)
   - [Chapter 01](#chapter-01)
 
 ## Chapter 01

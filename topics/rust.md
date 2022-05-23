@@ -265,6 +265,8 @@ fn multiply(dimensions: &(u32, u32)) -> u32 {
 multiply(&(2, 3));
 ```
 
+It's not possible to iterate tuples, because order or type consistency are not guaranteed!
+
 For strings, see the [Strings chapter](#strings).
 
 Memory-related operations:
@@ -856,7 +858,7 @@ val <<= n; val >>= n;           // unsigned is zero-extending, signed sign-exten
 10_u64.pow(2);                  // exponentiation (power), int/int
 10_f64.powi(2);                 // exponentiation, float/int
 10_f64.sqrt();                  // square root
-(-1_f64).rem_euclid(20);        // 19 (nonnegative remainder); -1 % 20 == -1; see https://doc.rust-lang.org/std/primitive.i32.html#method.rem_euclid
+(-1_f64).rem_euclid(20);        // 19 (nonnegative remainder); standard modulo: -1 % 20 == -1; see https://doc.rust-lang.org/std/primitive.i32.html#method.rem_euclid
 10_f64.sin();                   // sine (in rad)
 10_f64.cos();                   // cosine (in rad)
 10_f64.signum();                // sign. float: (>= +0.0 -> 1.0), (<= -0.0 -> -1.0), (NaN -> NaN); int: (0 -> 0), (< 0 -> -1), (> 0 -> 1)
@@ -2028,6 +2030,16 @@ In order to specify a dynamic type when boxing, must explicitly cast:
 ```rust
 Box::new(NullLogger {});                    // type = Box<NullLogger>
 Box::new(NullLogger {}) as Box<dyn Logger>; // type = Box<dyn Logger>
+```
+
+It's possible to write a function signature that performs both static and dynamic dispatching, depending on the call parameters (of course, it's monomorphized):
+
+
+```rs
+// static:  pass &MyType
+// dynamic: pass &dyn MyTrait
+//
+fn flexible_dispatch<T: MyTrait + ?Sized>(t: &T) { /* ... */}
 ```
 
 ### Supertraits and inheritance (object-orientation)
