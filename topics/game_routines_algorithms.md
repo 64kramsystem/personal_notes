@@ -1,5 +1,6 @@
-# Game routines
-- [Game routines](#game-routines)
+# Game routines and algorithms
+
+- [Game routines and algorithms](#game-routines-and-algorithms)
   - [Notes](#notes)
   - [Bidimensional scrolling](#bidimensional-scrolling)
   - [Player Animations/Acceleration](#player-animationsacceleration)

@@ -367,9 +367,9 @@ Intrinsic/ASM APIs are unstable.
 ```rs
 #![feature(core_intrinsics)]  // Enable the (unstable) intrinsics APIs
 #![feature(link_llvm_intrinsics)]
-#![feature(asm)]              // Enable the (unstable) ASM APIs
 
 use core::intrinsics;
+use std::arch::asm;
 
 unsafe { intrinsics::abort(); }
 
@@ -393,10 +393,10 @@ Basic structure for an O/S program:
 #![no_std]                    // Don't include the stdlib.
 #![no_main]                   // Program doesn't have main()
 #![feature(core_intrinsics)]
-#![feature(asm)]
 
 use core::intrinsics;
 use core::panic::PanicInfo;
+use std::arch::asm;
 
 #[panic_handler]
 #[no_mangle]

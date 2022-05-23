@@ -1,3 +1,32 @@
+## Mon 23/May/2022
+
+- Projects: New Poor Man's Spotlight
+  - [x] File search: allow spaces
+  - [x] Update code to be compatible with new fltk-rs release
+- Study: Rust
+  - [x] Review Rust double static/dynamic dispatching
+- SWE: Practice
+  - Leetcode
+    - [x] Review dynamic programming [solution](https://leetcode.com/problems/all-paths-from-source-to-target/solution) to "797. All Paths From Source to Target"
+    - [x] Medium    81%: 6 tests, 1 submissions, 21'51", "797. All Paths From Source to Target" (Dynamic programming sol.)
+      - Mistakes:
+        - `flat_map` was not the right approach
+        - put the terminating condition in the wrong place (inside the child loop)
+        - wrong caching: was caching the path from the current node, instead of the child path
+        - (2x debug runs)
+- Admin
+  - [x] Cleanup Ruby playground repo, to prepare for the book
+- Study: Gamedev/CS
+  - [ ] Game Programming Algorithms and Techniques
+    - [ ] 4. 3D Graphics (2nd pass)
+- Projects: Port Soccer to Fyrox
+  - [x] Significant restructurings
+    - [x] Introduced Game (GameGlobal) addition
+    - [x] Restructured APIs to load images
+      - [x] Some look at macros
+  - [x] New menu logic
+  - [x] New update() play/game over states
+
 ## Sun 22/May/2022
 
 - Projects: Port Soccer to Fyrox

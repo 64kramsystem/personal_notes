@@ -58,6 +58,7 @@
       - [`serde`/`bincode`](#serdebincode)
       - [TOML, simplest parsing (`toml`)](#toml-simplest-parsing-toml)
       - [Guaranteed endianness storage (`byteorder`)](#guaranteed-endianness-storage-byteorder)
+    - [Resource-light image size detection (`imagesize`)](#resource-light-image-size-detection-imagesize)
 
 ## Standard library
 
@@ -1769,4 +1770,12 @@ fn main() {
 
 ```rs
 f.read_u32::<LittleEndian>()?           // read an u32 stored in little endian format
+```
+
+### Resource-light image size detection (`imagesize`)
+
+Small crate, and reads the smallest possible amount of data.
+
+```rs
+let ImageSize { width, height } = imagesize::size(path).unwrap();
 ```
