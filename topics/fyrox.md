@@ -5,6 +5,8 @@
   - [Misc notes and concepts](#misc-notes-and-concepts)
   - [GameState methods](#gamestate-methods)
   - [Pool](#pool)
+  - [Textures](#textures)
+  - [Sound](#sound)
   - [Scene](#scene)
     - [Concepts/Terminology](#conceptsterminology)
     - [Graph](#graph)
@@ -118,6 +120,52 @@ pool.forget_ticket(ticket)                                      // Remove from t
 let str_handle = pool.handle_of(str_ref);
 ```
 
+## Textures
+
+As of Fyrox v0.25, loading textures in debug mode is extremely slow (1.4" for each PNG file, even if small), so we need to load them asynchronously.
+
+```rs
+let texture_requests = join_all(
+    IMAGE_PATHS
+        .iter()
+        .map(|path| resource_manager.request_texture(path)),
+);
+
+let images = IMAGE_PATHS
+    .iter()
+    .zip(block_on(texture_requests))
+    .map(|(path, texture)| (path.to_string(), texture.unwrap()))
+    .collect::<HashMap<_, _>>();
+```
+
+Image sizes are not needed, but if they had to, the `imagesize` crate is small and convenient.
+
+## Sound
+
+```rs
+let sound = resource_manager.request_sound_buffer(path);
+
+let source = SoundBuilder::new(BaseBuilder::new())
+    .with_buffer(Some(sound))
+    .with_status(Playing)          // doesn't start automatically
+    .build(&mut scene.graph);
+
+// Add effects.
+//
+let reverb_effect = ReverbEffectBuilder::new(BaseEffectBuilder::new().with_gain(0.7)) // Otherwise it's too loud!
+  .with_decay_time(3.0)  // Set reverb time to ~3 seconds - the longer, the deeper the echo.
+  .build(&mut scene.graph.sound_context);
+
+scene.graph
+    .sound_context
+    .effect_mut(reverb_effect)
+    .inputs_mut()
+    .push(EffectInput{
+        sound: source,
+        filter: None
+    });
+```
+
 ## Scene
 
 Loading:
@@ -185,6 +233,7 @@ scene.ambient_lighting_color = Color::opaque(30, 30, 30);
 - **Rectangle**: simple rectangle mesh that can have a texture and a color, it is a very simple version of a Mesh node,
   yet it uses very optimized renderer, that allows you to render dozens of rectangles simultaneously. This node is
   intended to be used for 2D games only.
+  **Pivot**: can be used as invisible node, to group other nodes
 
 - **Prefab**: Scene used to create a source of data for other scenes.
 
@@ -204,6 +253,7 @@ Nodes are (generally) created via builders:
 - `Collider`
 - `Joint`
 - `Rectangle`
+- `Pivot`
 
 They all implement `new(base_builder: BaseBuilder)` (except `BaseBuilder`), due to the composition-based design. Example:
 

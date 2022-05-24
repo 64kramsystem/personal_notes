@@ -8,7 +8,7 @@
     - [Features](#features)
     - [Conditional build (ifdef-like)](#conditional-build-ifdef-like)
     - [Toolchain](#toolchain)
-    - [Fast builds](#fast-builds)
+    - [Build times (profile/improve)](#build-times-profileimprove)
     - [Cross-compilation](#cross-compilation)
     - [Cargo doc](#cargo-doc)
   - [Rustfmt](#rustfmt)
@@ -176,7 +176,39 @@ echo nightly > rust-toolchain
 
 The `rust-toolchain` is not read outside a workspace (ie. directory including it). It can't be specified in the Cargo configuration.
 
-### Fast builds
+### Build times (profile/improve)
+
+Profile build; Graph with breakdown by crate; very simple and builtin:
+
+```sh
+cargo build --timings
+```
+
+More sophisticated profiling (see: https://blog.rust-lang.org/inside-rust/2020/02/25/intro-rustc-self-profile.html):
+
+```sh
+cargo install --git https://github.com/rust-lang/measureme crox flamegraph summarize
+
+rm -f *.mm_profdata
+
+RUSTFLAGS=-Zself-profile cargo build
+
+for f in *.mm_profdata; do
+  echo $f
+
+  # Ouput a flamegraph SVG
+  #
+  # flamegraph $f
+
+  # Print a summary table; filter out below 5%; skip size data
+  #
+  summarize summarize $f -p 5 | perl -ne 'print if //../^Total/ '
+
+  echo
+done
+```
+
+Improve build times:
 
 Bevy hello world: 8.75" -> 1.25" (!!).
 
@@ -188,6 +220,8 @@ Bevy hello world: 8.75" -> 1.25" (!!).
 # Source: git.io/JsfhD (includes other O/Ss).
 # Perf tests [here](https://docs.near.org/docs/community/contribute/contribute-nearcore).
 # Rust perf book chapter [here](https://nnethercote.github.io/perf-book/compile-times.html).
+#
+# Can be verified via `readelf -p .comment target/debug/$binary` (will show `mold...`).
 
 mkdir .cargo
 cat > .cargo/config.toml << 'TOML'
