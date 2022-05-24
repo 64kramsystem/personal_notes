@@ -618,15 +618,20 @@ require 'pathname'; Pathname.new(@path2).relative_path_from(Pathname.new(@path1)
 File opening/closing (flags):
 
 ```ruby
+# WATCH OUT!! The flags are not the same as the standard ruby; 'w' != WRONLY, 'a' != APPEND
+#
+# - 'w': File::CREAT | File::WRONLY | File::TRUNC
+# - 'a': File::CREAT | File::WRONLY | File::APPEND
+
+# Append to file, creating if non existent
+#
+File.open(@file, 'a') { ... }
+
 # If a file needs to be closed deterministically, then do it manually - GC collection doesn't guarantee
 # that it will be collected/closed.
 #
-f = File.open(@file, File::CREAT | File::WRONLY | File::APPEND) { } # append to file, creating if non existent
+f = File.open(@file, File::CREAT | File::WRONLY | File::APPEND) {... }
 f.close
-
-# WATCH OUT!! The flags are not the same as the standard ruby; 'w' != WRONLY
-
-File::CREAT | File::WRONLY | File::TRUNC     # use this as 'w' replacement
 ```
 
 File locking, via flock:

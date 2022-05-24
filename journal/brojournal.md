@@ -1,3 +1,22 @@
+## Tue 24/May/2022
+
+- Open Source: RustDesk
+  - [x] Remove remote.rs static mut booleans unsafe code, by using AtomicBool
+    - [ ] Investigate other unsafe code
+  - [x] Test pynput package, and open update README PR
+  - [x] Strip release binary using Rust toolchain
+- Projects: Port Soccer to Fyrox
+  - [x] Async resources load
+  - [x] Use Pivot as root node
+  - [x] Refactor resources loading, to use `join_all()`
+  - [x] Add sound support
+    - [ ] Fight sound played with delay
+- Study: Rust
+  - [x] Review build time profiling tools
+    - [x] Investigate rustdesk build times
+- Admin
+  - [x] Preliminary verifications for running Ubuntu 22.04
+
 ## Mon 23/May/2022
 
 - Projects: New Poor Man's Spotlight

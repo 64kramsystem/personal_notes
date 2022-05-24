@@ -3132,13 +3132,10 @@ pub(crate) fn new_shape_id() -> u32 {
 Some APIs (return the previous value):
 
 ```rs
-// Add to the current value, and return the previous
-//
-ab.fetch_add(value, ordering);
-
-// Replace the old value with a new one, and return the old one.
-//
-let old: bool = ab.swap(new, ordering);
+ab.load(ordering);                       // Load
+ab.store(value, ordering);               // Store
+ab.fetch_add(value, ordering);           // Add to the current value, and return the previous
+let old: bool = ab.swap(new, ordering);  // Replace the old value with a new one, and return the old one
 
 // If the existing value equals `current`, set to `new`; the two orderings are:
 //
