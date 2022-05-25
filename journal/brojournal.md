@@ -1,3 +1,14 @@
+## Wed 25/May/2022
+
+- Projects: Port Soccer to Fyrox
+  - [x] Add music support
+  - [x] Move sound nodes to a separate tree, and clean them on stop
+  - [x] Redesign media handling
+  - [x] Media: Generalize support for looping sounds
+  - [x] Follow up with port
+- Open Source: OpenScripts
+  - [x] git_rename_commits: Update Perl flags (use 0777 mode)
+
 ## Tue 24/May/2022
 
 - Open Source: RustDesk
