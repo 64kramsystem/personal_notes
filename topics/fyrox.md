@@ -142,13 +142,34 @@ Image sizes are not needed, but if they had to, the `imagesize` crate is small a
 
 ## Sound
 
+Sounds must be attached to a node, otherwise, they're not played.
+
 ```rs
 let sound = resource_manager.request_sound_buffer(path);
 
-let source = SoundBuilder::new(BaseBuilder::new())
+let sound_h = SoundBuilder::new(BaseBuilder::new())
     .with_buffer(Some(sound))
     .with_status(Playing)          // doesn't start automatically
     .build(&mut scene.graph);
+
+builder.
+  .with_looping(true)           // loop (use as music)
+  .with_play_once(true)         // destroy after playback; avoids manual node removal
+
+// Get node, use it, and remove it.
+let mut music: Sound = scene.graph[music_h].as_sound_mut();
+music.blah_blah();
+music.stop();
+
+// It's good practice to remove the stopped nodes (but see the play_once flag).
+//
+// Statuses: Stopped, Playing, Paused
+//
+if music.status == Status::Stopped {
+  // Removing the node also stops the playback.
+  //
+  scene.remove_node(music_h);
+}
 
 // Add effects.
 //

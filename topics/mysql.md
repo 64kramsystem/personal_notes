@@ -47,6 +47,7 @@
     - [Cursors (with example procedure)](#cursors-with-example-procedure)
   - [Performance/Optimization](#performanceoptimization)
     - [General optimization topics](#general-optimization-topics)
+    - [Locking](#locking)
     - [Query hints](#query-hints)
     - [Profiling](#profiling)
     - [Dynamic SQL](#dynamic-sql)
@@ -1186,6 +1187,22 @@ Docs:
 
 - [Subquery materialization](https://dev.mysql.com/doc/refman/8.0/en/subquery-materialization.html)
 - [Derived tables/Views/CTEs materialization](https://dev.mysql.com/doc/refman/8.0/en/derived-table-optimization.html)
+
+### Locking
+
+Skip locked rows:
+
+```sql
+SELECT * FROM seats WHERE seat_no BETWEEN 2 AND 3 AND booked = 'NO'
+FOR UPDATE SKIP LOCKED;
+
+-- If there is a join, and want to skip locked only on one table, use the `OF <table>` clause.
+--
+SELECT * FROM seats s JOIN seat_rows sr USING (row_no)
+WHERE seat_no IN (3, 4) AND sr.row_no IN (5, 6) AND booked = 'NO'
+FOR UPDATE OF s SKIP LOCKED;
+
+```
 
 ### Query hints
 

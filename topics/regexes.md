@@ -5,7 +5,7 @@
   - [Quantifiers (including `*`/`+`)](#quantifiers-including-)
   - [Anchors](#anchors)
   - [Backreferences](#backreferences)
-  - [PCRE flags](#pcre-flags)
+  - [PCRE flags (Perl)](#pcre-flags-perl)
   - [Complex cases](#complex-cases)
     - [Capturing sequences of N characters](#capturing-sequences-of-n-characters)
     - [Negative matches](#negative-matches)
@@ -74,10 +74,12 @@ perl -i -pe 's/^(\s+)def mymethod$.*?^\g1end$\n\n//sm'
 perl -i -pe 's/^(ident_file = .*)/#${1}/'
 ```
 
-## PCRE flags
+## PCRE flags (Perl)
 
-- `/m`: match newlines with `.`
-  - `/s`: match line beginning/end with `^`/`$` when `m` is used
+These are Perl; PCRE may have slightly different details:
+
+- `/m`: on 0777, match `^`/`$` on every line
+- `/s`: match newlines with `.`
 
 WATCH OUT! There are exceptions on some languages; see the specific language.
 

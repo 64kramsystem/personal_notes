@@ -38,7 +38,7 @@
     - [Commandline parsing (`clap`)](#commandline-parsing-clap)
     - [Terminal interaction (`termion`)](#terminal-interaction-termion)
     - [HashMap literals (`maplit`)](#hashmap-literals-maplit)
-    - [Faster hashing (`ahash`, `phf`)](#faster-hashing-ahash-phf)
+    - [Faster/Perfect hashing (`ahash`, `phf`)](#fasterperfect-hashing-ahash-phf)
     - [Channels: Single Producer Multiple Consumers (`bus`)](#channels-single-producer-multiple-consumers-bus)
     - [Unit testing](#unit-testing)
       - [RSpec-style testing (`demonstrate`)](#rspec-style-testing-demonstrate)
@@ -1158,6 +1158,8 @@ writeln!(term, "{}bar", fmt_color)?;
 
 ### HashMap literals (`maplit`)
 
+(Remember that a HashMap can be created from a vector of tuples)
+
 ```rust
 #[macro_use] extern crate maplit;
 
@@ -1167,7 +1169,7 @@ let map = hashmap!{
 };
 ```
 
-### Faster hashing (`ahash`, `phf`)
+### Faster/Perfect hashing (`ahash`, `phf`)
 
 Faster hashing (`ahash`):
 
@@ -1182,7 +1184,8 @@ Perfect hashing (`const`-compatible):
 ```rs
 // Requires `macros` feature
 // Must be a const; variable (`let`) is not supported.
-// Enums are not supported.
+// Enums are not supported as keys; Structs are supported as values.
+//
 const HAZZ: phf::Map<&str, i32> = phf_map! {
     "loop" => 4,
     "continue" => 2,
