@@ -138,7 +138,11 @@ let images = IMAGE_PATHS
     .collect::<HashMap<_, _>>();
 ```
 
-Image sizes are not needed, but if they had to, the `imagesize` crate is small and convenient.
+Image (texture) sizes are tricky to get:
+
+```rs
+if let TextureKind::Rectangle { width, height } = texture.data_ref().kind() { ... }
+```
 
 ## Sound
 
