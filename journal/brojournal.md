@@ -1,3 +1,13 @@
+## Thu 26/May/2022
+
+- Openscripts
+  - [x] git_rename_commits: Automatically cd to repo top level
+- Projects: Port Soccer to Fyrox
+  - [x] Media: Convert standard (2d library) coordinates to Fyrox ones
+    - [x] Fight find texture dimensions
+    - [x] Fight images (nodes) scaling
+  - [ ] Investigate problem with texture red border
+
 ## Wed 25/May/2022
 
 - Projects: Port Soccer to Fyrox
