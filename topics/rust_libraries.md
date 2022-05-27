@@ -199,8 +199,10 @@ show_it_generic(&*s); // works - manually deref
 
 ```rs
 // Example implementors: String, str...
-//
 fn open<P: AsRef<Path>>(path: P) -> Result<File>
+
+// Accepts String, &str...
+fn sound<S: AsRef<str>>(&self, base: S)
 ```
 
 Use `AsRef` when possible, rather than creating a new `AsFoo` trait!
