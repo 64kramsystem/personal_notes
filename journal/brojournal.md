@@ -1,3 +1,17 @@
+## Fri 27/May/2022
+
+- Open Source: Fyrox
+  - [x] Open Fyroxed issue about crash on dirs with symlinks
+  - [x] Open Fyrox issue about red areas in some PNG images
+- Open Source: Fyrox Cheat book
+  - [x] Add sound chapter
+- Projects: Port Soccer to Fyrox
+  - [x] Investigate window resizing+locking
+    - [x] Ask/discuss
+    - [x] Find workaround
+- Tools: IRC
+  - [x] Try irccloud
+
 ## Thu 26/May/2022
 
 - Openscripts

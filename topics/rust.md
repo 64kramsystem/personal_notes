@@ -1859,7 +1859,11 @@ impl<T, U> Point<T, U> {
 
 ### Const Generics
 
-Awesome!! This code is using an unstable const generic feature, in order to use an enum:
+```rs
+pub fn sound<const T: usize>(indexes: [u8; T])
+```
+
+With unstable, it's even possible to use enums:
 
 ```rs
 #![feature(adt_const_params)]
@@ -1869,6 +1873,8 @@ pub enum GameStep { AwaitingInput, MovePlayer }
 
 pub fn next_step<const T: GameStep>() { insert_resource(T); }
 
+// `{ }` disambiguate type/const generics.
+//
 app.with_system(next_step::next_step::<{ AwaitingInput }>)
 ```
 

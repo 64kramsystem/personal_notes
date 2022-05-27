@@ -118,7 +118,7 @@ println!("Hello!");
 ```
 ````
 
-The `main()` function is not required.
+The `main()` function is not required. WATCH OUT! It must be `rust`, not `rs`.
 
 The `#`-prefixed lines are not displayed to the user, but they're included in the compilation.
 

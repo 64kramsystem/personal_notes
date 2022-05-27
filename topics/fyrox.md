@@ -311,6 +311,8 @@ fn create_node(scene: &mut Scene) -> Handle<Node> {
 }
 ```
 
+In order to group nodes, can use a `Pivot` (which is not visible). WATCH OUT!! Scaling must be performed on the children nodes, not on the pivot.
+
 Other operations:
 
 ```rs
