@@ -124,6 +124,8 @@ let str_handle = pool.handle_of(str_ref);
 
 As of Fyrox v0.25, loading textures in debug mode is extremely slow (1.4" for each PNG file, even if small), so we need to load them asynchronously.
 
+WATCH OUT! As of Fyrox v0.26, some PNG files display with corruption (see https://github.com/FyroxEngine/Fyrox/issues/320).
+
 ```rs
 let texture_requests = join_all(
     IMAGE_PATHS
@@ -154,6 +156,7 @@ let sound = resource_manager.request_sound_buffer(path);
 let sound_h = SoundBuilder::new(BaseBuilder::new())
     .with_buffer(Some(sound))
     .with_status(Playing)          // doesn't start automatically
+    .with_gain(0.5)                // volume (0..1.0; can be set > 1.0); default = 1.0; logarithmic scale
     .build(&mut scene.graph);
 
 builder.
@@ -627,7 +630,15 @@ window.set_inner_size(PhysicalSize {
     height: 768,
 });
 
-// WATCH OUT! This prevents also programmatic changes.
+// WATCH OUT! There are two problems:
+//
+// 1. disabling resizing also prevents programmatic changes;
+// 2. if this API is invoked immediately after set_inner_size(), it will lead to a race condition;
+//    it will/can execute before set_inner_size(), voiding it; in order to solve, put set_inner_size()
+//    in on_window_event(), matching WindowEvent::Resized.
+//
+// See https://github.com/rust-windowing/winit/issues/2306.
+//
 window.set_resizable(false);
 ```
 

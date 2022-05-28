@@ -1,3 +1,20 @@
+## Sat 28/May/2022
+
+- Open source: Winit
+  - [x] Report Window issues with resizing
+- Open source: Openscripts
+  - encode_to_m4a
+    - [x] Check if destination exists
+    - [x] Cosmetic improvements
+- Projects: Port Soccer to Fyrox
+  - [x] Try images bug workaround
+  - [x] Complete draw() port
+- Open source: Fyrox Cheat book
+  - [ ] Look at reverb effect
+- Study: Gamedev/CS
+  - [ ] Game Programming Algorithms and Techniques
+    - [ ] 7. Physics
+
 ## Fri 27/May/2022
 
 - Open Source: Fyrox
