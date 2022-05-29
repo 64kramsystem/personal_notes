@@ -1,3 +1,19 @@
+## Sun 29/May/2022
+
+- Open Surce
+  - Winit
+    - [x] Follow up bug fix; report testing results
+- Projects: Port Soccer to Fyrox
+  - [x] Apply winit fix
+  - [ ] Try implementing `Control` with lifetimes
+- Writings: Learn Bevy's ECS by ripping off someone else's project
+  - [x] rusty_roguelike_step.sh: Compare current mode: Add step selection
+  - [x] 06.01: Query basics
+    - [x] First section
+    - [x] Query conditionals
+    - [x] Commands/Resources
+    - [x] (get_)single(_mut)
+
 ## Sat 28/May/2022
 
 - Open source: Winit

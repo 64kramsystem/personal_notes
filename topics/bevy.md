@@ -615,7 +615,7 @@ if let Ok((health, mut transform)) = query.get_mut(entity) {
 
 // Retrieve an entity that is guaranteed to be unique; panics if not found
 //
-// APIs: [get_]single[_mut](): combinations of ir/refutable and im/mutable.
+// APIs: [get_]single[_mut](): combinations of checked (get)/unchecked and im/mutable.
 //
 fn query_player(mut q: Query<(&Player, &mut Transform)>) {
     if let Ok(player, mut transform) = q.single_mut() { /* ... */ }

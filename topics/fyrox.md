@@ -630,13 +630,8 @@ window.set_inner_size(PhysicalSize {
     height: 768,
 });
 
-// WATCH OUT! There are two problems:
-//
-// 1. disabling resizing also prevents programmatic changes;
-// 2. if this API is invoked immediately after set_inner_size(), it will lead to a race condition;
-//    it will/can execute before set_inner_size(), voiding it; in order to solve, put set_inner_size()
-//    in on_window_event(), matching WindowEvent::Resized.
-//
+// WATCH OUT! There are currently issues with resizing; this call must be made before set_inner_size(),
+// otherwise resizing won't apply.
 // See https://github.com/rust-windowing/winit/issues/2306.
 //
 window.set_resizable(false);
