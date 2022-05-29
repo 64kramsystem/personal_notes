@@ -65,9 +65,11 @@ redisish = { path = "../redisish" }                         # Relative dependenc
 amethyst = { git = "https://github.com/amethyst/amethyst" } # Repository; options: `branch`/`tag`/`rev` (master branch is the default)
 image = { path = "vendor/image", version = "0.13.0" }       # When both `path` and `version` are specified, `path` is used locally, and `version` publicly
 
-# Patch (modify) crates; see https://doc.rust-lang.org/cargo/reference/overriding-dependencies.html
+# Override a (indirect) dependency.
+# See https://doc.rust-lang.org/cargo/reference/overriding-dependencies.html.
+#
 [patch.crates-io]
-uuid = { path = "../path/to/uuid" }
++winit = {git = "https://github.com/rust-windowing/winit.git", rev = "5d85c10a2"}
 
 # Another way to declare a dependency
 [dependencies.amethyst]
