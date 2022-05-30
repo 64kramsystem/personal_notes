@@ -25,6 +25,8 @@
 aws configure
 ```
 
+The region can be specified either via `--region $region` or `$AWS_DEFAULT_REGION`.
+
 ## General JSON parameters format
 
 When using JSON as parameters format, if values are not complex (e.g. include null values), just manually build the object:
@@ -88,7 +90,6 @@ Find RDS reservations expiry:
 
 ```sh
 aws rds describe-reserved-db-instances \
-  --region eu-west-1 \
   --reserved-db-instance-id my-reservation-id \
   --query 'ReservedDBInstances[*].[StartTime,Duration]'
 ```

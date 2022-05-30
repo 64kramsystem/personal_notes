@@ -19,6 +19,7 @@
       - ["Just pressed" functionality](#just-pressed-functionality)
   - [Window configuration](#window-configuration)
   - [More sophisticated hello world (2d)](#more-sophisticated-hello-world-2d)
+  - [Random](#random)
 
 Notes from the [Fyrox Cheat Book](https://fyrox-book.github.io/fyrox/introduction.html).
 
@@ -659,3 +660,7 @@ fn on_tick(&mut self, engine: &mut Engine, _dt: f32, _: &mut ControlFlow) {
     /* Handle input and transform (see #input) */
 }
 ```
+
+## Random
+
+Fyrox uses the `rand` crate, so just add `rand = "*"` as dependency.
