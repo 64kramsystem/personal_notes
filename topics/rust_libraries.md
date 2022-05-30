@@ -41,7 +41,8 @@
     - [Faster/Perfect hashing (`ahash`, `phf`)](#fasterperfect-hashing-ahash-phf)
     - [Channels: Single Producer Multiple Consumers (`bus`)](#channels-single-producer-multiple-consumers-bus)
     - [Unit testing](#unit-testing)
-      - [RSpec-style testing (`demonstrate`)](#rspec-style-testing-demonstrate)
+      - [RSpec-style testing (`rspec`)](#rspec-style-testing-rspec)
+      - [Macro-based RSpec-style testing (`demonstrate`)](#macro-based-rspec-style-testing-demonstrate)
       - [Cucumber](#cucumber)
       - [Utilities](#utilities)
     - [Static/global variables (`lazy_static`, `once_cell`, `thread_local!`)](#staticglobal-variables-lazy_static-once_cell-thread_local)
@@ -1239,9 +1240,15 @@ mod tests {
 }
 ```
 
-#### RSpec-style testing (`demonstrate`)
+#### RSpec-style testing (`rspec`)
+
+Neat!! See [repository](https://github.com/rust-rspec/rspec).
+
+#### Macro-based RSpec-style testing (`demonstrate`)
 
 Repository [here](https://github.com/austinsheep/demonstrate).
+
+It's cool, but also annoying, because relatively large suites have usability problems due to macros being used.
 
 ```rust
 use demonstrate::demonstrate;

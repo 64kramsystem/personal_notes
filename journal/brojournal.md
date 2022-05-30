@@ -1,3 +1,24 @@
+## Mon 30/May/2022
+
+- Studies: Rust
+  - [x] Review new RSpec-style test libraries
+  - [x] Quick review Rust-Ruby bridges
+- SWE: Practice
+  - Leetcode
+    - [x] Medium    81%: 2 tests, 1 submissions, 15'22", "1551. Minimum Operations to Make Array Equal"
+      - Mistakes
+        - [x] Mistakenly thought elements were powers, not sums, of 2
+      - Proceeded in a generally messy way
+- Admin/System
+  - [x] Review AMDGPU-Pro difference
+  - [x] Merge/update phone setup documents/scripts
+  - [x] Test Linux games without amdgpu pro
+    - [ ] Investigate excessive speed on high display refresh rates
+  - [ ] Laptop O/S upgrade
+    - [x] Installation and main upgrade
+      - [x] Upgrade fixes
+    - [ ] Tweaks
+
 ## Sun 29/May/2022
 
 - Open Surce
@@ -27,7 +48,7 @@
   - [x] Complete draw() port
 - Open source: Fyrox Cheat book
   - [ ] Look at reverb effect
-- Study: Gamedev/CS
+- Studies: Gamedev/CS
   - [ ] Game Programming Algorithms and Techniques
     - [ ] 7. Physics
 
@@ -79,7 +100,7 @@
   - [x] Refactor resources loading, to use `join_all()`
   - [x] Add sound support
     - [ ] Fight sound played with delay
-- Study: Rust
+- Studies: Rust
   - [x] Review build time profiling tools
     - [x] Investigate rustdesk build times
 - Admin
@@ -90,7 +111,7 @@
 - Projects: New Poor Man's Spotlight
   - [x] File search: allow spaces
   - [x] Update code to be compatible with new fltk-rs release
-- Study: Rust
+- Studies: Rust
   - [x] Review Rust double static/dynamic dispatching
 - SWE: Practice
   - Leetcode
@@ -103,7 +124,7 @@
         - (2x debug runs)
 - Admin
   - [x] Cleanup Ruby playground repo, to prepare for the book
-- Study: Gamedev/CS
+- Studies: Gamedev/CS
   - [ ] Game Programming Algorithms and Techniques
     - [ ] 4. 3D Graphics (2nd pass)
 - Projects: Port Soccer to Fyrox
@@ -121,7 +142,7 @@
   - [x] Complete menu drawing
   - [x] Fight Fyrox problem with input handling
     - [x] discuss issue
-- Study: Rust
+- Studies: Rust
   - [x] Review how mdbook examples work
 - Open Source: Improve Fyrox book documentation
   - [x] Add some code snippets to Data management subchapter
@@ -140,7 +161,7 @@
     - [x] Add introduction to system sets
 - Admin
   - [x] Flush pool, and plan next cycle
-- Study: Rust/CS
+- Studies: Rust/CS
   - [ ] Hands-On Concurrency with Rust
     - [ ] 6. Atomics - the Primitives of Synchronization
       - [x] Research linearizability
@@ -559,7 +580,7 @@
 
 ## Sun 24/Apr/2022
 
-- Study: Perl
+- Studies: Perl
   - [x] Review scalar/list contexts
 - Studies: Rust/Gamedev
   - Bevy
