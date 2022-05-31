@@ -2774,6 +2774,8 @@ let pizza: Arc<MyType> = boxed.into();
 
 ### Weak<T> and reference cycles
 
+W.R. are used to share RC (strong) references, without causing cycles; they don't cause them because any cycle involving weak references will be broken once the associated RC count is 0.
+
 Example with a tree data structure, with nodes pointing both to children and parents. The problem is that if we don't use weak references, there will be circular references (therefore leaks) because of parents pointing to children, and viceversa.
 
 It's important to always think who is the owner. A parent ultimately owns the children - if the former is dropped, the children should be dropped too; therefore, the reference to the parent should be weak.
@@ -2840,7 +2842,6 @@ opt_weak_ref.clone().unwrap();
 // See https://users.rust-lang.org/t/why-cant-weak-new-be-used-with-a-trait-object.
 //
 let parent: Mutex<Weak<dyn Shape>> = Mutex::new(Weak::<Plane>::new());
-
 ```
 
 Counting functions:
