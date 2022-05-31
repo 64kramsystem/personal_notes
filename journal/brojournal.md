@@ -1,3 +1,25 @@
+## Tue 31/May/2022
+
+- Admin/System
+  - [x] Laptop O/S upgrade
+    - [x] Tweaks
+    - [x] Fight issue with Tilix select all selecting only the bottom part of the buffer (=last screen)
+      - [x] Try multiple versions
+      - [x] Try on VM
+      - [x] Report issue on Ubuntu bug tracker
+    - [x] Investigate desktop performance issue
+    - [x] Backport new O/S script improvements to old O/S script
+    - [x] Reinstall old O/S
+- Projects
+  - Openscripts
+    - [x] Replace `inhibit_mate_screensaver.sh` with new (strategy) `set_display_sleep_time`
+- Projects
+  - Port Soccer to Fyrox
+    - [ ] Follow up port
+- Studies
+  - Rust
+    - [x] Review weak references
+
 ## Mon 30/May/2022
 
 - Studies: Rust
