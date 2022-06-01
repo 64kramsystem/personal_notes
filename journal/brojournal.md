@@ -1,3 +1,20 @@
+## Wed 01/Jun/2022
+
+- SWE: Practice
+  - Leetcode
+    - [x] Medium    81%: 1 tests, 4 submissions, 10'11", "1817. Finding the Users Active Minutes"
+      - Mistakes
+        - 2*incorrect Array.new update after code change (!!)
+        - keys instead of values in hash iteration
+- Writings: Learn Bevy's ECS by ripping off someone else's project
+  - [x] 06.01
+    - [x] Complete last chapter
+    - [x] Minor improvements, and restructuring of the snippets file referencing
+- Projects: Port Soccer to Fyrox
+  - [x] Review and implement a prelude design
+- Studies: Rust
+  - [x] Brutal fight with macros, to create a macro that add fields and implements a trait
+
 ## Tue 31/May/2022
 
 - Admin/System
