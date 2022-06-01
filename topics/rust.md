@@ -73,6 +73,7 @@
       - [Importing](#importing)
     - [Custom derive macros](#custom-derive-macros)
   - [Project structure](#project-structure)
+    - [Prelude structure](#prelude-structure)
     - [Modules (details)](#modules-details)
   - [Assorted insanity](#assorted-insanity)
 
@@ -3566,6 +3567,38 @@ crate_name
 ```
 
 `mod2` has an alternative structure (modules defined in a corresponding `.rs` file).
+
+### Prelude structure
+
+In the main file, do something like:
+
+```rs
+mod camera;
+pub mod components; // if the module is referenced as part of the prelude
+
+mod prelude {
+    pub use bracket_lib::prelude::*;
+    pub use legion::*;
+    pub const SCREEN_WIDTH: i32 = 80;
+    pub const SCREEN_HEIGHT: i32 = 50;
+    pub use crate::camera::*;
+    pub use crate::components::*;
+}
+```
+
+then, in the modules (files) use:
+
+```rs
+use crate::prelude::*;
+```
+
+What is exported depends on the intended design; a very basic design is to export:
+
+- global constants
+- commonly used external library APIs
+- crate types
+
+so that external library APIs that are used in a single module (file) only, are not in the prelude; if they become used in multiple modules, they can be moved to the prelude.
 
 ### Modules (details)
 
