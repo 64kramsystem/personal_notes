@@ -23,7 +23,7 @@
   - [Watch](#watch)
   - [Displaying messages](#displaying-messages)
   - [Nohup](#nohup)
-  - [xdotool](#xdotool)
+  - [xdotool (X11 automation)](#xdotool-x11-automation)
   - [Dates](#dates)
     - [Formatting](#formatting)
     - [Operations](#operations)
@@ -585,9 +585,9 @@ References:
 - [general](https://stackoverflow.com/a/29172)
 - [</dev/null](https://stackoverflow.com/a/19956266)
 
-## xdotool
+## xdotool (X11 automation)
 
-Send Alt+F4 to a window:
+Send key/mouse events to windows! Send Alt+F4 to a window:
 
 ```sh
 # Search in all the workspaces.

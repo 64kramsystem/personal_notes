@@ -1,3 +1,14 @@
+## Thu 02/Jun/2022
+
+- Open Source
+  - RVM
+    - [x] Close contributions and explain
+- Admin/System
+  - [x] Test GPU acceleration for video playback
+- Projects: Port Soccer to Fyrox
+  - [x] Redesign MyActor trait
+  - [x] Implement MyActor helper macro
+
 ## Wed 01/Jun/2022
 
 - SWE: Practice
