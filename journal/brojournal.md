@@ -1,3 +1,18 @@
+## Fri 03/Jun/2022
+
+- Admin
+  - [x] Fight google analytics
+- Writings: Learn Bevy's ECS by ripping off someone else's project
+  - [x] (rust-game-ports project) `rusty_roguelike_step.sh`: Add `compare_port_prev` mode
+  - [x] 06.02
+    - Querying: Entities and Param sets
+- Projects: Port Soccer to Fyrox
+  - [x] Fight GUI images implementation
+  - [x] Anchoring
+  - [x] Player initializer
+  - [x] Ball initializer
+  - [x] `BareActor`, progress with `Game#reset`, derive `my_actor_based` for `Player`
+
 ## Thu 02/Jun/2022
 
 - Open Source

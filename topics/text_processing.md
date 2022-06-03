@@ -741,6 +741,8 @@ perl -e 'print sort { (split "/", $a)[-1] <=> (split "/", $b)[-1] } <>'
 
 ## jq
 
+If one wants to output strings without quotes, use `-r` (see one of the examples below).
+
 ### Hash
 
 Select from a hash; returns an array:
@@ -775,6 +777,10 @@ jq ".[$start:$end]"      # Slice an array (0-based, open end)
 # Iterator operations are applied with the `|` operator; they return an iterator. In order to return an array, wrap the expression in `[]` (see git.io/J3roO).
 #
 jq "[.[] | $filter]"
+
+# Map the result to an array (instead of returning an array of the filtered objects).
+#
+jq ".[] | $filter[]"
 ```
 
 Filters:
@@ -827,6 +833,25 @@ JSON
 #   "Key": "key1",
 #   "VersionId": "key2"
 # }
+
+# Filter an array, select only the values of a certain key; remove quotes from the strings.
+#
+jq -r '.[] | {VersionId}[]' << JSON
+[
+  {
+    "Key": "key1",
+    "VersionId": "key2",
+    "IsLatest": false
+  },
+  {
+    "Key": "key1",
+    "VersionId": "key3",
+    "IsLatest": false
+  }
+]
+JSON
+# "key2"
+# "key3"
 ```
 
 #### More complex filtering
