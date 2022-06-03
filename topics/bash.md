@@ -784,9 +784,10 @@ slice=("${coordinates[@]:2}")        # Interval [2..-1]
 slice=("${@:2}")                     # Syntax to for the `$@` variable
 echo "${coordinates[@]:2}"           # When printing a slice, don't use the round brackets
 
-# Simple inclusion test (there is no direct way); ensure $value doesn't include metachars.
+# Simple inclusion tests (there is no direct way)
 #
-printf '%s\0' "${array[@]}" | grep -qz "^$value$"
+echo "${array[*]}" | grep -qP "\b$value\b"        # easy, if the values don't contain spaces or metachars
+printf '%s\0' "${array[@]}" | grep -qz "^$value$" # more rigorous; ensure $value doesn't include metachars.
 
 # Print arrays.
 #

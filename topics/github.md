@@ -2,7 +2,9 @@
 
 - [GitHub](#github)
   - [Searches](#searches)
-  - [Ruby CI action](#ruby-ci-action)
+  - [CI actions](#ci-actions)
+    - [Ruby example](#ruby-example)
+    - [Expressions](#expressions)
     - [Variables](#variables)
     - [Caching](#caching)
     - [Minimal example](#minimal-example)
@@ -21,7 +23,9 @@ Sample search using multiple topics and a language:
 - GUI: `language:rust topic:hacktoberfest topic:virtualization`
 - HTTP: https://github.com/search?l=Rust&q=topic%3Ahacktoberfest+topic%3Avirtualization&type=Repositories
 
-## Ruby CI action
+## CI actions
+
+### Ruby example
 
 Reference: https://docs.github.com/en/actions/guides/building-and-testing-ruby.
 
@@ -73,6 +77,10 @@ jobs:
     # `debug` is only to show the functionality - it's not included above.
     #
     continue-on-error: ${{ endsWith(matrix.ruby, 'head') || matrix.ruby == 'debug' }}
+    # Conditionals can also be at step level.
+    # When expressions are in an `if` key, curly braces are optional.
+    #
+    if: matrix.suite == 'rspec
     # See caching section.
     #
     steps:
@@ -92,10 +100,51 @@ jobs:
       run: bundle exec rspec
 ```
 
+### Expressions
+
+Expressions are wrapped in double curly braces: `{{ expression }}`.
+
 ### Variables
 
-- `github.workspace`: where the repo is checked out
-- `env.GITHUB_WORKSPACE`: don't use; for unclear reasons, it's blank, even after `checkout@v2` has run
+Contexts:
+
+- `github.*`: information about the workflow/event ([reference](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context))
+  - `github.workspace`: where the repo is checked out
+  - `github.event.number`: PR number ([reference](https://github.com/actions/checkout/issues/58#issuecomment-663103947))
+- `secrets.<SECRET_NAME>`: secrets
+
+There are environment variables, but must check the conditions, e.g. if they persist across jobs ([reference](https://docs.github.com/en/actions/learn-github-actions/environment-variables#default-environment-variables)):
+
+- `env.GITHUB_WORKSPACE`
+- `env.GITHUB_ENV`
+
+In order to access variables/secrets from scripts, pass them via env (but predefined env vars are already available):
+
+```yml
+env:
+  ENV_VAR_NAME: ${{ secrets.SECRET_NAME }}
+```
+
+`env` can also be defined in the top scope of the YAML file, which will set it for all the jobs.
+
+In order to set and read variables across jobs, can do the following:
+
+```yml
+# Don't do this with process substitution, since failures are not detected!
+#
+# Reference: https://docs.github.com/en/actions/learn-github-actions/environment-variables#passing-values-between-steps-and-jobs-in-a-workflow
+#
+- run: echo "MYVAR=1" >> $GITHUB_ENV
+
+# In case of process substitution, append to the github env vars inside the script:
+#
+# Step 1
+# Have the script execute `echo RUN_CURRENT_SUITE=1 >> "$GITHUB_ENV"`
+#
+- run:  echo "script/ci/test_if_run_suite.sh "shellcheck"
+# Step 2
+- if: env.RUN_CURRENT_SUITE == 1
+```
 
 ### Caching
 
@@ -134,8 +183,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Run shellcheck
-      run: ci/run_shellcheck.sh
+    - name: Test if current suite is run
+      run:  echo "RUN_CURRENT_SUITE=$(script/ci/test_if_run_suite.sh "shellcheck")" >> $GITHUB_ENV
+    - name: Run Shellcheck
+      if: env.RUN_CURRENT_SUITE == 1
+      run: script/ci/run_shellcheck.sh
 ```
 
 ## Rust CI action
