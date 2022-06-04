@@ -476,7 +476,7 @@ fold_first(|a, x| a + x)     // Like fold(), using the first element as initial 
 filter(|x| x % 2 == 0)       // Ruby :select
 filter_map(|x| Some(x * 2))  // AWESOME!!! Combines filter and map; None values are discarded
 [r]find(|x| x % 2 == 0)      // Ruby :find/:detect
-find_map(|x| if ... { Some(x) } ...) // Like find(); stops when the block returns Some<T>
+find_map(|x| cond(x).then(y)) // Like find(); stops when the block returns Some<T>
 [r]position(|x| x == 2)      // Ruby :[r]index(&block); None if not found
 dedup();                     // Ruby :uniq, with variations `_by(|a, b|)` and `_by_key(|k|)`
 rev()                        // reverse. WATCH OUT, UNINTUITIVE: since it's not inclusive, it goes from 99 to 0.
@@ -492,16 +492,17 @@ partition(|x| x % 2 == 0)    // divide a collection in two
 drain(range)                 // removes and returns the elements in the range
 fuse()                       // ensures that after the first None, any other iteration returns None
 
-// `_by` and `by_key` variations example
-max_by(|v1, v2| v1.x.cmp(&v2.x)).unwrap()      // Custom max (the closure returns `Ordering`; see [Sorting Floats](rust_libraries.md#sorting-floats))
-max_by_key(|v| v.field)                        // Easier version of max
-col.sort_by(|a, b| a.partial_cmp(b).unwrap()); // sort with closure 😍!
-
 // Math
 // For each max() there is a min()
 max().unwrap()               // Compute max, on types implementing `Ord`; with variations `_by(||)` and `_by_key(value)`
 sum()                        // WATCH OUT! Returns the same type, so conversion is needed, e.g. `.map(|&x| x as u32).sum();`
 product()                    // ^^ same as above
+
+// `_by` and `by_key` variations example
+// WATCH OUT!! the comparison is a<>b, not the reverse!
+max_by(|v1, v2| v1.x.cmp(&v2.x)).unwrap()      // Custom max (the closure returns `Ordering`; see [Sorting Floats](rust_libraries.md#sorting-floats))
+max_by_key(|v| v.field)                        // Easier version of max
+col.sort_by(|a, b| a.partial_cmp(b).unwrap()); // sort with closure 😍!
 
 // Iterator comparisons (!); supported: lt, le, eq, etc.
 iterator1.lt(iterator2)

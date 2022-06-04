@@ -109,16 +109,18 @@ pool.retain(|s| s.start_with("*"));
 Other APIs:
 
 ```rs
-// Reservation; used to extract an object and put it back. Reserved objects can't be borrowed in the meanwhile.
+// Reservation; used to extract an object and (put it back or remove it). Reserved objects can't be
+// borrowed in the meanwhile.
 //
 let (ticket, mut obj): Ticket<T>, T = pool.take_reserve(handle) // Format: [try_]take_reserve()
 // ...mess with obj...
 pool.put_back(ticket, obj)
 pool.forget_ticket(ticket)                                      // Remove from the pool
 
-// Get a handle from a ref/
-//
-let str_handle = pool.handle_of(str_ref);
+let str_handle = pool.handle_of(str_ref); // Get a handle from a ref
+pool.clear();                             // Destroy all the pool entries
+
+Handle::NONE;                             // Invalid handle; very useful for placeholder handles!
 ```
 
 ## Textures
@@ -129,12 +131,12 @@ WATCH OUT! As of Fyrox v0.26, some PNG files display with corruption (see https:
 
 ```rs
 let texture_requests = join_all(
-    IMAGE_PATHS
+    image_paths
         .iter()
         .map(|path| resource_manager.request_texture(path)),
 );
 
-let images = IMAGE_PATHS
+let images = image_paths
     .iter()
     .zip(block_on(texture_requests))
     .map(|(path, texture)| (path.to_string(), texture.unwrap()))
