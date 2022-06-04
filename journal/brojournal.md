@@ -1,3 +1,21 @@
+## Sat 04/Jun/2022
+
+- Projects: Port Soccer to Fyrox
+  - [x] Implement Game#draw
+  - [x] Complete Game initializer (excluding debug code)
+  - [x] Find and load all the resources, without static lists
+    - [x] Symlink sounds/theme.ogg to music/theme.ogg, for simplicity, and simplify sounds referencing
+  - [x] Minor improvements/fixes
+  - [x] Follow ups, mainly related to Game#update
+    - [x] Brutal fight with design polymorphic `Player#mark` association
+  - [x] Convert `Rc`s to Fyrox's `Pool`
+    - [x] Implement placeholder handles
+  - [x] Investigate untyped arenas (Fyrox and others)
+    - [x] Check also Macroquad
+    - [x] Think a simple implementation based on Fyrox `Pool`
+- Studies/Rust
+  - [x] Investigate stategy to turn `Vec<RCC<T>>` into `Vec<&dyn U>`
+
 ## Fri 03/Jun/2022
 
 - Admin

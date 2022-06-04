@@ -486,9 +486,9 @@ fs::set_permissions(path)
 // Read a directory's file basenames non-recursively.
 // The stdlib doesn't have glob APIs; use `walkdir` crate for a full dir traversal solution.
 // WATCH OUT! The result is not sorted! `.` and `..` are not included.
+// `path()` is the basename with the path sent to read_dir().
 //
-// Other `DirEntry` APIs: `path()`, `metadata()`, `file_type()`
-//
+// Other `DirEntry` APIs: `metadata()`, `file_type()`
 //
 let entries: ReadDir = std::fs::read_dir("/dev").unwrap();
 entries
@@ -783,7 +783,7 @@ let rand_byte: u8 = rand::random();
 //
 let randval: u8 = rand::thread_rng().gen_range(0..2);
 
-// Fetching a random element from an array
+// Fetching a random element from a vector
 //
 use rand::seq::SliceRandom;
 let entry: Option<&MyType> = vec.choose(&mut rand::thread_rng());
