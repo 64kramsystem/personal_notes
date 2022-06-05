@@ -524,8 +524,9 @@ split_at(); split_first(); split_last()
 windows(n)                   // like chunks, but with overlapping slices (Ruby :each_cons); doesn't have variations
 
 // Quasi-Ruby :flatten. WATCH OUT! flattens only one level.
-// !! Since None() evaluates to empty iterator, invoking on an Iterator<Option> perform Ruby :compact !!
+// !! Since None() evaluates to empty iterator, invoking on an Iterator<Option> performs Ruby :compact !!
 // Same applies to an Iterator<Result>
+// In order to flatten tuples, map them to arrays first.
 flatten()
 
 // If one wants to convert an iterator from borrowed (&T) to owned (T), use copied() or cloned().
@@ -964,6 +965,7 @@ s1 == s2;                               // String comparison (all comparisons su
 
 s += &s2;                               // concatenate via overloaded operator; can take &str or &String
 s.push_str(&str);                       // concatenate (append) strings
+s.strip_suffix(&str) -> Option<&str>    // strip a suffix; returns the stripped string; None if the suffix was not found
 s.push('c');
 s.pop();                                // remove last character and returns it
 s.insert(pos, 'c');                     // insert; use also as Ruby unshift()

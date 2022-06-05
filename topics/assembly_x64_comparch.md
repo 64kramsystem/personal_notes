@@ -79,6 +79,15 @@ Precision bits (sgn, exp, mant)
 Exponent: signed
 Mantissa: 1.0 + 0.5^(left position 1-based); there are special cases
 
+Max interval of integers that can be represented exactly (see https://blog.demofox.org/2017/11/21/floating-point-precision etc.):
+
+- f32: ±2^24 = ±16_777_216
+- f64: ±2^53 = ±9_007_199_254_740_992
+
+```rb
+9007199254740993.0 # => 9.007199254740992e+15 😬
+```
+
 ### Boolean representation
 
 "Logical systems", and advantages:
