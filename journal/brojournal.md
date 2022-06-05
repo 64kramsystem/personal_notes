@@ -1,3 +1,21 @@
+## Sun 05/Jun/2022
+
+- Projects: Port Soccer to Fyrox
+  - [x] Add util script `prefix_commits.sh`
+  - [x] Minor refactoring/changes/fixes
+  - [x] Port Game#update
+    - [x] Convert images to GIF, in order to workaround Fyrox bug
+  - [x] Implement draw ordering using Z depth
+  - [x] Investigate and report other image bug, with transparency
+  - [x] Brutal fight with fix drawing offset calculations
+  - [x] Fix enemies not drawn
+  - [ ] Port Player#update
+- Studies/SWE
+  - [x] Interval of integers exactly representable in IEEE754
+- Open Source
+  - Code the Classics Vol. 1
+    - [x] Open PR with fix for two bugs
+
 ## Sat 04/Jun/2022
 
 - Projects: Port Soccer to Fyrox
