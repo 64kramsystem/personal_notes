@@ -106,11 +106,14 @@ iter.next().unwrap();          // "str" (&String)
 pool.retain(|s| s.start_with("*"));
 ```
 
+Pools can be cloned (if the stored type is `Clone`); the stored objects are cloned, but handles from the source pool can be used with the clone.
+
 Other APIs:
 
 ```rs
 // Reservation; used to extract an object and (put it back or remove it). Reserved objects can't be
 // borrowed in the meanwhile.
+// It's mandatory to complete the operation (put back or forget).
 //
 let (ticket, mut obj): Ticket<T>, T = pool.take_reserve(handle) // Format: [try_]take_reserve()
 // ...mess with obj...

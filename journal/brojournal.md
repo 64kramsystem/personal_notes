@@ -1,3 +1,13 @@
+## Mon 06/Jun/2022
+
+- Admin/System
+  - [x] Try new kernel
+- Projects: Port Soccer to Fyrox
+  - [x] Fight access in Game#update
+  - [x] Brutal fight access in Game#update
+  - [x] Lots of other changes
+  - [x] Completed source port (although there are still bugs to fix)
+
 ## Sun 05/Jun/2022
 
 - Projects: Port Soccer to Fyrox
