@@ -378,6 +378,16 @@ let key_fn = move |city| city.print_stat(stat);
 struct Calculator<T: Fn(u32) -> u32> {
   calculation: T,
 }
+
+// Function accepting a closure.
+//
+pub fn with_player_mut<F>(&mut self, player_h: Handle<Player>, mut f: F)
+where F: FnMut(&mut Player),
+{
+    let player = self.players.borrow_mut(player_h);
+    f(player)
+}
+
 ```
 
 Functions can be assigned to variables (function pointers); their type is `fn` (don't confuse with `Fn`!!). However, they can't reference the context, and functions defined inside a function can't be assigned to a variable.
@@ -1285,6 +1295,10 @@ y == Some(2);
 //
 let mut x = Some(2);    // works also on None
 let old = x.replace(5);
+
+// convert Option<&T> to the owned version (Option<T>)
+opt.cloned()
+opt.copied()
 ```
 
 ### Result/Error
@@ -2225,32 +2239,29 @@ fn mix_trait_objs(left: &dyn MyTrait, right: &dyn MyTrait) {
 Downcasting from trait object to the concrete class (reference); useful to enable it only in testing:
 
 ```rust
-#[cfg(test)]
 use std::any::Any;
 
 trait Trait {
-  #[cfg(test)]
   // In some (non useful) cases, it's possible to get away without implementing this.
   fn as_any(&self) -> &dyn Any;
 }
 
-#[derive(Debug)]
 struct Concr {}
 
 impl Trait for Concr {
-  #[cfg(test)]
   fn as_any(&self) -> &dyn Any {
     self
   }
 }
 
-#[test]
 fn my_test() {
   let as_trait: Box<dyn Trait> = Box::new(Concr {});
 
   // Note the implicit Box dereferencing.
   //
-  let _concr: &Concr = as_trait.as_any().downcast_ref::<Concr>().unwrap();
+  if let Some(concr) = as_trait.as_any().downcast_ref::<Concr>() { /* ... */ }
+
+  if as_trait.as_any().is::<Concr>() { /* .. */ }
 }
 ```
 

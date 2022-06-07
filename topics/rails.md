@@ -6,8 +6,6 @@
   - [Controllers](#controllers)
   - [ActiveRecord](#activerecord)
     - [Querying](#querying)
-      - [Scopes](#scopes)
-      - [Group by/having](#group-byhaving)
     - [Batching](#batching)
     - [Updating](#updating)
     - [Migrations](#migrations)
@@ -42,10 +40,18 @@ Article.joins(:user).optimizer_hints("JOIN_ORDER(articles, users)").to_sql
 # => SELECT /*+ JOIN_ORDER(articles, users) */ `articles`.* FROM `articles` INNER JOIN `users` ON `users`.`id` = `articles`.`user_id`
 ```
 
+Table aliases require manual AREL:
+
+```rb
+Model.from(Arel::Table.new(:table_name).alias("alias")).where(...)
+```
+
 ### Querying
 
 ```ruby
 query.ids                   # pluck the ids!
+query.pluck(:column)        # select only the single column, without constructing AR instances
+query.pick(:column)         # limit(1).pluck(:column)
 arel.table                  # name of the main AREL query table
 
 # OR operator.
@@ -61,7 +67,7 @@ column: ...7    # column < 7
 column: 1..7    # column BETWEEN 1 AND 7
 ```
 
-#### Scopes
+Scopes:
 
 ```rb
 class Event
@@ -77,7 +83,7 @@ In order to use scope in joins, use `merge()`:
 Show.joins(:events).merge(Event.tagged('fun'))
 ```
 
-#### Group by/having
+Group by/having:
 
 ```rb
 customers.join(:orders).group('customers.id').having('count(*) > 10')
