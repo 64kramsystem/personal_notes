@@ -1,3 +1,16 @@
+## Tue 07/Jun/2022
+
+- Projects: Port Soccer to Fyrox
+  - [x] Make `targetable()` accept `Goal`
+    - [x] Implement Target
+    - [x] Experiment with Any
+  - [x] Fix bugs
+    - [x] Crash: "Attempt to borrow destroyed object"
+    - [x] Fixed nasty bug that made computer ball owners go left
+    - [x] Ball not being chased when without player
+  - [x] Update README
+  - [x] Send request to Rust GameDev newsletter
+
 ## Mon 06/Jun/2022
 
 - Admin/System
