@@ -1,3 +1,18 @@
+## Wed 08/Jun/2022
+
+- Open Source
+  - [x] Publish Bevy/Fyrox small review
+- Projects: Port Soccer to Fyrox
+  - [x] Make path cross-platform
+  - [x] Fight with cross-compilation issues
+  - [x] Media: Whitelist resources by extension
+  - [x] Brutal fight error on streaming
+- Admin
+  - VMPlayer/3D
+    - [x] Fight issue with compilation/vmware tools
+    - [x] Fight issue with speed
+    - [x] Fight issue wih 3d support
+
 ## Tue 07/Jun/2022
 
 - Projects: Port Soccer to Fyrox

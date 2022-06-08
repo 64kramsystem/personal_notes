@@ -190,7 +190,11 @@ formatlist("pattern", list)   # format a list using the pattern (e.g. "%s")
 
 # String
 
-replace(string, from, to)     # if from is wrapped in slashes, it's a regex, otherwise, it's a plain string
+replace(string, from, to)     # if `from` is wrapped in slashes, it's a regex, otherwise, it's a plain string
+regex(pattern, string)        # array of matches; WATCH OUT! `pattern` is a string; don't wrap in slashes
+                              # ^ backslashes must be escaped (`\\`)
+                              # ^ see: https://www.terraform.io/language/functions/regex
+substr(string, ofs, len)      # substring via plain string; len=-1 -> until end of string
 trimspace(string)             # remove leading/trailing whitespace
 
 # Encodings

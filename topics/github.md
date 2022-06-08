@@ -2,13 +2,15 @@
 
 - [GitHub](#github)
   - [Searches](#searches)
+  - [Access tokens](#access-tokens)
   - [CI actions](#ci-actions)
     - [Ruby example](#ruby-example)
     - [Expressions](#expressions)
     - [Variables](#variables)
     - [Caching](#caching)
     - [Minimal example](#minimal-example)
-  - [Rust CI action](#rust-ci-action)
+    - [Cancel existing actions for the same PR (branch)](#cancel-existing-actions-for-the-same-pr-branch)
+    - [Rust CI action](#rust-ci-action)
   - [Coauthorship (multiple authors)](#coauthorship-multiple-authors)
   - [README.md](#readmemd)
     - [Images](#images)
@@ -22,6 +24,14 @@ Sample search using multiple topics and a language:
 
 - GUI: `language:rust topic:hacktoberfest topic:virtualization`
 - HTTP: https://github.com/search?l=Rust&q=topic%3Ahacktoberfest+topic%3Avirtualization&type=Repositories
+
+## Access tokens
+
+Reference: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
+
+- Account settings
+- Developer settings
+- Personal access tokens
 
 ## CI actions
 
@@ -84,7 +94,7 @@ jobs:
     # See caching section.
     #
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
     - name: Setup Ruby ${{ matrix.ruby-version }}
       uses: ruby/setup-ruby@v1
@@ -182,7 +192,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Test if current suite is run
       run:  echo "RUN_CURRENT_SUITE=$(script/ci/test_if_run_suite.sh "shellcheck")" >> $GITHUB_ENV
     - name: Run Shellcheck
@@ -190,7 +200,24 @@ jobs:
       run: script/ci/run_shellcheck.sh
 ```
 
-## Rust CI action
+### Cancel existing actions for the same PR (branch)
+
+Use [this](https://github.com/marketplace/actions/cancel-workflow-action):
+
+```yml
+jobs:
+  cancel-previous-runs:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Cancel Previous Runs
+      uses: styfle/cancel-workflow-action@0.9.1
+      with:
+        access_token: ${{ github.token }}
+  other-jobs:
+#   ...
+```
+
+### Rust CI action
 
 Format/Clippy checks:
 
@@ -200,7 +227,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Formatting
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Check Rust formatting
         uses: actions-rs/cargo@v1
         with:
@@ -211,7 +238,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Linting
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install Clippy
         run: rustup component add clippy
       - name: Run Clippy
