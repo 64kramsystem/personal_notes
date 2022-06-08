@@ -414,6 +414,8 @@ file.seek(SeekFrom::Current(0))?; // get current position
 
 (for user paths/directories, see the crates section)
 
+WATCH OUT!! Path separators in simple strings are not translated across platforms; the correct way to build paths is `PathBuf::new(...).join(...)`).
+
 OsStr and Path are strings type that can handle invalid UTF-8 filenames (first is owned):
 
 - `PathBuf`/`Path`: full pathnames; it has utility methods;
