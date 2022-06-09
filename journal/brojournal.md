@@ -1,3 +1,11 @@
+## Thu 09/Jun/2022
+
+- Projects: Port Soccer to Fyrox
+  - [x] Fix bug due to wrong function comment in the source project
+  - [x] Think new true scene-based design
+  - [ ] Think path to new design
+  - [x] Soccer-fyrox: Fix game over images z depth
+
 ## Wed 08/Jun/2022
 
 - Open Source

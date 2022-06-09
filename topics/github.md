@@ -10,6 +10,7 @@
     - [Caching](#caching)
     - [Minimal example](#minimal-example)
     - [Cancel existing actions for the same PR (branch)](#cancel-existing-actions-for-the-same-pr-branch)
+    - [tmate debuggin!](#tmate-debuggin)
     - [Rust CI action](#rust-ci-action)
   - [Coauthorship (multiple authors)](#coauthorship-multiple-authors)
   - [README.md](#readmemd)
@@ -161,7 +162,9 @@ In order to set and read variables across jobs, can do the following:
 Base caching:
 
 ```yml
-- uses: actions/cache@v2
+# Will automatically run also after the job (to cache the data).
+
+- uses: actions/cache@v3
   with:
     path: |
       ~/.cargo/registry
@@ -215,6 +218,13 @@ jobs:
         access_token: ${{ github.token }}
   other-jobs:
 #   ...
+```
+
+### tmate debuggin!
+
+```yml
+- name: Setup tmate session
+  uses: mxschmitt/action-tmate@v3
 ```
 
 ### Rust CI action
