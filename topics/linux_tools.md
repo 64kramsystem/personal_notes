@@ -225,9 +225,16 @@ cat /proc/self/environ | xargs -0 -L 1        # print the env vars (null-termina
 
 ```sh
 tar -C /tmp xvz                                        # Extract to a different directory
-tar xvz --transform="s/^parsec-3.0/parsec-benchmark/"  # Rename destination files while extracting!!
 tar --exclude='parsec-benchmark/.git' parsec-benchmark # Exclude (glob pattern); if `/` is not prefixed, matches at any level
 tar xv -O -f "$tarfile" metadata.gz | gunzip > "$outfile" # Extract a single file to stdout (and redirect to a file)
+
+# Rename destination files while extracting!!
+#
+# - Basic sed regex!!: Not supported (at least): +, \d...
+# - The regex applies to the WHOLE name, so be careful when changing dir names
+# - Use --show-transform to display transformed names
+#
+tar xvz --transform="s/^parsec-3.0/parsec-benchmark/"
 ```
 
 ## mkfifo

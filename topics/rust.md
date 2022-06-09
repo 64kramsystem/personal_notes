@@ -570,7 +570,7 @@ cycle()                // Endless repeating
 
 // Ruby :times can be emulated via ranges.
 // Range supports only the `into_iter()` iterator, but no iterator invocation is actually needed.
-// There is a `try_for_each()`, to support early exit (or fallible closures).
+// There is `[try_]for_each()`, but they provide no advantage over a standard iteration.
 //
 (0..SHARKS_COUNT).map(|x| 2 * x).collect::<Vec<_>>();
 (0..SHARKS_COUNT).for_each(|x| println!("{}", x)); // for_each() returns no values
