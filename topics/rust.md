@@ -772,6 +772,17 @@ map.insert("b", 10);
 map.insert("b", 10);            // Overwrites the existing value
 map.remove("b");
 
+// Getters, and basic mutable access to values
+//
+// WATCH OUT!: Getters take and return references.
+//
+// There's no function for getting with a default, but `[cloned()].unwrap_or()` works well.
+// There's also no unchecked mutable (see https://stackoverflow.com/a/30414450).
+//
+map["b"];                       // Immutable, unchecked
+map.get("a");                   // Immutable, checked (Option)
+map.get_mut("a");               // Mutable, checked
+
 // Entry API: `entry()` gets the value for in-place modification.
 //
 // `or_insert()` sets the given value if the key doesn't exist; its return value can be used to modify
@@ -790,15 +801,6 @@ for triangle in triangles {
   let group = groups.entry(current_group);
   group.and_modify(|group| Group::add_child(group, &triangle));
 }
-
-// WATCH OUT!: Getters take and return references.
-//
-// There's no function for getting with a default, but `[cloned()].unwrap_or()` works well.
-// There's also no unchecked mutable (see https://stackoverflow.com/a/30414450).
-//
-map["b"];                       // Immutable, unchecked
-map.get("a");                   // Immutable, checked (Option)
-map.get_mut("a");               // Mutable, checked
 
 // Invalid! Once a key is inserted, it's owned by the hash map!
 //

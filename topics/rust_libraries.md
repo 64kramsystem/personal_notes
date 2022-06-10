@@ -148,6 +148,7 @@ impl std::ops::Index<Register> for Registers {
     }
 }
 
+// IndexMut requires Index to be implemented.
 impl IndexMut<Register> for Registers {
     fn index_mut(&mut self, register: Register) -> &mut Self::Output {
         match register {

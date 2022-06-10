@@ -1,3 +1,23 @@
+## Fri 10/Jun/2022
+
+- Projects: Port Soccer to Fyrox
+  - [x] Refactoring: Remove pivot node
+  - [x] Think path to new design
+  - [ ] Refactor into separate scenes
+    - [x] Implement Scenes type
+    - [x] Basic wiring of Scenes
+      - [x] Brutal fight with scenes (unclear behavior of active flag)
+    - [x] Draw to all the scenes
+      - [x] Brutal fight with iteration of all scenes
+    - [x] Make the player/goal/ball nodes permanent
+      - [x] Brutal fight with scene transition bug
+    - [ ] Fight with looped sound nodes
+      - [x] Crashing
+      - [ ] Not stopping on scene deactivation
+  - [x] Close separate scenes plan
+  - [ ] Implemente Camera
+    - [x] Implement scrolling
+
 ## Thu 09/Jun/2022
 
 - Projects: Port Soccer to Fyrox
