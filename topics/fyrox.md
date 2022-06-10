@@ -123,7 +123,7 @@ pool.forget_ticket(ticket)                                      // Remove from t
 let str_handle = pool.handle_of(str_ref); // Get a handle from a ref
 pool.clear();                             // Destroy all the pool entries
 
-Handle::NONE;                             // Invalid handle; very useful for placeholder handles!
+Handle::NONE;                             // Invalid (null) handle; very useful for placeholder handles!
 ```
 
 ## Textures
@@ -202,6 +202,8 @@ scene.graph
 
 ## Scene
 
+WATCH OUT!! Only one scene can be enabled at a time. If more are enabled, hilarity ensues (ie. black screen).
+
 Loading:
 
 ```rs
@@ -226,6 +228,10 @@ fn load_scene(resource_manager: ResourceManager) -> Scene {
 Other APIs:
 
 ```rs
+// There is no straight get; only `try_get[_mut]`.
+//
+engine.scenes.try_get(handle);
+
 // Freeze a scene, without needing to unload it.
 //
 scene.enabled = false;
@@ -327,7 +333,8 @@ Other operations:
 ```rs
 // Root node.
 //
-scene.graph[scene.graph.get_root()]
+let root_h = scene.graph.get_root();
+scene.graph[root_h];
 
 // Add a node manually.
 //
@@ -347,8 +354,18 @@ scene.graph.link_nodes(weapon, camera);
 
 // Remove node (including the children). If the node is linked to another, it's removed from the children
 // of both nodes.
+// To remove all the nodes except the root, iterate on `scene.graph[root_h].children().to_vec()`.
 //
 scene.graph.remove_node(handle)
+
+// Conditionally remove all the root children of a given type
+//
+for child_h in scene.graph[root_h].children().to_vec() {
+    // If doing something like this, think carefully if the camera must be removed.
+    if !scene.graph[child_h].is_camera() {
+        scene.graph.remove_node(child_h);
+    }
+}
 
 // Remove node, without removing the children (only detach them).
 //
