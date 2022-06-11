@@ -1,3 +1,31 @@
+## Sat 11/Jun/2022
+
+- Open source
+  - Fyrox book
+    - [x] Add streaming sound explanation
+- Projects
+  - Port Soccer to Fyrox
+    - [x] Implement Camera
+    - [x] Implement HUD via GUI widgets
+      - [x] Transparency issue; ask on chat
+        - [x] Attempt solution
+        - [x] Attempt other solution
+      - [x] Add Media APIS to handle GUI widgets (currently, not nested)
+- Projects
+  - Rust Game Ports
+    - [x] Take screenshots
+    - [x] Update README: Extend descriptions, and improve general structure
+    - [ ] Publish
+      - [x] Prepare screenshots collage for newsletter
+- Writings: Learn Bevy's ECS by ripping off someone else's project
+  - [ ] 07.01-02: Turn-based Games: Wandering/Turn-based
+    - [x] Add 07.01-02: Introduction
+    - [x] Add 07_01-02/a_look_at_the_states_model_in_the_source_project.md
+    - [ ] Add 07_01-02/a_basic_states_model_in_bevy.md
+- Studies
+  - Rust
+    - [x] Find out if build dir can be configured per-target; ask
+
 ## Fri 10/Jun/2022
 
 - Projects: Port Soccer to Fyrox

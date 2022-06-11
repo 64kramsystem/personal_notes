@@ -12,6 +12,7 @@
     - [Graph](#graph)
     - [Sprites (2d)](#sprites-2d)
     - [Camera](#camera)
+  - [GUI Widgets](#gui-widgets)
   - [Transforms](#transforms)
   - [Events](#events)
     - [Window events](#window-events)
@@ -183,9 +184,19 @@ if music.status == Status::Stopped {
   //
   scene.remove_node(music_h);
 }
+```
 
-// Add effects.
-//
+In order to stream an audio file, add a corresponding `.options` file (e.g. `/path/to/background.ogg.options`):
+
+```ron
+(
+  streaming: true
+)
+```
+
+Add effects:
+
+```rs
 let reverb_effect = ReverbEffectBuilder::new(BaseEffectBuilder::new().with_gain(0.7)) // Otherwise it's too loud!
   .with_decay_time(3.0)  // Set reverb time to ~3 seconds - the longer, the deeper the echo.
   .build(&mut scene.graph.sound_context);
@@ -416,6 +427,37 @@ CameraBuilder::new(BaseBuilder::new())
 ```
 
 On a fixed-screen 2d game, on can use the camera as root node, and attach/detach sprite nodes are required; the only transform they need is a local scale to the sprite size. It's still easier though, to use the background texture as root node.
+
+## GUI Widgets
+
+GUDs can be implemented via GUI widgets; their position is independent from the camera.
+
+```rs
+// Draw an image
+
+let texture_kind = texture.data_ref().kind();
+
+if let TextureKind::Rectangle {
+    width: texture_width,
+    height: texture_height,
+} = texture_kind
+{
+    let widget_h = ImageBuilder::new(
+        WidgetBuilder::new()
+            .with_width(texture_width as f32)
+            .with_height(texture_height as f32)
+            .with_desired_position(Vector2::new(std_x, std_y)),
+            // .with_opacity(0.5)                                // for (whole texture) transparency; 1.0 = fully opaque
+    )
+    .with_texture(into_gui_texture(texture))
+    .build(&mut engine.user_interface.build_ctx());
+}
+
+// Delete a widget
+
+engine.user_interface
+    .send_message(WidgetMessage::remove(widget_h, MessageDirection::ToWidget));
+```
 
 ## Transforms
 
