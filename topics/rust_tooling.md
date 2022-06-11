@@ -225,8 +225,8 @@ Bevy hello world: 8.75" -> 1.25" (!!).
 #
 # Can be verified via `readelf -p .comment target/debug/$binary` (will show `mold...`).
 
-mkdir .cargo
-cat > .cargo/config.toml << 'TOML'
+cat >> .cargo/config.toml << 'TOML'
+
 [target.x86_64-unknown-linux-gnu]
 linker = "/usr/bin/clang"
 rustflags = ["-Clink-arg=-fuse-ld=/path/to/mold", "-Zshare-generics=y"]
@@ -241,20 +241,18 @@ TOML
 rustup target add x86_64-pc-windows-gnu
 rustup toolchain install stable-x86_64-pc-windows-gnu
 
-# Cross-compile
+# Cross-compile. WATCH OUT! Will invalidate other target's build artifacts (!).
 #
 cargo build --release --target x86_64-pc-windows-gnu
 
 # Alternative: Configure Cargo for cross-compilation:
 #
-mkdir .cargo
-cat > .cargo/config.toml <<TOML
-[build]
+cat >> .cargo/config.toml <<TOML
 
+[build]
 target = "riscv64gc-unknown-linux-gnu"
 
 [target.riscv64gc-unknown-linux-gnu]
-
 linker = "riscv64-unknown-linux-gnu-gcc"
 TOML
 ```
