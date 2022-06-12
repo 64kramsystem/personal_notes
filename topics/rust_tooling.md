@@ -88,7 +88,11 @@ Versioning:
 
 See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-The cargo configuration file (see custom configs below) `toml` extension is optional; it's searched in many locations (https://doc.rust-lang.org/cargo/reference/config.html), also recursively (also if outside the workspace).
+The cargo configuration file (see custom configs below) `toml` extension is common but not mandatory; it's searched in many locations (https://doc.rust-lang.org/cargo/reference/config.html), also recursively (also if outside the workspace):
+
+- `$project_dir/*/config.toml` (first)
+- `$CARGO_HOME/config.toml`
+- `~/.cargo/config.toml` (last)
 
 ### Workspaces
 
@@ -110,7 +114,7 @@ Using cargo from root requires the member name; otherwise, each member can be tr
 members = ["playground", "rust_programming_by_example"]
 ```
 
-Members must have compatible dependencies, so projects can't be unrelated; without workspaces, it's possible to share artifacts by sharing the target dir (`.cargo/config` -> `[build] target-dir = "/path/to/target`; if relative, it refers to the `.cargo` parent directory).
+Members must have compatible dependencies, so projects can't be unrelated; without workspaces, it's possible to share artifacts by sharing the target dir (`.cargo/config.toml` -> `[build] target-dir = "/path/to/target`; if relative, it refers to the `.cargo` parent directory).
 
 ### Visual Studio Code/Rust Analyzer
 
@@ -225,7 +229,7 @@ Bevy hello world: 8.75" -> 1.25" (!!).
 #
 # Can be verified via `readelf -p .comment target/debug/$binary` (will show `mold...`).
 
-cat >> .cargo/config.toml << 'TOML'
+cat >> ~/.cargo/config.toml << 'TOML'
 
 [target.x86_64-unknown-linux-gnu]
 linker = "/usr/bin/clang"

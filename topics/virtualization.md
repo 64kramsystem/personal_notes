@@ -1,6 +1,7 @@
 # Virtualization
 
 - [Virtualization](#virtualization)
+  - [VMWare](#vmware)
   - [Virtual disks](#virtual-disks)
     - [Creation/copy/conversion:](#creationcopyconversion)
     - [Zeroing/compacting/compressing an image](#zeroingcompactingcompressing-an-image)
@@ -13,6 +14,14 @@
     - [RISC-V](#risc-v)
   - [Vagrant](#vagrant)
   - [WINE](#wine)
+
+## VMWare
+
+AMD GPU virtualization may not be supported; if so, add this to the VM cfg file:
+
+```sh
+echo "mks.gl.allowUnsupportedDrivers=TRUE" >> vmwindog.vxm
+```
 
 ## Virtual disks
 

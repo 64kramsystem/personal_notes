@@ -597,10 +597,21 @@ References:
 Send key/mouse events to windows! Send Alt+F4 to a window:
 
 ```sh
-# Search in all the workspaces.
+# Search in all the workspaces; it's better to search by name.
+# `--name` is a regex!
+#
 window_id=$(xdotool search --all --name smplayer | tail -n 1)
+xdotool search --name 'Slack \| '
+
 # windowactivate (bring to front) is necessary.
+#
 xdotool windowactivate --sync "$window_id" key "alt+F4"
+
+# Sending to windows in the background is either not always supported, or complex (https://stackoverflow.com/a/56240192).
+# The easiest thing is to store the current window, do the operations, then restore it.
+xdotool getactivewindow > /tmp/activated_window
+# blahblah
+xdotool windowactivate "$(< /tmp/activated_window)"
 ```
 
 See `browser-common.sh` for a complex example, and [StackOverflow](https://unix.stackexchange.com/q/87831) for discussion.
