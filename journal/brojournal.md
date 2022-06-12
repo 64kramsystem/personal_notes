@@ -1,3 +1,18 @@
+## Sun 12/Jun/2022
+
+- Admin
+  - [x] Plan cycle
+  - Rust
+    - [x] VSC: disable rust analyzer separate target on all the projects
+    - [x] Move linker cfg to global Cargo config dir
+    - [x] Fight VSC: issue rust analyzer on macro (maybe: https://github.com/rust-lang/rust-analyzer/issues/6029)
+  - System
+    - [x] Automate kernel version handling on O/S install script(s)
+- Projects: Rust Game Ports
+  - [x] Remove compiler speed tweaks
+- Gamedesv
+  - [x] Test Rust Game Port games on higher refresh rates
+
 ## Sat 11/Jun/2022
 
 - Open source
