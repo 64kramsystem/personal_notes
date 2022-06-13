@@ -1,3 +1,27 @@
+## Mon 13/Jun/2022
+
+- Open Source
+  - PM-Spotlight
+    - [x] Add robot emoji, plus source image conversion information
+- Tools
+  - [x] Fight VSC syncing issue
+- Studies: Rust
+  - [x] Flush notes
+- Writings: Learn Bevy's ECS by ripping off someone else's project
+  - [ ] 07.01-02: Turn-based Games: Wandering/Turn-based
+    - [x] Add commands flushing/stages modeling to `07_01-02/a_look_at_the_states_model_in_the_source_project.md`
+    - [x] Add `07_01-02/designing_the_states.md`
+    - [ ] Add `07_01-02/implementing_the_states_in_bevy.md`
+      - [x] Think carefully about port states design
+- SWE: Practice
+  - Leetcode
+    - [x] Medium    81%: 1 tests, 1 submissions, 3'29", "1877. Minimize Maximum Pair Sum in Array"
+      - Mistakes: none
+- Projects
+  - Port Soccer to Fyrox
+    - [ ] Convert to proper scene graph
+    - [x] Fix game over screen(s) transparency
+
 ## Sun 12/Jun/2022
 
 - Admin

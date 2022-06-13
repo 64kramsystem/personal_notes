@@ -14,14 +14,16 @@
     - [Arrays/Vectors/Slices](#arraysvectorsslices)
       - [Shared Vec/array methods](#shared-vecarray-methods)
     - [Hash maps](#hash-maps)
+    - [HashSet](#hashset)
+    - [Other data structures](#other-data-structures)
   - [Arithmetic/math APIs](#arithmeticmath-apis)
-      - [HashSet](#hashset)
   - [Strings](#strings)
     - [String/Slice/Char-related APIs/conversions](#stringslicechar-related-apisconversions)
     - [Internal representation (bytes/chars/graphemes)](#internal-representation-bytescharsgraphemes)
   - [Control flow](#control-flow)
   - [Enums](#enums)
     - [Option](#option)
+      - [Convenient Option patterns](#convenient-option-patterns)
     - [Result/Error](#resulterror)
     - [Option/Result common APIs](#optionresult-common-apis)
   - [Pattern matching](#pattern-matching)
@@ -552,9 +554,10 @@ collect::<Vec<_>>()
 
 // Create an iterator for:
 //
-std::iter::repeat(x)  // repeating a value
-std::iter::empty()    // empty
-std::iter::once(x)    // single entry
+iter::empty()           // empty
+iter::once(x)           // single entry
+iter::repeat(x)         // repeating a value
+iter::repeat(x).take(n) // create n repeating values
 
 // Create an iterator for generating a sequence, which stops when the function returns None
 // Use take(n) if want to use size as limitation, instead of Option.
@@ -671,9 +674,10 @@ vec.extend(&[1, 2, 3]);                 // Append (borrowing version) an array/v
 vec[range].copy_from_slice(&source);    // memcpy; see array example
 
 // Convert vector to array. If type annotations are required, use the second form:
+// In order to convert an iterator to array, collect to Vec first.
 //
-vec.as_slice().try_into().unwrap();
-TryInto::<&[f64; 3]>::try_into(vec.as_slice());
+vec.try_into().unwrap();
+TryInto::<&[f64; 3]>::try_into(vec);
 
 // Vectors can be received as array reference type (mutable, if required).
 //
@@ -857,6 +861,30 @@ In order to use enums as keys, annotate them with `#[derive(Eq, PartialEq, Hash)
 
 Map literals are not supported. See the `maplit` crate.
 
+### HashSet
+
+HashSet is based on HashMap, but it doesn't take space for the values, due to compiler's optimization.
+
+```rs
+// Convenient constructor
+//
+HashSet::from(["Foo", "Bar"])
+```
+
+### Other data structures
+
+`BinaryHeap`: max heap.
+
+```rs
+// Convenient construct:
+//
+let heap = iter.collect::<BinaryHeap>();
+
+// In order to represent a min heap, use Reverse, or implement a custom Ord:
+//
+heap.push(std::cmp::Reverse(1));
+```
+
 ## Arithmetic/math APIs
 
 ```rust
@@ -903,16 +931,6 @@ x.overflowing_shl(y);            // WATCH OUT! This is not the intuitive 1-bit l
 // Round to specific number of decimals (ugly!!; also see #printing)
 //
 (f * 100.0).round() / 100.0;
-```
-
-#### HashSet
-
-HashSet is based on HashMap, but it doesn't take space for the values, due to compiler's optimization.
-
-```rs
-// Convenient constructor
-//
-HashSet::from(["Foo", "Bar"])
 ```
 
 ## Strings
@@ -1254,31 +1272,6 @@ enum Option<T> {
 let some_number = Some(5);
 let absent_number: Option<i32> = None;
 
-// map(): map the content, only if it's Some.
-//
-let (with, without) = (Some(2), None::<i32>);
-with.map(|n| 2 * n); // Some(4)
-without.map(|n| 2 * n); // None
-
-// Convenient pattern. Companion APIs:
-//
-// - `unwrap_or`:         eagerly evaluated
-// - `unwrap_or_default`: invokes the `default()` (!!)
-//
-opt.unwrap_or_else( |err | {
-  println!("Problem parsing arguments: {}", err);
-  std::process::exit(1);
-});
-
-// Chain operations (results in Option<T>), stopping at None.
-// slow_function() must return Option.
-//
-opt.and(value).and_then(slow_function);
-
-// Other convenient chain - process only if Some; use a default is None.
-//
-opt.map(function).unwrap_or_else(default)
-
 // Extract a value, raising an error if None. Since `expect()` consumes the value, use `as_ref()`/
 // `as_mut()` in order to borrow.
 //
@@ -1301,6 +1294,31 @@ let old = x.replace(5);
 // convert Option<&T> to the owned version (Option<T>)
 opt.cloned()
 opt.copied()
+```
+
+#### Convenient Option patterns
+
+```rs
+// map(): map the content, only if it's Some.
+//
+Some(4).map(|n| 2 * n);        // Some(4)
+Some(4).and_then(|n| func(n)); // Same as map(), but does not wrap in Some()
+Some(4).and(val);
+None::<i32>.map(|n| 2 * n);    // None
+
+// Convenient pattern. Companion APIs:
+//
+// - `unwrap_or`:         eagerly evaluated
+// - `unwrap_or_default`: invokes the `default()` (!!)
+//
+opt.unwrap_or_else( |err | {
+  println!("Problem parsing arguments: {}", err);
+  std::process::exit(1);
+});
+
+// Convenient way to perform boolean tests (unstable)
+//
+if Some(4).is_some_and(|x| x == 4) { /* ... */ }
 ```
 
 ### Result/Error
@@ -2749,6 +2767,10 @@ let _c = Parent(Rc::new(RefCell::new(3)), Rc::clone(&a));
 
 *value.borrow_mut() += 10;
 value2.try_borrow_mut()?.value = 10; // try version
+
+// Dereference and cast to trait object.
+//
+&*value as &dyn MyTrait;
 ```
 
 ### Modifying Rc/Arc without inner mutable types (and conversion Box -> RC type)
