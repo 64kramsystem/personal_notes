@@ -122,6 +122,7 @@ Contexts:
 - `github.*`: information about the workflow/event ([reference](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context))
   - `github.workspace`: where the repo is checked out
   - `github.event.number`: PR number ([reference](https://github.com/actions/checkout/issues/58#issuecomment-663103947))
+  - `github.job`: job id (yaml key value)
 - `secrets.<SECRET_NAME>`: secrets
 
 There are environment variables, but must check the conditions, e.g. if they persist across jobs ([reference](https://docs.github.com/en/actions/learn-github-actions/environment-variables#default-environment-variables)):
@@ -152,7 +153,7 @@ In order to set and read variables across jobs, can do the following:
 # Step 1
 # Have the script execute `echo RUN_CURRENT_SUITE=1 >> "$GITHUB_ENV"`
 #
-- run:  echo "script/ci/test_if_run_suite.sh "shellcheck"
+- run:  echo "script/ci/test_if_run_suite.sh ${{ github.job }}
 # Step 2
 - if: env.RUN_CURRENT_SUITE == 1
 ```

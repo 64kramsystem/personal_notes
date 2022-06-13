@@ -35,7 +35,7 @@ cargo doc [--open]                   # builds and optionally opens docs for the 
 
 When a project is run via Cargo, the env variable `CARGO_MANIFEST_DIR` is passed to the binary.
 
-Configuration file example:
+Configuration file example, with explanation of some options:
 
 ```toml
 # Enable nightly features; `strip` is on 1.46
@@ -69,16 +69,25 @@ image = { path = "vendor/image", version = "0.13.0" }       # When both `path` a
 # See https://doc.rust-lang.org/cargo/reference/overriding-dependencies.html.
 #
 [patch.crates-io]
-+winit = {git = "https://github.com/rust-windowing/winit.git", rev = "5d85c10a2"}
+winit = {git = "https://github.com/rust-windowing/winit.git", rev = "5d85c10a2"}
 
 # Another way to declare a dependency
 [dependencies.amethyst]
 features = ["vulkan"]
 version = "0.15"
 
+# If relative, it refers to the `.cargo` parent directory.
+[build]
+target-dir = "/path/to/target"
+
 # There are 4 profiles: `dev`, `release`, `test`, and `bench`
 [profile.release]
 strip = true         # highest stripping (equivalent to "symbols")
+
+# Convenient setting to run dependencies in release mode, but main package in debug.
+#
+[profile.dev.package."*"]
+opt-level = 3
 ```
 
 Versioning:
@@ -114,7 +123,7 @@ Using cargo from root requires the member name; otherwise, each member can be tr
 members = ["playground", "rust_programming_by_example"]
 ```
 
-Members must have compatible dependencies, so projects can't be unrelated; without workspaces, it's possible to share artifacts by sharing the target dir (`.cargo/config.toml` -> `[build] target-dir = "/path/to/target`; if relative, it refers to the `.cargo` parent directory).
+Members must have compatible dependencies, so projects can't be unrelated; without workspaces, it's possible to share artifacts by sharing the target dir.
 
 ### Visual Studio Code/Rust Analyzer
 
