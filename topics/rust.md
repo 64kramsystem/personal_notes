@@ -530,6 +530,7 @@ all(|x| x % 2 == 0)          // terminates on the first false
 split(|x| myfn(x))
 chunks(n)                    // iterate in chunks of n elements; includes last chunk, if smaller
 chunks_exact(n)              // (preferred) iterate in chunks of n elements; does not include the last chunk, if smaller
+coll.iter().step_by(2).zip(coll.iter().skip(1).step_by(2)) // Manual implementation of chunks(2), where not available
 
 // Other splitting APIs; may not support all the variations
 split_at(); split_first(); split_last()
@@ -554,15 +555,25 @@ collect::<Vec<_>>()
 
 // Create an iterator for:
 //
-iter::empty()           // empty
-iter::once(x)           // single entry
-iter::repeat(x)         // repeating a value
-iter::repeat(x).take(n) // create n repeating values
+iter::empty()                  // empty
+iter::once(x)                  // single entry
+iter::repeat(x)                // repeating a value
+iter::repeat(x).take(n)        // create n repeating values
+iter::repeat_with(|n| func(n)) // repeate a function (Ruby's `Array.new() {}` )
 
-// Create an iterator for generating a sequence, which stops when the function returns None
+// Simplified version of fold(), where each item is based on the last value. Example with multiples
+// of 10:
+//
+iter::successors(Some(1), |n| n.checked_mul(10))
+
+// Example of creating an iterator via from_fn()
 // Use take(n) if want to use size as limitation, instead of Option.
-from_fn(|| Some(myfn()));
-successors(Some(start_val), |curr_val| Some(myfn(curr_val)))
+//
+let mut count = 0;
+let counter = std::iter::from_fn(move || {
+    count += 1;
+    if count < 6 { Some(count) } else { None }
+});
 
 // Other adapters:
 peek()                 // Returns a peekable iterator (`peek() -> Option<T>`)

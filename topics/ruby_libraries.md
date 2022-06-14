@@ -338,6 +338,8 @@ CSV.foreach(filename, options) { |row| ... }              # Stream (for large fi
 csv_content = CSV.generate { |csv| csv << [values] }      # Write to string
 CSV.open("/path/file.csv", "w", options) { |csv| ... }    # Write to file
 CSV.open('links.csv', 'ab', options) { |csv| ... }        # Append to file
+
+[values].to_csv                                           # Encode a single row
 ```
 
 Row can be indexed as a hash; empty fields are parsed as nil.
@@ -676,6 +678,11 @@ Tempfile.create(<naming>) { |f| operation(f) }  # Creates, operates, and deletes
 #
 require 'tmpdir'
 Dir::Tmpname.create(['a', '.png']) { }
+
+# Creates a temporary dir, for the duration of the block.
+# @prefix_suffix is the same format as Tmpname.create.
+# If the block is not provided, the directory is not deleted.
+Dir.mktmpdir(@prefix_suffix) { |dir| ... }
 
 # Find system temporary directory
 require 'tmpdir'

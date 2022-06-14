@@ -4,6 +4,7 @@
   - [IAM](#iam)
     - [Permissions](#permissions)
   - [S3](#s3)
+    - [Fileshare/Permissions](#filesharepermissions)
   - [RDS](#rds)
     - [Support stored procedures](#support-stored-procedures)
 
@@ -27,6 +28,16 @@ Bucket public URL format: https://mybucket.s3.amazonaws.com
 When versioning is enabled, uploaded files have `VersionId` set; it's null otherwise.
 
 When the storage class of an object is changed, a new version is created (even if versioning is disabled), with updated `LastModified`, `IsLatest` = true (and according `VersionId`).
+
+### Fileshare/Permissions
+
+If one needs to exchange files, it's possible to use private bucket/objects, with [presigned URLs](https://docs.aws.amazon.com/AmazonS3/latest/userguide/ShareObjectPreSignedURL.html); they temporarily grant the URL client the permissions of the entity that created it. Ruby implementation:
+
+```rb
+s3_object = @s3_client.bucket(BUCKET).object(object_key)
+s3_object.put(body: file_io, acl: 'private')
+s3_object.presigned_url(:get, expires_in: URL_EXPIRY, secure: true).to_s
+```
 
 ## RDS
 

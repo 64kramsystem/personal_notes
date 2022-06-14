@@ -1,3 +1,14 @@
+## Tue 14/Jun/2022
+
+- Projects
+  - Port Soccer to Fyrox
+    - [x] Make win score customizable
+    - [x] Replace reinitializatin of actors with reset
+      - [x] Ball
+      - [x] Player
+      - [x] Goal
+    - [x] Rebase scene graph branch
+
 ## Mon 13/Jun/2022
 
 - Open Source
