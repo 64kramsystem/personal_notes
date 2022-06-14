@@ -209,8 +209,10 @@ Arbitrary handling (references: [README](https://github.com/rspec/rspec-mocks#ar
 ```ruby
 # WATCH OUT! When using :expect_any_instance_of, the first arg is the instance.
 # If a `with()` expectation is added, it's still verified.
+# Use double() to stub/mock instances.
 #
-expect(double).to receive(:msg) do |instance, *args|
+mock_instance = double(:label)
+expect(mock_instance).to receive(:msg) do |instance, *args|
   expect(args.size).to eq(7)
 end
 ```
