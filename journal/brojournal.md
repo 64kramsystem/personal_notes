@@ -1,3 +1,17 @@
+## Wed 15/Jun/2022
+
+- Open Source
+  - Mysql2 Ruby gem
+    - [x] README: Fix streaming MySQL documentation link
+    - [x] README: Expand section on streaming, about early terminating a result set iteration
+- Projects: Port Soccer to Fyrox
+  - [ ] Convert to proper scene graph
+    - [x] Several restructurings required
+    - [x] Arrow
+    - [x] Reset Game instead of reinstantiating it
+    - [x] Add the pitch node only once
+    - [x] Rename sprites/widget drawing methods to new semantics
+
 ## Tue 14/Jun/2022
 
 - Projects
