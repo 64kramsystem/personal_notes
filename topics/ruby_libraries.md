@@ -1148,7 +1148,31 @@ db.extend(SQLite::Pragmas); db.table_info(table_name)  # table metadata
 
 ```rb
 @client = Mysql2::Client.new(host: HOST, username: USER, password: PWD)
+
 # Queries return hashes by default.
 # The #query returned class is a proxy.
-@client.query(sql, as: :array).map { |c1, c2| ... }
+result = @client.query(sql, as: :array)
+
+# Iterate.map
+result.each { || ... }
+result.map { |c1, c2| ... }
+
+# Get the column names
+result.fields
+
+# Get another row
+result.first
+```
+
+In order to stream:
+
+```rb
+# The :cache_rows option avoids a warning.
+#
+result = @client.query(sql, stream: true, cache_rows: false)
+
+# WATCH OUT! If terminating early (e.g. error recovery), must invoke this, otherwise, new queries will
+# raise the error "Commands out of sync; you can't run this command now"
+#
+result.free
 ```

@@ -11,6 +11,7 @@
     - [Migrations](#migrations)
     - [Callbacks](#callbacks)
     - [Metadata](#metadata-1)
+    - [SQL queries streaming](#sql-queries-streaming)
 
 ## Metadata
 
@@ -192,3 +193,7 @@ The format is `{"field" => [before, after]}`; unchanged fields are not included.
 #
 MyModel.columns_hash['my_attribute'].limit
 ```
+
+### SQL queries streaming
+
+For streaming of direct SQL, one must use the `mysql2` gem APIs - see its [notes section](ruby_libraries.md#mysql2); the low-level connection is retrieved via `connection.raw_connection`.

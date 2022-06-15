@@ -123,7 +123,7 @@ describe MyClass, :myconfig, myparam: 10 do ...
 ## Available variables
 
 - `subject`
-- `described_class`
+- `described_class` (not available for helpers)
 
 ## Mocks
 
@@ -220,6 +220,7 @@ end
 ## Testing modules
 
 ```ruby
+# :described_class is not available for modules
 let(:helper) { Class.new { extend ModuleToTest } }
 ```
 
