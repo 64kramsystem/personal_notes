@@ -84,11 +84,18 @@ target-dir = "/path/to/target"
 [profile.release]
 strip = true         # highest stripping (equivalent to "symbols")
 
-# Convenient setting to run dependencies in release mode, but main package in debug.
+# Optimize a little the debug build; compile time is essentially the same as level 0.
+#
+[profile.dev]
+opt-level = 1
+
+# Convenient setting to run dependencies (non-workspace members) in release mode, but main package in debug.
 #
 [profile.dev.package."*"]
 opt-level = 3
 ```
+
+Rust supports [PGO](https://doc.rust-lang.org/rustc/profile-guided-optimization.html)!!
 
 Versioning:
 
@@ -102,6 +109,8 @@ The cargo configuration file (see custom configs below) `toml` extension is comm
 - `$project_dir/*/config.toml` (first)
 - `$CARGO_HOME/config.toml`
 - `~/.cargo/config.toml` (last)
+
+The generic project Cargo options (e.g. profile optimizations) can also be stored in the config files above.
 
 ### Workspaces
 

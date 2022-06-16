@@ -1,3 +1,19 @@
+## Thu 16/Jun/2022
+
+- Projects: Rust Game Ports
+  - [x] Port Soccer to Fyrox
+    - [x] Convert to proper scene graph
+        - [x] Several refactorings
+        - [x] Update MenuScreen
+        - [x] Update GameHud
+        - [x] Update GameOverScreen
+  - Rusty Roguelike
+    - [x] Review and remove unnecessary state `PlayerCollisions`
+- Studies: Rust
+  - [x] Review profile optimization options
+- Studies: Rust/Gamedev
+  - [x] Review [Rusty Jam Template](https://github.com/septum/rusty_jam_bevy_template)
+
 ## Wed 15/Jun/2022
 
 - Open Source

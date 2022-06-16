@@ -704,6 +704,7 @@ let exe: io::Result<PathBuf> = std::env::current_dir(); // working directory
 ```rust
 std::env::consts::OS;               // values: https://doc.rust-lang.org/std/env/consts/constant.OS.html
 std::process::exit(exit_status);    // terminate program (exit)
+std::env::var("CASE_INSENSITIVE");  // access environment variables
 ```
 
 In order to spawn a process and pipe I/O, see the [specific section](#spawning-a-process-and-piping-to-it).

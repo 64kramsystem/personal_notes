@@ -24,7 +24,7 @@
   - [Arithmetic operations](#arithmetic-operations)
   - [Redirections](#redirections)
   - [Substitutions](#substitutions)
-  - [Brace expansion](#brace-expansion)
+  - [Wildcards/ranges](#wildcardsranges)
   - [Arrays](#arrays)
     - [Snippets](#snippets)
   - [Associative arrays](#associative-arrays)
@@ -726,11 +726,17 @@ command < "$filename"
 
 WATCH OUT! See the [background processes section](#background-processesjobs-management) for notes about cmd substitution + background jobs.
 
-## Brace expansion
+## Wildcards/ranges
+
 
 ```sh
-{$start..$end[..$incr]}            # generate a sequence (range) via brace expansion (!!); $end is included
-                                   # spaces and expressions are not allowed; better use arithmetic for loop.
+# Brace expansion: generate a sequence; $end is included. Spaces and expressions are not allowed; better
+# use arithmetic for loop.
+# WATCH OUT! If used as files prefix (`{a..z}*`), also non-matching entries are included.
+{$start..$end[..$incr]}
+
+# Range wildcard. If used as files prefix (`[a..z]*`), non-matching entries are not included.
+[$start..$end]
 ```
 
 ## Arrays
