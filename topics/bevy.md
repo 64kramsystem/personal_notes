@@ -8,7 +8,7 @@
     - [Resources](#resources)
     - [Systems](#systems)
       - [Stages](#stages)
-    - [States](#states)
+    - [States and callbacks](#states-and-callbacks)
       - [System sets and ordering](#system-sets-and-ordering)
       - [Handling state via `iyes_loopless` crate](#handling-state-via-iyes_loopless-crate)
     - [Run criteria](#run-criteria)
@@ -327,7 +327,7 @@ App::new()
     .add_system_set_to_stage(DebugState, movement)
 ```
 
-### States
+### States and callbacks
 
 WATCH OUT!! Bevy's states/stages are poorly implemented, and should not be used (together); see the [`iyes_loopless` section](#handling-state-via-iyes_loopless-crate).
 
@@ -349,39 +349,25 @@ App::new()
     // Different state callbacks /////////////////////////////////////////////////
 
     // on state active (use this as base)
-    .add_system_set(
-        SystemSet::on_update(AppState::MainMenu).with_system(handle_ui_buttons)
-    )
+    .add_system_set(SystemSet::on_update(AppState::MainMenu).with_system(handle_ui_buttons))
 
     // when entering the state (equivalent of startup systems)
-    .add_system_set(
-        SystemSet::on_enter(AppState::MainMenu).with_system(setup_menu)
-    )
+    .add_system_set(SystemSet::on_enter(AppState::MainMenu).with_system(setup_menu))
 
     // on pause, e.g. things to do when becoming inactive
-    .add_system_set(
-        SystemSet::on_pause(AppState::InGame).with_system(hide_enemies)
-    )
+    .add_system_set(SystemSet::on_pause(AppState::InGame).with_system(hide_enemies))
 
     // player idle animation while paused
-    .add_system_set(
-        SystemSet::on_inactive_update(AppState::InGame).with_system(player_idle)
-    )
+    .add_system_set(SystemSet::on_inactive_update(AppState::InGame).with_system(player_idle))
 
     // on state both active and paused
-    .add_system_set(
-        SystemSet::on_in_stack_update(AppState::InGame).with_system(animate_water)
-    )
+    .add_system_set(SystemSet::on_in_stack_update(AppState::InGame).with_system(animate_water))
 
     // when resuming from pause
-    .add_system_set(
-        SystemSet::on_resume(AppState::InGame).with_system(reset_player)
-    )
+    .add_system_set(SystemSet::on_resume(AppState::InGame).with_system(reset_player))
 
     // on exit (e.g. cleanup)
-    .add_system_set(
-        SystemSet::on_exit(AppState::MainMenu).with_system(close_menu)
-    )
+    .add_system_set(SystemSet::on_exit(AppState::MainMenu).with_system(close_menu))
 ```
 
 Match:
@@ -452,9 +438,10 @@ App::new()
             //
             .after(InputSet)
             .with_system(player_movement)
-            // System-level ordering. before()/after() can be called on any system instance.
+            // System-level labelling and ordering. before()/after() can be called on any system instance.
             //
-            .with_system(sys.after(other_sys))
+            .with_system(mysystem1.label("mysys").after(mysystem0)) // via function reference
+            .with_system(mysystem2.after("mysys"))                  // via label
     )
     .add_system_set(
         SystemSet::on_update(TurnState::MonsterTurn)
