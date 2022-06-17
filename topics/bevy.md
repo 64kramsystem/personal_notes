@@ -33,6 +33,7 @@
     - [Mouse](#mouse)
     - [Gamepad](#gamepad)
     - [Touchscreen](#touchscreen)
+  - [Audio/Music (Kira audio plugin)](#audiomusic-kira-audio-plugin)
   - [Other APIs](#other-apis)
     - [Time/Timestep](#timetimestep)
       - [Fixed timestep](#fixed-timestep)
@@ -1181,6 +1182,65 @@ fn gamepad_input(axes: Res<Axis<GamepadAxis>>, buttons: Res<Input<GamepadButton>
 ### Touchscreen
 
 See https://bevy-cheatbook.github.io/features/input-handling.html#touchscreen.
+
+## Audio/Music (Kira audio plugin)
+
+Use the `bevy_kira_audio` crate. WATCH OUT! Must specify the Bevy features, and exclude `bevy_audio` and `vorbis`.
+
+Single channel:
+
+```rs
+// For convenience, a struct with all the sound asset handles can be created, but it's not strictly
+// necessary, as Bevy caches the assets.
+
+use bevy_kira_audio::{Audio, AudioApp, AudioChannel, AudioPlugin, AudioSource};
+
+// Define one type for each extra channel. The `volume` field is optional; it's a convenience to keep
+// track of the volume, since it can't be queried; it's not needed if only playing at max volume.
+//
+struct Channel1State {
+    volume: f32,
+}
+
+app.add_plugin(AudioPlugin)
+   .add_audio_channel::<Channel1State>()
+   .add_startup_system(prepare_audio)
+   ...
+
+fn prepare_audio(mut commands: Commands, asset_server: Res<AssetServer>) {
+    // Required if we use a (the) channel volume resource.
+    commands.insert_resource(Channel1State { volume: 1.0 });
+}
+
+// There is a main channel, by default - Res<Audio>
+//
+fn play_main_channel(asset_server: Res<AssetServer>, audio: Res<Audio>) {
+    let source_h = asset_server.load("sounds/01.ogg");
+
+    // Playback-related methods
+
+    audio.play_looped(source_h);
+    // audio.play(source_h);
+    audio.stop();
+    audio.pause();
+    audio.resume();
+}
+
+// Non-main channels are queried via `Res<AudioChannel<T>>`.
+//
+fn play_channel_1(
+    sounds: Res<Sounds>,
+    channel1: Res<AudioChannel<Channel1State>>,
+    mut channel_1_state: ResMut<Channel1State>,
+) {
+    // Set (and store) the volume.
+
+    let source_h = asset_server.load("sounds/01.ogg");
+    channel_1_state.volume = 0.7;
+    channel1.set_volume(channel_1_state.volume);
+    channel1.play(source_h);
+}
+```
 
 ## Other APIs
 

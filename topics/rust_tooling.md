@@ -93,6 +93,12 @@ opt-level = 1
 #
 [profile.dev.package."*"]
 opt-level = 3
+
+# In order to specify features based on the profile, do this:
+#
+[features]
+default = ["bevy/bevy_winit", "bevy/render"]
+dev = ["bevy/dynamic"]
 ```
 
 Rust supports [PGO](https://doc.rust-lang.org/rustc/profile-guided-optimization.html)!!
