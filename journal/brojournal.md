@@ -1,3 +1,17 @@
+## Fri 17/Jun/2022
+
+- Admin
+  - [x] Review MIT/Apache licenses/compatibility
+- Studies: Rust
+  - [x] Fight Cargo per-profile properties
+- Open Source
+  - Bevy Kira audio
+    - [x] Open PR: Fix links in `examples/README.md`
+- Studies: Rust/Gamedev
+  - [x] Review proposed template
+  - [ ] Review Bevy notes
+  - [x] Fight Study Bevy audio
+
 ## Thu 16/Jun/2022
 
 - Projects: Rust Game Ports
