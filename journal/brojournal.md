@@ -1,3 +1,14 @@
+## Sat 18/Jun/2022
+
+- Studies: Rust/Gamedev
+  - [x] Bevy
+    - [x] Study 2d examples
+    - [x] Study remaining main topics
+    - [x] Study Breakout
+    - [x] Study Heron
+- Rust/Gamedev
+  - Rusty Jam
+
 ## Fri 17/Jun/2022
 
 - Admin
