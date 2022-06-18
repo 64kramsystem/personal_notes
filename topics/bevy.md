@@ -24,28 +24,29 @@
     - [Transforms](#transforms)
     - [Background](#background)
     - [Assets](#assets)
-      - [Custom asset events/hooks](#custom-asset-eventshooks)
-      - [Textures/sprites](#texturessprites)
+    - [Sprites/rectangles](#spritesrectangles)
     - [UI/Layout](#uilayout)
-    - [Text](#text)
+      - [Text](#text)
   - [Input handling](#input-handling)
     - [Keyboard](#keyboard)
     - [Mouse](#mouse)
     - [Gamepad](#gamepad)
     - [Touchscreen](#touchscreen)
-  - [Audio/Music (Kira audio plugin)](#audiomusic-kira-audio-plugin)
   - [Other APIs](#other-apis)
     - [Time/Timestep](#timetimestep)
       - [Fixed timestep](#fixed-timestep)
-    - [Math](#math)
+    - [Timers](#timers)
+    - [Math/Vecs/Quats etc.](#mathvecsquats-etc)
   - [Utils](#utils)
     - [Running a custom game loop](#running-a-custom-game-loop)
     - [Track Assets Loading](#track-assets-loading)
     - [List All Resource Types](#list-all-resource-types)
     - [Display the framerate](#display-the-framerate)
     - [Exit the application](#exit-the-application)
-    - [Transformations](#transformations)
+    - [Useful transforms](#useful-transforms)
   - [3rd party plugins](#3rd-party-plugins)
+  - [`bevy_kira_audio` (audio)](#bevy_kira_audio-audio)
+    - [`heron` (easy physics)](#heron-easy-physics)
 
 Notes from the [Bevy Cheat Book](https://bevy-cheatbook.github.io).
 
@@ -731,14 +732,14 @@ fn spawn_player(mut commands: Commands) {
     commands.insert_resource(GoalsReached { main_goal: false, bonus: false });
     commands.remove_resource::<MyResource>();
 
-    // Create a new entity using `spawn`
+    // Create a new entity using `spawn`.
+    // Insert commands allow chaining additions, which operate on the same entity.
     // WATCH OUT! insert_bundle() adds all the components of a bundle, while insert(Bundle) inserts the
     // bundle as a single component!
-    // Both inserts return EntityMut, which can be conveniently used to separately add other components.
     //
     let entity_id = commands.spawn()
         .insert(ComponentA)                 // add a component
-        .insert_bundle(MyBundle::default()) // add a bundle
+        .insert_bundle(MyBundle::default()) // add a bundle (to the same entity!)
         .id();                              // get the Entity ID
 
     // Shorthand for creating an entity with a bundle.
@@ -864,6 +865,12 @@ App::new()
 
 ## Rendering
 
+When working in 2D, add the orthographic camera bundle:
+
+```rs
+commands.spawn_bundle(OrthographicCameraBundle::new_2d());
+```
+
 ### Transforms
 
 Bevy's coordinates are left-hand.
@@ -877,6 +884,36 @@ In 2D:
 There are two transforms: `Transform` (relative to parent) and `GlobalTransform` (best to use read-only; if a component has no parent, T = GT)
 
 WATCH OUT! GT is synced with T in the `PostUpdate` stage, so be careful.
+
+A transform has three components:
+
+```rs
+pub struct Transform {
+    /// Position of the entity. In 2d, the last value of the `Vec3` is used for z-ordering.
+    pub translation: Vec3,
+    /// Rotation of the entity.
+    pub rotation: Quat,
+    /// Scale of the entity.
+    pub scale: Vec3,
+}
+```
+
+Useful stuff (see also [maths section](#mathvecsquats-etc)):
+
+```rs
+Transform::from_xyz(100., 0., 0.)       // from coordinates
+Transform::from_scale(Vec3::splat(6.))  // scale
+
+transform.translation.xy()              // Get a 2d vec of the position of a Transform
+
+// Bound transform
+let extents = Vec3::from((BOUNDS / 2.0, 0.0));
+transform.translation = transform.translation.min(extents).max(-extents);
+
+// Rotate of a given amount
+let rotation_delta = Quat::from_rotation_z(rotation_factor * rotation_speed * TIME_STEP);
+transform.rotation *= rotation_delta;
+```
 
 ### Background
 
@@ -955,20 +992,63 @@ fn add_material(mut materials: ResMut<Assets<StandardMaterial>>) {
 }
 ```
 
-#### Custom asset events/hooks
+For custom asset events/hooks, see https://bevy-cheatbook.github.io/features/assets.html#assetevent.
 
-See https://bevy-cheatbook.github.io/features/assets.html#assetevent.
-
-#### Textures/sprites
+### Sprites/rectangles
 
 For textures/images, Y points downwards. This is consistent with the majority of the image formats, but inconsistent with the rest of Bevy (and OpenGL).
 
-Use the sprite-flipping feature to invert this behavior:
+Add a sprite:
 
-```rust
-commands.spawn_bundle(SpriteBundle {
-  sprite: Sprite { flip_y: true, flip_x: false, ..Default::default() }, ..Default::default()
-});
+```rs
+commands
+    .spawn_bundle(SpriteBundle {
+        texture: asset_server.load("branding/icon.png"),
+
+        // If we want a plain rectangle, use a flat Color instead of a texture.
+        // We can also use `custom_size` not to use a texture's dimensions.
+        //
+        // sprite: Sprite {
+        //     color: Color::rgb(0.25, 0.25, 0.75),
+        //     custom_size: Some(Vec2::new(50.0, 50.0)),
+        //     ..default()
+        // },
+
+        // The transform is a queryable component!
+        transform: Transform::from_xyz(100., 0., 0.),
+
+        // optional; use flip_y to invert the Y axis direction.
+        sprite: Sprite { flip_y: true, flip_x: false, ..Default::default() },
+
+        ..default()
+    })
+    // Add another component, so we can query this sprite; for example, via Query<(&Transform, &OtherComponent)>
+    .insert(OtherComponent);
+```
+
+Sprite sheets:
+
+```rs
+fn setup(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
+) {
+    let texture_atlas: TextureAtlas = TextureAtlas::from_grid(
+        asset_server.load("textures/rpg/chars/gabe/gabe-idle-run.png"),
+        Vec2::new(24.0, 24.0), 7, 1, // sprite size, columns, rows
+    );
+
+    let texture_atlas_handle: Handle<TextureAtlas> = texture_atlases.add(texture_atlas);
+
+    commands
+        .spawn_bundle(SpriteSheetBundle {
+            texture_atlas: texture_atlas_handle,
+            transform: Transform::from_scale(Vec3::splat(6.0)), // optional: scale sprites
+            ..default()
+        })
+        .insert(AnimationTimer(Timer::from_seconds(0.1, true)));
+}
 ```
 
 ### UI/Layout
@@ -977,7 +1057,7 @@ In order to use a UI, don't forget to spawn a UI camera (`UiCameraBundle`).
 
 Since the Y starts at the bottom, the UI flows from there; use `FlexDirection::ColumnReverse` to flow from the top.
 
-### Text
+#### Text
 
 Creating text:
 
@@ -1014,14 +1094,18 @@ let style = Style {
 };
 
 let text_bundle = TextBundle { text, style, ..Default::default() };
+let scoreboard = ScoreBoard { score: 0 }; // assumed to be a component
+
+commands.spawn_bundle(text_bundle)
+        .insert(scoreboard);
 ```
 
 Update it:
 
 ```rs
-pub fn update_scoreboard(score: Res<Score>, mut query: Query<&mut Text, With<Scoreboard>>) {
-    let mut scoreboard_text = query.single_mut();
-    scoreboard_text.sections[1].value = format!("{}", score.0);
+fn update_scoreboard(scoreboard: Res<Scoreboard>, mut query: Query<(&mut Text, &Scoreboard)>) {
+    let (mut text, scoreboard) = query.single_mut();
+    text.sections[1].value = format!("{}", scoreboard.score);
 }
 ```
 
@@ -1033,9 +1117,9 @@ Input handling can be managed via resources (higher level) and events (lower lev
 
 ```rust
 fn keyboard_input(keys: Res<Input<KeyCode>>) {
-  if keys.just_pressed(KeyCode::Space) { /* Space was pressed */ }
+  if keys.just_pressed(KeyCode::Space) { /* Space was just pressed */ }
   if keys.just_released(KeyCode::LControl) { /* Left Ctrl was released */ }
-  if keys.pressed(KeyCode::W) { /* W is being held down */ }
+  if keys.pressed(KeyCode::W) { /* W is (being) held down */ }
 }
 
 fn keyboard_events(mut key_evr: EventReader<KeyboardInput>) {
@@ -1183,65 +1267,6 @@ fn gamepad_input(axes: Res<Axis<GamepadAxis>>, buttons: Res<Input<GamepadButton>
 
 See https://bevy-cheatbook.github.io/features/input-handling.html#touchscreen.
 
-## Audio/Music (Kira audio plugin)
-
-Use the `bevy_kira_audio` crate. WATCH OUT! Must specify the Bevy features, and exclude `bevy_audio` and `vorbis`.
-
-Single channel:
-
-```rs
-// For convenience, a struct with all the sound asset handles can be created, but it's not strictly
-// necessary, as Bevy caches the assets.
-
-use bevy_kira_audio::{Audio, AudioApp, AudioChannel, AudioPlugin, AudioSource};
-
-// Define one type for each extra channel. The `volume` field is optional; it's a convenience to keep
-// track of the volume, since it can't be queried; it's not needed if only playing at max volume.
-//
-struct Channel1State {
-    volume: f32,
-}
-
-app.add_plugin(AudioPlugin)
-   .add_audio_channel::<Channel1State>()
-   .add_startup_system(prepare_audio)
-   ...
-
-fn prepare_audio(mut commands: Commands, asset_server: Res<AssetServer>) {
-    // Required if we use a (the) channel volume resource.
-    commands.insert_resource(Channel1State { volume: 1.0 });
-}
-
-// There is a main channel, by default - Res<Audio>
-//
-fn play_main_channel(asset_server: Res<AssetServer>, audio: Res<Audio>) {
-    let source_h = asset_server.load("sounds/01.ogg");
-
-    // Playback-related methods
-
-    audio.play_looped(source_h);
-    // audio.play(source_h);
-    audio.stop();
-    audio.pause();
-    audio.resume();
-}
-
-// Non-main channels are queried via `Res<AudioChannel<T>>`.
-//
-fn play_channel_1(
-    sounds: Res<Sounds>,
-    channel1: Res<AudioChannel<Channel1State>>,
-    mut channel_1_state: ResMut<Channel1State>,
-) {
-    // Set (and store) the volume.
-
-    let source_h = asset_server.load("sounds/01.ogg");
-    channel_1_state.volume = 0.7;
-    channel1.set_volume(channel_1_state.volume);
-    channel1.play(source_h);
-}
-```
-
 ## Other APIs
 
 ### Time/Timestep
@@ -1288,10 +1313,37 @@ WATCH OUT!
 
 See https://bevy-cheatbook.github.io/features/fixed-timestep.html (and referred examples) for more details.
 
-### Math
+### Timers
+
+```rs
+Timer::from_seconds(0.1, true) // (duration, repeating)
+```
+
+### Math/Vecs/Quats etc.
+
+`Vec`a and `Quat`s are from the `glam` crate.
 
 ```rust
-const_vec2!   // create a const Vec2; also for: Mat2/3/4, Quat, Vec3/3a/4
+// - {N}: size (2,3,...)
+// - {A}: axis (X, Y, Z)
+
+const_vecN!([x., y.])        // Create a const Vec2; also for: Mat2/3/4, Quat, Vec3/3a/4
+vec3.xy()                    // Convert a Vec3 to Vec2, discarding z
+vec3.truncate()              // Convert a Vec3 to Vec2, discarding z
+vec.normalize()
+Vec{N}::splat(val)           // Create a Vec with all the components set to val
+Vec3::from((to_player, z))   // Convert Vec2+z to Vec3
+vec2.extend(z)               // Convert Vec2+z to Vec3
+
+Vec{N}::{A}                  // Unit vector in the given axis
+
+// Gets the minimal rotation for transforming `from` to `to`; the rotation is in the plane spanned by the two vectors.
+//
+Quat::from_rotation_arc(from3, to3)
+
+// Get a rotation from the angle (in radians) around the given axis
+//
+Quat::from_rotation_{A}(angle)
 ```
 
 ## Utils
@@ -1408,7 +1460,7 @@ fn exit_system(mut exit: EventWriter<AppExit>) {
 App::new().add_system(bevy::input::system::exit_on_esc_system)
 ```
 
-### Transformations
+### Useful transforms
 
 - Convert cursor to world coordinates: see https://bevy-cheatbook.github.io/cookbook/cursor2world.html#convert-cursor-to-world-coordinates.
 - Custom camera projection: see https://bevy-cheatbook.github.io/cookbook/custom-projection.html.
@@ -1418,9 +1470,113 @@ App::new().add_system(bevy::input::system::exit_on_esc_system)
 
 - `bevy_ecs_tilemap`: for conveniently/efficiently handling tilemaps
 - `bevy_ecs_ldtk`: specialized `bevy_ecs_tilemap` for LDTK
-- `bevy_kira_audio`: more advanced audio
 - `leafwing_input_manager`: more advanced input
 - `bevy_asset_loader`: convenient synchronous assets loading
 - `benimator`: spritesheets
-- `heron`: physics (high level, via Rapier)
 - `bevy_rapier`: physics (lower level, via Rapier)
+
+## `bevy_kira_audio` (audio)
+
+Use the `bevy_kira_audio` crate. WATCH OUT! Must specify the Bevy features, and exclude `bevy_audio` and `vorbis`.
+
+Single channel:
+
+```rs
+// For convenience, a struct with all the sound asset handles can be created, but it's not strictly
+// necessary, as Bevy caches the assets.
+
+use bevy_kira_audio::{Audio, AudioApp, AudioChannel, AudioPlugin, AudioSource};
+
+// Define one type for each extra channel. The `volume` field is optional; it's a convenience to keep
+// track of the volume, since it can't be queried; it's not needed if only playing at max volume.
+//
+struct Channel1State {
+    volume: f32,
+}
+
+app.add_plugin(AudioPlugin)
+   .add_audio_channel::<Channel1State>()
+   .add_startup_system(prepare_audio)
+   ...
+
+fn prepare_audio(mut commands: Commands, asset_server: Res<AssetServer>) {
+    // Required if we use a (the) channel volume resource.
+    commands.insert_resource(Channel1State { volume: 1.0 });
+}
+
+// There is a main channel, by default - Res<Audio>
+//
+fn play_main_channel(asset_server: Res<AssetServer>, audio: Res<Audio>) {
+    let source_h = asset_server.load("sounds/01.ogg");
+
+    // Playback-related methods
+
+    audio.play_looped(source_h);
+    // audio.play(source_h);
+    audio.stop();
+    audio.pause();
+    audio.resume();
+}
+
+// Non-main channels are queried via `Res<AudioChannel<T>>`.
+//
+fn play_channel_1(
+    sounds: Res<Sounds>,
+    channel1: Res<AudioChannel<Channel1State>>,
+    mut channel_1_state: ResMut<Channel1State>,
+) {
+    // Set (and store) the volume.
+
+    let source_h = asset_server.load("sounds/01.ogg");
+    channel_1_state.volume = 0.7;
+    channel1.set_volume(channel_1_state.volume);
+    channel1.play(source_h);
+}
+```
+
+### `heron` (easy physics)
+
+Hello world, with ball that falls on the ground:
+
+```rs
+app.add_plugin(PhysicsPlugin::default())
+   insert_resource(Gravity::from(Vec2::new(0.0, -600.0))) // Define the gravity (Y points up!)
+
+// Bundles must contain at least a `GlobalTransform`
+
+// Ground
+
+let size = Vec2::new(1000.0, 50.0);
+commands
+    .spawn_bundle(SpriteBundle {
+        sprite: Sprite { color: Color::WHITE, custom_size: Some(size), ..Default::default()},
+        transform: Transform::from_translation(Vec3::new(0.0, -300.0, 0.0)),
+        ..Default::default()
+    })
+
+    // Make it a rigid body
+    .insert(RigidBody::Static)
+
+    // Attach a collision shape
+    .insert(CollisionShape::Cuboid { half_extends: size.extend(0.0) / 2.0, border_radius: None })
+
+    // Define restitution (so that it bounces)
+    .insert(PhysicMaterial { restitution: 0.5, ..Default::default() });
+
+// Ball
+
+let size = Vec2::new(30.0, 30.0);
+commands
+    .spawn_bundle(SpriteBundle {
+        sprite: Sprite { color: Color::GREEN, custom_size: Some(size), ..Default::default() },
+        transform: Transform::from_translation(Vec3::new(-400.0, 200.0, 0.0)),
+        ..Default::default()
+    })
+    .insert(RigidBody::Dynamic)
+    .insert(CollisionShape::Cuboid { half_extends: size.extend(0.0) / 2.0, border_radius: None, })
+    .insert(PhysicMaterial { restitution: 0.7, ..Default::default() });
+
+    // Add an initial velocity. (it is also possible to read/mutate this component later).
+    // Also rotates.
+    .insert(Velocity::from(Vec2::X * 300.0).with_angular(AxisAngle::new(Vec3::Z, -PI)))
+```
