@@ -14,13 +14,14 @@
     - [Run criteria](#run-criteria)
       - [System Chaining](#system-chaining)
       - [Events](#events)
-    - [Queries](#queries)
+    - [Queries/ParamSets](#queriesparamsets)
       - [Change detection](#change-detection)
     - [World](#world)
     - [Commands](#commands)
       - [Recursive entities](#recursive-entities)
     - [Plugins](#plugins)
-  - [Rendering](#rendering)
+  - [Rendering/Window](#renderingwindow)
+    - [Camera](#camera)
     - [Transforms](#transforms)
     - [Background](#background)
     - [Assets](#assets)
@@ -571,7 +572,7 @@ fn debug_levelups(mut levelup: EventReader<LevelUpEvent>) {
 App::new().add_event::<LevelUpEvent>()
 ```
 
-### Queries
+### Queries/ParamSets
 
 Used to access entity components. WATCH OUT! Bundles must be queried via component(s), not bundle type!
 
@@ -632,8 +633,8 @@ fn reset_health(
     Query<&mut Health, With<Player>>
   )>,
 ) {
-  for mut health in q.q0_mut().iter_mut() { /* ... */ }
-  for mut health in q.q1_mut().iter_mut() { /* ... */ }
+  for mut health in q.p0_mut().iter_mut() { /* ... */ }
+  for mut health in q.p1_mut().iter_mut() { /* ... */ }
 }
 ```
 
@@ -722,6 +723,8 @@ for column in world.archetypes.resource_mut().unique_components.values_mut() { c
 ```
 
 ### Commands
+
+WATCH OUT!! Commands are flushed at the end of a stage; this includes Resources, that when inserted, can't be queried until the next stage!
 
 Commands add/remove/update stuff:
 
@@ -863,12 +866,27 @@ App::new()
     })
 ```
 
-## Rendering
+## Rendering/Window
 
-When working in 2D, add the orthographic camera bundle:
+In order to get the screen size:
 
 ```rs
+fn spawn_camera(mut commands: Commands, windows: Res<Windows>) {
+    let window = windows.get_primary().unwrap();
+    camera.transform = Transform::from_xyz(window.width() / 2., -window.height() / 2., 999.);
+}
+```
+
+### Camera
+
+```rs
+// Add the orthographic camera bundle:
+//
 commands.spawn_bundle(OrthographicCameraBundle::new_2d());
+
+// Query the camera transform:
+//
+pub fn move_camera(q_camera: Query<&GlobalTransform, With<Camera2d>>) { /* .. */ }
 ```
 
 ### Transforms
@@ -878,6 +896,7 @@ Bevy's coordinates are left-hand.
 In 2D:
 
 - (0, 0) is at the center of the screen;
+- WATCH OUT! The Y axis points upwards; !!! !!! !!! This is very confusing when drawing 2d !!! !!! !!!
 - by default, the camera is far (999.9, slightly before Z-clipping), so that the sprites can be displayed, however, in case of custom transforms, this must be take into account;
 - it's convenient to put the background on z=0, and other sprites with increasing z (based on priority).
 
@@ -1138,11 +1157,25 @@ fn keyboard_events(mut key_evr: EventReader<KeyboardInput>) {
 
 ### Mouse
 
-Grab the mouse: see https://bevy-cheatbook.github.io/cookbook/mouse-grab.html.
+Mouse center is bottom left (!).
+
+Grab the mouse: see https://bevy-cheatbook.github.io/window/mouse-grab.html.
+
+Motion:
+
+```rs
+fn cursor_position(windows: Res<Windows>) {
+    let window = windows.get_primary().unwrap();
+
+    if let Some(position) = window.cursor_position() {
+        // cursor is inside the window, position given
+    }
+}
+```
 
 Buttons/wheel:
 
-```rust
+```rs
 fn mouse_button_input(buttons: Res<Input<MouseButton>>) {
   if buttons.just_pressed(MouseButton::Left) { /* Left button was pressed */ }
   if buttons.just_released(MouseButton::Left) { /* Left Button was released */ }
@@ -1328,9 +1361,9 @@ Timer::from_seconds(0.1, true) // (duration, repeating)
 // - {A}: axis (X, Y, Z)
 
 const_vecN!([x., y.])        // Create a const Vec2; also for: Mat2/3/4, Quat, Vec3/3a/4
-vec3.xy()                    // Convert a Vec3 to Vec2, discarding z
 vec3.truncate()              // Convert a Vec3 to Vec2, discarding z
-vec.normalize()
+vec.normalize()              // WATCH OUT! Returns NaN when the vector is zero
+vec.normalize_or_zero()      // Convenient - returns a zero vector when zero
 Vec{N}::splat(val)           // Create a Vec with all the components set to val
 Vec3::from((to_player, z))   // Convert Vec2+z to Vec3
 vec2.extend(z)               // Convert Vec2+z to Vec3
@@ -1468,6 +1501,7 @@ App::new().add_system(bevy::input::system::exit_on_esc_system)
 
 ## 3rd party plugins
 
+- `bevy_inspector_egui`: display a window with the desired entities and components
 - `bevy_ecs_tilemap`: for conveniently/efficiently handling tilemaps
 - `bevy_ecs_ldtk`: specialized `bevy_ecs_tilemap` for LDTK
 - `leafwing_input_manager`: more advanced input

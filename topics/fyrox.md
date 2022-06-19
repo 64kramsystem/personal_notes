@@ -190,7 +190,7 @@ In order to stream an audio file, add a corresponding `.options` file (e.g. `/pa
 
 ```ron
 (
-  streaming: true
+  stream: true
 )
 ```
 
@@ -455,8 +455,29 @@ if let TextureKind::Rectangle {
 
 // Delete a widget
 
-engine.user_interface
-    .send_message(WidgetMessage::remove(widget_h, MessageDirection::ToWidget));
+engine.user_interface.send_message(WidgetMessage::remove(widget_h, MessageDirection::ToWidget));
+
+// Delete all the widgets
+
+let root_h = user_interface.root();
+
+for widget in user_interface.nodes() {
+    let widget_h = user_interface.nodes().handle_of(widget);
+
+    if widget_h != root_h {
+        user_interface.send_message(WidgetMessage::remove(widget_h, MessageDirection::ToWidget));
+    }
+}
+```
+
+WATCH OUT!! Widgets are not enabled/disabled using the scene graph node semantics; instead, do:
+
+```rs
+user_interface.send_message(WidgetMessage::visibility(
+    widget_h,
+    MessageDirection::ToWidget,
+    true, // enable/disable
+));
 ```
 
 ## Transforms
