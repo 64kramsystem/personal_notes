@@ -367,7 +367,11 @@ v.sort();
 
 Equivalent of Ruby blocks!
 
-```rust
+```rs
+#[must_use]
+fn retval() -> u32 { 1 };                       // `#[must_use]` causes a warning, if the retval is not used
+retval();                                       // <-- warning!
+
 let multiple_of_10 = |x: i32| { x % 10 == 0 };  // yay! braces and type annotation are optional
 (0..100).any(multiple_of_10);                   // double yay!
 
@@ -389,7 +393,6 @@ where F: FnMut(&mut Player),
     let player = self.players.borrow_mut(player_h);
     f(player)
 }
-
 ```
 
 Functions can be assigned to variables (function pointers); their type is `fn` (don't confuse with `Fn`!!). However, they can't reference the context, and functions defined inside a function can't be assigned to a variable.

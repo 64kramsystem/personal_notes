@@ -20,7 +20,7 @@
 AMD GPU virtualization may not be supported; if so, add this to the VM cfg file:
 
 ```sh
-echo "mks.gl.allowUnsupportedDrivers=TRUE" >> vmwindog.vxm
+echo "mks.gl.allowUnsupportedDrivers=TRUE" >> vmwindog.vmx
 ```
 
 ## Virtual disks

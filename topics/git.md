@@ -78,6 +78,8 @@ help -c                                # list all possible configuration keys
 | `diff.submodule`          |       `log`       | convenient submodules log display                  |
 | `status.submodulesummary` |        `1`        | add module changes summary to `status`             |
 | `push.recurseSubmodules`  |    `on-demand`    | automatically push submodules, if required         |
+| `submodule.recurse`       |      `true`       | automatically updates the submodules               |
+
 
 A section may be conditional, although this can also be accomplished per-project:
 

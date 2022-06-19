@@ -1,3 +1,50 @@
+## Sun 19/Jun/2022
+
+- Rust/Gamedev
+  - Rusty Jam
+    - [x] Add/spawn enemies
+    - [x] Add env var to skip main menu
+    - [x] Replace terrain texture with better stubs
+    - [x] Replace enemy texture with better stub
+    - [x] Add player, and minor refactorings
+    - [x] ingame: Disable stub update/teardown logging
+    - [x] ingame: Add move player logic (move camera is a stub)
+    - [x] ingame: Move camera
+    - [x] Add loot stub
+    - [x] Added assets
+    - [x] Change enemy texture
+    - [x] Add Pet stub
+    - [x] Use (two) new assets
+    - [x] Add pet (hook) move with mouse
+    - [x] Add pet target chasing
+    - [x] Split camera-related functions to a `camera_utils.rs` module
+    - [x] Move systems to own module (dir), and global constants too (to file)
+    - [x] Stub pet pick loot
+    - [x] Implement loot transportation
+- Tools
+  - Alarm script
+    - [x] Refactor
+    - [x] Add volume parameter support
+- Open source
+  - Fyrox book
+    - [x] Send PR with streaming option key name fix
+  - Fyrox website
+    - [x] Add Soccer to games list
+  - github-readme-stats
+    - [x] Report bug with commits count
+  - Geet
+    - [x] Recover PR summary (typically, on unexpected interruption)
+  - Rust Game Ports
+    - [x] Idiomatically set the widgets enable state
+    - [x] Don't set the goal widget enable state on every frame
+    - [x] Merge remaining shared imports into prelude
+- Admin
+  - [x] Check out Fish fight and other Open Gamedev School stuff
+  - [x] Search Rust gamedev streams
+- SWE/Practice
+  - [ ] Study MurderUserDungeon source
+    - Fight compilation
+
 ## Sat 18/Jun/2022
 
 - Studies: Rust/Gamedev
@@ -8,6 +55,7 @@
     - [x] Study Heron
 - Rust/Gamedev
   - Rusty Jam
+    - (...)
 
 ## Fri 17/Jun/2022
 
