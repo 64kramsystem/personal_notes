@@ -1,3 +1,17 @@
+## Mon 20/Jun/2022
+
+- Open source
+  - Geet
+    - [x] Don't replace process when opening files
+- Rust/Gamedev
+  - Rusty Jam
+    - [x] Loot locking
+      - [x] Fight algorithm
+    - [x] Loot attachment
+    - [x] Debug Joshi's collision bug
+    - [x] Fix Joshi bug were enemies health was not decreased
+    - [x] When aliens die, they now spawn loot
+
 ## Sun 19/Jun/2022
 
 - Rust/Gamedev
@@ -41,6 +55,8 @@
 - Admin
   - [x] Check out Fish fight and other Open Gamedev School stuff
   - [x] Search Rust gamedev streams
+  - [x] Add Rust Gamedev server
+    - [x] Search Rust Game Ports old announcement
 - SWE/Practice
   - [ ] Study MurderUserDungeon source
     - Fight compilation

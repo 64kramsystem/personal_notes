@@ -28,6 +28,7 @@
       - [Thread-safe data structures (Queue)](#thread-safe-data-structures-queue)
       - [IO.pipe for IPC](#iopipe-for-ipc)
     - [I/O and terminal](#io-and-terminal)
+    - [Zip (rubyzip)](#zip-rubyzip)
     - [Encryption (openssl)](#encryption-openssl)
     - [SecureRandom](#securerandom)
     - [Flock](#flock)
@@ -809,6 +810,19 @@ $stdin.getch
 require 'tty-screen'
 TTY::Screen.width    # => 280; aliases: columns/col
 TTY::Screen.height   # => 51;  aliases: rows/lines
+```
+
+### Zip (rubyzip)
+
+```rb
+# Create a zip archive
+Zip::File.open(archive_filename, create: true) do |zipfile|
+  # Create an archive entry
+  zipfile.get_output_stream(zip_entry_name) do |zip_entry_io|
+    # Stream writes to the archive entry
+    rows.each { |row| zip_entry_io.write(row.to_csv) }
+  end
+end
 ```
 
 ### Encryption (openssl)

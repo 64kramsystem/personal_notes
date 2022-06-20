@@ -294,6 +294,19 @@ impl PartialOrd for SortableFloat {
 }
 ```
 
+In order to hash, if there are no NaN, one can hash the bits!:
+
+```rs
+impl Hash for SortableFloat {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        if self.0.is_nan() {
+            panic!("NaN is not accepted!");
+        }
+        self.0.to_bits().hash(state);
+    }
+}
+```
+
 ### Base I/O (reading/writing)
 
 (there APIs other than the described)

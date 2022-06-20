@@ -25,7 +25,7 @@
     - [Option](#option)
       - [Convenient Option patterns](#convenient-option-patterns)
     - [Result/Error](#resulterror)
-    - [Option/Result common APIs](#optionresult-common-apis)
+    - [Result convient APIs, and interop with Option](#result-convient-apis-and-interop-with-option)
   - [Pattern matching](#pattern-matching)
     - [Error handling](#error-handling)
   - [Unsafe](#unsafe)
@@ -1315,24 +1315,25 @@ opt.copied()
 ```rs
 // map(): map the content, only if it's Some.
 //
-Some(4).map(|n| 2 * n);        // Some(4)
-Some(4).and_then(|n| func(n)); // Same as map(), but does not wrap in Some()
-Some(4).and(val);
-None::<i32>.map(|n| 2 * n);    // None
+opt.map(|n| 2 * n);               // Option -> Option
+opt.and_then(|n| func(n));        // Option -> func(v) (doesn't wrap)
+opt.and(val);                     // Option -> v       (doesn't wrap)
+
+// Boolean patterns
+//
+(a == b).then(|| value)           // bool -> Option
+(a == b).then_some(value)         // bool -> Option (unstable)
+opt.is_some_and(|n| func(n)) {  } // Option -> bool
 
 // Convenient pattern. Companion APIs:
 //
 // - `unwrap_or`:         eagerly evaluated
 // - `unwrap_or_default`: invokes the `default()` (!!)
 //
-opt.unwrap_or_else( |err | {
+opt.unwrap_or_else(|err | {
   println!("Problem parsing arguments: {}", err);
   std::process::exit(1);
 });
-
-// Convenient way to perform boolean tests (unstable)
-//
-if Some(4).is_some_and(|x| x == 4) { /* ... */ }
 ```
 
 ### Result/Error
@@ -1418,7 +1419,7 @@ impl fmt::Display for JsonError {
 impl std::error::Error for JsonError { }
 ```
 
-### Option/Result common APIs
+### Result convient APIs, and interop with Option
 
 Many of the methods are common between `Option` and `Result`.
 
