@@ -26,6 +26,7 @@
     - [Background](#background)
     - [Assets](#assets)
     - [Sprites/rectangles](#spritesrectangles)
+      - [Sprite utils](#sprite-utils)
     - [UI/Layout](#uilayout)
       - [Text](#text)
   - [Input handling](#input-handling)
@@ -1068,6 +1069,13 @@ fn setup(
         })
         .insert(AnimationTimer(Timer::from_seconds(0.1, true)));
 }
+```
+#### Sprite utils
+
+Bevy provides a collision check API:
+
+```rs
+sprite::collide_aabb::collide(a_pos: Vec3, a_size: Vec2, b_pos: Vec3, b_size: Vec2) -> Option<Collision>;
 ```
 
 ### UI/Layout

@@ -288,6 +288,10 @@ Once-off events can be scheduled; mind that they're not second-accurate.
 #
 # `--unit`: optional name; without, a long random name is set
 #
+# WATCH OUT! On some systems, `--on-active` caused, for very mysterious reasons, the timer to fire
+# with a long delay, seemingly because it was resetting. The alternative, in that case, has been to
+# run via fixed time: `--on-calendar=$(date +'%R' -d '+$delay minutes')`
+#
 $ systemd-run --user --on-active=10min --unit=test-example /bin/systemctl suspend
 Running timer as unit: test-example.timer
 Will run service as unit: test-example.service
