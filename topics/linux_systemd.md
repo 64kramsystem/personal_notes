@@ -128,6 +128,10 @@ Requires=network.target
 #
 After=network.target
 
+# Conditional unit execution; use `!` to negate
+#
+ConditionPathExists=!/path/to/file
+
 # Example of waiting for a network device to be online.
 #
 # After=sys-subsystem-net-devices-wlan0.device
