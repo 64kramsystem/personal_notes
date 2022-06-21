@@ -1,3 +1,18 @@
+## Tue 21/Jun/2022
+
+- Rust/Gamedev
+  - Rusty Jam
+    - [x] Fix Joshi's bullets hitbox (consider the distance travelled)
+    - [x] Loot type/drop/attach
+- Open Source
+  - Bundler
+    - [x] Investigate and open issue about improving gems installation (compilation) times
+- Writings: Learn Bevy's ECS by ripping off someone else's project
+  - [x] 07.01-02: Turn-based Games: Wandering/Turn-based
+    - [x] designing_the_states.md: Simplify the design (4 stages instead of 5)
+    - [x] Complete implementing_states_in_bevy.md
+  - [x] Submit to Bevy Assets repo
+
 ## Mon 20/Jun/2022
 
 - Open source

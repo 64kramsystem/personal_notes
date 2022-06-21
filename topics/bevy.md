@@ -1142,15 +1142,21 @@ Input handling can be managed via resources (higher level) and events (lower lev
 
 ### Keyboard
 
+Control is `LControl`/`RControl`.
+
 ```rust
 fn keyboard_input(keys: Res<Input<KeyCode>>) {
   if keys.just_pressed(KeyCode::Space) { /* Space was just pressed */ }
   if keys.just_released(KeyCode::LControl) { /* Left Ctrl was released */ }
   if keys.pressed(KeyCode::W) { /* W is (being) held down */ }
+
+  if keys.any_pressed([LControl, RControl]) { }
 }
 
 fn keyboard_events(mut key_evr: EventReader<KeyboardInput>) {
   use bevy::input::ElementState;
+
+  for key: &KeyCode in keys.get_just_pressed() { }
 
   // Scan codes are provided, but currently not usable.
   //
@@ -1317,12 +1323,8 @@ Don't use `std::time::Instant::now()` to get the time - use `Res<Time>`: due to 
 In order to run with variable timestep:
 
 ```rs
-pub fn paddle_input(mut last_time: Local<f64>, time: Res<Time>, ...) {
-    let last_time_diff = time.seconds_since_startup() - *last_time;
-
-    velocity.x = direction * speed * last_time_diff;
-
-    *last_time = time.seconds_since_startup();
+pub fn paddle_input(time: Res<Time>, ...) {
+    velocity.x = direction * speed * time.delta();
 }
 ```
 

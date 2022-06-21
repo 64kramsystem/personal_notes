@@ -3,7 +3,7 @@
 - [GitHub](#github)
   - [Searches](#searches)
   - [Access tokens](#access-tokens)
-  - [CI actions](#ci-actions)
+  - [Actions (CI)](#actions-ci)
     - [Ruby example](#ruby-example)
     - [Expressions](#expressions)
     - [Variables](#variables)
@@ -34,7 +34,9 @@ Reference: https://docs.github.com/en/authentication/keeping-your-account-and-da
 - Developer settings
 - Personal access tokens
 
-## CI actions
+## Actions (CI)
+
+In order to receive notifications on workflow completion, see the `Actions` in the [account settings](https://github.com/settings/notifications).
 
 ### Ruby example
 

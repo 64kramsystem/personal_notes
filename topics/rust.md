@@ -493,7 +493,6 @@ filter_map(|x| Some(x * 2))  // AWESOME!!! Combines filter and map; None values 
 [r]find(|x| x % 2 == 0)      // Ruby :find/:detect
 find_map(|x| cond(x).then(y)) // Like find(); stops when the block returns Some<T>
 [r]position(|x| x == 2)      // Ruby :[r]index(&block); None if not found
-dedup();                     // Ruby :uniq, with variations `_by(|a, b|)` and `_by_key(|k|)`
 rev()                        // reverse. WATCH OUT, UNINTUITIVE: since it's not inclusive, it goes from 99 to 0.
 nth(n); nth_back()           // nth element (0-based)
 last()
@@ -750,7 +749,6 @@ std::mem::swap(&mut new, &mut col[0])   // Replace an entry with another
 col.resize(new_len, value: T);          // resize (extend/shrink) a vector; T must be Clone
 col.resize_with(new_len, || expr);      // resize, via function (e.g. when T is not Clone)
 
-
 // Splitting/joining
 (sl1, sl2) = coll.split_at(split_point);     // immutable
 (sl1, sl2) = coll.split_at_mut(split_point); // mutable: the two arrays are subarrays of the source
@@ -768,6 +766,10 @@ col.binary_search(&value)               // with variations `_by(||)` and `_by_ke
 col.contains(value)                     // linear search
 col1.starts_with(col2)
 col1.ends_with(col2)
+
+// In order to deduplicate (Ruby :uniq), collect into a HashSet, or sort_unstable() + dedup()
+//
+dedup();                                // Deduplicate consecutive entries, with variations `_by(|a, b|)` and `_by_key(|k|)`
 ```
 
 In order to pick a random element, see [rand crate](#random-with-and-without-rand).

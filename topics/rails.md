@@ -44,7 +44,7 @@ Article.joins(:user).optimizer_hints("JOIN_ORDER(articles, users)").to_sql
 Table aliases require manual AREL:
 
 ```rb
-Model.from(Arel::Table.new(:table_name).alias("alias")).where(...)
+MyModel.from(Arel::Table.new(:table_name).alias("alias")).where(...)
 ```
 
 ### Querying
