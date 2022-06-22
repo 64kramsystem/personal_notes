@@ -1,3 +1,9 @@
+## Wed 22/Jun/2022
+
+- Rust/Gamedev: Rusty Jam
+  - [x] Enemy fire
+  - [x] Destruction of player's extra tiles
+
 ## Tue 21/Jun/2022
 
 - Rust/Gamedev

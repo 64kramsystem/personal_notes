@@ -635,6 +635,10 @@ File.open(@file, 'a') { ... }
 #
 f = File.open(@file, File::CREAT | File::WRONLY | File::APPEND) {... }
 f.close
+
+# Use file modes, e.g. to append. WATCH OUT! They're letters (see https://ruby-doc.org/core-3.1.2/IO.html#method-c-write).
+#
+IO.write @file, @content, mode: @mode
 ```
 
 File locking, via flock:

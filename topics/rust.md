@@ -6,7 +6,7 @@
   - [Data types](#data-types)
     - [Casting/conversions](#castingconversions)
     - [`.` operator](#-operator)
-  - [Closures/Functions](#closuresfunctions)
+  - [Functions/Closures](#functionsclosures)
   - [Collections](#collections)
     - [Iterators](#iterators)
       - [Ranges and `std::iter::Iterator` methods](#ranges-and-stditeriterator-methods)
@@ -363,7 +363,7 @@ v.sort();
 -1.method(2) // => interpreted as `-(1.method(2))`
 ```
 
-## Closures/Functions
+## Functions/Closures
 
 Equivalent of Ruby blocks!
 
@@ -371,6 +371,8 @@ Equivalent of Ruby blocks!
 #[must_use]
 fn retval() -> u32 { 1 };                       // `#[must_use]` causes a warning, if the retval is not used
 retval();                                       // <-- warning!
+
+fn unpack(In(val): In<u32>) { }                 // Unpacking can be performed also at parameter level (!!)
 
 let multiple_of_10 = |x: i32| { x % 10 == 0 };  // yay! braces and type annotation are optional
 (0..100).any(multiple_of_10);                   // double yay!
