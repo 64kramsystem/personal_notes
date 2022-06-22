@@ -150,7 +150,7 @@ Type=oneshot
 StandardOutput=syslog        # default: journal
 StandardError=syslog         # ^^
 SyslogIdentifier=my-service  # defaults to the name of the executed process
-SyslogFacility=daemon        # default
+SyslogFacility=daemon        # default; use `syslog` to send there (and then filter via log service)
 
 # Owner defaults to root, but if user-specific vars like $HOME needs to be set, then set `User=root`.
 User=app

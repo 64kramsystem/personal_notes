@@ -290,16 +290,14 @@ App::new()
 
 Bevy handles resources contention by looking at the system signatures.
 
-A system can run with a preset resource:
+A system can run with a preset (preinitialized) resource:
 
 ```rs
 fn my_system(mut cmd: Commands, config: &MyConfig) { /* ... */ }
 
-App::new()
-    .add_system(move |cmd: Commands| {
-        my_system(cmd, &config);
-    })
-    .run();
+// Use #with_system(), depending on the context
+//
+app.add_system(move |cmd: Commands| { my_system(cmd, &config); })
 ```
 
 #### Stages
@@ -521,18 +519,12 @@ Run criteria allow low-level systems running specification. See: https://bevy-ch
 Systems can be chained, so that the output of one is the input of the next.
 
 ```rust
-fn net_receive(mut netcode: ResMut<MyNetProto>) -> std::io::Result<()> {
-    netcode.receive_updates()?;
-    Ok(())
-}
+fn sender() -> u32 { 42 }
+fn receiver(In(val): In<u32>) { println!("Value: {}", val) }
 
-fn handle_io_errors(In(result): In<std::io::Result<()>>) {
-    if let Err(e) = result { eprintln!("I/O error occurred: {}", e); }
-}
-
-// WATCH OUT! Chaining must be registered:
+// WATCH OUT! 1. Chaining must be registered; 2. The receiver is the second!!
 //
-App::new().add_system(net_receive.chain(handle_io_errors))
+app.add_system(sender.chain(receiver))
 ```
 
 WATCH OUT!
@@ -595,6 +587,10 @@ fn check_zero_health(
         if let Some(player) = player { /* the current entity is the player! */ }
     }
 }
+
+
+// More complex query param
+(With<Collider>, Or<(With<Player>, With<Enemy>)>)
 
 // Components for a specific entity.
 //
@@ -1046,7 +1042,7 @@ commands
     .insert(OtherComponent);
 ```
 
-Sprite sheets:
+Sprite sheets; they're indended to represent multiple states of a sprite, rather than heterogeneous sprites:
 
 ```rs
 fn setup(
@@ -1061,15 +1057,33 @@ fn setup(
 
     let texture_atlas_handle: Handle<TextureAtlas> = texture_atlases.add(texture_atlas);
 
+    let mut sprite_sheet_bundle = SpriteSheetBundle {
+        texture_atlas: texture_atlas_handle,
+        transform: Transform::from_scale(Vec3::splat(6.0)), // optional: scale sprites
+        ..default()
+    };
+
     commands
-        .spawn_bundle(SpriteSheetBundle {
-            texture_atlas: texture_atlas_handle,
-            transform: Transform::from_scale(Vec3::splat(6.0)), // optional: scale sprites
-            ..default()
-        })
+        .spawn_bundle(sprite_sheet_bundle)
         .insert(AnimationTimer(Timer::from_seconds(0.1, true)));
-}
+
 ```
+
+If one wants to use individual textures from an atlas (via index):
+
+```rs
+// Either specify the index while instantiating the SpriteSheetBundle:
+//
+SpriteSheetBundle {
+    sprite: TextureAtlasSprite { index: 1, ..default() },
+    ...
+}
+
+// Or set it separately:
+//
+sprite_sheet_bundle.sprite.index = 1;
+```
+
 #### Sprite utils
 
 Bevy provides a collision check API:
@@ -1359,7 +1373,20 @@ See https://bevy-cheatbook.github.io/features/fixed-timestep.html (and referred 
 ### Timers
 
 ```rs
-Timer::from_seconds(0.1, true) // (duration, repeating)
+app.insert_resource(EnemyBulletTimer(Timer::new(
+    Duration::from_secs_f32(ENEMY_BULLET_INTERVAL), false, // (duration, repeating)
+)))
+
+pub fn spawn_enemy_bullets(
+    mut enemy_bullet_timer: ResMut<EnemyBulletTimer>,
+) {
+    enemy_bullet_timer.0.tick(time.delta());
+
+    if enemy_bullet_timer.0.finished() {
+        // ...
+        enemy_bullet_timer.0.reset();
+    }
+}
 ```
 
 ### Math/Vecs/Quats etc.

@@ -694,6 +694,8 @@ xz -dc dump.sql.xz | cut -c 64- | head -n 10	# cut after N chars of each line
 
 ## tr (translate tokens)
 
+Note that `-` is a metachar, so if needs to be used as char, escape it or put it at the end.
+
 ```sh
 tr -s ' '   		    # [s]queeze (compress) all ' '
 tr -d ' '   		    # [d]elete all ' '

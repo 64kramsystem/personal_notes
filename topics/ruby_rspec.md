@@ -18,6 +18,7 @@
   - [Customizations](#customizations)
     - [Custom matcher](#custom-matcher)
     - [Custom expectation](#custom-expectation)
+  - [Useful stuff](#useful-stuff)
 
 ## Structure examples
 
@@ -336,4 +337,13 @@ end
 include NewExpectation
 
 expect_instance_list(instance, "product").to eql("foo")
+```
+
+## Useful stuff
+
+Stub `Kernel#sleep`:
+
+```rb
+# Stub the enclosing class, in this case, assume the subject.
+expect(subject).to receive(sleep).with(time)
 ```
