@@ -637,7 +637,9 @@ fn reset_health(
 
 #### Change detection
 
-Use query filters:
+WATCH OUT 1-frame lag; for `Added`, [stages](#stages) may be required.
+
+For components, use query filters:
 
 - `Added<T>`: component added to an entity, or entity with it created
 - `Changed<T>`: some as `Added` or component mutably accessed (`DerefMut` access, not necessarily changed; not query only)
@@ -669,7 +671,14 @@ fn debug_new_hostiles(query: Query<(Entity, &Health), Added<Enemy>>) {
 }
 ```
 
-WATCH OUT 1-frame lag; for `Added`, [stages](#stages) may be required.
+For resources, just query on `Res`:
+
+```rs
+fn myfn(res: Res<MyRes>) {
+  let is_changed = res.is_changed();
+  let is_added = res.is_added();
+}
+```
 
 ### World
 
@@ -1144,6 +1153,8 @@ commands.spawn_bundle(text_bundle)
 Update it:
 
 ```rs
+// A more sophisticated approach is to use change detection.
+//
 fn update_scoreboard(scoreboard: Res<Scoreboard>, mut query: Query<(&mut Text, &Scoreboard)>) {
     let (mut text, scoreboard) = query.single_mut();
     text.sections[1].value = format!("{}", scoreboard.score);
@@ -1404,6 +1415,9 @@ vec.normalize_or_zero()      // Convenient - returns a zero vector when zero
 Vec{N}::splat(val)           // Create a Vec with all the components set to val
 Vec3::from((to_player, z))   // Convert Vec2+z to Vec3
 vec2.extend(z)               // Convert Vec2+z to Vec3
+
+// ??? Not in Glam from Bevy 0.7; just use [angle.cos(), angle.sin()]
+Vec2::from_rotation(rads)    // Convert angle to Vec2
 
 Vec{N}::{A}                  // Unit vector in the given axis
 
