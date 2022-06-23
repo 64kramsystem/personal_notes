@@ -17,24 +17,36 @@ Aws::EC2Metadata.new.get("/latest/meta-data/instance-id")
 
 ## Target groups
 
-Find the target group for a given instance id:
+Find all the target group arns:
 
 ```rb
-# Find all the target group arns
-
 target_groups_data, next_page = @lb_client.describe_target_groups
 
 raise "Next page found while calling :describe_target_groups" if next_page
 
 target_group_arns = target_groups_data.target_groups.map(&:target_group_arn)
+```
 
-# Find ther target healths for each target group, and search the matching instance id
+Find ther target healths for each target group, and search the matching instance id:
 
+```rb
 target_group_arns.map do |target_group_arn|
   target_group_health_states = @lb_client.describe_target_health(target_group_arn: target_group_arn).target_health_descriptions
 
   return target_group_arn if target_group_health_states.keys.include?(instance_id)
 end
+```
+
+De/register a target:
+
+```rb
+targets_data = {
+  target_group_arn: target_group_arn,
+  targets: [{id: instance_id}],
+}
+
+# Use #register to register.
+@lb_client.deregister_targets(targets_data)
 ```
 
 ## Waiters
@@ -59,8 +71,15 @@ end
 
 Reference: https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DynamoDB/Client.html#update_item-instance_method.
 
+List all items ("scan"):
+
 ```rb
-# Read an item
+client.scan(table_name: "Music")
+```
+
+Read an item:
+
+```rb
 # Raises an error if the table doesn't exist.
 # Integers can be returned as BigDecimal.
 #
@@ -79,9 +98,11 @@ reponse.to_h == {
     "SongTitle" => "Happy Day",
   },
 }
+```
 
-# Update an item
-#
+Upsert an item:
+
+```rb
 response = client.update_item(
   table_name: "Music",
   expression_attribute_names: {

@@ -1,3 +1,9 @@
+## Thu 23/Jun/2022
+
+- Rust/Gamedev: Rusty Jam
+  - [x] Add scoreboard
+  - [x] Enemy movement
+
 ## Wed 22/Jun/2022
 
 - Rust/Gamedev: Rusty Jam

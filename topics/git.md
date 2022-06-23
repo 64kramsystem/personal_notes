@@ -108,7 +108,12 @@ If an alias starts with `!`, it's a shell commmand. Use bash when:
 - there are parameters involved;
 - and/or dash is not sufficient.
 
-```
+```sh
+# WATCH OUT!! TO VERIFY: Positional paramters must be *explicitly* referenced from position 0.
+# Without `:0`, the first parameter specified is not included.
+#
+test = !bash -c 'echo "${@:0}"'
+
 # Note that without `sh` as first parameter, the positional parameters don't behave as expected.
 # IMPORTANT: doesn't work with filenames with spaces.
 #

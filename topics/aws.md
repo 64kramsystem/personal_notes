@@ -7,6 +7,7 @@
     - [Fileshare/Permissions](#filesharepermissions)
   - [RDS](#rds)
     - [Support stored procedures](#support-stored-procedures)
+  - [DynamoDB](#dynamodb)
 
 ## IAM
 
@@ -72,3 +73,7 @@ WHERE routine_type = 'PROCEDURE'
 -- | ...                               |
 -- +-----------------------------------+
 ```
+
+## DynamoDB
+
+In order to list the content of a table, perform a "scan".
