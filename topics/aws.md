@@ -8,6 +8,8 @@
   - [RDS](#rds)
     - [Support stored procedures](#support-stored-procedures)
   - [DynamoDB](#dynamodb)
+    - [Permissions](#permissions-1)
+    - [TTL](#ttl)
 
 ## IAM
 
@@ -77,3 +79,42 @@ WHERE routine_type = 'PROCEDURE'
 ## DynamoDB
 
 In order to list the content of a table, perform a "scan".
+
+Writes are performed via `put` and `update`, however WATCH OUT!!:
+
+- update doesn't add new columns where it performs an insert
+- put does!
+
+Supported data types:
+
+- `S`: strings
+- `N`: all numbers
+- (...)
+
+References:
+
+- https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/time-to-live-ttl-before-you-start.html
+- https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBMapper.DataTypes.html
+- https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.NamingRulesDataTypes.html
+
+### Permissions
+
+For basic CRUD, give:
+
+- `dynamodb:GetItem`
+- `dynamodb:PutItem`
+- `dynamodb:UpdateItem`
+- `dynamodb:Scan`
+
+They're granular, so `Scan` doesn't allow getting an item.
+
+### TTL
+
+Item expiry needs to be activated; the column must be Number data type, and the value in epoch format.
+
+WATCH OUT!:
+
+- it can take 1 hour for expiry to be actually activated
+- it can take up to 48 hours for an expired item to be deleted; in the meanwhile, searches must explicitly add a condition
+
+There is a TTL preview in the console, but didn't yield any value when tried it.

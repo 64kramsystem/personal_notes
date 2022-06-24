@@ -1,3 +1,10 @@
+## Fri 24/Jun/2022
+
+- Rust/Gamedev: Rusty Jam
+  - [x] Fix crash
+  - [ ] Gameover scene+state management
+    - [ ] Fight center text
+
 ## Thu 23/Jun/2022
 
 - Rust/Gamedev: Rusty Jam
