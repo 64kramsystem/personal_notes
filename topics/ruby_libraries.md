@@ -203,7 +203,7 @@ General APIs/operations:
 @date >> @months; @date << @months                        # Adds/subtracts months to a date (!!)
 @date.next_month(@months=1), @date.prev_month(@months=1)  # More readable; also supports `day`, `year`
 
-@date_time.to_time.to_i                                   # DateTime to Unix time
+@date_time.to_time.to_i                                   # DateTime to Unix time (epoch)
 Time.at(time_i)                                           # Unix time to Time
 
 @date.wday                                                # Sun=0 .. Sat=6

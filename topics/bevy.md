@@ -1390,6 +1390,7 @@ app.insert_resource(EnemyBulletTimer(Timer::new(
 
 pub fn spawn_enemy_bullets(
     mut enemy_bullet_timer: ResMut<EnemyBulletTimer>,
+    time: Res<Time>,
 ) {
     enemy_bullet_timer.0.tick(time.delta());
 

@@ -12,6 +12,7 @@
     - [Control flow/dynamic blocks](#control-flowdynamic-blocks)
   - [State operations](#state-operations)
     - [Move resources from one statefile to another](#move-resources-from-one-statefile-to-another)
+  - [Providers](#providers)
   - [Resources](#resources)
     - [Key pair](#key-pair)
     - [IAM](#iam)
@@ -36,6 +37,7 @@
       - [Objects](#objects)
       - [Lifecycle rules/intelligent tiering](#lifecycle-rulesintelligent-tiering)
     - [Lambda](#lambda)
+    - [DynamoDB](#dynamodb)
     - [Lightsail](#lightsail)
     - [DNS: `aws_route53_zone`](#dns-aws_route53_zone)
     - [Cloudfront: `aws_cloudfront_distribution`, `aws_cloudfront_origin_access_identity`](#cloudfront-aws_cloudfront_distribution-aws_cloudfront_origin_access_identity)
@@ -268,6 +270,10 @@ done
 cd "$project_dest"
 terraform state push remote.tfstate
 ```
+
+## Providers
+
+Use `terraform providers` do display the dependency graph.
 
 ## Resources
 
@@ -1083,6 +1089,28 @@ The zip contains a `/lambda_function.py` file, which contains:
 def lambda_handler(event, context):
     print("value1 = " + event['key1'])
     return event['key1']  # Echo back the first key value
+```
+
+### DynamoDB
+
+```tf
+resource "aws_dynamodb_table" "standby_timers" {
+  name           = "standby_timers"
+  billing_mode   = "PROVISIONED"
+  read_capacity  = 10
+  write_capacity = 10
+  hash_key       = "MyKey"
+
+  attribute {
+    name = "MyKey"
+    type = "S"
+  }
+
+  ttl {
+    enabled = true
+    attribute_name = "ExpiryAttribute"
+  }
+}
 ```
 
 ### Lightsail

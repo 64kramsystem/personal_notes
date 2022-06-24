@@ -1,18 +1,60 @@
 # AWS SDK Ruby v3
 
 - [AWS SDK Ruby v3](#aws-sdk-ruby-v3)
+  - [Responses paging](#responses-paging)
   - [EC2](#ec2)
   - [Target groups](#target-groups)
   - [Waiters](#waiters)
   - [DynamoDB](#dynamodb)
 
+## Responses paging
+
+Many APIs return a [PageableResponse](https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/PageableResponse.html); the options to iterate are:
+
+```rb
+# Automatic (use #flat_map where necessary)
+# Note sure if #each is required, as #map is _not_ overwritten 
+
+result = response.each.map { |page| page.key }
+
+# Manual
+
+result = []
+while response.next_page? do
+  response = response.next_page
+  result << response.key
+end
+```
+
 ## EC2
 
-Find the instance id:
+Find the instance id (from the instance):
 
 ```rb
 require 'aws-sdk-core'
 Aws::EC2Metadata.new.get("/latest/meta-data/instance-id")
+```
+
+Find instances:
+
+```rb
+# Basic filtering, by given tag.
+#
+resp = @ec2_client.describe_instances(filters:[{ name: 'tag-key', values: ['key1', 'key2'] }])
+
+resp == {
+  instance_ids: ["InstanceId"],
+  # ...
+  next_token: "String",
+}
+```
+
+Start instances:
+
+```rb
+resp = client.start_instances({
+  instance_ids: ["i-1234567890abcdef0"],
+})
 ```
 
 ## Target groups
@@ -71,17 +113,29 @@ end
 
 Reference: https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DynamoDB/Client.html#update_item-instance_method.
 
+Numeric items returned are of BigDecimal type.
+
 List all items ("scan"):
 
 ```rb
-client.scan(table_name: "Music")
+resp = client.scan(
+  table_name: "Music"
+  expression_attribute_values: {    # optional
+    ":e" => Time.now.to_i
+  },
+  filter_expression: "Expiry > :e", # ^^optional
+)
+
+resp.items == [
+  [{"Key"=>"foo", "Val"=>0.1656062109e10}]
+]
 ```
 
 Read an item:
 
 ```rb
 # Raises an error if the table doesn't exist.
-# Integers can be returned as BigDecimal.
+# #item is nil if the item is not found.
 #
 response = client.get_item(
   table_name: "Music",
@@ -100,7 +154,21 @@ reponse.to_h == {
 }
 ```
 
-Upsert an item:
+WATCH OUT! See [aws section](aws.md#dynamodb) for differences between put and update (they're both upserts).
+
+Put an item
+
+```rb
+response = client.put_item(
+  table_name: "Music",
+  item: {
+    "Artist" => "Acme Band",
+    "SongTitle" => "Happy Day",
+  },
+)
+```
+
+Update an item:
 
 ```rb
 response = client.update_item(
