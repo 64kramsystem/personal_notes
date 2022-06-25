@@ -1,3 +1,9 @@
+## Sat 25/Jun/2022
+
+- Rust/Gamedev: Rusty Jam
+  - [x] Implement Game over/game cycle
+    - [x] Required some restructurings
+
 ## Fri 24/Jun/2022
 
 - Rust/Gamedev: Rusty Jam
