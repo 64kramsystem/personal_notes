@@ -712,6 +712,7 @@ world.entity_mut(entity)
 
 // Systems with mutable World access are called "exclusive", and block all the other ones; also, accessing
 // World can be incompatible with querying some resources.
+//
 // Exclusive system must be registered with `exclusive_system()`.
 //
 pub fn excl_movement(world: &World) {
@@ -723,9 +724,9 @@ add_system(excl_movement.exclusive_system())
 In order to clear entities/resources:
 
 ```rs
+// Resources can't be easily cleared as of v0.7; see https://github.com/bevyengine/bevy/pull/3212/files
+//
 world.clear_entities();
-// Clear resources; see for future functionality: https://github.com/bevyengine/bevy/pull/3212/files
-for column in world.archetypes.resource_mut().unique_components.values_mut() { column.clear(); }
 ```
 
 ### Commands
