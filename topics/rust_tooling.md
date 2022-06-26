@@ -1,6 +1,7 @@
 # Rust Tooling
 
 - [Rust Tooling](#rust-tooling)
+  - [Warnings](#warnings)
   - [Cargo/Rustup](#cargorustup)
     - [Workspaces](#workspaces)
     - [Visual Studio Code/Rust Analyzer](#visual-studio-coderust-analyzer)
@@ -12,6 +13,15 @@
     - [Cross-compilation](#cross-compilation)
     - [Cargo doc](#cargo-doc)
   - [Rustfmt](#rustfmt)
+
+## Warnings
+
+In order to make all warnings errors, use one of:
+
+- `RUSTFLAGS="--deny warnings"`
+- `#![deny(warnings)]`
+
+There are some disadvantanges; see https://rust-unofficial.github.io/patterns/anti_patterns/deny-warnings.html.
 
 ## Cargo/Rustup
 
@@ -29,8 +39,12 @@ cargo clippy                         # linter
 cargo doc [--open]                   # builds and optionally opens docs for the installed crates
 
 # Build/run options
-
+#
 --features draw_hitboxes
+
+# Exits with error if the project is not formatted
+#
+fmt --all --check
 ```
 
 When a project is run via Cargo, the env variable `CARGO_MANIFEST_DIR` is passed to the binary.

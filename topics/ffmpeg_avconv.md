@@ -185,31 +185,41 @@ ffmpeg -f x11grab -s 1920x1080 -r 10 -i :0.0 -vf scale=1280x800 -c:v libx264 -pr
 ### Build FFmpeg with libfdk-aac support
 
 ```sh
-sudo apt install libfdk-aac-dev libx264-dev
+sudo apt install \
+  libfdk-aac-dev libx264-dev frei0r-plugins-dev libgnutls28-dev libaom-dev libass-dev libmp3lame-dev \
+  libopenjp2-7-dev libvorbis-dev libvpx-dev libwebp-dev libx265-dev ocl-icd-opencl-dev libdrm-dev
 
 git clone https://github.com/FFmpeg/FFmpeg.git
 
 cd FFmpeg
 
-# Optional (choose the version).
-#
-git checkout origin/release/5.0
+latest_release=$(git branch -r | perl -lne 'print $1 if /origin\/release\/([\d.]+)/' | sort -V | tail -n 1)
+git checkout release/"$latest_release"
 
+# Compile minimal version, with some options taken from Ubuntu:
+#
 # `-lpthread`: include pthread library
 # `-lm`: include standard C math library `libm` (see https://stackoverflow.com/q/1033898)
 # --enable-gpl --enable-nonfree: required in order to include also GPL-licensed stuff
 #
+# In order to check how an ffmpeg binary was compiled, run `ffmpeg -version`; switches can be listed via `./configure --help`.
+#
+# Notes:
+#
+# - Not sure if should pass `--disable-filter=resample`.
+# - Not sure if needed: `--extra-libs="-lpthread -lm"`
+#
 ./configure \
-  --extra-libs="-lpthread -lm" \
-  --enable-gpl --enable-nonfree --enable-libfdk-aac --enable-libx264
+  --enable-gpl --enable-nonfree --enable-libfdk-aac --enable-libx264 \
+  --prefix=/usr --toolchain=hardened --libdir=/usr/lib/x86_64-linux-gnu --incdir=/usr/include/x86_64-linux-gnu --arch=amd64 \
+  --enable-libmp3lame --enable-libopenjpeg --enable-opencl --enable-opengl --enable-sdl2 --enable-gnutls --enable-libaom --enable-libass \
+  --enable-libvorbis --enable-libvpx --enable-libwebp --enable-libx265 --enable-libdrm --enable-libx264 --enable-shared
 
 make -j $(nproc)
-
-ls -lh ffmpeg
 ```
 
 Check ffmpeg binary linked libraries:
 
 ```sh
-ldd `which ffmpeg`
+ldd $(which ffmpeg)
 ```
