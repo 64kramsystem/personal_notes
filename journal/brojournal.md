@@ -1,3 +1,20 @@
+## Sun 26/Jun/2022
+
+- Admin
+  - [x] Fork/update jam repo
+  - [x] Search Rust dev streams
+  - [x] Prepare custom compiled FFmpeg
+  - [x] Install, configure and test OBS
+- Open Source
+  - Geet
+    - [x] Automatically add upstream repo on PR creation, if not existing
+- Studies
+  - Bevy Kira plugin
+    - [x] experiment multichannel
+    - [x] investigate channels lifetime (removal?)
+  - Rust
+    - [x] Make warnings errors/discussion
+
 ## Sat 25/Jun/2022
 
 - Rust/Gamedev: Rusty Jam

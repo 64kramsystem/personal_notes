@@ -1076,7 +1076,7 @@ fn setup(
     commands
         .spawn_bundle(sprite_sheet_bundle)
         .insert(AnimationTimer(Timer::from_seconds(0.1, true)));
-
+}
 ```
 
 If one wants to use individual textures from an atlas (via index):
@@ -1564,9 +1564,12 @@ App::new().add_system(bevy::input::system::exit_on_esc_system)
 
 ## `bevy_kira_audio` (audio)
 
-Use the `bevy_kira_audio` crate. WATCH OUT! Must specify the Bevy features, and exclude `bevy_audio` and `vorbis`.
+It's advised to use the `bevy_kira_audio` crate for audio. WATCH OUT!
 
-Single channel:
+- must specify the Bevy features, and exclude `bevy_audio` and `vorbis`;
+- a single audio channel can play multiple sounds;
+- it seems that audio channels are intended to be permanent, since there are no removal APIs;
+- v0.10 has different APIs from v0.9.
 
 ```rs
 // For convenience, a struct with all the sound asset handles can be created, but it's not strictly
