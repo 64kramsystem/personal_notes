@@ -218,7 +218,7 @@ log -- $path                        # search a deleted file (path is relative)
 # Grep search (!); outputs with the grep format
 # This has the advantage of (besides likely performance) searching only files in the index, which avoids cases like symlinks to unindexed files.
 #
-grep [--line-number] $regex         
+grep [--line-number] $regex
 ```
 
 Blaming format:

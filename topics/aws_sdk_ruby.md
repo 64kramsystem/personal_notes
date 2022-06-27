@@ -15,7 +15,7 @@ Many APIs return a [PageableResponse](https://docs.aws.amazon.com/sdk-for-ruby/v
 # Automatic (use #flat_map where necessary)
 # Note sure if #each is required, as #map is _not_ overwritten 
 
-result = response.each.map { |page| page.key }
+result = response.each.map { |page| page.data.my_field }
 
 # Manual
 
@@ -38,12 +38,24 @@ Aws::EC2Metadata.new.get("/latest/meta-data/instance-id")
 Find instances:
 
 ```rb
-# Basic filtering, by given tag.
+# Basic filtering.
 #
-resp = @ec2_client.describe_instances(filters:[{ name: 'tag-key', values: ['key1', 'key2'] }])
+resp = @ec2_client.describe_instances(
+  filters:[
+    { name: 'tag:mytag',           values: %w[tag1] },
+    { name: 'instance-state-name', values: %w[stopped] },
+    # ...
+  ],
+)
 
 resp == {
-  instance_ids: ["InstanceId"],
+  reservations: [
+    instances: [
+      {
+        instance_id: "InstanceId",
+      }
+    ],
+  ],
   # ...
   next_token: "String",
 }
