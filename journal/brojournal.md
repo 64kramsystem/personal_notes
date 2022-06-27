@@ -1,3 +1,15 @@
+## Mon 27/Jun/2022
+
+- Open Source
+  - [x] Review Spicy Lobster projects
+  - [x] Report Ripcord issues
+- Tools
+  - [x] Setup Ripcord
+- Open Source: Geet
+  - [x] PR merge: Add upstream support
+  - [x] PR create: On difference local/remote, offer diff/force push options
+    - [x] A few extensions to GitClient
+
 ## Sun 26/Jun/2022
 
 - Admin

@@ -8,6 +8,7 @@
     - [Per-user](#per-user)
   - [journalctl](#journalctl)
   - [Configuring a service unit](#configuring-a-service-unit)
+      - [Notify unit type](#notify-unit-type)
     - [Overrides](#overrides)
     - [Hooks](#hooks)
   - [Timers (scheduled events)](#timers-scheduled-events)
@@ -80,7 +81,7 @@ IMPORTANT! "Lingering" must be enabled (`loginctl enable-linger`), otherwise, on
 
 ```sh
 journalctl -b -xp 3 [-k]                           # view log for current Boot; with e[x]tra information, only errors (`-p 3` = level); only [k]ernel messages
-journalctl --pager-end --unit=$service.service     # show unit log; `page-end`: go to end
+journalctl --follow --unit=$service.service        # show unit log; use `page-end` to go to end
 journalctl --vacuum-time=1d                        # clean systemd journal (/var/log/journal)
 ```
 
@@ -139,7 +140,9 @@ ConditionPathExists=!/path/to/file
 
 [Service]
 # If ExecStart is specified (and `BusName` not specified), `simple` is implicit.
-# Use `forking` when the process forks (e.g. nmon).
+#
+# Use `forking` when the process forks (e.g. nmon). See the `Notify` section below for automatic forking.
+#
 # Generally prefer `oneshot` to `simple` (see https://stackoverflow.com/a/39050387 and https://trstringer.com/simple-vs-oneshot-systemd-service/#summary).
 #
 Type=oneshot
@@ -197,6 +200,15 @@ UNIT
 
 # now enable and start
 ```
+
+#### Notify unit type
+
+If one wants Systemd to fork the process, then the best is `notify` (see https://askubuntu.com/q/1120023); this requires the program to report success via `systemd-notify --ready`, otherwise, Systemd will kill
+the program after timeout. Use `TimeoutSec=` in order to set the timeout.
+
+`NotifyAccess=` can be left to the default, if the program process itself sends the notification.
+
+References: [Type=](https://www.freedesktop.org/software/systemd/man/systemd.service.html#Type=) and [NotifyAccess=](https://www.freedesktop.org/software/systemd/man/systemd.service.html#NotifyAccess=).
 
 ### Overrides
 

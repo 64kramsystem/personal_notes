@@ -18,10 +18,10 @@
 Permissions can use variables, for example:
 
 ```json
-// If associated to a EC2 profile, this gives the permission to the caller instance.
+// If associated to a EC2 profile, this gives the permission to the caller (self) instance.
 // See: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_variables.html.
 //
-Resource = "arn:aws:ec2:eu-west-1:01234567:instance/${ec2-instance-id}"
+"Resource": "arn:aws:ec2:eu-west-1:01234567:instance/${ec2-instance-id}"
 ```
 
 ## S3
