@@ -242,7 +242,7 @@ Destructure an array in blocks ("unpacking" refers to arrays):
 ```ruby
 # "key:a, b:1, c:2" !!!
 #
-{a: {b: 1, c: 2}}.each do |key, b:, c: nil| # default provided for :c
+{a: {b: 1, c: 2}}.each do |key, b:, c: nil, **| # default provided for :c; ignore other keywords, if any
   puts "key:#{key}, b:#{b}, c:#{c}"
 end
 ```
