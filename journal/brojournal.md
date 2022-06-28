@@ -1,3 +1,21 @@
+## Tue 28/Jun/2022
+
+- Open Source
+  - Punchy
+    - [x] Add GitHub actions CI, with format check
+    - [x] Brief review of Clippy lints
+    - [x] Build discussion
+- Open Source
+  - Rust Gamedev Newsletter
+    - [x] Add Rust Game Ports
+  - Bevy
+    - [x] Send PR for broken documentation link
+  - Rust Game Ports
+    - [x] `Fixes to rusty_roguelike_step.sh`
+- Writings: Learn Bevy's ECS by ripping off someone else's project
+  - [x] Review remaining chapters
+  - [x] 7.3: Events passing
+
 ## Mon 27/Jun/2022
 
 - Open Source

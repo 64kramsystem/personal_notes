@@ -44,7 +44,7 @@ cargo doc [--open]                   # builds and optionally opens docs for the 
 
 # Exits with error if the project is not formatted
 #
-fmt --all --check
+fmt --all -- --check
 ```
 
 When a project is run via Cargo, the env variable `CARGO_MANIFEST_DIR` is passed to the binary.
