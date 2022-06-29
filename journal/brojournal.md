@@ -1,3 +1,17 @@
+## Wed 29/Jun/2022
+
+- Open Source
+  - [x] Rust Game Ports/RustConf Arcade Cabinet: Add pad support
+    - [x] Add in-game pad support to Boing/ggez
+    - [x] Check out pad support in bracket-lib and Fyrox
+- Writings: Learn Bevy's ECS by ripping off someone else's project
+  - [x] 9.2: World
+    - [x] Accessing World, and exclusive systems
+    - [x] Clearing entities
+  - [x] Write conclusion and exercise
+- Admin
+  - [x] Add Boing to list of ggez projects
+
 ## Tue 28/Jun/2022
 
 - Open Source

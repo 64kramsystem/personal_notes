@@ -16,6 +16,7 @@
   - [Timing](#timing)
   - [Events Handling](#events-handling)
     - [Input](#input)
+      - [Pad helpers](#pad-helpers)
     - [Window](#window)
   - [Misc](#misc)
     - [Graphics(-related) info](#graphics-related-info)
@@ -480,9 +481,37 @@ fn mouse_wheel_event(&mut self, _ctx: &mut Context, x: f32, y: f32) { /* ... */ 
 Pad:
 
 ```rust
+// Pad layout: https://docs.rs/ggez/latest/ggez/event/enum.Button.html
+
 fn gamepad_button_down_event(&mut self, _ctx: &mut Context, btn: Button, id: GamepadId) { /* .. */ }
 fn gamepad_button_up_event(&mut self, _ctx: &mut Context, btn: Button, id: GamepadId) { /* .. */ }
 fn gamepad_axis_event(&mut self, _ctx: &mut Context, axis: Axis, value: f32, id: GamepadId) { /* .. */ }
+```
+
+#### Pad helpers
+
+```rs
+pub enum PadNum { Zero, One }
+pub const ANALOG_STICK_TOLERANCE: f32 = 0.1;
+
+pub fn pad_input(context: &Context, pad_number: PadNum, test: fn(&Gamepad) -> bool) -> bool {
+    let mut pad_iter = gamepad::gamepads(context);
+    let pad = match pad_number {
+        PadNum::Zero => pad_iter.next(),
+        PadNum::One => pad_iter.skip(1).next(),
+    };
+    pad.is_some_and(|(_id, pad)| test(pad))
+}
+
+pub fn is_pad_up_pressed(context: &Context, pad_number: PadNum) -> bool {
+    pad_input(context, pad_number, |pad| { pad.value(Axis::LeftStickY) > ANALOG_STICK_TOLERANCE })
+}
+
+pub fn is_fire_button_pressed(context: &Context, pad_number: PadNum) -> bool {
+    // Oddly, on two pads tested, X was mapped to a different button, so we catch both.
+    //
+    pad_input(context, pad_number, |pad| { pad.is_pressed(Button::West) || pad.is_pressed(Button::North) })
+}
 ```
 
 ### Window

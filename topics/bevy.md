@@ -715,8 +715,8 @@ world.entity_mut(entity)
 //
 // Exclusive system must be registered with `exclusive_system()`.
 //
-pub fn excl_movement(world: &World) {
-  if let Some(player) = world.entity(entity).get::<Player>() { /* ... */ }
+pub fn excl_movement(world: &mut World) {
+  if let Some(player) = world.entity(entity).get_mut::<Player>() { /* ... */ }
 }
 add_system(excl_movement.exclusive_system())
 ```
