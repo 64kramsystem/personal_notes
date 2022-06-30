@@ -238,6 +238,9 @@ Watch out! The f64 doesn't support Ord (which is often required); only PartialOr
 Convenient solutions:
 
 ```rs
+// Super-simple, and includes NaN, but be aware of the ordering (https://doc.rust-lang.org/std/primitive.f32.html#method.total_cmp)
+floats.sort_by(f32::total_cmp);
+
 // Simple, if there is no NaN
 floats.sort_by(|a, b| a.partial_cmp(b).unwrap());
 

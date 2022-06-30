@@ -1,3 +1,16 @@
+## Thu 30/Jun/2022
+
+- Studies: Bevy
+  - [x] Review jam project
+- SWE: Practice
+  - Admin
+    - [x] Fight setup Youtube for streaming
+  - Leetcode
+    - [x] Medium    80%: 2 tests, 1 submissions, 12'32", "1008. Construct Binary Search Tree from Preorder Traversal"
+      - Mistakes
+        - Forgot while cycle
+      - Lost large part of the time, because misunderstood the problem
+
 ## Wed 29/Jun/2022
 
 - Open Source

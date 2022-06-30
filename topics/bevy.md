@@ -46,8 +46,9 @@
     - [Display the framerate](#display-the-framerate)
     - [Exit the application](#exit-the-application)
     - [Useful transforms](#useful-transforms)
+  - [General design considerations](#general-design-considerations)
   - [3rd party plugins](#3rd-party-plugins)
-  - [`bevy_kira_audio` (audio)](#bevy_kira_audio-audio)
+    - [`bevy_kira_audio` (audio)](#bevy_kira_audio-audio)
     - [`heron` (easy physics)](#heron-easy-physics)
 
 Notes from the [Bevy Cheat Book](https://bevy-cheatbook.github.io).
@@ -1552,6 +1553,10 @@ App::new().add_system(bevy::input::system::exit_on_esc_system)
 - Custom camera projection: see https://bevy-cheatbook.github.io/cookbook/custom-projection.html.
 - Pan+Orbit camera: see https://bevy-cheatbook.github.io/cookbook/pan-orbit-camera.html.
 
+## General design considerations
+
+- It's easier to understand how entities are composed, by defining and spawining bundles, rather than inserting components individually (`.spawn().insert(...)`).
+
 ## 3rd party plugins
 
 - `bevy_inspector_egui`: display a window with the desired entities and components
@@ -1562,7 +1567,7 @@ App::new().add_system(bevy::input::system::exit_on_esc_system)
 - `benimator`: spritesheets
 - `bevy_rapier`: physics (lower level, via Rapier)
 
-## `bevy_kira_audio` (audio)
+### `bevy_kira_audio` (audio)
 
 It's advised to use the `bevy_kira_audio` crate for audio. WATCH OUT!
 
