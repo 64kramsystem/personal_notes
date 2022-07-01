@@ -159,6 +159,7 @@ List all the views:
 
 ```sql
 SHOW FULL TABLES WHERE Table_type = 'VIEW';
+SELECT * FROM information_schema.TABLES WHERE TABLE_TYPE = 'VIEW';
 
 # Includes the definition and more information; must specify the db, otherwise, also the system views
 # are included.

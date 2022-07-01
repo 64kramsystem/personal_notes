@@ -33,6 +33,7 @@ size_of::<Type>()         // memory occupation of a type
 size_of_val(&v)           // memory occupation of a variable
 unsafe { zeroed::<T>() }  // return zeroed memory for type; it's unsafe because zero(s) may not be a valid value
 forget(var)               // use when transferring ownership to a library; prevents destructors to run
+swap(&mut x, &mut y)      // swaps values at two locations
 ```
 
 ### Unsafe
