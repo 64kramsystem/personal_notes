@@ -1,3 +1,16 @@
+## Fri 01/Jul/2022
+
+- Admin
+  - [x] Fight twitch issue with audio/channels
+- SWE: Practice
+  - Leetcode
+    - [x] Medium    80%: 4 tests, 1 submissions, 23'0", "2079. Watering Plants"
+      - Mistakes
+        - Used capacity on comparison, instead of current water
+        - 1 debug run
+        - Didn't clamp the capacity when adding water
+      - Bad run; multiple mistakes; submitted by accident
+
 ## Thu 30/Jun/2022
 
 - Studies: Bevy

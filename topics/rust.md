@@ -1190,7 +1190,7 @@ if x > 5 {
 // Fancy if->Some(v) else->None
 //
 (a == b).then(|| value)
-(a == b).then_some(value) // unstable
+(a == b).then_some(value)
 
 // If with (multiple) assignment.
 //
