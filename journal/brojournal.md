@@ -1,3 +1,20 @@
+## Sat 02/Jul/2022
+
+- Misc
+  - [x] Check open source game listing websites
+  - [x] Check FFmpeg compile options
+  - [x] Announce mini-book on blog
+- Admin
+  - [x] Setup OBS on laptop
+  - [x] Flush/plan cycle
+- Open Source
+  - Schedule manager
+    - [x] Minor refactorings/improvements
+    - [x] Add whitelist to work lines check
+    - [x] Enforce timestamp when `f` flag (fixed timestamp) is provided
+- Studies: Gamedev/Rust
+  - [ ] Review Fyrox [platformer demo](https://fyrox-book.github.io/fyrox/tutorials/platformer/part1.html)
+
 ## Fri 01/Jul/2022
 
 - Admin
