@@ -206,7 +206,7 @@ git checkout release/"$latest_release"
 #
 # Notes:
 #
-# - Not sure if should pass `--disable-filter=resample`.
+# - Not availabile anymore on 5.0: `--disable-filter=resample`.
 # - Not sure if needed: `--extra-libs="-lpthread -lm"`
 #
 ./configure \
