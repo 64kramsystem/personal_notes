@@ -469,6 +469,8 @@ This crate doesn't have problems with mixing states/stages; it allows proper imp
 - a Stage is added for each (atomic) system set, so that each works on a committed world view
 - ConditionState's are used to manage game state (by filtering system sets)
 
+WATCH OUT! It seems that `before`/`after` can't be added at system level, but only at `ConditionSet` level.
+
 Example of state management:
 
 ```rs
@@ -732,7 +734,7 @@ world.clear_entities();
 
 ### Commands
 
-WATCH OUT!! Commands are flushed at the end of a stage; this includes Resources, that when inserted, can't be queried until the next stage!
+WATCH OUT!! Commands are flushed at the end of a stage; this includes Resources, that when inserted, can't be queried until the next stage! This also applies to entities despawning (which are visible until the end of the stage).
 
 Commands add/remove/update stuff:
 

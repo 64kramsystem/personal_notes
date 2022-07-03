@@ -343,7 +343,7 @@ end
 
 Flags:
 
-- `/m` : match newlines with `.`, like Perl (there's no need for `/s`!)
+- `/m` : match newlines with `.`; WATCH OUT! This is like both Perl `sm`
 - `/x` : ignore whitespace and comments
 - `/u`, `/e`, `/s`, `/n` : force encodings; don't mistake `/s` for the Perl one!
 
@@ -558,8 +558,9 @@ end
 arr = [0, 1, 2]
 Array.new(size) { |i| fx(i) }           # creates an array of the given size, where each element is the result of the block
 
-arr.fill(nil, arr.size...5)             # resize/extend (destructive) in arguably expressive form; returns the array; !!! watch out the `...` syntax !!!
-arr[5] ||= nil                          # other resize/extend, in arguably less expressive form
+arr.fill(nil, arr.size...@newlen)          # resize/extend (destructive) in arguably expressive form; returns the array; !!! watch out the `...` syntax !!!
+arr.fill(arr.size, @add_len) { |i| fx(i) } # other form, for non-copy types
+arr[5] ||= nil                             # other resize/extend, in arguably less expressive form
 
 arr.delete(obj)                         # delete an object matching via `==`; returns self
 arr.delete_at(i)                        # delete an object at index `i`; returns the value deleted, or nil if no deletion
