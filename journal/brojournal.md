@@ -1,3 +1,29 @@
+## Sun 03/Jul/2022
+
+- Project: Schedule Manager
+  - [x] Implement cleaner logic to detect user's unexpected spaces (and similar cases)
+  - [x] Add brackets when adding replan lines, and there aren't enough brackets
+    - Fight odd edge case handling of `String#split`
+      - Review Ruby source (`rb_str_split_m`)
+- Project: Geet
+  - [x] PR creation: Always ensure that the tree is clean
+  - [x] PR Creation: Always run in automated mode
+- Studies: Gamedev
+  - [x] Ask question about debugging unintended changes on ECS systems
+- Open Source: Fish Fight: Punchy
+  - [x] Fix [Throwable Item animation bug](https://github.com/fishfight/punchy/issues/37)
+  - [x] Discuss Punchy/Bevy design
+  - [x] Investigate/fix (workaround) [Investigate/find workaround for attack bug](https://github.com/fishfight/punchy/issues/48)
+  - [ ] Brutal fight with bundles/transforms
+- Admin/Gamedev
+  - [x] Write Erlend about projects and gamedev opinion
+  - [x] Review Open Gamedev (Rust) projects
+- SWE: Practice
+  - Leetcode
+    - [x] Medium    80%: 1 tests, 1 submissions, 0'0", "1382. Balance a Binary Search Tree"
+      - Failed - got to a solution in ~22", and currently not clear why it's rejected
+      - Overly complicated solution
+
 ## Sat 02/Jul/2022
 
 - Misc
