@@ -1,3 +1,19 @@
+## Mon 04/Jul/2022
+
+- Open Source: Openscripts
+  - [x] Move SystemHelper from `fill_labels` to standalone file
+  - [x] fill_dhl_packet_slip: Replace former system_helper require with new one (bug fix)
+- Studies: Gamedev/Rust
+  - [x] Review HECS
+- SWE: Practice
+  - Programming Streams
+    - [David Pedersen](https://www.youtube.com/channel/UCDmSWx6SK0zCU2NqPJ0VmDQ)
+      - [ ] Educational Rust live coding - Building a web app - Part 1
+    - [Veloren Code Reading club](https://www.youtube.com/playlist?list=PLMI4vW_LISAkB0AzfIOvS-W504x3vrXvw)
+      - [x] Download a few streams
+- Studies: Rust
+  - [x] Modularize, clean and make idiomation the Rust Game Ports support macro
+
 ## Sun 03/Jul/2022
 
 - Project: Schedule Manager

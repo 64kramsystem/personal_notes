@@ -749,6 +749,7 @@ fn spawn_player(mut commands: Commands) {
     // Insert commands allow chaining additions, which operate on the same entity.
     // WATCH OUT! insert_bundle() adds all the components of a bundle, while insert(Bundle) inserts the
     // bundle as a single component!
+    // WATCH OUT! If (the type of) a component exists already in the entity on addition, it's overwritten!
     //
     let entity_id = commands.spawn()
         .insert(ComponentA)                 // add a component

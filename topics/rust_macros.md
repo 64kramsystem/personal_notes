@@ -315,6 +315,7 @@ proc-macro = true
 [dependencies]
 quote = "1.0"
 syn = "1.0"
+proc-macro2 = "1.0.40"
 TOML
 
 cat >> main/Cargo.toml << 'TOML'
@@ -351,50 +352,158 @@ Derive macros can't change the passed struct, they can only add other items (e.g
 In order to add new fields (but can also add other items), one must use an attribute macro, which returns a new struct definition.
 
 ```rs
+// Reference: https://discord.com/channels/273534239310479360/981857974089814086
+
+// It's good practice to fully qualify (even with leading `::`) all the types.
+
 use proc_macro::TokenStream;
 use quote::quote;
 use syn::{
     self,
     parse::{self, Parser},
-    parse_macro_input, Data, DataStruct, DeriveInput, Fields,
+    Data, DataStruct, DeriveInput, Fields,
 };
 
-#[proc_macro_attribute]
-pub fn base_actor(args: TokenStream, input: TokenStream) -> TokenStream {
-    let mut ast: DeriveInput = syn::parse(input).unwrap();
-    let _ = parse_macro_input!(args as parse::Nothing); // Make sure no arguments are passed
+type TokenStream2 = proc_macro2::TokenStream;
 
+// The appropriate way to report macro errors is using syn::Error, and converting it into proc_macro2::TokenStream
+// via into_compile_error(), then into TokenStream via into() (see below).
+//
+macro_rules! bail {
+    ( $msg:expr $(,)? ) => {
+        return ::syn::Result::<_>::Err(::syn::Error::new(::proc_macro2::Span::call_site(), &$msg))
+    };
+
+    // Handy rule to get nicely spanned error messages. For example, to reject the struct name being Foo:
+    //
+    //     if input.ident == "Foo" {
+    //         bail! {
+    //             "Use a more creative name!" => &input.ident,
+    //         }
+    //     }
+    //
+    ( $msg:expr => $spanned:expr $(,)? ) => {
+        return ::syn::Result::<_>::Err(::syn::Error::new_spanned(&$spanned, &$msg))
+    };
+}
+
+#[proc_macro_attribute]
+pub fn my_actor_based(args: TokenStream, input: TokenStream) -> TokenStream {
+    let my_actor_based_impl = impl_my_actor_based(args, input);
+
+    // We don't want to panic! Instead, we convert to TokenStream via `into_compile_error().into()`.
+    //
+    my_actor_based_impl
+        .unwrap_or_else(::syn::Error::into_compile_error)
+        .into()
+}
+
+fn impl_my_actor_based(
+    args: impl Into<TokenStream2>,
+    input: impl Into<TokenStream2>,
+) -> ::syn::Result<TokenStream2> {
+    let mut ast: DeriveInput = ::syn::parse2(input.into())?;
+    let _: parse::Nothing = ::syn::parse2(args.into())?;
+
+    add_fields(&mut ast)?;
+
+    let trait_impl = impl_trait(&ast)?;
+
+    Ok(quote!(
+        #ast
+
+        #trait_impl
+    ))
+}
+
+fn add_fields(ast: &'_ mut DeriveInput) -> ::syn::Result<()> {
     if let Data::Struct(DataStruct {
         fields: Fields::Named(fields),
         ..
     }) = &mut ast.data
     {
         let fields_tokens = vec![
-            quote! { img_base: &'static str },
-            quote! { img_indexes: Vec<u8> },
+            quote! { pub img_base: &'static str },
+            quote! { pub img_indexes: Vec<u8> },
+            quote! { pub vpos: Vector2<f32> },
+            quote! { anchor: Anchor },
+            quote! { rectangle_h: Handle<Node> },
         ];
 
         for field_tokens in fields_tokens {
-            fields
-                .named
-                .push(syn::Field::parse_named.parse2(field_tokens).unwrap());
+            // It should be possible to use parse_quote! as a shorthand for parse2(quote!(…)).unwrap(),
+            // but it doesn't work; the indication on the chat seems to have a couple of issues.
+            //
+            let field = syn::Field::parse_named.parse2(field_tokens).unwrap();
+            fields.named.push(field);
         }
+
+        Ok(())
     } else {
-        panic!("Unexpected input (missing curly braces?)");
+        bail!("Unexpected input (missing curly braces?)")
     }
+}
 
-    let name = &ast.ident;
+// Use `Result<ItemImpl>` if you prefer strongly typed (replace `quote!` with `parse_quote!`)
+//
+fn impl_trait(ast: &'_ DeriveInput) -> ::syn::Result<TokenStream2> {
+    #[allow(non_snake_case)]
+    let TyName = &ast.ident;
+    let (intro_generics, forward_generics, maybe_where_clause) = ast.generics.split_for_impl();
 
-    let gen = quote! {
-        #ast
+    Ok(quote!(
+        impl #intro_generics
+            crate::my_actor::MyActor
+        for
+            #TyName #forward_generics
+        #maybe_where_clause
+        {
+            fn vpos(&self) -> Vector2<f32> {
+                self.vpos
+            }
 
-        impl MyTrait for #name {
-            fn print_my_field(&self) {
-                println!("myfield: {}", self.myfield);
+            fn vpos_mut(&mut self) -> &mut Vector2<f32> {
+                &mut self.vpos
+            }
+
+            fn img_base(&self) -> &'static str {
+                self.img_base
+            }
+
+            fn img_indexes(&self) -> &[u8] {
+                &self.img_indexes
+            }
+
+            fn anchor(&self) -> Anchor {
+                self.anchor
+            }
+
+            fn rectangle_h(&self) -> Handle<Node> {
+                self.rectangle_h
             }
         }
-    };
+    ))
+}
+```
 
-    gen.into()
+With this division, the code can be unit tested!:
+
+```rs
+#[test]
+fn basic()
+{
+  let attr_args = quote!();
+  let input = quote!(
+      struct Foo {}
+  );
+  let expected_output = quote!(
+      struct Foo { myfield: ::std::string::String }
+      impl …
+  );
+
+  assert_eq!(
+      impl_my_actor_based(attr_args, input).unwrap().to_string(),
+      expected_output.to_string(),
+  );
 }
 ```
