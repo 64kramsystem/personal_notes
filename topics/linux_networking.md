@@ -174,7 +174,7 @@ ssh-add                                # adds the ssh key password to the authen
 
 openssl rsa -in $private_key -out $private_key_dec # decrypt a key
 ssh-keygen -p -f $private_key                      # encrypt a key (or change passphrase)
-ssh-keygen -t rsa                                  # generate ssh key pair
+ssh-keygen [-t $type] [-O bits=$bits]              # generate ssh key pair (defaults: RSA/3072 bits)
 
 ssh-keyscan -H $address > ~/.ssh/known_hosts                                     # Programmatically add fingerprints to known_hosts
 ssh-keygen -E md5 -lf $public_key                                                # Print public keys fingerprint

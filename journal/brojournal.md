@@ -1,3 +1,13 @@
+## Tue 05/Jul/2022
+
+- Open Source: Fish Fight: Punchy
+  - [x] Investigate and fix crash (#51)
+  - [x] Discuss state machine problem
+- Open Source: Rust Game Ports: Rusty Roguelike
+  - [x] Brutal fight with [reported issue](https://github.com/64kramsystem/rust-game-ports/issues/97)
+    - [x] Ask on channel if the diagnosis is correct
+    - [x] Brief check of the problem in the source code
+
 ## Mon 04/Jul/2022
 
 - Open Source: Openscripts
