@@ -38,13 +38,14 @@
     - [Gem](#gem)
       - [Version comparisons](#version-comparisons)
     - [ERB templates](#erb-templates)
+    - [Rubocop](#rubocop)
     - [GC (garbage collection)](#gc-garbage-collection)
     - [Networking](#networking)
       - [HTTP](#http)
       - [Telnet](#telnet)
       - [SMTP](#smtp)
-    - [Ping (ICMP)](#ping-icmp)
-    - [Convert curl request to Ruby](#convert-curl-request-to-ruby)
+      - [Ping (ICMP)](#ping-icmp)
+      - [Convert curl request to Ruby](#convert-curl-request-to-ruby)
   - [Solargraph](#solargraph)
   - [Databases](#databases)
     - [SQLite 3](#sqlite-3)
@@ -907,6 +908,10 @@ Etc.getpwuid.dir              # Get current user home dir. For generic users, us
 #
 StringIO.new("start_string", File::RDWR | File::APPEND)
 
+# Check size (there's no :empty method in StringIO).
+#
+StringIO.new.size
+
 # WATCH OUT! :puts adds a newline, but chomps the parameter's last trailing newline
 #
 buffer.print "line\n"    # one trailing newline
@@ -982,6 +987,14 @@ If one doesn't use variables, but just `ENV` references (e.g. yaml configfile), 
 erb_template = IO.read(template_file)
 yaml_string = ERB.new(erb_template).result
 YAML.load(yaml_string)
+```
+
+### Rubocop
+
+Disable multiple cops:
+
+```rb
+# rubocop:disable Style/NumericPredicate, Style/ZeroLengthPredicate
 ```
 
 ### GC (garbage collection)
@@ -1111,11 +1124,11 @@ email_text = prepare_email_text(SENDER_EMAIL, RECIPIENT_EMAILS, SUBJECT, BODY, c
 send_email(SENDER_EMAIL, RECIPIENT_EMAILS, email_text, password, cc: CC_EMAILS, bcc: BCC_EMAILS)
 ```
 
-### Ping (ICMP)
+#### Ping (ICMP)
 
 `net/ping` has been removed from the stdlib anymore. Must use a gem or the `ping` unix tool, since the solution proposed on [StackOverflow](https://stackoverflow.com/a/7520485) has inconsistent results.
 
-### Convert curl request to Ruby
+#### Convert curl request to Ruby
 
 See https://jhawthorn.github.io/curl-to-ruby.
 
