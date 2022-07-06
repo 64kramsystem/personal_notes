@@ -1563,6 +1563,7 @@ App::new().add_system(bevy::input::system::exit_on_esc_system)
 ## 3rd party plugins
 
 - `bevy_inspector_egui`: display a window with the desired entities and components
+- `bevy_mod_debugdump`: display a scheduler graph
 - `bevy_ecs_tilemap`: for conveniently/efficiently handling tilemaps
 - `bevy_ecs_ldtk`: specialized `bevy_ecs_tilemap` for LDTK
 - `leafwing_input_manager`: more advanced input
