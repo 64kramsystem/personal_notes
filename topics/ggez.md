@@ -10,7 +10,7 @@
     - [Sprites batching](#sprites-batching)
   - [Screen](#screen)
     - [Graphics configuration](#graphics-configuration)
-    - [Viewport](#viewport)
+    - [Viewport (/add borders)](#viewport-add-borders)
     - [Canvas](#canvas)
   - [Audio/Sound](#audiosound)
   - [Timing](#timing)
@@ -284,16 +284,17 @@ Fullscreen/windowed, and resizability:
 ```rust
 enum conf::FullscreenType {
     Windowed,
-    True,     // also it allows us to set different resolutions.
+    True,     // also it allows us to set different resolutions (may not work well)
     Desktop,  // modern preference; plays nicer with multiple monitors.
 }
 
 ggez::graphics::set_fullscreen(ctx, fullscreen_type)?;
 
 context_builder
+    // watch out, this is not .window_setup()!
     .window_mode(
         conf::WindowMode::default()
-            .fullscreen_type(conf::FullscreenType::Windowed)
+            .fullscreen_type(conf::FullscreenType::Desktop)
             .vsync(true) // default: true
             .resizable(true)
     )
@@ -329,12 +330,51 @@ context_builder
     .backend(backend)
 ```
 
-### Viewport
+### Viewport (/add borders)
 
 The `set_screen_coordinates()` function sets the viewport; this implies that if the window size is the same, and the viewport size increases, the image drawn gets smaller!
 
 ```rust
 println!("Viewport size: {:?}", graphics::screen_coordinates(ctx));
+```
+
+Add borders:
+
+```rs
+// (It's not confirmed whether this is the simplest procedure)
+
+// From the current size, we get the ratio of the screen. Assumes that on initalization,
+// `conf::FullscreenType::Desktop` was set, but no size (so that the current display size is set).
+//
+let (drawable_width, drawable_height) = ggez::graphics::drawable_size(context);
+
+let (new_drawable_width, new_drawable_height) =
+    if drawable_width / drawable_height > WINDOW_WIDTH / WINDOW_HEIGHT {
+        (
+            WINDOW_HEIGHT * (drawable_width / drawable_height),
+            WINDOW_HEIGHT,
+        )
+    } else {
+        (
+            WINDOW_WIDTH,
+            WINDOW_WIDTH * (drawable_height / drawable_width),
+        )
+    };
+
+ggez::graphics::set_drawable_size(context, new_drawable_width, new_drawable_height)?;
+
+let tot_border_width = new_drawable_width - WINDOW_WIDTH;
+let tot_border_height = new_drawable_height - WINDOW_HEIGHT;
+
+ggez::graphics::set_screen_coordinates(
+    context,
+    Rect::new(
+        -tot_border_width / 2.,
+        -tot_border_height / 2.,
+        new_drawable_width,
+        new_drawable_height,
+    ),
+)
 ```
 
 It's also possible to draw upside down:

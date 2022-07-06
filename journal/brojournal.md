@@ -1,3 +1,21 @@
+## Wed 06/Jul/2022
+
+- Project: Schedule Manager
+  - [x] Fixed timestamp: Improve error message
+  - [x] Fixed timestamp: Allow no dot/spaces between time and description
+- Project: Fish Fight: Punchy
+  - [x] Discuss Bevy state handling
+- Writings
+  - [x] Article "A Rust game developer enters a bar"
+- Project: Rust Game Ports
+  - Rusty Roguelike
+    - [x] Apply and test [state handling solution](https://discord.com/channels/691052431525675048/742884593551802431/956147241435955203)
+  - Boing
+    - [x] Fight find ggez procedure to change the logical size
+- Open source: ggez
+  - [x] Ask question about idiomatic procedure to change the logical size
+  - [x] File issue about broken link
+
 ## Tue 05/Jul/2022
 
 - Open Source: Fish Fight: Punchy

@@ -673,6 +673,11 @@ resource "aws_instance" "first_instance" {
   #
   iam_instance_profile = aws_iam_role.demo_role.id
 
+  root_block_device {
+    volume_size = 64
+    volume_type = "gp3" # As of Jul/2022, defaults to gp2, which is an outdated choice
+  }
+
   # Changes force replacement. Don't forget to add a terminating newline if/when creating the
   # instance via console.
   #
