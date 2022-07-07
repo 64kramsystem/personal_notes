@@ -1,3 +1,15 @@
+## Thu 07/Jul/2022
+
+- SWE: Practice
+  - Programming Streams
+    - [David Pedersen](https://www.youtube.com/channel/UCDmSWx6SK0zCU2NqPJ0VmDQ)
+      - [ ] Educational Rust live coding - Building a web app - Part 1
+- Open Source
+  - [x] Open Gamedev meeting
+- Studies: Gamedev/CS
+  - [ ] Game Programming Algorithms and Techniques
+    - [ ] 7. Physics
+
 ## Wed 06/Jul/2022
 
 - Project: Schedule Manager
@@ -64,7 +76,7 @@
   - [x] Review Open Gamedev (Rust) projects
 - SWE: Practice
   - Leetcode
-    - [x] Medium    80%: 1 tests, 1 submissions, 0'0", "1382. Balance a Binary Search Tree"
+    - [ ] Medium    80%: 1 tests, 1 submissions, 0'0", "1382. Balance a Binary Search Tree"
       - Failed - got to a solution in ~22", and currently not clear why it's rejected
       - Overly complicated solution
 
