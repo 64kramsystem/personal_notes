@@ -1,3 +1,25 @@
+## Fri 08/Jul/2022
+
+- Studies: Rust
+  - [x] Investigate `Vec#set_len()` assert not invoked/compiled
+- Open Source: Punchy
+  - [x] Review next milestone issues, PRs etc.
+- Projects: Schedule Manager
+  - [x] Fix: On fixed timestamp, the time was not copied to the new line
+- Programming Streams
+  - [David Pedersen](https://www.youtube.com/channel/UCDmSWx6SK0zCU2NqPJ0VmDQ)
+    - [ ] Educational Rust live coding - Building a web app - Part 1
+- SWE: Practice
+  - Publish latest article in Reddit
+  - Leetcode
+    - [x] Medium    80%: 5 tests, 3 submissions, 22'00", "2330. Valid Palindrome IV"
+      - Mistakes
+        - [x] Misunderstood problem
+        - [x] Typo
+        - [x] Not thought edge case
+        - [x] Incorrect thinking of cases
+      - Disaster
+
 ## Thu 07/Jul/2022
 
 - SWE: Practice
