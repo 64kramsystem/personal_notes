@@ -268,7 +268,7 @@ log --merges v0.1.8...v0.1.9                           # search merges between t
 # `--ws-error-highlight=new,old` colors the removed trailing whitespace (which is not displayed by default (!!))
 
 show rev[:file]                                 # diff rev^..rev
-show -m $merge                                  # show the full diff of the parents of a merge
+show -m $merge                                  # show the full diff of the parents of a merge (short form of `--diff-merges=m`)
 
 diff [--cached]                                 # non committed files; [--cached] files in the index
 diff $commit [$commit2]                         # can be used to show a merge diff!

@@ -44,6 +44,7 @@ Image (raw) path: `https://github.com/64kramsystem/vscode-markdown-code-blocks-a
 ### Link references
 
 - Project root: prefix the path with `/../../` (see [Stack Overflow](https://stackoverflow.com/a/40440270/210029))
+  - commit SHAs don't autoreference; it's not clear if there is any way (besides using a rel/abs URL)
 - Current path: use the bare filename, without prefixes; the (dynamically generated) prefix `/blob/$current_branch/` will be automatically added
 
 ## Releases
