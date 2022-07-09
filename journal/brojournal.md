@@ -1,3 +1,13 @@
+## Sat 09/Jul/2022
+
+- Projects
+  - Rust Game Ports: Rusty Roguelike
+    - [x] Fix state management
+- Writings
+  - Learn Bevy's ECS by ripping off someone else's project
+    - [x] Update states management chapter with correct design
+    - [x] Explain difference between `run_in_state()` and `run_if_resource_equals()`
+
 ## Fri 08/Jul/2022
 
 - Studies: Rust
