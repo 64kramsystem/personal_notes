@@ -1,3 +1,13 @@
+## Sun 10/Jul/2022
+
+- Open Source: Rust Analyzer
+  - [x] Investigate and report [bug on type inference](https://github.com/rust-lang/rust-analyzer/issues/12738)
+- Open Source: Punchy
+  - [x] Direct ingame start functionality
+  - [x] Limit players distance
+  - [x] Implement left movement boundary
+  - [x] Implement a correct multiplayer camera movement
+
 ## Sat 09/Jul/2022
 
 - Projects

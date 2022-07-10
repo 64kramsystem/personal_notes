@@ -503,7 +503,7 @@ next()                       // Ruby :first
 take_while(||)               // stops iteration, by returning always false after the first false
 skip_while(||)               // start iteration on the first true, returning all the others
 enumerate()                  // iterator (index, &value) (Ruby :each_with_index)
-zip(iter)                    // zip two arrays (iterators)!!!
+zip(iter)                    // zip two arrays (iterators); stops at the shortest iterator
 partition(|x| x % 2 == 0)    // divide a collection in two
 drain(range)                 // removes and returns the elements in the range
 fuse()                       // ensures that after the first None, any other iteration returns None
