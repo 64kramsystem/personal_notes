@@ -1,3 +1,13 @@
+## Mon 11/Jul/2022
+
+- Admin
+  - [x] Prepare and send talk submission to EuroRust
+- Open Source: Punchy
+  - [x] Review recent PRs
+  - [x] Open issue about enemy energy bars
+  - [x] Refactor fighters spawning
+  - [x] Study attacks logic
+
 ## Sun 10/Jul/2022
 
 - Open Source: Rust Analyzer
