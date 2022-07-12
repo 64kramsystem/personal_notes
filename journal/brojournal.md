@@ -1,3 +1,13 @@
+## Tue 12/Jul/2022
+
+- Studies: Rust
+  - [x] Find out how to override Cargo global linker/rustflags settings
+- Open Source: Rust Analyzer
+  - [x] Follow up [bug on type inference](https://github.com/rust-lang/rust-analyzer/issues/12738)
+    - Investigate various rust versions/toolchains
+- Open Source: Punchy
+  - [x] Reviews and discussions
+
 ## Mon 11/Jul/2022
 
 - Admin

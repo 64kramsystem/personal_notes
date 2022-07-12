@@ -23,6 +23,17 @@ In order to make all warnings errors, use one of:
 
 There are some disadvantanges; see https://rust-unofficial.github.io/patterns/anti_patterns/deny-warnings.html.
 
+A convenient cargo clippy scan is:
+
+```sh
+# -W clippy::correctness : set warnings to correctness only
+# -D warnings            : deny warnings
+#
+cargo clippy -- -W clippy::correctness -D warnings
+```
+
+Default checks described [here](https://github.com/rust-lang/rust-clippy#clippy).
+
 ## Cargo/Rustup
 
 Base operations:
@@ -205,7 +216,7 @@ The attribute can be applied to methods, statements, etc.
 
 ### Toolchain
 
-Set the specified toolchain for the current project:
+Set the specified toolchain for the current project (directory):
 
 ```sh
 # Using rustup; this is stored in rustup's config.
@@ -266,12 +277,19 @@ Bevy hello world: 8.75" -> 1.25" (!!).
 # Rust perf book chapter [here](https://nnethercote.github.io/perf-book/compile-times.html).
 #
 # Can be verified via `readelf -p .comment target/debug/$binary` (will show `mold...`).
+#
+# In order to override the `rustflags` in a project, set `rustflags` in the project cargo config.
 
 cat >> ~/.cargo/config.toml << 'TOML'
 
 [target.x86_64-unknown-linux-gnu]
 linker = "/usr/bin/clang"
-rustflags = ["-Clink-arg=-fuse-ld=/path/to/mold", "-Zshare-generics=y"]
+
+[build]
+rustflags = [
+  "-Clink-arg=-fuse-ld=/home/saverio/local/mold/bin/mold",
+  "-Zshare-generics=y",
+]
 TOML
 ```
 
