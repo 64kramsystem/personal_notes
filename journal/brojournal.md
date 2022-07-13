@@ -1,3 +1,16 @@
+## Wed 13/Jul/2022
+
+- Open Source: Punchy
+  - [x] Implement clippy/Github actions caching
+    - [x] Discussion Clippy/build time
+    - [x] Implement Clippy job
+    - [x] Implement build/check caching
+  - [x] Reviews
+- Open Source: Punchy
+  - [ ] [First audio pass](https://github.com/fishfight/punchy/issues/55)
+    - [ ] Implement base support, with enemy audio effects
+      - Fight problem with assets loader
+
 ## Tue 12/Jul/2022
 
 - Studies: Rust

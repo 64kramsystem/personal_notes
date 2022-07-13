@@ -63,8 +63,8 @@ When a project is run via Cargo, the env variable `CARGO_MANIFEST_DIR` is passed
 Configuration file example, with explanation of some options:
 
 ```toml
-# Enable nightly features; `strip` is on 1.46
-cargo-features = ["strip"]
+# Enable nightly features
+cargo-features = ["myfeature"]
 
 [package]
 name = "rust"

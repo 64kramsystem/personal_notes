@@ -1626,7 +1626,7 @@ fn play_channel_1(
 ) {
     // Set (and store) the volume.
 
-    let source_h = asset_server.load("sounds/01.ogg");
+    let source_h: Handle<AudioSource> = asset_server.load("sounds/01.ogg");
     channel_1_state.volume = 0.7;
     channel1.set_volume(channel_1_state.volume);
     channel1.play(source_h);
