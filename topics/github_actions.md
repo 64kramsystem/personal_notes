@@ -10,8 +10,11 @@
     - [Cancel existing actions for the same PR (branch)](#cancel-existing-actions-for-the-same-pr-branch)
     - [tmate debuggin'!](#tmate-debuggin)
     - [Minimal conditional execution](#minimal-conditional-execution)
+    - [Run command (e.g. install package)](#run-command-eg-install-package)
     - [Ruby generic tasks](#ruby-generic-tasks)
-    - [Rust CI](#rust-ci)
+  - [Preset CIs](#preset-cis)
+    - [Ruby](#ruby)
+    - [Rust](#rust)
 
 ## Actions (CI)
 
@@ -72,40 +75,9 @@ In order to set and read variables across jobs, can do the following:
 
 WATCH OUT!!! Caching is not shared across branches (PRs), but it is for the same branch, and from master to branches. In order to share caches across all the branches, use a job that builds them on the main branch.
 
-Base caching:
+Examples: https://github.com/actions/cache/blob/main/examples.md.
 
-```yml
-# Put this in the PRs workflow
-# Will automatically run also after the job (to cache the data).
-#
-- uses: actions/cache@v3
-  with:
-    path: |
-      ~/.cargo/registry
-      ~/.cargo/git
-      target
-    key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-
-# Put (something like) this in a/the master workflow
-#
-on:
-  push:
-    branches:
-      - master
-jobs:
-  build_ruby_cache:
-    name: Build Ruby cache
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: ruby/setup-ruby@v1
-      with:
-        bundler-cache: true
-```
-
-Manual Ruby Bundler caching is discouraged (as it's not trivial); see the [Ruby example](#ruby-generic-tasks).
-
-Other examples: https://github.com/actions/cache/blob/main/examples.md.
+See also [Preset CIs](#preset-cis) in this document.
 
 ## Examples
 
@@ -150,6 +122,13 @@ jobs:
     - name: Run Shellcheck
       if: env.RUN_CURRENT_SUITE == 1
       run: script/ci/run_shellcheck.sh
+```
+
+### Run command (e.g. install package)
+
+```yml
+- name: Install Alsa dev library
+  run: sudo apt install libasound2-dev
 ```
 
 ### Ruby generic tasks
@@ -236,31 +215,109 @@ For caching, use the specific action:
     bundler-cache: true
 ```
 
-### Rust CI
+## Preset CIs
 
-Format/Clippy checks:
+### Ruby
 
 ```yml
+# Master workflow
+
+on:
+  push:
+    branches:
+      - master
 jobs:
-  fmt:
+  build_ruby_cache:
+    name: Build Ruby cache
     runs-on: ubuntu-latest
-    name: Formatting
     steps:
-      - uses: actions/checkout@v3
-      - name: Check Rust formatting
-        uses: actions-rs/cargo@v1
+    - uses: actions/checkout@v3
+    - uses: ruby/setup-ruby@v1
+      with:
+        bundler-cache: true
+
+# PR Workflow
+
+# Will automatically run also after the job (to cache the data).
+- uses: ruby/setup-ruby@v1
+  if: env.RUN_CURRENT_SUITE == 1
+  with:
+    bundler-cache: true
+```
+
+Manual Ruby Bundler caching is discouraged (as it's not trivial); see the [Ruby example](#ruby-generic-tasks).
+
+### Rust
+
+Format/Clippy checks (with caching). WATCH OUT! For unclear reasons, this setup causes Clippy to check also dependencies (!).
+
+```yml
+# Master workflow
+
+name: Build caches
+
+on:
+  push:
+    branches:
+      - master
+jobs:
+  # Watch out! Clippy (cache) data is shared with build data, but it's not the same.
+  # In order to cache build, add a separate job (or extend this).
+  build_clippy_cache:
+    name: Build Clippy cache
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install dev packages
+      run: sudo apt install libasound2-dev libudev-dev
+    - uses: actions/checkout@v3
+    - uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          target/
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+    - uses: actions-rs/cargo@v1
+      with:
+        command: clippy
+
+# PR Workflow
+
+name: CI
+
+on:
+  pull_request:
+
+jobs:
+  check_formatting:
+    runs-on: ubuntu-latest
+    name: Check Rust formatting
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/cargo@v1
         with:
           command: fmt
           args: --all -- --check
-  # To improve: cache installation
-  clippy:
+  clippy_correctness_checks:
     runs-on: ubuntu-latest
-    name: Linting
+    name: Clippy correctness checks
     steps:
+      - name: Install Alsa dev library
+        run: sudo apt install libasound2-dev libudev-dev
       - uses: actions/checkout@v3
-      - name: Install Clippy
-        run: rustup component add clippy
-      - name: Run Clippy
-        run: cargo clippy
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: -- -W clippy::correctness -D warnings
 ```
-
