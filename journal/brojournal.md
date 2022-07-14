@@ -1,3 +1,8 @@
+## Thu 14/Jul/2022
+
+- Open Source: Punchy
+  - [x] [First audio pass](https://github.com/fishfight/punchy/issues/55)
+
 ## Wed 13/Jul/2022
 
 - Open Source: Punchy

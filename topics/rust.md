@@ -1329,6 +1329,10 @@ opt.and(val);                     // Option -> v       (doesn't wrap)
 (a == b).then_some(value)         // bool -> Option (unstable)
 opt.is_some_and(|n| func(n)) {  } // Option -> bool
 
+// "is_none or equality_condition" is not simple; this is a reasonable approach.
+opt.unwrap_or(value) == value
+opt.unwrap_or(impossible_value) != value
+
 // Convenient pattern. Companion APIs:
 //
 // - `unwrap_or`:         eagerly evaluated
