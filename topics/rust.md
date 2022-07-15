@@ -498,7 +498,7 @@ find_map(|x| cond(x).then(y)) // Like find(); stops when the block returns Some<
 rev()                        // reverse. WATCH OUT, UNINTUITIVE: since it's not inclusive, it goes from 99 to 0.
 nth(n); nth_back()           // nth element (0-based)
 last()
-take(n); skip(n)             // iterator taking/skipping the first n elements
+take(n); skip(n)             // iterator taking/skipping the first n elements; use nth() if choosing only one element
 next()                       // Ruby :first
 take_while(||)               // stops iteration, by returning always false after the first false
 skip_while(||)               // start iteration on the first true, returning all the others

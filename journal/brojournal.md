@@ -1,3 +1,15 @@
+## Fri 15/Jul/2022
+
+- Open Source: ggez
+  - [x] Investigate and [report](https://github.com/ggez/ggez/issues/1065) bug with ggez example
+  - [x] Brutal fight with fullscreen modes
+- Projects: Rust Game Ports
+  - [x] Minor cleanups to Boing
+- Open Source: Punchy
+  - [x] Apply review notes to [First audio pass](https://github.com/fishfight/punchy/issues/55)
+  - [x] Review and discuss projects
+  - [x] Fix panics on players death #98
+
 ## Thu 14/Jul/2022
 
 - Open Source: Punchy
