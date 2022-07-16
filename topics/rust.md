@@ -291,7 +291,7 @@ let bool_as_int = true as i32;      // true: 1, false: 0
 let int_as_bool = 1 as bool;        // 1: true, 0: false, other: !!undefined!!
 ```
 
-For static variables, see [static section](#staticglobal-variables-lazy_static-once_cell-thread_local)
+For static variables, see [static section](rust_libraries.md#staticglobal-variables-lazy_static-once_cell-thread_local)
 
 Number-related casts/operations:
 
