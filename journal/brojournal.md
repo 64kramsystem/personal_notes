@@ -1,3 +1,14 @@
+## Sat 16/Jul/2022
+
+- Open Source: Punchy
+  - [x] [First audio pass](https://github.com/fishfight/punchy/issues/55)
+    - [x] Change the two music tracks
+  - [x] Add PlayerIndex component (to PlayerBundle) #81
+    - [x] Discussion
+  - [x] Remove (manual) camera panning #61
+- Studies: Rust
+  - [x] Try 1.63+ Mutex/RwLock, and update notes
+
 ## Fri 15/Jul/2022
 
 - Open Source: ggez

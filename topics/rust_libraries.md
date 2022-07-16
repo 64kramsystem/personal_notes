@@ -1280,9 +1280,7 @@ use demonstrate::demonstrate;
 //
 use std::sync::Mutex;
 unsafe impl Send for MyInterface {}
-lazy_static! {
-  static ref INTERFACE: Mutex<MyInterface> = Mutex::new(MyInterface::init("test"));
-}
+static INTERFACE: Mutex<MyInterface> = Mutex::new(MyInterface::init("test"));
 
 demonstrate! {
   // Not needed in this case; here for reference.
@@ -1458,37 +1456,13 @@ asserting(&"test condition").that(&1).is_equal_to(&2);
 
 ### Static/global variables (`lazy_static`, `once_cell`, `thread_local!`)
 
-Static variables can be defined inside a function (c-style) or at the root level; they need a constant expression/etc. They are unsafe when mutable. The difference from const is that they're associated only one memory location.
+Static variables can be defined inside a function (c-style) or at the root level; they need a const expression. They are unsafe when mutable. The difference from const is that they're associated with only one memory location.
 
 ```rust
 static HELLO_WORLD: u32 = 1000;
 ```
 
-Global variables; also, allows initializing static variables with any function.
-
-The simplest built-in solution, if supported by the architecture, is using [atomics](rust.md#atomic-primitive-type-wrappers); `Mutex`es are currently (May/2022) not supported, since `Mutex` is not const.
-
-More sophisticated solutions, require crates:
-
-```rust
-lazy_static::lazy_static! {
-  static ref HASHMAP: HashMap<u32, &'static str> = {
-    let mut m = HashMap::new();
-    m.insert(0, "foo");
-    m
-  };
-}
-```
-
-In order to mutably access, a `Mutex` (or `RWLock`) needs to be wrapped around.
-
-The crate `once_cell` can also be used (it may be merge in stdlib in the future).
-
-```rust
-static ARRAY: Lazy<Mutex<Vec<u8>>> = Lazy::new(|| Mutex::new(vec![]));
-```
-
-In unstable there is `SyncLazy`.
+Vanilla mutable static vars are unsafe; the safe alternatives are using [atomics](rust.md#atomic-primitive-type-wrappers) (if the architecture supports it) or wrapping with a `Mutex`/`RwLock` (both Rust 1.63+).
 
 Thread-local variables:
 
