@@ -245,7 +245,7 @@ More sophisticated profiling (see: https://blog.rust-lang.org/inside-rust/2020/0
 cargo install --git https://github.com/rust-lang/measureme crox flamegraph summarize
 
 rm -f *.mm_profdata
-
+# WATCH OUT!! This replaces the rustflags; if the linker is customized, it must be added.
 RUSTFLAGS=-Zself-profile cargo build
 
 for f in *.mm_profdata; do

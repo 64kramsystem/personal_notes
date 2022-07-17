@@ -387,6 +387,11 @@ perf record -e sched:sched_stat_sleep,sched:sched_switch,sched:sched_process_exi
 perf report --thread --stdio
 perf report --stdio --no-call-graph --tid=mytid --sort comm
 
+# Convenient display; uses `inferno` crate.
+# Possibly, can use `https://github.com/flamegraph-rs/flamegraph`.
+#
+perf script | inferno-collapse-perf | inferno-flamegraph > rustc.svg
+
 # Terminate, with data saving.
 #
 kill -INT $(pgrep perf)
