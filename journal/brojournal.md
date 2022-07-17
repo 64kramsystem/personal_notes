@@ -1,3 +1,10 @@
+## Sun 17/Jul/2022
+
+- Open Source: ggez
+  - [x] Test issue again and report
+- Open Source: Punchy
+  - [ ] Brutal fight slow compile problem
+
 ## Sat 16/Jul/2022
 
 - Open Source: Punchy
