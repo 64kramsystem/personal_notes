@@ -233,7 +233,7 @@ The `rust-toolchain` is not read outside a workspace (ie. directory including it
 
 ### Build times (profile/improve)
 
-Profile build; Graph with breakdown by crate; very simple and builtin:
+Profile build via graph with breakdown by crate (simple and builtin):
 
 ```sh
 cargo build --timings
@@ -263,11 +263,9 @@ for f in *.mm_profdata; do
 done
 ```
 
-Improve build times:
+Convenient configuration with fast(er) build times and fast(er) runtime. Setting options in `~/.cargo/config.toml` is confusing, since options override is not intuitive (e.g. `rustflags` must go in the `[build]` table, not in `[target...], otherwise it's not overridden in project-level cargo configs).
 
-Bevy hello world: 8.75" -> 1.25" (!!).
-
-```sh
+```toml
 # The option "-Zshare-generics=y" is available only in nightly.
 #
 # The lld linker is considerably faster than the Rust one; the "mold" linker is even faster.
@@ -276,21 +274,25 @@ Bevy hello world: 8.75" -> 1.25" (!!).
 # Perf tests [here](https://docs.near.org/docs/community/contribute/contribute-nearcore).
 # Rust perf book chapter [here](https://nnethercote.github.io/perf-book/compile-times.html).
 #
-# Can be verified via `readelf -p .comment target/debug/$binary` (will show `mold...`).
-#
-# In order to override the `rustflags` in a project, set `rustflags` in the project cargo config.
-
-cat >> ~/.cargo/config.toml << 'TOML'
+# Mold linking can be verified via `readelf -p .comment target/debug/$binary` (will show `mold...`).
 
 [target.x86_64-unknown-linux-gnu]
 linker = "/usr/bin/clang"
-
-[build]
 rustflags = [
   "-Clink-arg=-fuse-ld=/home/saverio/local/mold/bin/mold",
   "-Zshare-generics=y",
 ]
-TOML
+
+# WATCH OUT!! While generally, the impact on compilation times is negligible, in some cases this is
+# considerably slower than opt-level=0 (the default).
+# A middle ground is opt-level=1 + lto=false.
+#
+[profile.dev]
+opt-level = 1
+
+[profile.dev.package."*"]
+opt-level = 3
+debug = false
 ```
 
 ### Cross-compilation

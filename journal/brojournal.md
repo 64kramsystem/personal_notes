@@ -1,3 +1,10 @@
+## Mon 18/Jul/2022
+
+- Open Source: Punchy
+  - [x] Double check and create PR for faster compile
+- Open Source: ggez
+  - [x] Discuss fullscreen issues
+
 ## Sun 17/Jul/2022
 
 - Open Source: ggez
