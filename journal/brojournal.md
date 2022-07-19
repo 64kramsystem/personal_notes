@@ -1,3 +1,9 @@
+## Tue 19/Jul/2022
+
+- Open Source: Punchy
+  - [x] Review https://github.com/fishfight/punchy/pull/100
+  - [x] Write progress report
+
 ## Mon 18/Jul/2022
 
 - Open Source: Punchy
