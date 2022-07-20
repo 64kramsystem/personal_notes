@@ -1,3 +1,10 @@
+## Wed 20/Jul/2022
+
+- Open source
+  - [x] Discuss [proposed Rust Gamedev meta-project](https://github.com/rust-gamedev/wg/issues/126)
+- Open Source: Punchy
+  - [x] Estimate and discuss build demands
+
 ## Tue 19/Jul/2022
 
 - Open Source: Punchy
