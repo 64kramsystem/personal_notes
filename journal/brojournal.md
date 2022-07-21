@@ -1,3 +1,26 @@
+## Thu 21/Jul/2022
+
+- Projects: SimpleScripts
+  - [x] Argv: Fix boolean option parsing
+    - [x] Added test coverage
+  - [x] Clean test suites
+    - [x] Cosmetic whitespace cleanup to test suites
+    - [x] Update RSpec deprecated expectations
+  - [x] Release new version
+  - [x] CI: Move from Travis to Github Actions
+- Admin
+  - [x] Sync Ubuntu 20.04 install script with v22.04
+  - [x] Fight expired repo key
+- Open Source: Punchy
+  - [x] Preliminary investigation for: Black window LC_CTYPE environment variable (Issue #117)
+  - [x] Follow up discussion: Add GitHub workflow for automated binary releases (PR #112)
+  - [x] Review Github CI PRs
+  - [x] Remove orphan Panning component and related code
+  - [x] Return to main menu on players death (closes #96)
+  - [ ] Stages splitting design #99
+    - [x] Preliminary design
+    - [x] Refactoring: Move remaining attacks into attack plugin (module)
+
 ## Wed 20/Jul/2022
 
 - Open source

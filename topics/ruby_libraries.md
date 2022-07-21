@@ -552,7 +552,8 @@ optparse = OptionParser.new do |op|
     options[:param] = param || 'default_value'
   end
 
-  # Class conversion. An Array can be passed, it takes the form 'a,b,c'
+  # Class conversion. An Array can be passed, it takes the form 'a,b,c'.
+  # Use `TrueClass` for booleans.
   #
   op.on('-c PARAM', Float, 'Converted param') do |param|
     options[:converted] = param
