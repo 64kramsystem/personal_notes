@@ -279,7 +279,7 @@ Convenient configuration with fast(er) build times and fast(er) runtime. Setting
 [target.x86_64-unknown-linux-gnu]
 linker = "/usr/bin/clang"
 rustflags = [
-  "-Clink-arg=-fuse-ld=/home/saverio/local/mold/bin/mold",
+  "-Clink-arg=-fuse-ld=/path/to/mold",
   "-Zshare-generics=y",
 ]
 

@@ -638,6 +638,12 @@ fn reset_health(
 }
 ```
 
+Utility methods:
+
+```rs
+q.is_empty() // return true if no components are found
+```
+
 #### Change detection
 
 WATCH OUT 1-frame lag; for `Added`, [stages](#stages) may be required.
