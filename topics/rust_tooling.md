@@ -32,6 +32,27 @@ A convenient cargo clippy scan is:
 cargo clippy -- -W clippy::correctness -D warnings
 ```
 
+This can be applied via macro:
+
+```rs
+#![allow(clippy::all)]
+#![deny(clippy::correctness)] // (partially) overrides the former
+```
+
+My allowed warnings:
+
+```rs
+// style includes the useful `redundant_closure`
+
+clippy::collapsible_else_if,
+clippy::collapsible_if,
+clippy::comparison_chain,
+clippy::derive_partial_eq_without_eq,
+clippy::len_zero,
+clippy::manual_range_contains,
+clippy::type_complexity,
+```
+
 Default checks described [here](https://github.com/rust-lang/rust-clippy#clippy).
 
 ## Cargo/Rustup

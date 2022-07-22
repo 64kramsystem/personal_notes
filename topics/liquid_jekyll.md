@@ -49,6 +49,10 @@ Comment out content:
     assign myStatement = "frontend development"
     {% capture myStatement %}{{ myStatement }} sucks {% endcapture %}     # compose strings
 
+In order to escape double opening curly braces, treat them as strings:
+
+    key: ${{ '{{' }} runner.os }}-cargo-${{ '{{' }} hashFiles('**/Cargo.lock') }}
+
 ### Strings
 
 String operations:

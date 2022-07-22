@@ -938,7 +938,8 @@ Useful stuff (see also [maths section](#mathvecsquats-etc)):
 
 ```rs
 Transform::from_xyz(100., 0., 0.)       // from coordinates
-Transform::from_scale(Vec3::splat(6.))  // scale
+Transform::from_translation(vec3)       // ... translation
+Transform::from_scale(Vec3::splat(6.))  // ... scale
 
 transform.translation.xy()              // Get a 2d vec of the position of a Transform
 
