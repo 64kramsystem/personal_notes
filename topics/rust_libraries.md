@@ -453,7 +453,7 @@ let p: Option<&OsStr> = path.file_stem(); // Filename without extension/path. Mu
 pathbuf.pop()                                  // Remove the last child (but doesn't return it)
 path.strip_prefix("parent")?                   // Can be used to find out a path relative to another
 path.parent()?                                 // Find the parent path
-std::fs::canonicalize(path)                    // Absolute path (Ruby expand_path)
+pathbuf.canonicalize()?                        // Ruby File.expand_path
 
 // Conversions (methods available to both Path/PathBuf):
 //

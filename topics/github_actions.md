@@ -24,6 +24,8 @@ In order to receive notifications on workflow completion, see the `Actions` in t
 
 For the main example, see [Ruby generic tasks](#ruby-generic-tasks).
 
+WATCH OUT! The configuration files are not legal YAML (!).
+
 ### Expressions
 
 Expressions are wrapped in double curly braces: `{{ expression }}`.
@@ -138,8 +140,6 @@ Reference: https://docs.github.com/en/actions/guides/building-and-testing-ruby.
 Add a file named `.github/workflows/ci.yml`:
 
 ```yml
-# Note that this is not legal YAML (!)
-#
 name: Ruby CI
 
 # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#on
@@ -220,12 +220,11 @@ For caching, use the specific action:
 ### Ruby
 
 ```yml
-# Master workflow
+# Default branch workflow
 
 on:
   push:
-    branches:
-      - master
+    branches: [ $default-branch ]
 jobs:
   build_ruby_cache:
     name: Build Ruby cache
@@ -252,14 +251,13 @@ Manual Ruby Bundler caching is discouraged (as it's not trivial); see the [Ruby 
 Format/Clippy checks (with caching). WATCH OUT! For unclear reasons, this setup causes Clippy to check also dependencies (!).
 
 ```yml
-# Master workflow
+# Default branch workflow
 
 name: Build caches
 
 on:
   push:
-    branches:
-      - master
+    branches: [ $default-branch ]
 jobs:
   # Watch out! Clippy (cache) data is shared with build data, but it's not the same.
   # In order to cache build, add a separate job (or extend this).

@@ -1,3 +1,23 @@
+## Fri 22/Jul/2022
+
+- Open Source: Rust Game Ports
+  - [x] Make Boing (resource paths) compatible with Windows
+- Open Source: ggez
+  - [x] Follow up [fullscreen issues](https://github.com/ggez/ggez/issues/1066)
+- Writings
+  - [x] Rename and update Rust game engines article
+  - [x] Write article "Improving the Github Actions caching effectiveness"
+- Open Source: Punchy
+  - [ ] Stages splitting design #99
+    - [x] Update, including suggestions
+    - [x] Discuss
+      - [x] Review Bevy discussions about new scheduler
+  - [ ] Add spawnable items support (part of #83)
+    - [ ] Brutal fight with assets loading
+- Open Source: ZFS-installer
+  - [x] Review support request
+  - [x] Update README
+
 ## Thu 21/Jul/2022
 
 - Projects: SimpleScripts
