@@ -1,3 +1,16 @@
+## Sat 23/Jul/2022
+
+- Open Source: ggez
+  - [x] Follow up [fullscreen issues](https://github.com/ggez/ggez/issues/1066)
+  - [x] Add spawnable items support (part of #83)
+    - [x] Asset loaders: Make use of the API get_relative_asset() where not (yet) used
+  - [x] Weapons refactoring
+    - [x] Refactoring: Add ShotWeapon bundle
+    - [x] Refactoring: Add ThrownWeapon bundle
+    - [x] Refactoring: Merge item throwing event logic into player_throw system
+    - [x] Merge player weapon attacks into a single system
+    - [x] (other refactorings)
+
 ## Fri 22/Jul/2022
 
 - Open Source: Rust Game Ports
@@ -12,11 +25,14 @@
     - [x] Update, including suggestions
     - [x] Discuss
       - [x] Review Bevy discussions about new scheduler
+  - [x] Investigate and fix: (Main menu) Music is not stopped, when the start/stop cycle is very short (autostart flag) #121
   - [ ] Add spawnable items support (part of #83)
     - [ ] Brutal fight with assets loading
 - Open Source: ZFS-installer
   - [x] Review support request
   - [x] Update README
+- Open Source: mainline
+  - [x] Test and send feature request about libc dependency checking
 
 ## Thu 21/Jul/2022
 
