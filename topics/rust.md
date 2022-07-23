@@ -1436,6 +1436,14 @@ Many of the methods are common between `Option` and `Result`.
 //
 result.ok();
 
+// Try multiple result values; for functions, use or_else().
+//
+res.or(res2);
+
+// Control flow based on return value
+//
+res.or_else(|e| f(e)).or_else(|e| f2(e));
+
 // Convert Option to Result.
 //
 option.ok_or("error!");
