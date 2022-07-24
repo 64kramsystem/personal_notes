@@ -1,6 +1,6 @@
-# GitHub Actions
+# GitHub Actions/Apps
 
-- [GitHub Actions](#github-actions)
+- [GitHub Actions/Apps](#github-actionsapps)
   - [Actions (CI)](#actions-ci)
   - [Concepts](#concepts)
     - [Expressions](#expressions)
@@ -15,10 +15,14 @@
   - [Preset CIs](#preset-cis)
     - [Ruby](#ruby)
     - [Rust](#rust)
+  - [Apps](#apps)
+    - [Bors](#bors)
 
 ## Actions (CI)
 
 In order to receive notifications on workflow completion, see the `Actions` in the [account settings](https://github.com/settings/notifications).
+
+Usage limits are described [here](https://docs.github.com/en/actions/learn-github-actions/usage-limits-billing-and-administration#usage-limits).
 
 ## Concepts
 
@@ -319,3 +323,18 @@ jobs:
           command: clippy
           args: -- -W clippy::correctness -D warnings
 ```
+
+## Apps
+
+### Bors
+
+Add a `.github/bors.toml` file, with the content:
+
+```toml
+# Workflow file names, without (`yml`) extension; see comment below.
+status = ["ci"]
+```
+
+It's not clear where the file should be located; possibly, anywhere; typically under `.github`.
+
+It's also not clear what the entries can be exactly; they're described as workflow names, but the examples (also in the wild) use workflow filenames without extensions.
