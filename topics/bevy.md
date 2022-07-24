@@ -89,6 +89,8 @@ See [other plugins](https://bevy-cheatbook.github.io/setup/bevy-config.html).
 
 ## Hello world
 
+For a convenient testing program, see [iyes_loopless section](#handling-state-via-iyes_loopless-crate).
+
 ```rust
 use bevy::{prelude::*, window::PresentMode};
 
@@ -141,7 +143,7 @@ fn main() {
             title: "Hello W!".to_string(),
             width: 1280.,
             height: 720.,
-            present_mode: PresentMode::Immediate, // enable/disable vsync here
+            present_mode: PresentMode::Immediate, // Immediate: no vsync; Mailbox: efficient vsync; Fifo: save vsync (default)
             ..Default::default()
         })
         // The DefaultPlugins group includes the basic plugins to run a game; it makes a window popup
@@ -513,6 +515,52 @@ app.add_system_set_to_stage(
 );
 ```
 
+Fixed timestep (hello world):
+
+```rs
+use std::time::Duration;
+
+use bevy::prelude::*;
+use iyes_loopless::prelude::FixedTimestepStage;
+
+struct MyRes {
+    val: u64,
+}
+
+fn test_system1(mut myres: ResMut<MyRes>) {
+    println!("INC");
+    myres.val += 1;
+}
+
+fn test_system2(myres: Res<MyRes>) {
+    println!("RV: {}", myres.val);
+}
+
+fn post_system() {
+    println!("===============");
+}
+
+fn main() {
+    let systems_stage = SystemStage::parallel()
+        .with_system(test_system1)
+        .with_system(test_system2.after(test_system1));
+
+    let post_stage = SystemStage::parallel().with_system(post_system);
+
+    App::new()
+        .add_plugins(DefaultPlugins)
+        .add_stage_before(
+            CoreStage::Update,
+            "my_fixed_update",
+            FixedTimestepStage::new(Duration::from_secs(1))
+                .with_stage(systems_stage)
+                .with_stage(post_stage),
+        )
+        .insert_resource(MyRes { val: 0 })
+        .run();
+}
+```
+
 ### Run criteria
 
 Run criteria allow low-level systems running specification. See: https://bevy-cheatbook.github.io/programming/run-criteria.html.
@@ -740,7 +788,12 @@ world.clear_entities();
 
 ### Commands
 
-WATCH OUT!! Commands are flushed at the end of a stage; this includes Resources, that when inserted, can't be queried until the next stage! This also applies to entities despawning (which are visible until the end of the stage).
+WATCH OUT!! Commands are flushed at the end of a stage, so the results of the operations are visible *only on the next stage*; this includes:
+
+- resources addition/removal
+- entities despawning (which are visible until the end of the stage)
+
+WATCH OUT!! Resource updates (via `ResMut`) are instead immediately visible.
 
 Commands add/remove/update stuff:
 

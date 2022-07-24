@@ -1,3 +1,25 @@
+## Sun 24/Jul/2022
+
+- Open Source: Punchy
+  - [x] Report bug on controls configuration
+  - [x] Extract all loading-related code into new LoadingPlugin (loading.rs module)
+  - [x] [Bottle throwable item](https://github.com/fishfight/punchy/issues/83)
+    - [x] Fight Fix bug in player_shoot: System was stopping at the first player under certain conditions
+    - [x] Implement items picking (base version)
+    - [x] Allow bottle attacks only if a player carries a bottle
+    - [x] Remove carried bottle item, after a bottle has been thrown
+  - [ ] Stages splitting design #99
+    - [x] Sync issue with current systems
+- Studies: Rust/Bevy
+  - [x] Experiment resource changes/iyes_loopless fixed timestep
+- Tools/Open source
+  - [x] Setup Bors for punchy project
+    - [x] Add badge to README
+  - [x] Review Github actions usage limits
+- Studies: Gamedev/CS
+  - [ ] Game Programming Algorithms and Techniques
+    - [x] 7. Physics
+
 ## Sat 23/Jul/2022
 
 - Open Source: ggez
