@@ -32,25 +32,30 @@ A convenient cargo clippy scan is:
 cargo clippy -- -W clippy::correctness -D warnings
 ```
 
-This can be applied via macro:
+Basic linting, via macros:
 
 ```rs
 #![allow(clippy::all)]
 #![deny(clippy::correctness)] // (partially) overrides the former
 ```
 
-My allowed warnings:
+More thorough linting:
 
 ```rs
-// style includes the useful `redundant_closure`
-
-clippy::collapsible_else_if,
-clippy::collapsible_if,
-clippy::comparison_chain,
-clippy::derive_partial_eq_without_eq,
-clippy::len_zero,
-clippy::manual_range_contains,
-clippy::type_complexity,
+#![deny(clippy::all)]
+#![allow(
+  // style includes the useful `redundant_closure`
+  clippy::assign_op_pattern,
+  clippy::collapsible_else_if,
+  clippy::collapsible_if,
+  clippy::comparison_chain,
+  clippy::derive_partial_eq_without_eq,
+  clippy::len_zero,
+  clippy::manual_range_contains,
+  clippy::new_without_default,
+  clippy::too_many_arguments,
+  clippy::type_complexity,
+)]
 ```
 
 Default checks described [here](https://github.com/rust-lang/rust-clippy#clippy).
