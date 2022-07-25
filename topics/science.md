@@ -3,13 +3,11 @@
 - [Science](#science)
   - [Computer Science](#computer-science)
     - [Logic](#logic)
-  - [Math](#math)
+  - [Maths](#maths)
     - [Arithmetic](#arithmetic)
       - [Properties](#properties)
     - [Number theory](#number-theory)
-    - [Trigonometry](#trigonometry)
     - [Geometry](#geometry)
-    - [Statistics](#statistics)
     - [Algebra](#algebra)
       - [Finding the square root of a number (without exponentiation functions)](#finding-the-square-root-of-a-number-without-exponentiation-functions)
     - [Linear Algebra](#linear-algebra)
@@ -27,7 +25,7 @@
 
 "Complete boolean evaluation": when the conditions are always evaluated (as opposed to Short-Circuit).
 
-## Math
+## Maths
 
 ### Arithmetic
 
@@ -44,34 +42,15 @@
   - use `nonnegative integer` to avoid ambiguities
 - rational numbers; result of a fraction
 
-### Trigonometry
-
-- tan(θ) = opposite/adjacent
-- θ = arctan(opposite/adjacent)
-
 ### Geometry
 
-Collision test between rectangles aligned with the axes. Essentially, r1.top_left < r2.bottom_right, and r1.bottom_right > r2.top_left.
+Collision test between axis-aligned rectangles. Essentially, r1.top_left < r2.bottom_right, and r1.bottom_right > r2.top_left.
 
 ```
 r2.left > r1.right && r2.right < r1.left && r2.top > r1.bottom && r2.bottom < r1.top
 ```
 
-### Statistics
-
-Stddev: sqrt( Ε( (xᵢ-avg)² ) / n) )
-
-In words: root of (the mean of (the square of difference)).
-
 ### Algebra
-
-Solve a quadratic equation:
-
-```
-ax² + bx + c = 0
-
-x = (-b ± √(b² - 4ac)) / 2a
-```
 
 #### Finding the square root of a number (without exponentiation functions)
 
@@ -114,16 +93,6 @@ end
 Vector length is called "magnitude":
 
   $$ |\vec{V}| = \sqrt{x^2 + y^2 + z^2} $$
-
-The dot product is often used to indicate the angle between two vectors; algebraic formula:
-
-  $$ \langle \vec{V},\vec{W} \rangle = V_x * W_x + V_y * W_y + V_z * W_z $$
-
-Dot product, geometic formula:
-
-  $$ |\vec{V}| \cdot |\vec{W}| \cdot cos(\alpha) $$
-
-The cross product is used to find the normal vector of a surface (two vectors); it's complex.
 
 #### Matrices
 

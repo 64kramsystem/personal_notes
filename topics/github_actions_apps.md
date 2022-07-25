@@ -331,10 +331,19 @@ jobs:
 Add a `.github/bors.toml` file, with the content:
 
 ```toml
-# Workflow file names, without (`yml`) extension; see comment below.
-status = ["ci"]
+status = [
+  "Build (ubuntu-latest, x86_64-unknown-linux-gnu)", # Names of the jobs, not workflows!
+  "Check Rust formatting",
+]
 ```
 
-It's not clear where the file should be located; possibly, anywhere; typically under `.github`.
+The CI workflows should also be triggered for `staging` and `trying` branches:
 
-It's also not clear what the entries can be exactly; they're described as workflow names, but the examples (also in the wild) use workflow filenames without extensions.
+```yaml
+push:
+  branches:
+    - master
+    - staging
+    - trying
+# etc.etc.
+```

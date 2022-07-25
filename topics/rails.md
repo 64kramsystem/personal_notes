@@ -97,7 +97,7 @@ Both `:find_each` and `:find_in_batches` have a default batch size of 1000.
 ### Updating
 
 ```ruby
-instance.update_columns({a: 'b'})   # skips all the logic, except serialization
+instance.update_columns(a: 'b')     # skips all the logic, except serialization
 
 # Use SQL as set value of a column
 #

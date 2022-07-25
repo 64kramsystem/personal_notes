@@ -1,3 +1,22 @@
+## Mon 25/Jul/2022
+
+- Maths
+  - [x] Review dot/cross products
+  - [x] Copy some notes to Anki
+- Open Source: ggez
+  - [x] Test fullscreen on Soccer-fyrox
+- Open Source: Rust Game Ports
+  - [x] Soccer-Fyrox: Soccer-fyrox: Apply clippy cleanups, and set project lints
+- Open Source: Punchy
+  - [x] Various discussions
+  - [x] Add [Flop sound effect does not play for Sharky](#130)
+  - [x] Updates to Github workflows, primarly remove cache building and leave build to release
+  - [Bottle throwable item](https://github.com/fishfight/punchy/issues/83)
+    - [x] Rework to use children entities
+- Studies: Gamedev/CS
+  - [ ] Game Programming Algorithms and Techniques
+    - [x] 8. Cameras
+
 ## Sun 24/Jul/2022
 
 - Open Source: Punchy
