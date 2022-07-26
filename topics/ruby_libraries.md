@@ -4,6 +4,7 @@
   - [APIs/Stdlib](#apisstdlib)
     - [URL/HTML encoding](#urlhtml-encoding)
     - [Strings](#strings)
+      - [Printf/interpolation](#printfinterpolation)
       - [Encoding](#encoding)
       - [Activesupport/Inflector](#activesupportinflector)
     - [Date/time](#datetime)
@@ -93,7 +94,6 @@ Useful methods:
 - `slice(start[, end])`, `slice!`
 - `start_with?`
 - `lcomp`                             : doesn't exist; use `str.gsub /^(Regexp.escape(expr))+/`
-- `% *values`                         : equal to `sprintf(str, *values)`
 - `each_slice`                        : doesn't exist; use `str.scan /.{1,n}/`
 
 Splitting:
@@ -139,6 +139,17 @@ end # => "z:4:a"
 # Linux tool `tr`.
 #
 "abcZHNC".tr("ZHNC", "*")                               # return "abc****"
+```
+
+#### Printf/interpolation
+
+`String% *values` equals to `sprintf(str, *values)`
+
+Named parameters:
+
+```rb
+"%{val}" % {val: 28}                    # unformatted param
+"%<num>.d" % {num: 28}                  # formatted param
 ```
 
 #### Encoding
