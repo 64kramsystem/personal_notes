@@ -1,3 +1,20 @@
+## Tue 26/Jul/2022
+
+- Open Source: Json on Rails
+  - [x] Review security alert
+- Open Source: Punchy: Rust Game Ports
+  - [x] Move ownership
+- Tools
+  - [x] Review Github head branch autodeletion functionality on forks
+- Writings
+  - [x] Update introduction to Rust Gamedev article
+- Open Source: Punchy
+  - [x] Discussions
+  - [x] [Unify the player translation](https://github.com/fishfight/punchy/issues/63) (Closes #133, #63)
+- Studies: Gamedev/CS
+  - [ ] Game Programming Algorithms and Techniques
+    - [ ] 9. Artificial Intelligence
+
 ## Mon 25/Jul/2022
 
 - Maths

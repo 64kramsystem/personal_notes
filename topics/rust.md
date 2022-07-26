@@ -504,9 +504,15 @@ take_while(||)               // stops iteration, by returning always false after
 skip_while(||)               // start iteration on the first true, returning all the others
 enumerate()                  // iterator (index, &value) (Ruby :each_with_index)
 zip(iter)                    // zip two arrays (iterators); stops at the shortest iterator
-partition(|x| x % 2 == 0)    // divide a collection in two
 drain(range)                 // removes and returns the elements in the range
 fuse()                       // ensures that after the first None, any other iteration returns None
+
+// Partition (divide a collection in two (true, false)). Remember that:
+// 1. must specify `let (a, b): (Vec<_>, Vec<_>) = ...`
+// 2. don't forget `iter_mut()` when needed; if the types are complex, the errors are unreadable.
+// 3. for complex types, intermediate steps can be confusing, and the compiler may require types; in
+//    this case, temporarily use intermediate typed vectors.
+partition(|x| x % 2 == 0)
 
 // Math
 // For each max() there is a min()

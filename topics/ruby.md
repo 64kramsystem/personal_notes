@@ -35,7 +35,7 @@
   - [Basic I/O](#basic-io)
   - [Handling processes](#handling-processes)
     - [Basic handling, via `IO.popen`](#basic-handling-via-iopopen)
-    - [Using `IO.popen3`](#using-iopopen3)
+    - [Using `Open3`](#using-open3)
     - [Live execution, via `Kernel#system`](#live-execution-via-kernelsystem)
     - [Backticks](#backticks)
     - [Definitive way of capturing Ctrl+C (trap signals)](#definitive-way-of-capturing-ctrlc-trap-signals)
@@ -693,6 +693,8 @@ io_obj.readchar                         # reads one char; raises EOFError at the
 
 The sections assume `require 'English'`, which aliases `$?` (`Process::Status`) to `$CHILD_STATUS`.
 
+In order to execute under a certain directory, use `Dir.chdir { ... }`; alternatively, `open3`-like methods can set the `PWD` env var.
+
 ### Basic handling, via `IO.popen`
 
 The stdout content is captured, so this is not appropriate for long operations.
@@ -716,12 +718,18 @@ end
 
 A non-block form exists, which returns the `IO` object.
 
-### Using `IO.popen3`
+### Using `Open3`
 
 The output is not printed as well, so the same considerations as `IO.popen` apply.
 
+`env_vars` must be strings, not symbols.
+
+Options (partial):
+
+- `:stdin_data`: send data to stdin
+
 ```ruby
-Open3.popen3([env,] command) do |stdin, stdout, stderr, wait_thread|
+Open3.popen3([env_vars,] command [, options]) do |stdin, stdout, stderr, wait_thread|
   stdout_content, stderr_content = stdout.read, stderr.read
 
   $stdout.puts(stdout_content) if stdout_content != ''
@@ -738,7 +746,7 @@ end
 A convenient way to execute and capture the output is `capture3`:
 
 ```ruby
-stdout, stderr, status = Open3.capture3(extra_env_vars, command)
+stdout, stderr, status = Open3.capture3([env_vars,] command [, options])
 
 $stdout.puts stdout
 $stderr.puts stderr
@@ -748,7 +756,7 @@ exit status.exitstatus if !status.success?
 
 ### Live execution, via `Kernel#system`
 
-This way, stdout/stderr content is printed straight away.
+This way, stdout/stderr content is printed straight away; interaction (input) is supported.
 
 The exit status can be obtained directly via return value, or via `$CHILD_STATUS`.
 
