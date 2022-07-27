@@ -347,11 +347,14 @@ seq 4 | xargs -I {} -P 0 sh -c 'aws ec2 delete-snapshot --snapshot-id {} || true
 
 ## Profiling (perf)
 
-```sh
-sudo mkdir /usr/share/doc/perf-tip
-curl https://raw.githubusercontent.com/torvalds/linux/master/tools/perf/Documentation/tips.txt | sudo tee /usr/share/doc/perf-tip/tips.txt
-sysctl -w kernel.perf_event_paranoid=1 # allow to non-root users
+Perf is bound to the given kernel version; when this conditions can't be fulfilled:
 
+- build it (https://unix.stackexchange.com/a/530898; requires `libelf-dev`, `libdw-dev`): `make -C tools/ perf_install prefix=/my/path`
+- can directly invoke the binary (hack): `/usr/lib/linux-tools/5.15.0-41-generic/perf`
+
+See install script for convenient tweaks.
+
+```sh
 # Display stats (to stderr!!)
 #
 # -e                   : events recorded

@@ -1,3 +1,22 @@
+## Wed 27/Jul/2022
+
+- Writings
+  - [x] Article "Unexpected things users will find when moving from metal to the cloud (AWS)"
+  - [x] Bevy ECS article: evaluate suggestions at https://discord.com/channels/691052431525675048/991808970731819149
+- Open Source: Geet
+  - [x] Add upstream support to PR comment
+- Open Source: Ruby
+  - [x] Investigate and report string splitting issue
+- Admin
+  - [x] Retract talk from conference
+  - [x] Flush brogramming pool
+- Systems
+  - [x] Setup IMAP client on laptop
+- Tools
+  - [x] Review: https://eighty-twenty.org/2021/09/09/perf-addr2line-speed-improvement
+    - [x] Compile/prepare new perf
+    - [x] Check if kernel versions (`a2l_subprocess`)
+
 ## Tue 26/Jul/2022
 
 - Open Source: Json on Rails

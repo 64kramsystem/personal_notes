@@ -17,11 +17,7 @@
 
 ## VMWare
 
-AMD GPU virtualization may not be supported; if so, add this to the VM cfg file:
-
-```sh
-echo "mks.gl.allowUnsupportedDrivers=TRUE" >> vmwindog.vmx
-```
+AMD GPU virtualization may not be supported; if so, add `mks.gl.allowUnsupportedDrivers=TRUE` to either `~/.vmware/preferences` or the VM cfg file.
 
 ## Virtual disks
 
