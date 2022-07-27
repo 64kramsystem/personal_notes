@@ -144,6 +144,8 @@ usermod -d $new_home -m $user
 Snippets:
 
 ```sh
+usermod -a -G $group $user              # add user to group
+
 chmod -R go-rx .ssh                     # setup SSH permissions
 chage -d $(date +%Y-%m-%d) $user        # set the last changed date to today, and the mandatory change date to (today + max days)
 chage -I 0 $user                        # expire password
@@ -393,6 +395,7 @@ Informations:
 # Show package info; for this operation, `apt` is stable [enough].
 #
 apt show $package
+dpkg --list $package
 
 # Check if a package is installed, in the most standard way possible.
 #
@@ -413,6 +416,7 @@ apt-cache search '^linux-image-unsigned-5.4.[[:digit:]-]+-generic'
 # Show dependencies of a package
 #
 aptitude why -v $package
+dpkg -I $package.deb
 
 # Display the repositories with a given package
 #

@@ -82,6 +82,10 @@ cargo doc [--open]                   # builds and optionally opens docs for the 
 # Exits with error if the project is not formatted
 #
 fmt --all -- --check
+
+# Other Cargo flags
+#
+--build-std         # build the stdlib
 ```
 
 When a project is run via Cargo, the env variable `CARGO_MANIFEST_DIR` is passed to the binary.
@@ -135,7 +139,8 @@ target-dir = "/path/to/target"
 [profile.release]
 strip = true         # highest stripping (equivalent to "symbols")
 
-# Optimize a little the debug build; compile time is essentially the same as level 0.
+# Optimize a little the debug build; WATCH OUT! This is generally as fast as level 0, but sometimes
+# considerably slower!
 #
 [profile.dev]
 opt-level = 1
