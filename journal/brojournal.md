@@ -1,3 +1,20 @@
+## Thu 28/Jul/2022
+
+- Admin
+  - [x] Convert some note formulas to Latex
+- Open Source: Punchy
+  - [x] Reviews
+  - [x] Implement the first version of camera stopping
+    - [x] Refactoring: Extract code into ActivePlayerBundler
+- Tools
+  - [x] Verify email client plugin replacement
+  - [x] Refactor projects creation script
+    - [x] General refactorings
+    - [x] Remove independent Rust mode
+- Studies: Gamedev/CS
+  - [ ] Game Programming Algorithms and Techniques
+    - [ ] 9. Artificial Intelligence
+
 ## Wed 27/Jul/2022
 
 - Writings
