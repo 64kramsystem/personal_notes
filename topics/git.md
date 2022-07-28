@@ -29,7 +29,7 @@
     - [Aggressive garbage collection](#aggressive-garbage-collection)
     - [Shell prompt](#shell-prompt)
     - [Correct whitespaces problems](#correct-whitespaces-problems)
-    - [Revert common mistakes](#revert-common-mistakes)
+    - [Revert/recover common mistakes](#revertrecover-common-mistakes)
     - [Find the default branch](#find-the-default-branch)
     - [Checkout a GitHub PR (of a private repository)](#checkout-a-github-pr-of-a-private-repository)
 
@@ -457,14 +457,6 @@ stash clear
 stash show -p $stash_entry    # shows a stash entry content
 ```
 
-Examples:
-
-```sh
-# Recover dropped stashes
-#
-gitk --all $(git fsck --no-reflog | awk '/dangling commit/ {print $3}')
-```
-
 ## Bisect
 
 ```sh
@@ -574,9 +566,20 @@ Update git history, cleaning whitespace problems!:
 rebase $base_commit --whitespace=fix
 ```
 
-### Revert common mistakes
+### Revert/recover common mistakes
 
-See: https://sethrobertson.github.io/GitFixUm/fixup.html
+See: https://sethrobertson.github.io/GitFixUm/fixup.html.
+
+```sh
+# Recover dropped stashes
+#
+gitk --all $(git fsck --no-reflog | awk '/dangling commit/ {print $3}')
+
+# Recover lost commits.
+# If not found in `--unreachable`, try `--lost-found`, which is subtly different.
+#
+git show $(git fsck --unreachable | git cat-file --batch-check | awk '/commit/ { print $3 }')
+```
 
 ### Find the default branch
 
