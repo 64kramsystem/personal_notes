@@ -17,9 +17,10 @@ x_1  x_{1}  E_{r,c} % subscript
 \frac{x}{y}         % fraction
 \pm                 % ± (plus/minus)
 \bar{x}             % top bar (average)
+\cdot               % multiplication dot (e.g. dot product)
 
-\left|  \right|     % bars (abs. value)
-\left(  \right)     % round brackets
+| \vert \lvert \rvert \left| \right| % vertical bar (magnitude/absolute) symbol
+( ) \left(  \right) % round brackets
 \langle  \rangle    % angle brackets
 \alpha ...          % greek letters
 \cdot               % multiplication dot

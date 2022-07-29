@@ -7,6 +7,7 @@
     - [Components/bundles](#componentsbundles)
     - [Resources](#resources)
     - [Systems](#systems)
+      - [SystemParams (service-alike types)](#systemparams-service-alike-types)
       - [Stages](#stages)
     - [States and callbacks](#states-and-callbacks)
       - [System sets and ordering](#system-sets-and-ordering)
@@ -301,6 +302,33 @@ fn my_system(mut cmd: Commands, config: &MyConfig) { /* ... */ }
 // Use #with_system(), depending on the context
 //
 app.add_system(move |cmd: Commands| { my_system(cmd, &config); })
+```
+
+#### SystemParams (service-alike types)
+
+In order to create sort-of service types, and pass them to systems, use `SystemParams`:
+
+```rs
+// 'w(orld), 's(state); borrow data from the ECS world, and from our system's own state
+#[derive(SystemParam)]
+struct PlayerMovementClamper<'w, 's> {
+    enemy_spawn_locations: Query<'w, 's, &SpawnLocationX>,
+    level_meta: Res<'w, LevelMeta>,
+}
+
+impl<'w, 's> PlayerMovementClamper<'w, 's> {
+    pub fn clamp(
+        &self, // Self will have all of our queries we need for clamping
+        mut player_movements: Vec<Vec2>,
+    ) -> Vec<Option<Vec2>> {
+        // Impl clamping
+    }
+}
+
+fn my_system(clamper: PlayerMovementClamper, /* ... */) {
+    let player_movements = todo!();
+    let clamped_player_movements = clamper.clamp(player_movements);
+}
 ```
 
 #### Stages

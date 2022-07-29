@@ -12,6 +12,7 @@
     - [`cron`](#cron)
     - [`cookbook_file`](#cookbook_file)
     - [`directory`](#directory)
+    - [`link` (symlink)](#link-symlink)
     - [`execute`](#execute-1)
     - [`line` (manual file editing)](#line-manual-file-editing)
     - [`mount`](#mount)
@@ -187,6 +188,14 @@ end
   end
 
   current_path
+end
+```
+
+### `link` (symlink)
+
+```rb
+link '/tmp/file' do
+  to '/etc/file'
 end
 ```
 
