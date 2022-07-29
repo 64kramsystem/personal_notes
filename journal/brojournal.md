@@ -1,3 +1,16 @@
+## Fri 29/Jul/2022
+
+- Open Source: Bevy
+  - [x] Review reported issue
+- Open Source: Punchy
+  - [x] Read Bevy [stageless PR](https://github.com/bevyengine/rfcs/blob/2833d6bdb1386cef45c5617707be7947c25a3d68/rfcs/45-stageless.md)
+  - [x] Reviews
+- Tools
+  - [x] Create script to create `.cargo/config.toml`
+    - [x] Make VSC creation script use it
+- Admin
+  - [x] Complete copying math notes to Anki, and Bevy SystemParam
+
 ## Thu 28/Jul/2022
 
 - Admin

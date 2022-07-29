@@ -10,9 +10,6 @@
     - [Geometry](#geometry)
     - [Algebra](#algebra)
       - [Finding the square root of a number (without exponentiation functions)](#finding-the-square-root-of-a-number-without-exponentiation-functions)
-    - [Linear Algebra](#linear-algebra)
-      - [Vectors](#vectors)
-      - [Matrices](#matrices)
     - [Convenient stuff](#convenient-stuff)
       - [Test if a positive number is a power of two](#test-if-a-positive-number-is-a-power-of-two)
       - [Check if a number is close within the two ends of an interval](#check-if-a-number-is-close-within-the-two-ends-of-an-interval)
@@ -39,7 +36,7 @@
 
 - positive numbers: integers > 0
 - natural numbers: positive numbers, plus, sometimes, 0
-  - use `nonnegative integer` to avoid ambiguities
+  - use `nonnegative` integer to avoid ambiguities
 - rational numbers; result of a fraction
 
 ### Geometry
@@ -86,24 +83,6 @@ def my_sqrt(x)
 end
 ```
 
-### Linear Algebra
-
-#### Vectors
-
-Vector length is called "magnitude":
-
-  $$ |\vec{V}| = \sqrt{x^2 + y^2 + z^2} $$
-
-#### Matrices
-
-The product of two matrices V*W = X is (informal):
-
-  $$ X_{r,c} = |Vrow_r| \cdot |Wcol_c| $$
-
-Vcols must equal Wcols; result dimensions are (Vrows, Wcols).
-
-Since the operation matrix * vector = vector, it transforms the vector.
-
 ### Convenient stuff
 
 #### Test if a positive number is a power of two
@@ -141,12 +120,6 @@ $width/2 - x > $width/2 - $interval
 ## Physics
 
 ### Falling object (gravity)
-
-(`ᵢ` = initial)
-
-Velocity(`t`)     : `vₜ = vᵢ + tg`
-Displacement(`t`) : `y = gt²/2 + vᵢt`
-Velocity(`y`)     : `vₜ² = vᵢ² - 2gy`
 
 ```rs
 const JUMP_SPEED: f32 = -500.;
