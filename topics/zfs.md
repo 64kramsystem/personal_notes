@@ -147,6 +147,9 @@ zpool add $pool mirror $device1 $device2
 #
 zpool detach $pool $device
 
+# Delete a device
+zfs destroy $pool/$device
+
 # ZFS mirroring with different sector sizes (9=512, 12=4096). Watch out! It has a significant impact on performance.
 #
 fdisk -l                                                         # show the SS for the disks

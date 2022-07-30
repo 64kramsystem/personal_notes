@@ -1,3 +1,20 @@
+## Sat 30/Jul/2022
+
+- Studies
+  - Physics
+    - [x] Laws of motion (V(s))
+- Open Source
+  - Rust Game Ports
+    - [x] Discuss, and review Wireframe magazine
+- Admin
+  - [x] Choose next books; find copies etc.
+  - [x] Review Bevy 0.8 release
+- Open Source: Punchy
+  - [x] Discussions/reviews
+  - [x] Convert (InGame) design to full multi-stage (#99)
+    - [x] Perfom split
+      - [x] Fight player issue with Y teletransportation on flop
+
 ## Fri 29/Jul/2022
 
 - Open Source: Bevy
