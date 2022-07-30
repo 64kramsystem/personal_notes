@@ -739,19 +739,26 @@ pdfimages -l $input
 pdfimages -j $input /path/to/$prefix
 ```
 
-Extract pages/remove a page from a PDF doc:
+Other operations:
 
 ```sh
+# Extract pages/remove a page from a PDF doc:
+#
 pdftk $input.pdf cat 1-29 31-end output $output.pdf
-```
 
-Compress a pdf:
-
-```sh
+# Compress a pdf:
+#
 # Some sources use `-dPDFSETTINGS=/prepress` for the best quality, but the [manual](https://www.ghostscript.com/doc/VectorDevices.htm#PSPDF_IN)
 # specifies that for the best quality, the default should be used.
 #
 gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dNOPAUSE -dBATCH -sOutputFile="$2" "$1"
+
+# Convert an Open XML (docs) file to PDF (requires Libreoffice)
+# The extension is replaced with PDF, independently of it.
+# Output dir defaults to current, not the doc's!
+#
+# lowriter --convert-to pdf $file [--outdir $dir]
+
 ```
 
 For cropping (via GUI), best to use an online tool (e.g. [Xodo](https://pdf.online/crop-pdf)); (maintained) GUI tools don't copy bookmarks (krop, pdfarranger), or don't work as intended, or they have unintended side effects (pdfcrop increases the file size).

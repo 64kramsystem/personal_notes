@@ -120,7 +120,7 @@ struct GreetTimer(Timer);
 //
 fn greet_people_timed(time: Res<Time>, mut timer: ResMut<GreetTimer>, query: Query<&Name, With<Person>>) {
     if timer.0.tick(time.delta()).just_finished() {
-        for name in query.iter() {
+        for name in &query {
             println!("Hello {}!", name.0);
         }
     }
@@ -626,7 +626,7 @@ struct LevelUpEvent(Entity);
 // Generate an event, via EventWriter<T>.
 //
 fn player_level_up(mut levelup: EventWriter<LevelUpEvent>, query: Query<(Entity, &PlayerXp)>) {
-    for (entity, xp) in query.iter() {
+    for (entity, xp) in &query {
         if xp.0 > 1000 { levelup.send(LevelUpEvent(entity)); }
     }
 }
@@ -667,7 +667,6 @@ fn check_zero_health(
     }
 }
 
-
 // More complex query param
 (With<Collider>, Or<(With<Player>, With<Enemy>)>)
 
@@ -685,6 +684,17 @@ if let Ok((health, mut transform)) = query.get_mut(entity) {
 //
 fn query_player(mut q: Query<(&Player, &mut Transform)>) {
     if let Ok(player, mut transform) = q.single_mut() { /* ... */ }
+}
+
+// Get many entities at once (readonly/mutable versions)
+//
+fn system(members:players: Query<&Player>) {
+  let members: Vec<Entity> = ...;
+
+  for player in players.iter_many(&members) { /* ... */ }
+
+  let mut iter = players.iter_many_mut(&members);
+  while let Some(mut player) = iter.fetch_next() { /* ... */ }
 }
 
 // Test if an entity has a component
@@ -742,7 +752,7 @@ fn debug_stats_change(
         (Without<Enemy>, Or<(Changed<Health>, Changed<PlayerXp>)>),
     >,
 ) {
-    for (health, xp) in query.iter() {
+    for (health, xp) in &query) {
         eprintln!("hp: {}+{}, xp: {}", health.hp, health.extra, xp.0);
     }
 }
@@ -750,7 +760,7 @@ fn debug_stats_change(
 // Detect new enemies and print their health:
 //
 fn debug_new_hostiles(query: Query<(Entity, &Health), Added<Enemy>>) {
-    for (entity, health) in query.iter() {
+    for (entity, health) in &query {
         eprintln!("Entity {:?} is now an enemy! HP: {}", entity, health.hp);
     }
 }
@@ -870,7 +880,7 @@ fn spawn_player(mut commands: Commands) {
 }
 
 fn make_all_players_hostile(mut commands: Commands, query: Query<Entity, With<Player>>) {
-    for entity in query.iter() {
+    for entity in &query {
         commands.entity(entity).insert(Enemy); // add an `Enemy` component to the entity
     }
 }
@@ -901,7 +911,7 @@ Querying; use the `Parent`/`Children` reserved components:
 // Query parent, from children:
 //
 fn camera_with_parent(q_child: Query<(&Parent, &Transform), With<Camera>>, q_parent: Query<&GlobalTransform>) {
-    for (parent, child_transform) in q_child.iter() {
+    for (parent, child_transform) in &q_child {
         // `parent` contains the Entity ID we can use to query components from the parent:
         //
         let parent_global_transform = q_parent.get(parent.0);
@@ -911,7 +921,7 @@ fn camera_with_parent(q_child: Query<(&Parent, &Transform), With<Camera>>, q_par
 // Query children, from parent:
 //
 fn process_squad_damage(q_parent: Query<(&MySquadDamage, &Children)>, q_child: Query<&MyUnitHealth>) {
-    for (squad_dmg, children) in q_parent.iter() {
+    for (squad_dmg, children) in &q_parent {
         // `children` is a collection of Entity IDs:
         //
         for &child in children.iter() {
