@@ -35,6 +35,7 @@
     - [Operators/variables](#operatorsvariables)
     - [Operations](#operations)
     - [Special characters](#special-characters)
+    - [Useful examples](#useful-examples-2)
   - [Ruby](#ruby)
   - [Snippets](#snippets)
     - [Print only a particular line number](#print-only-a-particular-line-number)
@@ -545,6 +546,7 @@ Cmdline params:
 - `-i`      : in-place editing
 - `-E`/`-r` : extended regexes
 - `-e`      : execute
+- `-z`      : separate lines by NUL; WATCH OUT! Has tricky consequences
 
 ### Syntax
 
@@ -582,6 +584,8 @@ Not supported (at all):
 - `$`            : last line
 - `/from/,/to/p` : flip flop
 
+Sed *can't* read env variables, so they must be interpolated.
+
 ### Operations
 
 General:
@@ -605,6 +609,8 @@ Operations with matches:
 
 ### Special characters
 
+- `\x0`: null character
+
 ```sh
 # In order to handle tabs (`\t`), either use `$` quoting or parameter substitution:
 #
@@ -614,6 +620,16 @@ sed "s/$(printf '\t')/ /"
 # WATCH OUT!! Newlines don't require `$` quoting:
 #
 sed 's/from/to1\nto2/'
+```
+
+### Useful examples
+
+```sh
+# Replace the second occurrence of `---`; WATCH OUT! Regex are affected, and it's not clear how to match
+# line delimiters (`\x0` doesn't have effect).
+# WATCH OUT!! `-iz` has a strange effect (renames the file).
+#
+sed -zi 's/---/abc\n---/2'
 ```
 
 ## Ruby

@@ -1,3 +1,35 @@
+## Sun 31/Jul/2022
+
+- Open Source: Rust Game Ports
+  - [x] Discussion with contributor
+  - [x] Review/Test/Discuss PR: https://github.com/rust-gamedev/rust-game-ports/pull/111
+  - [x] Discussion with other contributor
+- SWE: Practice
+  - Leetcode (rev. order)
+    - [x] Easy      89%: 1 tests, 1 submissions, 0'55", "1672. Richest Customer Wealth"
+    - [x] Easy      89%: 2 tests, 1 submissions, 0'46", "2236. Root Equals Sum of Children"
+      - Mistakes
+        - Typo (forgot `root.`)
+    - [x] Easy      91%: 1 tests, 1 submissions, 2'30", "1119. Remove Vowels from a String"
+      - Slow - testing APIs
+    - [x] Easy      92%: 1 tests, 1 submissions, 1'32", "1929. Concatenation of Array"
+- Tools
+  - [x] Blog: Update script improvements/fixes
+    - [x] Add last_updated_at field, if not found
+    - [x] Fix: path is not added to non-top level TOC entries
+    - [x] Minor refactorings
+    - [x] Add some checks
+- Open Source: Punchy
+  - [x] Open tripping point issue
+  - [x] Discussion stages PR
+  - [x] CI: Add WASM target to Clippy job
+  - [x] Implement trip points #183
+- Studies: Gamedev/CS
+  - [ ] Game Programming Algorithms and Techniques
+    - [x] 9. Artificial Intelligence
+    - ~~10. User Interfaces~~
+    - [ ] 11. Scripting Languages and Data Formats
+
 ## Sat 30/Jul/2022
 
 - Studies
