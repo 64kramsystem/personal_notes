@@ -616,7 +616,7 @@ WATCH OUT!
 
 Systems can communicate via a message queue - the `Event`s system. Every reader tracks the events it has read independently, so one can handle the same events from multiple systems.
 
-WATCH OUT!! W/R don't enforce ordering, so if the two W/R systems are not ordered, events may be read on the next frame ("1-frame-lag" problem). Events persists only until the end of the next frame.
+WATCH OUT!! Events are _immediately_ committed, however, ordering is not implicitly enforced, so if it's not defined, events may be read on the next frame. Events persists for two frames (current and next).
 
 It's possible to manually manage events (see [here](https://bevy-cheatbook.github.io/patterns/manual-event-clear.html)).
 
@@ -831,7 +831,10 @@ WATCH OUT!! Commands are flushed at the end of a stage, so the results of the op
 - resources addition/removal
 - entities despawning (which are visible until the end of the stage)
 
-WATCH OUT!! Resource updates (via `ResMut`) are instead immediately visible.
+WATCH OUT!! These are instead immediately visible:
+
+- Resource updates (via `ResMut`)
+- Events Writing -> Reading
 
 Commands add/remove/update stuff:
 

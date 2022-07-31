@@ -4,6 +4,7 @@
   - [Actions (CI)](#actions-ci)
   - [Concepts](#concepts)
     - [Expressions](#expressions)
+    - [Conditionals](#conditionals)
     - [Variables](#variables)
     - [Caching](#caching)
   - [Examples](#examples)
@@ -12,6 +13,7 @@
     - [Minimal conditional execution](#minimal-conditional-execution)
     - [Run command (e.g. install package)](#run-command-eg-install-package)
     - [Ruby generic tasks](#ruby-generic-tasks)
+    - [Rust Cargo Clippy on multiple targets](#rust-cargo-clippy-on-multiple-targets)
   - [Preset CIs](#preset-cis)
     - [Ruby](#ruby)
     - [Rust](#rust)
@@ -33,6 +35,15 @@ WATCH OUT! The configuration files are not legal YAML (!).
 ### Expressions
 
 Expressions are wrapped in double curly braces: `{{ expression }}`.
+
+### Conditionals
+
+```yaml
+# For variables, expressions braces are not required.
+#
+- name: Use WASM target for Clippy
+  if: matrix.config.target == 'wasm32-unknown-unknown'
+```
 
 ### Variables
 
@@ -217,6 +228,45 @@ For caching, use the specific action:
   with:
     ruby-version: ...
     bundler-cache: true
+```
+
+### Rust Cargo Clippy on multiple targets
+
+```yml
+clippy_correctness_checks:
+    runs-on: ubuntu-latest
+    name: Clippy correctness checks
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - { target: 'x86_64-unknown-linux-gnu', target_dir: 'target' }
+          - { target: 'wasm32-unknown-unknown', target_dir: 'web-target' }
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use WASM target for Clippy
+        if: matrix.config.target == 'wasm32-unknown-unknown'
+        uses: actions-rs/toolchain@v1
+        with:
+            toolchain: stable
+            target: ${{ matrix.config.target }}
+            components: clippy
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+            web-target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - uses: actions-rs/cargo@v1
+        env:
+          CARGO_TARGET_DIR: ${{ matrix.config.target_dir }}
+        with:
+          command: clippy
+          args: --target ${{ matrix.config.target }} -- -W clippy::correctness -D warnings
 ```
 
 ## Preset CIs
