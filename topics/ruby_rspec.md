@@ -6,6 +6,7 @@
   - [Setup/configuration](#setupconfiguration)
     - [Add helpers to example groups (`describe`)](#add-helpers-to-example-groups-describe)
     - [Hooks and execution params](#hooks-and-execution-params)
+    - [Sharing](#sharing)
   - [Available variables](#available-variables)
   - [Mocks](#mocks)
     - [Matchers](#matchers)
@@ -119,6 +120,24 @@ RSpec.configure do |config|
 end
 
 describe MyClass, :myconfig, myparam: 10 do ...
+```
+
+### Sharing
+
+Share `let`s:
+
+```rb
+# Put this in a file, and require it in `rspec_helper.rb`.
+# Shared context hase more complex functionality; this is a basic one.
+#
+RSpec.shared_context "my context" do
+  let(:my_double) { double("my_double") }
+end
+
+describe LaunchStagingService do
+  # Make :my_double accessible to the examples.
+  include_examples "my context"
+end
 ```
 
 ## Available variables

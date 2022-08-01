@@ -53,6 +53,8 @@ Options:
 - `-X`, `--request <command>`
 - `-H`, `--header <header/@file>`
 - `-i`, `--include`: include headers in the response
+- `-s`, `--silent`: quiet mode - errors are not displayed; best used with `-S`
+- `-S`, `--show-error`: display errors also in quiet mode
 
 ```sh
 # Bare form: implies `-X GET`

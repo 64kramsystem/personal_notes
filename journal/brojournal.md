@@ -1,3 +1,9 @@
+## Mon 01/Aug/2022
+
+- Open Source: Punchy
+  - [ ] Implement intention to move
+    - [ ] Brutal fight with multithreading issue
+
 ## Sun 31/Jul/2022
 
 - Open Source: Rust Game Ports
