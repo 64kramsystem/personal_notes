@@ -85,6 +85,12 @@ journalctl --follow --unit=$service.service        # show unit log; use `page-en
 journalctl --vacuum-time=1d                        # clean systemd journal (/var/log/journal)
 ```
 
+Display the log of the last run only:
+
+```sh
+journalctl _SYSTEMD_INVOCATION_ID="$(systemctl show --value -p InvocationID $unit)"
+```
+
 Limit the max use:
 
 ```sh
@@ -204,7 +210,9 @@ UNIT
 #### Notify unit type
 
 If one wants Systemd to fork the process, then the best is `notify` (see https://askubuntu.com/q/1120023); this requires the program to report success via `systemd-notify --ready`, otherwise, Systemd will kill
-the program after timeout. Use `TimeoutSec=` in order to set the timeout.
+the program after timeout.
+
+Use `TimeoutStartSec=` and `TimeoutStopSec=` in order to set the timeouts (default: 90"); can also use `TimeoutSec=` as shorthand for setting both.
 
 `NotifyAccess=` can be left to the default, if the program process itself sends the notification.
 
