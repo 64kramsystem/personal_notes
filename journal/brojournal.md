@@ -1,3 +1,14 @@
+## Tue 02/Aug/2022
+
+- Open Source: Punchy
+  - [x] Think design/discuss: intention to move
+  - [x] Review proposal
+  - [x] Update "Implement first version of camera stopping" #171
+  - [x] Improve AI targeting #155
+    - [x] Fight find out state machine working
+    - [x] Introduce the concept of (random) enemy target max distance
+    - [x] Make enemies point to the target offset when attacking
+
 ## Mon 01/Aug/2022
 
 - Open Source: Punchy
