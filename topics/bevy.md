@@ -312,7 +312,7 @@ In order to create sort-of service types, and pass them to systems, use `SystemP
 // 'w(orld), 's(state); borrow data from the ECS world, and from our system's own state
 #[derive(SystemParam)]
 struct PlayerMovementClamper<'w, 's> {
-    enemy_spawn_locations: Query<'w, 's, &SpawnLocationX>,
+    enemy_spawn_locations: Query<'w, 's, &'static SpawnLocationX>,
     level_meta: Res<'w, LevelMeta>,
 }
 
