@@ -12,6 +12,7 @@
     - [States and callbacks](#states-and-callbacks)
       - [System sets and ordering](#system-sets-and-ordering)
       - [Handling state via `iyes_loopless` crate](#handling-state-via-iyes_loopless-crate)
+        - [Conditional systems](#conditional-systems)
     - [Run criteria](#run-criteria)
       - [System Chaining](#system-chaining)
       - [Events](#events)
@@ -587,6 +588,20 @@ fn main() {
         .insert_resource(MyRes { val: 0 })
         .run();
 }
+```
+##### Conditional systems
+
+Run a system, conditional to the result of a query:
+
+```rs
+enum PlayerState { /* ... */ }
+fn player_action() { /* ... */ }
+
+fn in_state(target_state: PlayerState) -> impl Fn(Query<&PlayerState, With<Player>>) -> bool {
+    move |q| *q.single() == target_state
+}
+
+app.add_system(player_action.run_if(in_state(PlayerState::State1)))
 ```
 
 ### Run criteria

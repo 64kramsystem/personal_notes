@@ -1332,8 +1332,9 @@ opt.and(val);                     // Option -> v       (doesn't wrap)
 // Boolean patterns
 //
 (a == b).then(|| value)           // bool -> Option
-(a == b).then_some(value)         // bool -> Option (unstable)
-opt.is_some_and(|n| func(n)) {  } // Option -> bool
+(a == b).then_some(value)         // bool -> Option; unstable
+opt.is_some_and(|n| func(n)) {  } // Option -> bool; unstable, equivalent to `matches!(val, Some(x) if f(x))`
+
 
 // "is_none or equality_condition" is not simple; this is a reasonable approach.
 opt.unwrap_or(value) == value
