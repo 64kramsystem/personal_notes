@@ -1,3 +1,25 @@
+## Wed 03/Aug/2022
+
+- Open Source: Punchy
+  - [x] Implement Health restore item #85
+- Studies: Bevy
+  - [x] Review solution for system conditional based on a query
+- Tools
+  - [x] Setup Github notifications
+- Open Source: Rust Game Ports
+  - [x] Discuss maintenance
+  - [ ] Review `Rusty roguelike macroquad`
+  - [x] Move Rusty Roguelike steps to new separate project
+    - [x] Create fork, remove other ports, and update everything
+    - [x] Update book references
+    - [x] Ports project: Remove Rusty Roguelike steps except the last
+  - [x] soccer-fyrox: Update requirements to new project ones
+    - [x] soccer-fyrox: Make compatible with stable Rust
+    - [x] Move macros into own fyrox workspace
+  - [x] Repository preparations for release (part 1/3)
+    - [x] Remove now unnecessary files
+    - [x] Updates to the README (part 1)
+
 ## Tue 02/Aug/2022
 
 - Open Source: Punchy
@@ -8,6 +30,9 @@
     - [x] Fight find out state machine working
     - [x] Introduce the concept of (random) enemy target max distance
     - [x] Make enemies point to the target offset when attacking
+- [ ] Game Programming Algorithms and Techniques
+  - [x] 11. Scripting Languages and Data Formats
+  - [x] 12. Networked Games
 
 ## Mon 01/Aug/2022
 
