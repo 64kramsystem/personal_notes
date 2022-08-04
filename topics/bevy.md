@@ -597,9 +597,11 @@ Run a system, conditional to the result of a query:
 enum PlayerState { /* ... */ }
 fn player_action() { /* ... */ }
 
-fn in_state(target_state: PlayerState) -> impl Fn(Query<&PlayerState, With<Player>>) -> bool {
+// Generic version; S can be replaced with a concrete type.
+fn in_state<S: PartialEq + Component>(target_state: S) -> impl Fn(Query<&S, With<Player>>) -> bool {
     move |q| *q.single() == target_state
 }
+
 
 app.add_system(player_action.run_if(in_state(PlayerState::State1)))
 ```

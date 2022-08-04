@@ -43,6 +43,7 @@
   - [Partclone](#partclone)
   - [Docker](#docker)
   - [Wine](#wine)
+  - [Build the Linux kernel](#build-the-linux-kernel)
 
 ## ls
 
@@ -349,7 +350,7 @@ seq 4 | xargs -I {} -P 0 sh -c 'aws ec2 delete-snapshot --snapshot-id {} || true
 
 Perf is bound to the given kernel version; when this conditions can't be fulfilled:
 
-- build it (https://unix.stackexchange.com/a/530898; requires `libelf-dev`, `libdw-dev`): `make -C tools/ perf_install prefix=/my/path`
+- build it (https://unix.stackexchange.com/a/530898; requires `libelf-dev libdw-dev`): `make -C tools/ perf_install prefix=/my/path`
 - can directly invoke the binary (hack): `/usr/lib/linux-tools/5.15.0-41-generic/perf`
 
 See install script for convenient tweaks.
@@ -523,7 +524,6 @@ ln -s $images_parent_dir /home/partimag
 # Backup
 #
 # If snapshotting a Windows live O/S, schedule a disk check via `chkdsk /f` (and reboot) before starting the backup.
-#
 #
 # - `-q2`           : use partclone
 # - `-c`            : ask confirmation
@@ -1061,4 +1061,52 @@ Install .NET:
 # It's not clear if `--force` is required.
 #
 winetricks dotnet472 corefonts
+```
+
+## Build the Linux kernel
+
+A good reference is the [`tuxbuilder` builder](https://github.com/TuxInvader/focal-mainline-builder/blob/main/build.sh), but it does some things differently.
+
+Doesn't include packages (e.g. kernel-package`to be installed!
+
+```sh
+# Copy the running kernel config, then use the defaults for the new kernel version.
+#
+cp /boot/config-`uname -r` .config
+make olddefconfig
+
+# For the defaults, use instead:
+#
+make defconfig
+```
+
+Modifications:
+
+```sh
+# Necessary on some Debian/Ubuntu configs (see https://askubuntu.com/q/1329538).
+# Don't use `--disable`, which doesn't work as intended!
+#
+scripts/config --set-str SYSTEM_TRUSTED_KEYS ""
+scripts/config --set-str SYSTEM_REVOCATION_KEYS ""
+```
+
+Build:
+
+```sh
+# Old but working version (read issue below).
+#
+fakeroot make-kpkg -j $(nproc) --initrd --append-to-version=-myver kernel-image kernel-headers
+
+# This also runs `make clean`, and builds the kernel.
+# If there are errors, run with `-j` to display the cause.
+# All the deb packages are required.
+# The firmware files are not included, so include the latest `linux-firmware` package, if needed.
+#
+# Odd. Generates a 1.2GB `-dbg` package.
+#
+make -j $(nproc) deb-pkg LOCALVERSION=-sav
+
+# If the build is interrupted, run this, otherwise, wacky errors may happen (it removes all, including the config!):
+#
+make mrproper
 ```

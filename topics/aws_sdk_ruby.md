@@ -6,6 +6,8 @@
   - [Target groups](#target-groups)
   - [Waiters](#waiters)
   - [DynamoDB](#dynamodb)
+  - [Samples](#samples)
+    - [Informations EC2/Load balancing](#informations-ec2load-balancing)
 
 ## Responses paging
 
@@ -200,4 +202,36 @@ response = client.update_item(
   return_values: "ALL_NEW",  # Optional
   update_expression: "SET #Y = :y, #AT = :t",
 )
+```
+
+## Samples
+
+### Informations EC2/Load balancing
+
+Find the host taget statuses (quite a pain):
+
+```rb
+def find_hosts_target_status(hostnames)
+  target_group_arns = @lb_client
+    .describe_target_groups
+    .flat_map(&:target_groups)
+    .map(&:target_group_arn)
+
+  # {id => state}
+  target_states = target_group_arns
+    .map { |arn| @lb_client.describe_target_health(target_group_arn: arn) }
+    .flat_map(&:target_health_descriptions)
+    .each_with_object({}) { |target, result| result[target.target.id] = target.target_health.state }
+
+  # {hostname => state}
+  @ec2_client
+    .describe_instances(filters: [{name: 'tag:Hostname', values: hostnames}])
+    .flat_map(&:reservations)
+    .flat_map(&:instances)
+    .select { |instance| instance.state.name != 'terminated' }
+    .each_with_object({}) do |instance, result|
+      hostname = instance.tags.find { |tag| tag.key == 'Hostname' }.value
+      result[hostname] = target_states[instance.instance_id] || 'unattached'
+    end
+end
 ```

@@ -1,7 +1,9 @@
 # Virtualization
 
 - [Virtualization](#virtualization)
-  - [VMWare](#vmware)
+  - [Software-specific](#software-specific)
+    - [VMWare](#vmware)
+    - [VirtualBox](#virtualbox)
   - [Virtual disks](#virtual-disks)
     - [Creation/copy/conversion:](#creationcopyconversion)
     - [Zeroing/compacting/compressing an image](#zeroingcompactingcompressing-an-image)
@@ -15,9 +17,18 @@
   - [Vagrant](#vagrant)
   - [WINE](#wine)
 
-## VMWare
+## Software-specific
+
+### VMWare
 
 AMD GPU virtualization may not be supported; if so, add `mks.gl.allowUnsupportedDrivers=TRUE` to either `~/.vmware/preferences` or the VM cfg file.
+
+### VirtualBox
+
+```sh
+# Rebuild modules.
+/sbin/vboxconfig
+```
 
 ## Virtual disks
 
