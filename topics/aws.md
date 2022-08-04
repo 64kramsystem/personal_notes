@@ -15,6 +15,8 @@
 
 ### Permissions
 
+WATCH OUT!! Permissions don't always support specific/scoped resources - verify them in the console!
+
 Permissions can use variables, for example:
 
 ```json

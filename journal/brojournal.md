@@ -1,3 +1,20 @@
+## Thu 04/Aug/2022
+
+- Admin
+  - [x] Test new laptop
+- Open Source: Openscripts
+  - [x] ejectdisk: Fix LUKS devices handling
+- Open Source: Rust Game Ports
+- [ ] Repository preparations for release (part 2/3)
+  - [x] Move licenses
+  - [x] Updates to the README (part 2)
+    - [x] Table updates
+    - [x] Add requirements: license, stable rust
+    - [x] Advice to newcomers
+- Admin/Linux
+  - [x] Fight compile kernel
+  - [x] Fight boot issues
+
 ## Wed 03/Aug/2022
 
 - Open Source: Punchy
@@ -19,6 +36,17 @@
   - [x] Repository preparations for release (part 1/3)
     - [x] Remove now unnecessary files
     - [x] Updates to the README (part 1)
+- SWE: Practice
+  - Leetcode (rev. order)
+    - [x] Easy      88%: 5 tests, 1 submissions, 7'22", "1512. Number of Good Pairs"
+      - Semi-disaster
+      - Mistakes
+        - 2x used wrong variable, because misunderstood the error line in the stack trace
+        - used wrong variable
+        - used wrong variable
+    - [x] Easy      88%: 1 tests, 1 submissions, 4'13", "2160. Minimum Sum of Four Digit Number After Splitting Digits"
+    - [x] Easy      88%: 1 tests, 1 submissions, 1'14", "1470. Shuffle the Array"
+      - Used idiomatic Ruby
 
 ## Tue 02/Aug/2022
 

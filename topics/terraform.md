@@ -292,6 +292,8 @@ resource "aws_key_pair" "deployer" {
 
 ### IAM
 
+WATCH OUT!! If a permission is invalid, or the resource is not supported, TF won't notify the user, and the invalid permission will be stored (see [aws](aws.md#permissions)).
+
 #### `aws_iam_group`/`aws_iam_group_policy_attachment`
 
 ```tf

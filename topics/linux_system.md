@@ -458,10 +458,10 @@ apt-get source $package
 #
 dpkg-deb -c $package.deb
 
-# Unpack deb file
+# Unpack deb file.
 #
-ar -vx $package.deb
-tar xvf data.tar.gz
+dpkg-deb --fsys-tarfile $package.deb | tar xv # extract the data file; can pass /dev/stdin as input
+ar -vx $package.deb                           # this extract the deb files (debian-binary, control, data)
 
 # Find which package a file in the filesystem belongs to
 #
