@@ -1,3 +1,19 @@
+## Fri 05/Aug/2022
+
+- Admin/Linux
+  - [x] Kernel compilation: Further tests
+  - [x] Prepare new laptop
+- Open Source: Rust Game Ports
+  - [ ] Review of `Rusty roguelike macroquad` #119 (deadline: Aug/07)
+  - [x] Repository preparations for release (part 2/3)
+    - [x] Open discussion about contribution guidelines
+- Open Source: Rust Gamedev WG
+  - [x] Add entry to newsletter about ports project officialization
+- Open Source: Punchy
+  - [x] Write enemy attack state machine diagram, and add it to the wiki
+- Open Source: Bevy
+  - [x] Review Reddit question, investigate, and reply
+
 ## Thu 04/Aug/2022
 
 - Admin
