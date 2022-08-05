@@ -514,15 +514,19 @@ In some workflows, it's convenient to set `IGNOREEOF`, in order to prevent accid
 
 
 ```sh
-# Setup
+# Setup, from 20.04.4 live CD. The package is a complete distaster; dependencies are not installed:
 #
-# The Ubuntu package is broken; must install `partclone` manually.
+# - one old Ubuntus, partclone was not installed
+# - the compressions programs need to be installed
 #
-apt install -y clonezilla partclone
+# In case of error, disable the GUI to see the underlying message (see https://unix.stackexchange.com/a/589650).
+#
+apt install -y clonezilla zstd
 ln -s $images_parent_dir /home/partimag
 
 # Backup
 #
+# WATCH OUT!! The dev path is the basename!!
 # If snapshotting a Windows live O/S, schedule a disk check via `chkdsk /f` (and reboot) before starting the backup.
 #
 # - `-q2`           : use partclone
@@ -1072,41 +1076,59 @@ Doesn't include packages (e.g. kernel-package`to be installed!
 ```sh
 # Copy the running kernel config, then use the defaults for the new kernel version.
 #
-cp /boot/config-`uname -r` .config
-make olddefconfig
+cp /boot/config-$(uname -r) .config
 
-# For the defaults, use instead:
+# Disable debug package build
 #
-make defconfig
-```
+# WATCH OUT! This must go before olddefconfig, otherwise the settings will differ.
+# Makes `CONFIG_DEBUG_INFO_NONE=y` and `CONFIG_DEBUG_INFO` disappear.
+#
+# Related settings: `*DEBUG_INFO*`.
+#
+scripts/config --disable CONFIG_DEBUG_INFO_DWARF5
 
-Modifications:
-
-```sh
-# Necessary on some Debian/Ubuntu configs (see https://askubuntu.com/q/1329538).
-# Don't use `--disable`, which doesn't work as intended!
+# Necessary on some Debian/Ubuntu configs.
+# Don't use `--disable`!!
+#
+# References:
+# - https://cs4118.github.io/dev-guides/debian-kernel-compilation.html
+# - https://askubuntu.com/q/1329538
 #
 scripts/config --set-str SYSTEM_TRUSTED_KEYS ""
 scripts/config --set-str SYSTEM_REVOCATION_KEYS ""
+
+make olddefconfig
 ```
 
 Build:
 
 ```sh
-# Old but working version (read issue below).
-#
-fakeroot make-kpkg -j $(nproc) --initrd --append-to-version=-myver kernel-image kernel-headers
-
 # This also runs `make clean`, and builds the kernel.
-# If there are errors, run with `-j` to display the cause.
+# If there are errors, the last error message is not informative; either scroll up, or run without
+# `-j` (which makes the last error message informative).
 # All the deb packages are required.
 # The firmware files are not included, so include the latest `linux-firmware` package, if needed.
 #
-# Odd. Generates a 1.2GB `-dbg` package.
+# This will build a large debug package, which can be ignored. See the alternate workflows section.
 #
 make -j $(nproc) deb-pkg LOCALVERSION=-sav
 
-# If the build is interrupted, run this, otherwise, wacky errors may happen (it removes all, including the config!):
+# If the build is interrupted, run these, otherwise wacky errors may happen, and restart from scratch.
+# mrproper does not checkout (git) changed files.
 #
 make mrproper
+rm -rf ../$(basename "$(pwd)").orig
+```
+
+Alternate workflows:
+
+```sh
+# Config the build using defaults.
+#
+make defconfig
+
+# Old package building method.
+# Doesn't generate the debug package.
+#
+fakeroot make-kpkg -j $(nproc) --initrd --append-to-version=-myver kernel-image kernel-headers
 ```

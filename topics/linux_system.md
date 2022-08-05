@@ -47,7 +47,9 @@
   - [MIME (extensions) (file associations) handling](#mime-extensions-file-associations-handling)
     - [Adding and associating a new application](#adding-and-associating-a-new-application)
     - [Split MAFF association](#split-maff-association)
-  - [Mount encrypted (.ecryptfs) home](#mount-encrypted-ecryptfs-home)
+  - [Encryption](#encryption)
+    - [Mount encrypted (.ecryptfs) home](#mount-encrypted-ecryptfs-home)
+    - [Setup hibernation on Ubuntu-setup LUKS volume](#setup-hibernation-on-ubuntu-setup-luks-volume)
 
 ## Processes
 
@@ -1046,7 +1048,9 @@ XML
 update-mime-database /usr/share/mime
 ```
 
-## Mount encrypted (.ecryptfs) home
+## Encryption
+
+### Mount encrypted (.ecryptfs) home
 
 Obsolete, but kept for reference. Requires `ecryptfs-utils` package.
 
@@ -1054,4 +1058,22 @@ Obsolete, but kept for reference. Requires `ecryptfs-utils` package.
 ecryptfs-unwrap-passphrase /mnt/home/.ecryptfs/saverio/.ecryptfs/wrapped-passphrase # mount passphrase
 ecryptfs-add-passphrase --fnek                                                      # use mount PP; store the second signature
 mount -t ecryptfs /mnt/home/.ecryptfs/saverio/.Private /mnt                         # use mount PP; enable filename encryption; use signature
+```
+
+### Setup hibernation on Ubuntu-setup LUKS volume
+
+Ubuntu creates a too small swap partition, and doesn't set the swap volume kernel option.
+
+```sh
+# From live CD
+
+apt install partitionmanager
+partitionmanager
+# => unlock the volume, refresh, and resize the partitions
+mkswap /dev/mapper/$swapdev
+# => reboot
+
+# From host
+
+perl -i -pe "s/GRUB_CMDLINE_LINUX_DEFAULT=.*\K\"/ resume=/dev/mapper/$swapdev\"/" /etc/default/grub
 ```
