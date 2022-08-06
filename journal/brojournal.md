@@ -1,3 +1,9 @@
+## Sat 06/Aug/2022
+
+- Open Source: Punchy
+  - [x] Discuss big PR, and do minor investigation
+  - [x] Review other PR
+
 ## Fri 05/Aug/2022
 
 - Admin/Linux
