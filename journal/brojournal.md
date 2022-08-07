@@ -1,3 +1,22 @@
+## Sun 07/Aug/2022
+
+- Open Source: Punchy
+  - [x] Further discussion about big PR
+- Open Source: Rust Game Ports
+  - [x] Review `Rusty roguelike macroquad` #119 (deadline: Aug/07)
+- Open Source: Bevy Parallax
+  - [x] Check/fix issue reported by cdsupina
+- Project: Geet
+  - [x] CreatePr: Don't assign current user anymore
+- Tools
+  - [x] Rip aliases from OMZ git plugin
+- System
+  - [x] Remove some caches from backup
+- Admin
+  - [x] Flush weekly pool
+- Writings: Compiling Kernel
+  - [ ] Search how to find Ubuntu kernel config file not from running system
+
 ## Sat 06/Aug/2022
 
 - Open Source: Punchy
