@@ -107,6 +107,10 @@ Note: file traversal ordering is not guaranteed.
 -exec $command {} +               # execute command with as many files as possible (see https://unix.stackexchange.com/a/389706)
 ```
 
+Printf params:
+
+- `%h`: parent directory (!!!)
+
 Regexp types:
 
 - `egrep`: supports: `\w`, `[:digit:]`, not: `\d`
