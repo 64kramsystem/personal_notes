@@ -74,6 +74,7 @@ cargo test [-- --nocapture]          # pass nocapture in order to output print s
 cargo fmt
 cargo clippy                         # linter
 cargo doc [--open]                   # builds and optionally opens docs for the installed crates
+cargo publish [--features ...]       # publish a crate, optionally with some features enabled
 
 # Build/run options
 #
@@ -85,7 +86,8 @@ fmt --all -- --check
 
 # Other Cargo flags
 #
---build-std         # build the stdlib
+--build-std                   # build the stdlib
+--manifest-path $cargo_file   # run in the context of the workspace including the given cargo file
 ```
 
 When a project is run via Cargo, the env variable `CARGO_MANIFEST_DIR` is passed to the binary.

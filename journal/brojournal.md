@@ -1,3 +1,23 @@
+## Mon 08/Aug/2022
+
+- Admin
+  - [x] Update Github 64kramsystem profile: Convert structure to list of highlights
+  - [x] Buy new books
+    - [x] Fight find/convert book
+- Open Source: Rust Game Ports
+  - [x] Design and update labels
+  - [x] Create first two issues
+  - [x] Repository preparations for release (part 3/3)
+    - [x] Add CI
+      - Brutal fight with dynamic matrix generation
+    - [x] Align projects to new CI requirements
+    - [x] README: Add versions to table
+    - [x] README: Update Fyrox bug fixed
+- Open Source: Veloren
+  - [x] Preliminary look
+- Writings
+- [ ] Update kernel compilation article
+
 ## Sun 07/Aug/2022
 
 - Open Source: Punchy

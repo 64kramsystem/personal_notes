@@ -12,6 +12,7 @@
     - [tmate debuggin'!](#tmate-debuggin)
     - [Minimal conditional execution](#minimal-conditional-execution)
     - [Run command (e.g. install package)](#run-command-eg-install-package)
+    - [Dynamically generate a matrix](#dynamically-generate-a-matrix)
     - [Ruby generic tasks](#ruby-generic-tasks)
     - [Rust Cargo Clippy on multiple targets](#rust-cargo-clippy-on-multiple-targets)
   - [Preset CIs](#preset-cis)
@@ -53,6 +54,7 @@ Contexts:
   - `github.workspace`: where the repo is checked out
   - `github.event.number`: PR number ([reference](https://github.com/actions/checkout/issues/58#issuecomment-663103947))
   - `github.job`: job id (yaml key value)
+  - `github.workspace`: project (workspace) directory
 - `secrets.<SECRET_NAME>`: secrets
 
 There are environment variables, but must check the conditions, e.g. if they persist across jobs ([reference](https://docs.github.com/en/actions/learn-github-actions/environment-variables#default-environment-variables)):
@@ -148,6 +150,41 @@ jobs:
   run: sudo apt install libasound2-dev
 ```
 
+### Dynamically generate a matrix
+
+```yml
+# The names/references must match:
+#
+# - `steps.generate-matrix.outputs.XXX`          -> `set-output name=XXX`
+# - `needs.generate_projects_matrix.outputs.YYY` -> `outputs: YYY:`
+#
+generate_projects_matrix:
+  runs-on: ubuntu-latest
+  outputs:
+    matrix: ${{ steps.generate-matrix.outputs.matrix }}
+  steps:
+  - uses: actions/checkout@v3
+  - id: generate-matrix
+    # The script must print a JSON document to stdout. It's not specified if it's JSON5, but trailing
+    # commas are allowed.
+    # The command can be alternatively split into assignment to variable (`VAR=$(...)`), then output
+    # setting (`echo ...::$VAR`)
+    run: echo ::set-output name=matrix::$(.github/workflows/generate-projects-matrix.sh ${{ github.workspace }})
+check_code_formatting:
+  runs-on: ubuntu-latest
+  needs: generate_projects_matrix
+  strategy:
+    fail-fast: false
+    matrix:
+      cfg: ${{ fromJson(needs.generate_projects_matrix.outputs.matrix) }}
+  steps:
+    - uses: actions/checkout@v3
+    - uses: actions-rs/cargo@v1
+      with:
+        command: fmt
+        args: --all --manifest-path=${{ matrix.cfg.port_manifest }} -- --check
+```
+
 ### Ruby generic tasks
 
 Reference: https://docs.github.com/en/actions/guides/building-and-testing-ruby.
@@ -161,7 +198,7 @@ name: Ruby CI
 #
 on:
   push:
-    branches: [ $default-branch ]
+    branches: [ master ] # Can't use `$default-branch` here!!!
   # Leave without values in order to to disable filtering.
   #
   pull_request:
@@ -343,11 +380,11 @@ on:
   pull_request:
 
 jobs:
-  check_formatting:
+  check_code_formatting:
     runs-on: ubuntu-latest
-    name: Check Rust formatting
+    name: Check code formatting
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions-rs/cargo@v1
         with:
           command: fmt
@@ -356,7 +393,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Clippy correctness checks
     steps:
-      - name: Install Alsa dev library
+      - name: Install dev libraries
         run: sudo apt install libasound2-dev libudev-dev
       - uses: actions/checkout@v3
       - uses: actions/cache@v3
