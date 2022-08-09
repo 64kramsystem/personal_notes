@@ -1075,24 +1075,28 @@ winetricks dotnet472 corefonts
 
 A good reference is the [`tuxbuilder` builder](https://github.com/TuxInvader/focal-mainline-builder/blob/main/build.sh), but it does some things differently.
 
-Doesn't include packages (e.g. kernel-package`to be installed!
+Explanation of the Ubuntu kernel versioning [here](https://ubuntu.com/kernel).
+
+Repositories:
+
+- `git@github.com:torvalds/linux.git`: Official kernel repository; doesn't include patch versions
+- `git://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/focal`: Canonical versions for the given release, including HWE etc. (see [here](https://wiki.ubuntu.com/Kernel/Dev/KernelGitGuide))
+- `git://git.launchpad.net/~ubuntu-kernel-test/ubuntu/+source/linux/+git/mainline-crack`: Canonical mainline (testing) versions
+
+Procedure:
 
 ```sh
-# Copy the running kernel config, then use the defaults for the new kernel version.
-#
-cp /boot/config-$(uname -r) .config
+# (Packages installation is not included)
 
-# Disable debug package build
+# Copies the running kernel config (if .config is not present), and apply defaults for the new settings
+# of the new kernel version.
+# The running kernel config can be found in `/boot`.
+# It's not straightforward/possible to extract the kernel config from non-running kernels, for example,
+# the script `extract-ikconfig` requires a certain compile-time setting.
 #
-# WATCH OUT! This must go before olddefconfig, otherwise the settings will differ.
-# Makes `CONFIG_DEBUG_INFO_NONE=y` and `CONFIG_DEBUG_INFO` disappear.
-#
-# Related settings: `*DEBUG_INFO*`.
-#
-scripts/config --disable CONFIG_DEBUG_INFO_DWARF5
+make olddefconfig
 
 # Necessary on some Debian/Ubuntu configs.
-# Don't use `--disable`!!
 #
 # References:
 # - https://cs4118.github.io/dev-guides/debian-kernel-compilation.html
@@ -1101,7 +1105,33 @@ scripts/config --disable CONFIG_DEBUG_INFO_DWARF5
 scripts/config --set-str SYSTEM_TRUSTED_KEYS ""
 scripts/config --set-str SYSTEM_REVOCATION_KEYS ""
 
-make olddefconfig
+# Disable debug package build, programmatically (safer from GUI, since this has changed across kernel
+# versions).
+#
+# From GUI: "Kernel hacking" -> "Compile-time checks and compiler options" -> "Compile the kernel with debug info"
+#
+scripts/config --undefine DEBUG_INFO
+scripts/config --undefine DEBUG_INFO_COMPRESSED
+scripts/config --undefine DEBUG_INFO_REDUCED
+scripts/config --undefine DEBUG_INFO_SPLIT
+scripts/config --undefine GDB_SCRIPTS
+scripts/config --set-val DEBUG_INFO_DWARF5 n
+scripts/config --set-val DEBUG_INFO_NONE y
+
+# There are two GUI options for interactive configuration.
+# The easiest way to turn interactive changes into non-interactive is to use the interactive mode,
+# then compare the old and new version via `scripts/diffconfig`.
+#
+# Remember that there are different `scripts/config` commands:
+#
+# `--undefine`: entirely remove
+# `--disable`:  comment
+# `--enable`:   uncommment
+# `--set-val`:  set a value
+# `--set-str`:  set a quoted value
+#
+make xconfig    # X11
+make menuconfig # terminal
 ```
 
 Build:
@@ -1111,9 +1141,9 @@ Build:
 # If there are errors, the last error message is not informative; either scroll up, or run without
 # `-j` (which makes the last error message informative).
 # All the deb packages are required.
-# The firmware files are not included, so include the latest `linux-firmware` package, if needed.
 #
-# This will build a large debug package, which can be ignored. See the alternate workflows section.
+# The firmware files are not included, so include the latest `linux-firmware` package, if needed.
+# The official firmware repo is https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git.
 #
 make -j $(nproc) deb-pkg LOCALVERSION=-sav
 
@@ -1124,15 +1154,11 @@ make mrproper
 rm -rf ../$(basename "$(pwd)").orig
 ```
 
-Alternate workflows:
+Old references:
 
-```sh
-# Config the build using defaults.
-#
-make defconfig
-
-# Old package building method.
-# Doesn't generate the debug package.
-#
-fakeroot make-kpkg -j $(nproc) --initrd --append-to-version=-myver kernel-image kernel-headers
-```
+- [What's a simple way to recompile the kernel?](https://askubuntu.com/questions/163298/whats-a-simple-way-to-recompile-the-kernel)
+- [BuildYourOwnKernel](https://wiki.ubuntu.com/Kernel/BuildYourOwnKernel)
+- [Compiling the kernel with default configurations](https://unix.stackexchange.com/questions/29439/compiling-the-kernel-with-default-configurations)
+- [What does “make oldconfig” do exactly in the Linux kernel makefile?](https://stackoverflow.com/questions/4178526/what-does-make-oldconfig-do-exactly-in-the-linux-kernel-makefile)
+- [Where can I get the 11.04 kernel .config file?](https://askubuntu.com/questions/28047/where-can-i-get-the-11-04-kernel-config-file)
+- [make config vs oldconfig vs defconfig vs menuconfig vs savedefconfig](http://embeddedguruji.blogspot.com/2019/01/make-config-vs-oldconfig-vs-defconfig.html)

@@ -1,3 +1,17 @@
+## Tue 09/Aug/2022
+
+- Writings
+  - [x] Rewrite kernel compilation article
+- Studies: Linux
+  - [x] Investigate sed slurping mode replacements
+- Open Source: Rust Game Ports
+  - [x] Request: Review project
+- Admin
+  - [x] Long term planning
+  - [x] Fight find JPEG 2000 resources
+  - [x] Preliminary read of chapters from JPEG 2000 books
+    - [x] Brutal fight PDF cropping tools
+
 ## Mon 08/Aug/2022
 
 - Admin
@@ -16,7 +30,7 @@
 - Open Source: Veloren
   - [x] Preliminary look
 - Writings
-- [ ] Update kernel compilation article
+  - [ ] Rewrite kernel compilation article
 
 ## Sun 07/Aug/2022
 
