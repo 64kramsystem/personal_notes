@@ -571,12 +571,14 @@ Basic support:
 Some supported by `-E`:
 
 - `\w`
+- `\b`
 - `+`
 - (at least basic) capturing groups; references, also back-, are supported via `\` (but not `$`).
 
 Not supported (at all):
 
 - `\d`
+- non-capturing group, lookahead/behind
 
 ### Operators/variables
 
@@ -625,11 +627,18 @@ sed 's/from/to1\nto2/'
 ### Useful examples
 
 ```sh
-# Replace the second occurrence of `---`; WATCH OUT! Regex are affected, and it's not clear how to match
-# line delimiters (`\x0` doesn't have effect).
-# WATCH OUT!! `-iz` has a strange effect (renames the file).
+# Replace the second occurrence of `FOO`.
+# `-z` is the sed version of Perl's slurping.
 #
-sed -zi 's/---/abc\n---/2'
+sed -z 's/FOO/FOO\nBAR/2'
+
+# Line matching is not trivial, since when slurping, `^` matches the beginning of the file, and the
+# `m` regex modifiers doesn't work [like Perl].
+# WATCH OUT! This is tricky, as unintuitive things happen when matching beginning and ending of the
+# line. A mitigation is to use `\b`.
+#
+echo $'FOO1\nFOO2\nFOO3' | sed -Ez 's/(^|\n)FOO./\1/2'   # => replaces #2 with an empty line
+echo $'FOO1\nFOO2\nFOO3' | sed -Ez 's/(^|\n)FOO.\n/\1/2' # => unexpected: replaces #3
 ```
 
 ## Ruby
