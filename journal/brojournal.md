@@ -1,3 +1,10 @@
+## Wed 10/Aug/2022
+
+- Open Source: Veloren
+  - [x] Server: Vacuum database on startup (Closes #1610)
+  - [x] Review all easy/beginner issues
+  - [ ] Watch Veloren Code Reading #1
+
 ## Tue 09/Aug/2022
 
 - Writings

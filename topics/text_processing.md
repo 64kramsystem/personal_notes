@@ -629,16 +629,18 @@ sed 's/from/to1\nto2/'
 ```sh
 # Replace the second occurrence of `FOO`.
 # `-z` is the sed version of Perl's slurping.
+# WATCH OUT! `-z` is experimental, and in some cases, confusing (see example below).
 #
 sed -z 's/FOO/FOO\nBAR/2'
 
-# Line matching is not trivial, since when slurping, `^` matches the beginning of the file, and the
-# `m` regex modifiers doesn't work [like Perl].
-# WATCH OUT! This is tricky, as unintuitive things happen when matching beginning and ending of the
-# line. A mitigation is to use `\b`.
+# Line matching is not fully functional, since when slurping, `^` matches the beginning of the file,
+# and the `m` regex modifiers doesn't work [like Perl].
+# This functionality is better not used (see second example).
+# Reference: https://unix.stackexchange.com/a/712968.
 #
-echo $'FOO1\nFOO2\nFOO3' | sed -Ez 's/(^|\n)FOO./\1/2'   # => replaces #2 with an empty line
-echo $'FOO1\nFOO2\nFOO3' | sed -Ez 's/(^|\n)FOO.\n/\1/2' # => unexpected: replaces #3
+echo $'FOO1\nFOO2\nFOO3' | sed -Ez 's/FOO.\n//2'         # match EOL terminator; works as expected
+echo $'FOO1\nFOO2\nFOO3' | sed -Ez 's/(^|\n)FOO./\1/2'   # match BOL terminator; INEXACT: replaces #2 with an empty line
+echo $'FOO1\nFOO2\nFOO3' | sed -Ez 's/(^|\n)FOO.\n/\1/2' # match both terminators; UNEXPECTED: replaces #3 instead of #2
 ```
 
 ## Ruby
