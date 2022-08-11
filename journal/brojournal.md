@@ -1,3 +1,14 @@
+## Thu 11/Aug/2022
+
+- Admin: Blog
+  - [x] Investigate and fix redirect causing 404 on GHP only
+- Project: Open Source Games Collection
+  - [x] Find early Carmack games (+sources)
+  - [x] Setup DOSBox
+  - [x] Test Keen/Catacomb
+  - [x] Organize sources and list
+  - [ ] Review Github organizations/Gitlab groups
+
 ## Wed 10/Aug/2022
 
 - Open Source: Veloren

@@ -10,6 +10,7 @@
   - [Jekyll](#jekyll)
     - [(Some) Metadata](#some-metadata)
     - [Define site-wide collections](#define-site-wide-collections)
+    - [Redirect old pages](#redirect-old-pages)
 
 ## Liquid
 
@@ -123,3 +124,15 @@ collections:
 ```
 
 Each collection entry is a document in a directory with name `_<collection` (e.g. `_tags`).
+
+### Redirect old pages
+
+Use `jekyll-redirect-from` gem, and add this to the front matter:
+
+```yml
+redirect_from:
+- Quickly-building-a-custom-linux-ubuntu-kernel-with-modified-configuration-kernel-timer-frequency
+- Quickly-building-a-custom-linux-ubuntu-kernel-with-modified-configuration-kernel-timer-frequency/
+```
+
+WATCH OUT! The trailing slash makes no difference locally, but it does on GH Pages!

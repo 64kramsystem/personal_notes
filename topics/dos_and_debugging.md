@@ -1,10 +1,6 @@
-# DOSBox and DOS debugging
+# DOS and debugging
 
-## DOSBox sample execution
-
-```sh
-dosbox -c 'MOUNT C "."' -c 'C:' -c 'DEBUG SAMPLE.COM'
-```
+See virtualization DOSBox [section](virtualization.md#dosbox).
 
 ## DEBUG.COM commands
 
