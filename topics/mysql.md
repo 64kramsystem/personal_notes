@@ -24,6 +24,10 @@
   - [Regular expressions (regexes)](#regular-expressions-regexes)
     - [Strategies/Examples](#strategiesexamples)
   - [JSON + MVI and array storage](#json--mvi-and-array-storage)
+    - [Search](#search)
+    - [Extraction](#extraction)
+    - [Modification](#modification)
+    - [Column conversion](#column-conversion)
     - [Aggregation performance](#aggregation-performance)
   - [Fulltext indexes](#fulltext-indexes)
     - [Stopwords](#stopwords)
@@ -516,6 +520,8 @@ SELECT 1 `id`, '["foo", "bar", "baz"]' `client_tags`;
 ALTER TABLE clients ADD KEY client_tags ( (CAST(client_tags -> '$' AS CHAR(16) ARRAY)) );
 ```
 
+### Search
+
 JSON search functions. WATCH OUT!! Searches must be performed on `<column> -> $`, otherwise, the index can't be used!
 
 ```sql
@@ -551,6 +557,15 @@ SELECT JSON_SEARCH(client_tags, 'all', 'ba_') FROM clients;
 -- "$[1]"
 ```
 
+### Extraction
+
+```sql
+SELECT JSON_EXTRACT('{"extra": {"name": "Foo"}}', '$.extra');
+-- {"name": "Foo"}
+```
+
+### Modification
+
 JSON modification functions. WATCH OUT! Operating on a null node (/column) will return NULL.
 
 ```sql
@@ -584,6 +599,8 @@ SELECT JSON_INSERT(client_tags, '$[5]', 'qux') FROM clients;
 SELECT JSON_REPLACE(client_tags, '$[5]', 'qux') FROM clients;
 -- ["foo", "bar", "baz"]
 ```
+
+### Column conversion
 
 Convert an array to a table, from single string:
 

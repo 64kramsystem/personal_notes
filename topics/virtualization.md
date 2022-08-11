@@ -16,6 +16,7 @@
     - [RISC-V](#risc-v)
   - [Vagrant](#vagrant)
   - [WINE](#wine)
+  - [DOSBox](#dosbox)
 
 ## Software-specific
 
@@ -307,3 +308,11 @@ vagrant ssh-config $host | awk '/IdentityFile/ {print $NF}'
 ## WINE
 
 If fonts are not rendering correctly, install the core fonts: `winetricks corefonts`.
+
+## DOSBox
+
+Sample execution:
+
+```sh
+dosbox -c 'MOUNT C "."' -c 'C:' -c 'DEBUG SAMPLE.COM'
+```
