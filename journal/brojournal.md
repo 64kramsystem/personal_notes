@@ -1,3 +1,17 @@
+## Fri 12/Aug/2022
+
+- Project: Open Source Games Collection
+  - [x] Check out Build Engine sources
+  - [x] Setup game sources org in Github, and transfer first game
+  - [x] Write readme
+  - [x] Add a few games (move Hägar the Horrible)
+- Studies: Gamedev
+  - [ ] Tricks of the Game Programming Gurus
+    - [x] 1. A Video Game Primer
+    - [x] 2. Assembly Language Basics
+    - [x] 3. Input Device Basics
+    - [x] 4. The Mechanics of Two-Dimensional Graphics
+
 ## Thu 11/Aug/2022
 
 - Admin: Blog
@@ -6,8 +20,9 @@
   - [x] Find early Carmack games (+sources)
   - [x] Setup DOSBox
   - [x] Test Keen/Catacomb
-  - [x] Organize sources and list
-  - [ ] Review Github organizations/Gitlab groups
+  - [x] Think structure
+    - [x] Organize sources and list
+  - [x] Review Github organizations/Gitlab groups
 
 ## Wed 10/Aug/2022
 

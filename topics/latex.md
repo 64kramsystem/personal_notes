@@ -24,4 +24,13 @@ x_1  x_{1}  E_{r,c} % subscript
 \langle  \rangle    % angle brackets
 \alpha ...          % greek letters
 \cdot               % multiplication dot
+
+% matrices
+% the *dots are filling dots
+
+\begin{bmatrix}
+    x_11   & \dots  & x_1n   \\
+    \vdots & \ddots & \vdots \\
+    x_d1   & x_d3   & x_dn
+\end{bmatrix}
 ```

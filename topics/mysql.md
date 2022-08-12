@@ -921,6 +921,8 @@ WINDOW w AS (ORDER BY id DESC)
 This example is a typical application - selecting a row within a window:
 
 ```sql
+# We either use a CTE or a subquery; the window function value can't be used in a WHERE condition.
+#
 WITH ordered_items AS
 (
   SELECT id, customer_id, active, expires_on,
