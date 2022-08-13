@@ -9,7 +9,8 @@
   - [Configuration](#configuration)
   - [C/C++](#cc)
     - [Setting up a project](#setting-up-a-project)
-    - [Define macros (symbols)](#define-macros-symbols)
+    - [Find compile commands](#find-compile-commands)
+    - [Includes/Macros](#includesmacros)
 
 ## Extensions
 
@@ -91,19 +92,43 @@ Configuring file type:
 
 The `Makefile tools` extension takes care of the project configuration.
 
-Setup the basic options via UI (`C/C++: Edit Configurations (UI)`); if necessary, tweak `.vscode/c_cpp_properties.json`.
+Setup the basic options via UI (`C/C++: Edit Configurations (UI)`), which will create `.vscode/c_cpp_properties.json`, then tweak it, if necessary.
 
 Some options can be found by observing `./configure`, and/or via bear (see below).
 
 When a project is opened, the extension will perform a build dry run; it's better to run build (make) the project before, since some operations may be performed (e.g. generating files), that the dry run doesn't.
 
+### Find compile commands
+
+CMake can generate the compile commands: `cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1`, which outputs to `compile_commands.json`.
+
 For desperate cases, an option is to use the `bear` tool, which generates the compile options for each file.
 
 Run `bear make`, then add `"compileCommands": "${workspaceFolder}/compile_commands.json"` to `.vscode/c_cpp_properties.json`.
 
-### Define macros (symbols)
+### Includes/Macros
 
-Not clear:
+Add include paths; for unclear reasons, some defines raise an error, even if go to definition works.
+
+```json
+// In c_cpp_properties.json
+
+"includePath": [
+    "${workspaceFolder}/**", // default
+    "/usr/include/SDL2",
+    "/usr/include/x86_64-linux-gnu/sys"
+],
+
+// For unclear reasons, some entries must be manually added to `browse.path`, otherwise, a warning is raised:
+
+"browse": {
+  "path": [
+    "/usr/include/SDL2"
+  ]
+},
+```
+
+Define macros (not clear):
 
 ```json
 // In settings.json

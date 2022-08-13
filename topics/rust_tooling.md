@@ -2,13 +2,13 @@
 
 - [Rust Tooling](#rust-tooling)
   - [Warnings](#warnings)
-  - [Cargo/Rustup](#cargorustup)
+  - [Cargo](#cargo)
     - [Workspaces](#workspaces)
     - [Visual Studio Code/Rust Analyzer](#visual-studio-coderust-analyzer)
     - [Debugging information](#debugging-information)
     - [Features](#features)
     - [Conditional build (ifdef-like)](#conditional-build-ifdef-like)
-    - [Toolchain](#toolchain)
+    - [Toolchain (Rustup)](#toolchain-rustup)
     - [Build times (profile/improve)](#build-times-profileimprove)
     - [Cross-compilation](#cross-compilation)
     - [Cargo doc](#cargo-doc)
@@ -60,7 +60,7 @@ More thorough linting:
 
 Default checks described [here](https://github.com/rust-lang/rust-clippy#clippy).
 
-## Cargo/Rustup
+## Cargo
 
 Base operations:
 
@@ -247,7 +247,7 @@ The `cfg` attribute performs a conditional build:
 
 The attribute can be applied to methods, statements, etc.
 
-### Toolchain
+### Toolchain (Rustup)
 
 Set the specified toolchain for the current project (directory):
 

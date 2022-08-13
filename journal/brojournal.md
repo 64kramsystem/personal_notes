@@ -1,3 +1,55 @@
+## Sat 13/Aug/2022
+
+- Open Source: Rust Game Ports
+  - [x] README: Inline the links in the ports table (+ minor changes)
+  - [x] Remove source projects
+- Project: Commercial Game Sources
+  - [x] Rename organization and add image
+  - [x] Use references for links, and add "Convenient port(s)" section
+- Admin/Tools
+  - [x] Fight GNU Global vs Pascal files
+  - [x] Fight C2Rust binary production
+- Project: Port Catacomb II
+  - [x] Open PR with key polling fix
+  - [x] Open PR with misaligned break correction
+  - [x] Fix warnings
+    - [x] Refactor some transpiler ugliness
+  - [x] Fix issue caused by transpiler
+  - Admin stuff
+    - [x] Disable Clippy, except for correctness warnings
+    - [x] Format Rust code
+    - [x] Add (VSC) `build` to .gitignore
+    - [x] Add phony Makefile, to prevent VSC (plugin) from complaining
+    - [x] Rename source_project, and references, to sdl_port_project
+    - [x] Format SDL port project (with Clang)
+  - Port
+    - [x] Mark some SDL-related function parameters as unused
+    - [x] Workaround improper Rust warning (!)
+    - [x] Fix two struct representation related issues
+    - [x] Remove file unpacking option from `installgrfile()`
+    - [x] Refactor very ugly macro expansion in `ControlMouse()`; add `extra_*` modules
+    - [x] De-hardcode `open()` flag constants
+    - [x] De-hardcode NUM_DEMOS constant
+    - [x] Fix `_SDL_turnOnPCSpeaker()` overflow caused by possibly improper transpiling
+    - [x] Convert argv/argv variables to a Vec
+    - [x] Remove and simplify ugly `<bool>_0` constants
+    - [x] Remove (many) literal number casts
+    - [x] Convert (many) literal number casts to just the literal (cargo fmt not applied)
+    - [x] Apply Cargo fmt (following previous numeric literals conversion)
+    - [x] Restore comments in main(_0) function
+    - [x] Merge `main_0()` into `main()` (important note!)
+    - [x] Restore spacing in `main()`
+    - [x] Convert help to standard Rust `print!`
+    - [x] Convert main() to idiomatic Rust
+    - [x] Convert an ugly transpiled assert
+    - [x] Convert `main()` to more idiomatic Rust, and `exitdemo` global
+    - [x] Convert `statetype` to enum
+    - [x] Convert `demoenum` to Rust enum, as global non-extern variable
+    - [x] Convert `priority` global to a main loop local
+    - [x] Extract `main()` into a separate `main.rs` module
+    - [x] Convert `items` global to a main loop local
+    - [x] Merge all scancode constants (into separate module)
+
 ## Fri 12/Aug/2022
 
 - Project: Open Source Games Collection

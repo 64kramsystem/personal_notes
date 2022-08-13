@@ -297,10 +297,11 @@ Diff/Patching:
 format-patch [--stdout] $start_commit~[..$end_commit]
 am [--reject] $patchfile
 
-# "Transfer" one or more commits between two repositories.
+# "Transfer" one or more commits between two repositories, while changing the files path.
+# Don't forget the `g` regex modifier!
 #
 git -C ~/code/riscv_images format-patch --stdout $start_commit[..$end_commit] |
-  sed 's| [ab]/ruby||g' |
+  perl -pe 's| [ab]/ruby||g' |
   git am
 
 # Patch with metadata loss (and no commit)
