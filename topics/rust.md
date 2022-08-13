@@ -648,7 +648,7 @@ let mtarr = [
 // If a struct has an array, it's possible to initialize the array implicitly by using the [Default](#default) trait on the struct.
 
 arr[512..512 + source.len()].copy_from_slice(&source) // memcpy (copy) from/to slices/vectors; source/dest size must be the same!
-arr.fill(value)                         // memset; unstable as of Aug/2020
+arr.fill(value)                         // memset
 [1, 2, 3] == [1, 2, 4]                  // arrays can be compared via `==`
 
 arr.to_vec()                            // convert array to vector
@@ -980,10 +980,10 @@ let literal: &str = "Your pizza";             // string literals are slices!
 // for the Ruby squiggly heredoc, use the `indoc` crate.
 //
 let string = "\
-  a\n\
-    b c\n\
-    d \n\
-"
+    CatacombSDL\n\
+\
+    Usage: catacomb [windowed <width> <height>] [screen <num>]\n\
+" // this is not included as newline, since there is a backslash before
 ```
 
 Using strings with functions:

@@ -1,4 +1,5 @@
 # SDL/Rust
+
 - [SDL/Rust](#sdlrust)
   - [Terminology and general concepts](#terminology-and-general-concepts)
   - [Base operations](#base-operations)
