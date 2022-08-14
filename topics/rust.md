@@ -225,7 +225,7 @@ All number literals support the type as suffix (e.g. `32u8`), and the (cosmetic)
 Extra string literals:
 
 ```rust
-let bytestr: &[u8] = b"hello";      // byte string
+let bytestr: &[u8] = b"hello";      // byte string (use `as_bytes()` to convert from string types)
 let rawstr: &str = r"hello";        // raw string (doesn't process escapes)
 let byterawstr: &[u8] = br"hello";  // byte raw string
 
@@ -569,7 +569,17 @@ iter::empty()                  // empty
 iter::once(x)                  // single entry
 iter::repeat(x)                // repeating a value
 iter::repeat(x).take(n)        // create n repeating values
-iter::repeat_with(|n| func(n)) // repeate a function (Ruby's `Array.new() {}` )
+iter::repeat_with(|| func())   // repeate a function (Ruby's `Array.new() {}` )
+
+// Fancy, but impractical, way of creating a duplicated array (Ruby's `Array.new() {}`); `collect()`
+// is necessary because the `RepeatWith` iterator doesn't implement `TryInto`.
+// The simplest way is just to make Foo a Copy and instantiate the array directly.
+//
+let _arr: [Foo; 10] = iter::repeat_with(|| Foo { v: 1 })
+    .take(10)
+    .collect::<Vec<_>>()
+    .try_into()
+    .unwrap();
 
 // Simplified version of fold(), where each item is based on the last value. Example with multiples
 // of 10:
@@ -648,7 +658,7 @@ let mtarr = [
 // If a struct has an array, it's possible to initialize the array implicitly by using the [Default](#default) trait on the struct.
 
 arr[512..512 + source.len()].copy_from_slice(&source) // memcpy (copy) from/to slices/vectors; source/dest size must be the same!
-arr.fill(value)                         // memset
+slice.fill(value)                       // memset; can be used with arrays or slices (eg. partial fill)
 [1, 2, 3] == [1, 2, 4]                  // arrays can be compared via `==`
 
 arr.to_vec()                            // convert array to vector
@@ -689,6 +699,7 @@ vec.last();
 
 vec.push(1);                            // Push at the end
 vec.pop();                              // Pop from the end
+vec.remove(0);                          // Ruby's `Array#shift()`. WATCH OUT! Panics if index is out of bounds
 
 vec.extend([1, 2, 3].iter().copied());  // Append (concatenate) an array
 vec.extend(&[1, 2, 3]);                 // Append (borrowing version) an array/vec
@@ -1298,6 +1309,7 @@ let absent_number: Option<i32> = None;
 
 // Extract a value, raising an error if None. Since `expect()` consumes the value, use `as_ref()`/
 // `as_mut()` in order to borrow.
+// If the message needs formatting, use `format!`, optionally via  `unwrap_or_else()`.
 //
 let value = opt.expect("it shouldn't be None!");
 let &mut value = opt.as_mut().expect("it shouldn't be None!");
@@ -1333,7 +1345,8 @@ opt.and(val);                     // Option -> v       (doesn't wrap)
 //
 (a == b).then(|| value)           // bool -> Option
 (a == b).then_some(value)         // bool -> Option; unstable
-opt.is_some_and(|n| func(n)) {  } // Option -> bool; unstable, equivalent to `matches!(val, Some(x) if f(x))`
+opt.is_some_and(|n| func(n)) {  } // Option -> bool; unstable, equivalent to `matches!(val, Some(x) if f(x))`;
+                                  // can also split in `let res = ...` -> `if Some(val) = res {}`
 
 
 // "is_none or equality_condition" is not simple; this is a reasonable approach.
@@ -1607,7 +1620,7 @@ print_raw_pointers(ref_mut, ref_const);
 //
 mymethod(&mut num, &num as *const i32);
 
-// (Some) APIs, specific to raw pointers:
+// (Some) APIs, specific to raw pointers (unsafe):
 
 contents                                      // *mut u8
     .offset(1)                                // pointer arithmetic; unit: size_of::<T>

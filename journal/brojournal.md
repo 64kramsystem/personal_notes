@@ -1,3 +1,42 @@
+## Mon 15/Aug/2022
+
+- Project: Port Catacomb II
+  - [x] Remove some globals/constants
+  - [x] De-hardcode `numlevels` constant
+  - [x] Convert `objects` libc byte/word types to native Rust
+  - [x] Remove redundant typedefs from `objects` module
+  - [x] Remove now unnecessary public visibility from `catacomb-lib` modules
+  - [x] Merge several structs/enums
+  - [x] Simplifications to `think_type` data type conversion
+  - [x] Narrow `thinktype` enum internal representation
+  - [x] Convert some enums to Rust enums, along with (some) data type conversions
+  - [x] Correct comment to bug in `_SDL_turnOnPCSpeaker()`
+  - [x] Convert `initobjects()` to non-external
+  - [x] `initobjects()` is now safe! 🥳
+  - [x] Remove unnecessary casts in `initobjects()`
+  - [x] Replace libc's `exit()` invocation with Rust stdlib's
+  - [x] Convert cmdline args processing to simpler and safe Rust code
+  - [x] Simplify some data types in `_setupgame()`
+  - [x] Move some code out of the unsafe block in `original_main()`
+  - [x] Remove a lot of junk base type typedefs
+  - [x] Move several globals to global state
+  - [x] Add `remove_junk_data_types` utility script
+  - [x] Add `num*` crate, and use it
+  - [x] `catasm` module: Convert two globals to constants
+  - [x] Introduce (sob) a global state type
+  - [x] Convert many globals to constants; some requiring very extensive changes
+  - [x] Move `statetype` enum into own module
+  - [x] Move some pub consts from `catacomb` module into `cat_play`, as private
+  - [x] Add convenience type Vec2
+  - [x] Convert screencenter x/y variables into Vec2
+  - [x] `clearold()`: Use standard array filling instead of memset (makes it safe)
+  - [x] Reorder GlobalState variables; add original comments; add missing entries (commented)
+  - [x] Rename `global_state` variables to `gs`
+  - [x] Create safe SDL wrapper module (not complete)
+  - [x] Remove extern from the functions (where possible)
+  - [x] Remove a libc memset dependency
+  - [x] Make some symbols private
+
 ## Sat 13/Aug/2022
 
 - Open Source: Rust Game Ports

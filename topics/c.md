@@ -51,7 +51,8 @@ int main(int argc, char **argv) {
 
 #### printf
 
-- `lu/ld` long unsigned/signed
+- `d`:     int signed
+- `lu/ld`: long unsigned/signed
 
 ## Preprocessor
 
