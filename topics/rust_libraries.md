@@ -48,7 +48,7 @@
     - [Static/global variables (`lazy_static`, `once_cell`, `thread_local!`)](#staticglobal-variables-lazy_static-once_cell-thread_local)
     - [Single-time initialization (`std::sync::Once`)](#single-time-initialization-stdsynconce)
     - [Concurrency (multithreading) tools (`rayon`/`crossbeam`)](#concurrency-multithreading-tools-rayoncrossbeam)
-    - [Enum utils, e.g. iterate (`strum`)](#enum-utils-eg-iterate-strum)
+    - [Enum utils, e.g. iterate (`strum`, `num`)](#enum-utils-eg-iterate-strum-num)
     - [Convenience macros for operator overloading (`auto_ops`)](#convenience-macros-for-operator-overloading-auto_ops)
     - [Indented Heredoc-like strings (`indoc`)](#indented-heredoc-like-strings-indoc)
     - [User directories (`dirs`)](#user-directories-dirs)
@@ -125,7 +125,19 @@ let num: Number = int.into();
 
 Important: `From/To` don't guarantee that the trait implementation is cheap.
 
-The respective `Try` versions are fallible (return `Option`).
+The respective `Try` versions are fallible (return `Option`):
+
+```rs
+// See [num](#num) for convenient enum casting
+//
+impl TryFrom<u32> for dirtype {
+    type Error = ();
+
+    fn try_from(value: u32) -> Result<Self, Self::Error> {
+        FromPrimitive::from_u32(value).ok_or(())
+    }
+}
+```
 
 #### Index[Mut]
 
@@ -1527,7 +1539,7 @@ Both Rayon and [Crossbeam](https://github.com/crossbeam-rs/crossbeam) provide to
 rayon::join(|| quicksort(a), || quicksort(&mut b[1..]))
 ```
 
-### Enum utils, e.g. iterate (`strum`)
+### Enum utils, e.g. iterate (`strum`, `num`)
 
 ```rust
 // include both `strum` and `strum_macros`.
@@ -1545,6 +1557,22 @@ pub enum Flag {
 use strum::IntoEnumIterator;
 
 for flag in Flag::iter() { /* ... */ }
+```
+
+Convert enums from numeric types (requires `num`, `num-traits`, `num-derive`):
+
+```rs
+#[derive(FromPrimitive)]
+pub enum dirtype { east = 1, north = 0 }
+
+impl TryFrom<u32> for dirtype {
+    type Error = ();
+    fn try_from(value: u32) -> Result<Self, Self::Error> {
+        FromPrimitive::from_u32(value).ok_or(())
+    }
+}
+
+let xxx: dirtype = 1_u32.try_into().unwrap();
 ```
 
 ### Convenience macros for operator overloading (`auto_ops`)
