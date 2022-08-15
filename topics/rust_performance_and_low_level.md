@@ -10,7 +10,9 @@
       - [C library patterns](#c-library-patterns)
     - [Uninitialized memory (`std::mem::MaybeUninit`)/Partially initialized structs](#uninitialized-memory-stdmemmaybeuninitpartially-initialized-structs)
       - [Bidimensional array struct, uninitialized and macro'ed](#bidimensional-array-struct-uninitialized-and-macroed)
-    - [Manually allocating memory](#manually-allocating-memory)
+    - [Manual memory management](#manual-memory-management)
+      - [Allocation](#allocation)
+      - [Expose Vec internal array as raw pointer](#expose-vec-internal-array-as-raw-pointer)
     - [std::num::NonZero*](#stdnumnonzero)
     - [(LLVM) Intrinsics/ASM APIs](#llvm-intrinsicsasm-apis)
     - [Embedded/OS development](#embeddedos-development)
@@ -32,7 +34,8 @@
 size_of::<Type>()         // memory occupation of a type
 size_of_val(&v)           // memory occupation of a variable
 unsafe { zeroed::<T>() }  // return zeroed memory for type; it's unsafe because zero(s) may not be a valid value
-forget(var)               // use when transferring ownership to a library; prevents destructors to run
+forget(var)               // use when transferring ownership to a library; prevents destructors to run. safe because
+                          // Rust doesn't guarantee that destructors need to run
 swap(&mut x, &mut y)      // swaps values at two locations
 ```
 
@@ -61,6 +64,22 @@ print_raw_pointers(ref_mut, ref_const);
 // Invalid, due to BC; as workaround, pass the raw pointer as separate variable.
 //
 mymethod(&mut num, &num as *const i32);
+
+// Some APIs:
+//
+raw_p.write_bytes(val, cnt);         // memset
+dest_raw_p.offset_from(start_raw_p); // compute offset (pointer arithmetic). WATCH OUT!: Uses the type size as unit, not 1!
+```
+
+Referencing raw memory (undefined behavior):
+
+```rust
+let address = 0x012345_usize;
+let r = address as *mut i32;
+
+let slice: &[i32] = unsafe {
+  std::slice::from_raw_parts_mut(r, 10000)
+};
 ```
 
 Functions:
@@ -91,17 +110,6 @@ let (slice1, slice2) = unsafe {
     std::slice::from_raw_parts_mut(ptr, mid),
     std::slice::from_raw_parts_mut(ptr.offset(mid as isize), len - mid),
   )
-};
-```
-
-Referencing raw memory (undefined behavior):
-
-```rust
-let address = 0x012345_usize;
-let r = address as *mut i32;
-
-let slice: &[i32] = unsafe {
-  std::slice::from_raw_parts_mut(r, 10000)
 };
 ```
 
@@ -141,7 +149,7 @@ Other types (Rust -> C):
 #[repr(C)] pub struct mytype { _private: [u8; 0] }
 ```
 
-For functions accepting uninitialized memory, see [Manually allocating memory](#manually-allocating-memory).
+For functions accepting uninitialized memory, see [Manually allocating memory](#allocation).
 
 #### Extern functions/Build scripts
 
@@ -203,15 +211,6 @@ extern "C" fn shutdown() {
     std::process::abort();
 }
 
-// Manage C<>Rust strings.
-// The `as_bytes` method exists only on Unix-like systems.
-//
-#[cfg(unix)]
-fn path_to_cstring(path: &Path) -> Result<CString> {
-    use std::os::unix::ffi::OsStrExt;
-    Ok(CString::new(path.as_os_str().as_bytes())?)
-}
-
 // Define lifetimes when the type has no (Rust) references to another type, via PhantomData
 //
 pub struct Commit<'r> {
@@ -226,6 +225,31 @@ impl Drop for Repository {
         raw::git_repository_free(self.raw);
     }
 }
+```
+
+Raw C <> Rust string conversions:
+
+```rs
+// Raw C string to String
+//
+// CStr and CString are C-compatible, null terminated strings.
+// CString has special assumptions when converting to it.
+//
+// The example assumes that the source is valid UTF-8.
+//
+let raw_str = SDL_GetError();
+CStr::from_ptr(raw_str).to_string_lossy().to_string();
+
+// (Interpolated) String to Raw C string. WATCH OUT!! Don't forget `format!()`.
+//
+let p_cstr: *const i8 = CString::new(format!("LEVEL{level}.CA2");).unwrap().as_ptr();
+
+// Byte array/Path to Raw C string.
+//
+// In the example, `as_bytes()` method exists only on Unix-like systems.
+//
+let path_bytes = path.as_os_str().as_bytes();
+CString::new(path_bytes).unwrap().as_ptr();
 ```
 
 ### Uninitialized memory (`std::mem::MaybeUninit`)/Partially initialized structs
@@ -308,7 +332,20 @@ for (row, source_row) in values.iter_mut().zip(source_values.chunks($order)) {
 }
 ```
 
-### Manually allocating memory
+### Manual memory management
+
+#### Allocation
+
+Closest to `malloc`; not sure if this is generally preferred to the lower-level (below):
+
+```rs
+let layout = Layout::array::<u8>(size).unwrap();
+let ptr = alloc(layout);
+// ...
+dealloc(ptr, layout);
+```
+
+Conventional ways:
 
 ```rs
 // For simplicity, set buffer_size as multiple of PAGE_SIZE (see https://linux.die.net/man/3/posix_memalign).
@@ -317,7 +354,7 @@ for (row, source_row) in values.iter_mut().zip(source_values.chunks($order)) {
 let buffer: *mut u8 = unsafe {
     let page_size = libc::sysconf(_SC_PAGESIZE) as usize;
 
-    // Since posix_memalign discards the existing associate memory, we can use init as null pointer.
+    // Since posix_memalign discards the existing associated memory, we can use init as null pointer.
     // We can use MaybeUninit, but in this case it's more verbose and no more useful.
     //
     let mut buffer_addr: *mut c_void = std::ptr::null_mut();
@@ -355,6 +392,15 @@ libc::posix_memalign(buffer_addr.as_mut_ptr(), G.page_size, size);
 let buffer_addr: *mut c_void = buffer_addr.assume_init();
 
 // etc.etc.
+```
+
+#### Expose Vec internal array as raw pointer
+
+```rs
+vec.shrink_to_fit();                             // Assume that after, vec.len() == vec.capacity()
+let (ptr, len) = (vec.as_mut_ptr(), vec.len());
+mem::forget(vec);                                // Prevent deallocation in Rust.
+unsafe { my_api(ptr, len); }
 ```
 
 ### std::num::NonZero*

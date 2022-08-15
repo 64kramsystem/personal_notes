@@ -9,6 +9,7 @@
   - [Configuration](#configuration)
   - [C/C++](#cc)
     - [Setting up a project](#setting-up-a-project)
+    - [Multi-root and makefile warning](#multi-root-and-makefile-warning)
     - [Find compile commands](#find-compile-commands)
     - [Includes/Macros](#includesmacros)
 
@@ -98,13 +99,15 @@ Some options can be found by observing `./configure`, and/or via bear (see below
 
 When a project is opened, the extension will perform a build dry run; it's better to run build (make) the project before, since some operations may be performed (e.g. generating files), that the dry run doesn't.
 
+### Multi-root and makefile warning
+
+In a multi-root setup, typically, a makefile warning is raised when the project is opened.
+
+If the projects are not actually executed, just touch a phony Makefile in the root directory.
+
 ### Find compile commands
 
-CMake can generate the compile commands: `cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1`, which outputs to `compile_commands.json`.
-
-For desperate cases, an option is to use the `bear` tool, which generates the compile options for each file.
-
-Run `bear make`, then add `"compileCommands": "${workspaceFolder}/compile_commands.json"` to `.vscode/c_cpp_properties.json`.
+Follow [C notebook strategies](c.md#find-compilation-commands); then add `"compileCommands": "${workspaceFolder}/compile_commands.json"` to `.vscode/c_cpp_properties.json`.
 
 ### Includes/Macros
 

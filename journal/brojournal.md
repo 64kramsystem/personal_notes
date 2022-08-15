@@ -1,5 +1,56 @@
 ## Mon 15/Aug/2022
 
+- Open Source: C2Rust
+  - [x] Follow up on issue with incorrect `--binary` parameter
+- Studies: Rust
+  - [x] Review manual memory allocation
+- Project: Port Catacomb II
+  - [x] Diagnose and fix warp bug on level clearing, introduced in the upstream port
+  - [x] Convert enum TryInto into Into
+  - [x] Add alternate `LoadFile` and `RLEExpand` routines
+  - [x] `catacomb` module: Use new file loading/decoding (and get rid of `itoa()`)
+  - [x] Make LoadDemo use the new safe APIs
+  - [x] Make safe_SDL_GetError return a Rust String
+  - [x] _setupgame: Make use of safe SDL error message API
+  - [x] Remove many unused (SDL) constants
+  - [x] `pcrlib_a` module: Convert two globals to consts
+  - [x] `pcrlib_a` module: Convert (and remove) memset/memcpy invocations to Rust APIs
+  - [x] pcrlib_c: Remove malloc() libc dependency
+  - [x] Fully replace bloadin() with Rust APIs
+  - [x] pcrlib_c.rs: Convert Load/SaveFile pointer to be const
+  - [x] Convert some raw pointers to const
+  - [x] Get rid of `str` global, by using CString to prepare strings
+  - [x] Remove the now unnecessary itoa/ltoa
+  - [x] cpanel.rs: Convert local static to global const
+  - [x] cat_play.rs: Rip out atoi() import
+  - [x] cat_play.rs: Rip out abs() import
+  - [x] Make objtype#update_from_active() borrow the source
+  - [x] Add objtype#update_from_objdeftype() helper
+  - [x] cat_play.rs: Rip out memcpy's (and libc import)
+  - [x] catacomb.rs: Rip out tolower()/toupper() imports
+  - [x] Remove (now) unused imports
+  - [x] catasm.rs: Rip out memcpy's, and full libc import
+  - [x] pcrlib_a.rs: Rip out time() and the libc import
+  - [x] pcrlib_c.rs: Rip out toupper() import
+  - [x] pcrlib_c.rs: Convert _inputint/_input to Rust
+  - [x] De-global `pics`/`picsexact`/`indemo`
+  - [x] cpanel.rs: Convert some globals to const, and made the rest private
+  - [x] Merged `soundtype`/`inputtype` enums, into Rust enum
+  - [x] De-global all cpanel.rs globals, into new type PrivateCpanelState
+  - [x] Removed a bunch of consts from cpanel.rs, and made the rest private
+  - [x] Remove remaining #[no_mangle] attributes
+  - [x] Move remaining cpanel.rs globals into CpanelState
+  - [x] Rename an unnamed struct in pcrlib_a.rs
+  - [x] Move the DOSScanCodeMap inside the scan codes module, and rename the module
+  - [x] Brutal fight with move remaining pcrlib_a.rs globals into PcrlibAState
+    - [x] Understand and remove SDL port atexit() callback
+  - [x] (other minor stuff)
+
+## Mon 15/Aug/2022
+
+- Open Source
+  - [x] C2Rust: Report issue with incorrect `--binary` parameter
+  - [x] CatacombSDL: Better investigate, and report automatic typecasting bug in SDL port
 - Project: Port Catacomb II
   - [x] Remove some globals/constants
   - [x] De-hardcode `numlevels` constant
@@ -36,6 +87,11 @@
   - [x] Remove extern from the functions (where possible)
   - [x] Remove a libc memset dependency
   - [x] Make some symbols private
+  - [x] Removed all extern globals, and made private the non-shared globals (where found)
+  - [x] Converted some SDL calls to the safe ones
+  - [x] Encapsulate atexit() calls to the safe sdl module
+  - [x] Replace libc printf() call(s) with standard println!()
+  - [ ] Unf*kk C-ugliness related to file loading and decoding
 
 ## Sat 13/Aug/2022
 

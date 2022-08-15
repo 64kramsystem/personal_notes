@@ -16,7 +16,7 @@
       - [Spawning a process (and piping to it) (executing commands)](#spawning-a-process-and-piping-to-it-executing-commands)
     - [File operations](#file-operations)
     - [Directories/filenames/paths handling](#directoriesfilenamespaths-handling)
-    - [File/directory operations](#filedirectory-operations)
+    - [File/directory operations/informations](#filedirectory-operationsinformations)
     - [Testing](#testing)
       - [Integration tests](#integration-tests)
     - [Collections](#collections)
@@ -60,6 +60,7 @@
       - [TOML, simplest parsing (`toml`)](#toml-simplest-parsing-toml)
       - [Guaranteed endianness storage (`byteorder`)](#guaranteed-endianness-storage-byteorder)
     - [Resource-light image size detection (`imagesize`)](#resource-light-image-size-detection-imagesize)
+  - [C2Rust: Port C to Rust](#c2rust-port-c-to-rust)
 
 ## Standard library
 
@@ -332,8 +333,8 @@ use std::io::prelude::*;
 
 fs::read(path)?                        // binary content; filename can be relative
 fs::read_to_string(path)?              // valid UTF-8
-io::read_to_end(&mut buffer)?          // read until the EOF; binary
-io::read_exact(&mut buf)?
+file.read_to_end(&mut vec_buffer) -> Result<usize> // read until the EOF; binary
+file.read_exact(&mut buf)?
 take(n)                                // create an adapter reading at most n bytes
 
 // std::io::Write
@@ -491,12 +492,12 @@ any
 Path::new(os_str.unwrap());  // Convert OsStr to Path
 ```
 
-### File/directory operations
+### File/directory operations/informations
 
 There are some other APIs, e.g. for traversing directories.
 
 ```rust
-path.exists()                   // test if file/dir exists
+path.exists()                   // test if file/dir exists (Ruby File.exists?)
 path.is_dir()                   // test if is directory; also: is_file(), is_symlink()
 
 fs::remove_file(path)
@@ -511,7 +512,8 @@ fs::rename(src, dest)           // copy a file (cp -p)
 
 std::os::unix::fs::symlink(target, dest) // OS-specific (use `std::os::unix::prelude::*` for others)
 fs::canonicalize(path)          // Ruby File.expand_path
-fs::metadata(path)              // metadata, including `permissions()`, `len()`, is_dir()`; follows symlinks
+file.metadata()?                // metadata, including `permissions()`, `len()`, is_dir()`; follows symlinks
+fs::metadata(path)              // ^^ (same)
 fs::set_permissions(path)
 
 // Read a directory's file basenames non-recursively.
@@ -1572,7 +1574,7 @@ impl TryFrom<u32> for dirtype {
     }
 }
 
-let xxx: dirtype = 1_u32.try_into().unwrap();
+let mydt: dirtype = 1_u32.try_into().unwrap();
 ```
 
 ### Convenience macros for operator overloading (`auto_ops`)
@@ -1812,4 +1814,15 @@ Small crate, and reads the smallest possible amount of data.
 
 ```rs
 let ImageSize { width, height } = imagesize::size(path).unwrap();
+```
+
+## C2Rust: Port C to Rust
+
+Requires the compile commands; see [C notebook strategies](c.md#find-compilation-commands).
+
+```sh
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1
+# The binary parameter is the name of the Rust file containing main(), without the extension.
+# WATCH OUT! As of v0.16.0, if the parameter is not correct, the binary functionality fails silently!
+c2rust transpile --binary catacomb compile_commands.json
 ```
