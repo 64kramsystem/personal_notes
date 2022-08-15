@@ -326,10 +326,11 @@ String::from_utf8(vec)?                   // requires valid input; also `str`
 String::from_utf8_lossy(&byte)            // replaces invalid chars with `�`
 String::from_utf8_unchecked(&byte)        // assumes valid input; also `str`
 
-// parse string to numeric type; with any numeric implementing `FromString`
-// f64 will parse integer strings (e.g. `1`)
+// Parse string to numeric type; with any numeric implementing `FromString`
+// f64 will parse integer strings (e.g. `1`).
+// WATCH OUT! Whitespace is not accepted, so it must be trimmed.
 //
-let guess: u32 = string.parse().unwrap();
+let guess: u32 = string.trim().parse().unwrap();
 ```
 
 Automatic casting, for types supporting the `Deref` trait:
@@ -705,7 +706,7 @@ vec.extend([1, 2, 3].iter().copied());  // Append (concatenate) an array
 vec.extend(&[1, 2, 3]);                 // Append (borrowing version) an array/vec
 vec[range].copy_from_slice(&source);    // memcpy; see array example
 
-// Convert vector to array. If type annotations are required, use the second form:
+// Convert vector to array (same len). If type annotations are required, use the second form:
 // In order to convert an iterator to array, collect to Vec first.
 //
 vec.try_into().unwrap();
@@ -1116,7 +1117,8 @@ c.is_control()                            // control char
 c.is_digit()                              // ASCII-only
 c.is_lowercase(); c.is_uppercase()        // also non-latin
 
-c.to_lowercase(); c.to_uppercase();       // returns an iterator (AAARGH!!!)
+c.to_ascii_lowercase(); c.to_ascii_uppercase(); // Also implemented for u8; ignores non-ascii chars
+c.to_lowercase(); c.to_uppercase();             // UTF8; returns an iterator (AAARGH!!!)
 ```
 
 See [Casting/Conversions](#castingconversions) for cast-related APIs.

@@ -16,6 +16,7 @@
     - [Print a stack trace on segfault](#print-a-stack-trace-on-segfault)
     - [Find the current executable filename](#find-the-current-executable-filename)
   - [Compiler/builder stuff](#compilerbuilder-stuff)
+    - [Find compilation commands](#find-compilation-commands)
   - [Common issues](#common-issues)
     - [Error `glibconfig.h: No such file or directory`](#error-glibconfigh-no-such-file-or-directory)
     - [Error `cannot find install-sh, install.sh, or shtool in ...`](#error-cannot-find-install-sh-installsh-or-shtool-in-)
@@ -176,6 +177,14 @@ Specify the compiler for CMake:
 #
 cmake -D CMAKE_C_COMPILER=$c_compiler_full_path -D CMAKE_CXX_COMPILER=$cpp_compiler_full_path $project_path
 ```
+
+### Find compilation commands
+
+CMake can generate the compile commands: `cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1`, which outputs to `compile_commands.json`.
+
+For desperate cases, an option is to use the `bear` tool, which generates the compile options for each file (`bear make`).
+
+[intercept-build](https://github.com/immunant/c2rust#-with-intercept-build) is also an option.
 
 ## Common issues
 
