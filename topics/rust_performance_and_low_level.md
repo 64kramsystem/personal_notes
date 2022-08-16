@@ -4,6 +4,8 @@
   - [User-facing](#user-facing)
     - [std::mem APIs](#stdmem-apis)
     - [Unsafe](#unsafe)
+      - [Raw pointers](#raw-pointers)
+      - [Functions](#functions)
     - [FFI](#ffi)
       - [C to Rust types mapping](#c-to-rust-types-mapping)
       - [Extern functions/Build scripts](#extern-functionsbuild-scripts)
@@ -11,7 +13,10 @@
     - [Uninitialized memory (`std::mem::MaybeUninit`)/Partially initialized structs](#uninitialized-memory-stdmemmaybeuninitpartially-initialized-structs)
       - [Bidimensional array struct, uninitialized and macro'ed](#bidimensional-array-struct-uninitialized-and-macroed)
     - [Manual memory management](#manual-memory-management)
-      - [Allocation](#allocation)
+      - [Allocate memory](#allocate-memory)
+        - [Via `alloc`](#via-alloc)
+        - [Via `libc` low-level APIs (`posix_memalign`)](#via-libc-low-level-apis-posix_memalign)
+        - [Via `Box`](#via-box)
       - [Expose Vec internal array as raw pointer](#expose-vec-internal-array-as-raw-pointer)
     - [std::num::NonZero*](#stdnumnonzero)
     - [(LLVM) Intrinsics/ASM APIs](#llvm-intrinsicsasm-apis)
@@ -41,29 +46,45 @@ swap(&mut x, &mut y)      // swaps values at two locations
 
 ### Unsafe
 
-Raw pointers:
+#### Raw pointers
+
+Creation and cast:
+
+```rs
+// Simple. Creating pointers is not unsafe - only dereferencing them.
+// Pointers don't own the data, and the multiple raw pointers to the same data are valid.
+//
+let ptr1 = &mut num as *mut i32;
+let ptr2 = &num as *const i32;
+
+// Convert from regular reference to raw pointer of different type requires two casts:
+//
+// 1. reference source type -> pointer source type (use *const/*mut accordingly)
+// 2. pointer source type -> pointer dest type
+//
+// myref: &mut PcrlibAStates
+let ptr = myref as *mut _ as *mut libc::c_void;
+
+// Convert from pointer to reference.
+//
+// ptr: *mut libc::c_void
+let myref = &mut *(ptr as *mut PcrlibAState);
+```
+
+Usage:
 
 ```rust
-fn print_raw_pointers(ref_mut: *mut i32, ref_const: *const i32) {
+// Dereference:
+
+fn print_raw_pointers(ptr1: *mut i32, ptr2: *const i32) {
   unsafe {
-    println!("r1:{}, r2:{}", *ref_const, *ref_mut);
+    println!("r1:{}, r2:{}", *ptr1, *ptr2);
   }
 }
 
-let mut num = 5;
-
-// Creating pointers is not unsafe - only dereferencing them.
-// They don't own the data, and the multiple raw pointers to the same data are valid.
-//
-let ref_mut = &mut num as *mut i32;
-let ref_const = &num as *const i32;
-let ref_const_2 = &num as *const i32;
-
-print_raw_pointers(ref_mut, ref_const);
-
 // Invalid, due to BC; as workaround, pass the raw pointer as separate variable.
 //
-mymethod(&mut num, &num as *const i32);
+mymethod(&mut ptr, &ptr as *const i32);
 
 // Some APIs:
 //
@@ -82,7 +103,7 @@ let slice: &[i32] = unsafe {
 };
 ```
 
-Functions:
+#### Functions
 
 ```rust
 // Unsafe function; unsafe calls themselves don't require the enclosing function to be marked as such.
@@ -334,7 +355,9 @@ for (row, source_row) in values.iter_mut().zip(source_values.chunks($order)) {
 
 ### Manual memory management
 
-#### Allocation
+#### Allocate memory
+
+##### Via `alloc`
 
 Closest to `malloc`; not sure if this is generally preferred to the lower-level (below):
 
@@ -345,7 +368,7 @@ let ptr = alloc(layout);
 dealloc(ptr, layout);
 ```
 
-Conventional ways:
+##### Via `libc` low-level APIs (`posix_memalign`)
 
 ```rs
 // For simplicity, set buffer_size as multiple of PAGE_SIZE (see https://linux.die.net/man/3/posix_memalign).
@@ -392,6 +415,35 @@ libc::posix_memalign(buffer_addr.as_mut_ptr(), G.page_size, size);
 let buffer_addr: *mut c_void = buffer_addr.assume_init();
 
 // etc.etc.
+```
+
+##### Via `Box`
+
+Raw box - outlives the creation scope.
+
+```rs
+// Allocate; into_raw() will _not_ invoke the destructor.
+
+let (foo, bar) = (&mut Foo {}, &mut Bar {});
+
+let data = (foo as *mut Foo, bar as *mut Bar);
+let box_send = Box::into_raw(Box::new(data));
+
+let void_ref = box_send as *mut libc::c_void;
+
+// Unbox and deallocate: Box's destructor will run as normal
+
+let box_receive = Box::from_raw(void_ref as *mut (*mut Foo, *mut Bar));
+let data = *box_receive;
+
+let (foo, bar) = (&mut *data.0, &mut *data.1);
+```
+
+Leak! Will be permanently allocated:
+
+```rs
+let box_send = Box::leak(Box::new(data));
+send(userdata as *const _ as *mut libc::c_void);
 ```
 
 #### Expose Vec internal array as raw pointer

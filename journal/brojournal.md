@@ -1,3 +1,26 @@
+## Tue 16/Aug/2022
+
+- Open Source: C2Rust
+  - [x] Review and test `--binary` parameter PR
+  - Open issues with the problems encountered
+    - [x] Avoid introducing typecasts from C char to Rust libc::c_int in comparisons to literals
+    - [x] Feature request: Implement for loops with a for iterators
+    - [x] Feature request: Use more idiomatic ptr null pointer APIs instead of hardcoded 0s
+- Studies: Rust
+  - [x] Study more in depth raw pointers/manual allocation
+- Project: Port Catacomb II
+  - [x] Minor changes
+  - Most important changes
+    - [x] Fix bug in highscore display (conversion to CString)
+    - [x] Replace SaveDemo() routine with safe version
+    - [x] Add port_temp_SaveFile()
+    - [x] Convert demoptr to usize (index), from raw pointer
+    - [x] Convert ch from global to local, and cautiously convert comparison literals to i8 (from i32)- Studies: Gamedev
+    - [x] Move globals from pcrlib_c.rs into PcrlibCstate
+      - [x] Fight pointers/events
+    - [x] pcrlib_c.rs: Convert some globals to consts/private
+    - [x] Convert null pointers to ptr::null[_mut](), where possible
+
 ## Mon 15/Aug/2022
 
 - Open Source: C2Rust
