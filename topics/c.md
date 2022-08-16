@@ -3,7 +3,9 @@
 - [C](#c)
   - [Requirements](#requirements)
   - [Basics](#basics)
-    - [Base program and functions](#base-program-and-functions)
+    - [Base program](#base-program)
+    - [Data types](#data-types)
+    - [Base functions](#base-functions)
       - [printf](#printf)
   - [Preprocessor](#preprocessor)
   - [Stdlib](#stdlib)
@@ -35,7 +37,7 @@ The exit with error examples are intentionally simplified (no braces, messages, 
 
 ## Basics
 
-### Base program and functions
+### Base program
 
 ```c
 int main(int argc, char **argv) {
@@ -49,6 +51,12 @@ int main(int argc, char **argv) {
   system("ls -l /tmp");
 }
 ```
+
+### Data types
+
+- `char`: i8
+
+### Base functions
 
 #### printf
 

@@ -328,20 +328,19 @@ impl Hash for SortableFloat {
 (there APIs other than the described)
 
 ```rust
-// Convenience, when using io module methods.
-use std::io::prelude::*;
+// std::io::Read/Write
+//
+use std::io::prelude::*;                        // Convenience, when using io module methods
+r.read_to_end(&mut vec_buffer) -> Result<usize> // Read until the EOF; binary
+r.read_exact(&mut buf)?
+r.take(n)                                       // Create an adapter reading at most n bytes
+w.write_all(&mut buf)?                          // Write the whole buffer to a writer (e.g. File)
+w.write(&mut buf)?                              // Prefer `write_all()` to `write()`, since the latter doesn't guarantee that the whole buffer is written!
+w.flush()?
 
+// There's no fast write; just open File and write to it.
 fs::read(path)?                        // binary content; filename can be relative
 fs::read_to_string(path)?              // valid UTF-8
-file.read_to_end(&mut vec_buffer) -> Result<usize> // read until the EOF; binary
-file.read_exact(&mut buf)?
-take(n)                                // create an adapter reading at most n bytes
-
-// std::io::Write
-//
-write_all(&mut buf)?                   // write the whole buffer to a writer (e.g. File)
-write(&mut buf)?                       // prefer `write_all()` to `write()`, since the latter doesn't guarantee that the whole buffer is written!
-flush()?
 
 // Copy
 //
@@ -1821,7 +1820,7 @@ let ImageSize { width, height } = imagesize::size(path).unwrap();
 Requires the compile commands; see [C notebook strategies](c.md#find-compilation-commands).
 
 ```sh
-cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 $dir
 # The binary parameter is the name of the Rust file containing main(), without the extension.
 # WATCH OUT! As of v0.16.0, if the parameter is not correct, the binary functionality fails silently!
 c2rust transpile --binary catacomb compile_commands.json
