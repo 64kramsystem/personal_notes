@@ -331,7 +331,7 @@ impl Hash for SortableFloat {
 // std::io::Read/Write
 //
 use std::io::prelude::*;                        // Convenience, when using io module methods
-r.read_to_end(&mut vec_buffer) -> Result<usize> // Read until the EOF; binary
+r.read_to_end(&mut vec_buffer) -> Result<usize> // Read until the EOF; binary; content is appended
 r.read_exact(&mut buf)?
 r.take(n)                                       // Create an adapter reading at most n bytes
 w.write_all(&mut buf)?                          // Write the whole buffer to a writer (e.g. File)
@@ -497,6 +497,7 @@ There are some other APIs, e.g. for traversing directories.
 
 ```rust
 path.exists()                   // test if file/dir exists (Ruby File.exists?)
+Path::exists(path)              // ^^ (same)
 path.is_dir()                   // test if is directory; also: is_file(), is_symlink()
 
 fs::remove_file(path)
@@ -511,7 +512,7 @@ fs::rename(src, dest)           // copy a file (cp -p)
 
 std::os::unix::fs::symlink(target, dest) // OS-specific (use `std::os::unix::prelude::*` for others)
 fs::canonicalize(path)          // Ruby File.expand_path
-file.metadata()?                // metadata, including `permissions()`, `len()`, is_dir()`; follows symlinks
+file.metadata()?                // metadata (file stats), including permissions(), len(), is_dir(); follows symlinks
 fs::metadata(path)              // ^^ (same)
 fs::set_permissions(path)
 

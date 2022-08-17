@@ -10,6 +10,7 @@
       - [C to Rust types mapping](#c-to-rust-types-mapping)
       - [Extern functions/Build scripts](#extern-functionsbuild-scripts)
       - [C library patterns](#c-library-patterns)
+        - [Strings: `CStr`, `CString`](#strings-cstr-cstring)
     - [Uninitialized memory (`std::mem::MaybeUninit`)/Partially initialized structs](#uninitialized-memory-stdmemmaybeuninitpartially-initialized-structs)
       - [Bidimensional array struct, uninitialized and macro'ed](#bidimensional-array-struct-uninitialized-and-macroed)
     - [Manual memory management](#manual-memory-management)
@@ -74,11 +75,9 @@ let myref = &mut *(ptr as *mut PcrlibAState);
 Usage:
 
 ```rust
-// Dereference:
-
 fn print_raw_pointers(ptr1: *mut i32, ptr2: *const i32) {
   unsafe {
-    println!("r1:{}, r2:{}", *ptr1, *ptr2);
+    println!("r1:{:?}, r2:{:?}", ptr1, ptr2);
   }
 }
 
@@ -248,6 +247,13 @@ impl Drop for Repository {
 }
 ```
 
+##### Strings: `CStr`, `CString`
+
+None directly support `len()`; best use `Cstring.as_bytes().len()`.
+
+- `Cstr`: borrowed; build from ptr/bytes (has no `new()`)
+- `Cstring`: owned; build from string/Vec; into_string() (consuming!!); supports the raw pattern
+
 Raw C <> Rust string conversions:
 
 ```rs
@@ -272,6 +278,15 @@ let p_cstr: *const i8 = CString::new(format!("LEVEL{level}.CA2");).unwrap().as_p
 let path_bytes = path.as_os_str().as_bytes();
 CString::new(path_bytes).unwrap().as_ptr();
 ```
+
+For itteration, there is a family of APIs:
+
+- `as_bytes()`
+- `as_bytes_with_nul`
+- `to_bytes`          : copies the bytes
+- `to_bytes_with_nul`
+
+They all guarantee that nul is not included inside the string.
 
 ### Uninitialized memory (`std::mem::MaybeUninit`)/Partially initialized structs
 

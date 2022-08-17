@@ -60,7 +60,9 @@ int main(int argc, char **argv) {
 
 #### printf
 
-- `d`:     int signed
+No support for boolean; use `d`
+
+- `d`:     int signed, boolean
 - `lu/ld`: long unsigned/signed
 
 ## Preprocessor

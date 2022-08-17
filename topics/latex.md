@@ -23,7 +23,9 @@ x_1  x_{1}  E_{r,c} % subscript
 ( ) \left(  \right) % round brackets
 \langle  \rangle    % angle brackets
 \alpha ...          % greek letters
+
 \cdot               % multiplication dot
+\times              % multiplication cross
 
 % matrices
 % the *dots are filling dots

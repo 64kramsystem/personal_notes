@@ -1,3 +1,36 @@
+## Wed 17/Aug/2022
+
+- Tools
+  - [x] Investigate
+- Open Source: C2Rust
+  - [x] Diagnose and open issue "Feature request: Don't wrap the numeric part of negative literals in parentheses"
+- Open Source: Natalie compiler
+  - [x] Open issue "Commandline options parsing should raise an error when -c is specified, but no source file is"
+- Open Source: Veloren
+  - [x] Rebase PR
+- Project: Port Catacomb II
+  - [x] Refactor print() routine
+  - [x] Split state variables according to the modules using them
+  - [x] Fix Clippy lint `precedence`
+  - [x] Fix Clippy lint `assign_op_pattern`
+  - [x] Fix Clippy lint of unnecessary mutable reference
+  - [x] Clean `-(1)` occurrences
+  - [x] Fix lint `unused_mut`
+  - [x] Remove RLEExpand original routine
+  - [x] Remove some SDL_Quit()-related code
+  - [x] Remove bunch of dead constants/imports, and two functions
+  - [x] Update global lint attributes
+  - [x] Refactor print() routine
+  - [x] Replace print(literal) calls with port_temp_print_str()
+  - [x] Remove printint/long() calls to port_temp_print_str()
+  - [x] Directly replace _printhex(b) with safe versions
+  - [x] Convert _princ() to safe
+  - [x] Convert _printbin() to safe (but comment it out, as it's dead)
+  - [x] Add safe version of _Verify()
+  - [x] Replace _Verify() call with safe equivalent
+  - [x] Replace _Verify() with safe version
+  - [x] Investigate off-by-one error in source RLE expand routine
+
 ## Tue 16/Aug/2022
 
 - Open Source: C2Rust
@@ -20,6 +53,7 @@
       - [x] Fight pointers/events
     - [x] pcrlib_c.rs: Convert some globals to consts/private
     - [x] Convert null pointers to ptr::null[_mut](), where possible
+    - [x] Add port_temp_print_*()
 
 ## Mon 15/Aug/2022
 
