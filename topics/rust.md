@@ -1263,15 +1263,7 @@ enum IpAddr {
   V6(String),
 }
 
-// Enums can have particular internal representations, and can be associated to values.
-// `repr(u<N>)` forces the compiler to use N bits for each variant, but it's not necessary for assigning
-// values; there are interesting representations (see https://doc.rust-lang.org/nomicon/other-reprs.html).
-//
-#[repr(u8)]
-enum Color {
-    WHITE = 0x00,
-    BLACK = 0x01,
-}
+// For the memory layout, see [here](rust_performance_and_low_level.md#memory-layout)
 
 // Methods can even be defined on enums!
 //

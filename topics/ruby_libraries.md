@@ -51,6 +51,7 @@
   - [Databases](#databases)
     - [SQLite 3](#sqlite-3)
     - [Mysql2](#mysql2)
+    - [Sorbet and related](#sorbet-and-related)
 
 ## APIs/Stdlib
 
@@ -1225,4 +1226,29 @@ result = @client.query(sql, stream: true, cache_rows: false)
 # raise the error "Commands out of sync; you can't run this command now"
 #
 result.free
+```
+
+### Sorbet and related
+
+```sh
+cat >> Gemfile << RUBY
+
+gem 'sorbet-runtime'
+gem 'sorbet',  group: :development
+gem 'tapioca', group: :development, require: false
+gem 'spoom',   group: :development, require: false
+RUBY
+
+bundle install
+
+# Generates the rbi for the gems
+tapioca init
+
+# Typecheck; if the files are not set to typed, nothing will be checked
+bundle exec srb tc
+
+perl -i -0777 -pe 's/^/# typed: true/' **/*.rb
+
+# Add signatures to your methods with sig. To learn how, read: https://sorbet.org/docs/sigs
+# Even without signatures, some errors may pop up.
 ```

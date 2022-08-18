@@ -40,7 +40,7 @@ group :development do
   gem 'rspec', '~> 3.10.0'
 end
 
-# The test group should include gems that are not strictly required.
+# The test group should include gems that are used only in the test env
 #
 group :test do
   gem "benchmark-ips", "~> 2.7.2"

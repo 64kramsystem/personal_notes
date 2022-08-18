@@ -19,6 +19,7 @@
     - [Sleep times](#sleep-times)
   - [GNU Screen](#gnu-screen)
   - [Clonezilla](#clonezilla)
+  - [Dump CDs (safely)](#dump-cds-safely)
   - [Sleep](#sleep)
   - [Watch](#watch)
   - [Displaying messages](#displaying-messages)
@@ -554,6 +555,14 @@ chown -R $SUDO_USER /home/partimag/$image_dir_name
 #
 sed -i '/^sector-size:/ s/^/# /' /home/partimag/$image_dir_name/*.sf
 ocs-sr -g auto -e1 auto -e2 -r -j2 -c -scr -p choose restoredisk $image_dir_name $dev_basename
+```
+
+## Dump CDs (safely)
+
+DVDisaster will check the data while dumping:
+
+```sh
+dvdisaster -d $block_dev -r --read-raw -i $image.iso
 ```
 
 ## Sleep
