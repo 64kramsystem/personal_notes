@@ -1,3 +1,29 @@
+## Thu 18/Aug/2022
+
+- Tools: Blog
+  - Utils: add_new_article.sh
+    - [x] Create branch on execution
+    - [x] Make some refactorings
+- Writings: Porting C to Rust
+  - [ ] Organize notes
+- Studies: C
+  - [ ] Investigate numeric literals
+- Studies: C/Rust
+  - [x] Study [Rust out your C](https://www.youtube.com/watch?v=SKGVItFlK3w)
+- Project: Port Catacomb II
+  - [x] Double check and update overflow snippet
+- Project: Geet
+  - [x] Update Rubocop version
+  - [x] Fix rubocop remaining offenses
+  - [x] Fight update Rubocop configurations
+  - [x] Bump required Ruby version to 2.6
+  - [x] Remove Travis configuration
+  - [x] Fix issues revealed by Sorbet
+- Studies: Ruby
+  - [x] Fight Sorbet
+- Tools: Rust
+  - [ ] Search program to generate the static call graph; ask
+
 ## Wed 17/Aug/2022
 
 - Tools

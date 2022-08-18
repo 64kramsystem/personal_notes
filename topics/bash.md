@@ -590,8 +590,8 @@ ${str:[<start>][:<end_expr>]}     # substring (0-based)
                                   # `start`: inclusive; blank: first char
                                   # `end_expr`: not inclusive; positive: length; negative: !! -1 = beforelast !!; blank: until end
 
-${str^^}                          # upper case (single `^` applies only once)
-${str,,}                          # down case (single `^` applies only once)
+${str^^}                          # uppercase (single `^` applies only once)
+${str,,}                          # downcase (single `,` applies only once)
 ```
 
 (g)sub (applied to filenames):

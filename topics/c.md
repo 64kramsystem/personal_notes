@@ -55,6 +55,7 @@ int main(int argc, char **argv) {
 ### Data types
 
 - `char`: i8
+- `short`: i16
 
 ### Base functions
 
@@ -62,8 +63,8 @@ int main(int argc, char **argv) {
 
 No support for boolean; use `d`
 
-- `d`:     int signed, boolean
-- `lu/ld`: long unsigned/signed
+- `u`; `d`/`i`: int: unsigned; signed (also use for boolean)
+- `lu`; `ld`: long: unsigned, signed
 
 ## Preprocessor
 

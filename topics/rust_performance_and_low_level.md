@@ -437,28 +437,31 @@ let buffer_addr: *mut c_void = buffer_addr.assume_init();
 Raw box - outlives the creation scope.
 
 ```rs
-// Allocate; into_raw() will _not_ invoke the destructor.
+// Allocate; into_raw() will _not_ invoke the destructor (extra steps for clarity)
 
-let (foo, bar) = (&mut Foo {}, &mut Bar {});
+struct Payload { foo: *mut Foo, bar: *mut Bar }
 
-let data = (foo as *mut Foo, bar as *mut Bar);
-let box_send = Box::into_raw(Box::new(data));
+let payload = Payload { foo: &mut Foo {}, bar: &mut Bar {} };
+let box_send: *mut Payload = Box::into_raw(Box::new(payload));
 
-let void_ref = box_send as *mut libc::c_void;
+send(box_send as *mut libc::c_void);
 
-// Unbox and deallocate: Box's destructor will run as normal
+// Unbox and deallocate (from another location): Box's destructor will run as normal
 
-let box_receive = Box::from_raw(void_ref as *mut (*mut Foo, *mut Bar));
-let data = *box_receive;
+let box_recv: Box<Payload> = unsafe { Box::from_raw(void_ref as *mut Payload) };
+let payload: Payload = *box_recv; // own!
 
-let (foo, bar) = (&mut *data.0, &mut *data.1);
+let (foo, bar) = unsafe { (&mut *payload.foo, &mut *payload.bar) };
 ```
 
-Leak! Will be permanently allocated:
+Leak! Will be permanently allocated (steps compacted):
 
 ```rs
-let box_send = Box::leak(Box::new(data));
-send(userdata as *const _ as *mut libc::c_void);
+let box_send: *mut Payload = Box::leak(Box::new(payload));
+send(box_send as *mut libc::c_void);
+
+let payload: &Payload = &*(payload as *mut Payload); // borrow; can't move out of raw pointer
+let (foo, bar) = (&mut *payload.foo, &mut *payload.bar);
 ```
 
 #### Expose Vec internal array as raw pointer
@@ -607,7 +610,14 @@ There are no guarantees about the struct underlying memory layout, except that t
 
 Both can be used at the same time: `#[repr(C, packed)]`.
 
-Enums also don't have a guaranteed layout, except that the first byte is the tag.
+When a struct is packed, reading field references is typically UB due to misalignment; in order to do it safely, copy the field (via curly braces): `let value = &{ instance.field };`.
+
+Enums:
+
+- don't have a guaranteed layout, except that the first byte is the tag
+- can use `#[repr(<unsigned_type>)]` and assign a value to each variant (`WHITE = 0x00`)
+
+For other interesting representations see https://doc.rust-lang.org/nomicon/other-reprs.html.
 
 ### References
 
