@@ -17,7 +17,9 @@
     - [Print a struct instances's bytes](#print-a-struct-instancess-bytes)
     - [Print a stack trace on segfault](#print-a-stack-trace-on-segfault)
     - [Find the current executable filename](#find-the-current-executable-filename)
+    - [Build a C program's call graph](#build-a-c-programs-call-graph)
   - [Compiler/builder stuff](#compilerbuilder-stuff)
+    - [CMake](#cmake)
     - [Find compilation commands](#find-compilation-commands)
   - [Common issues](#common-issues)
     - [Error `glibconfig.h: No such file or directory`](#error-glibconfigh-no-such-file-or-directory)
@@ -174,6 +176,23 @@ exe_filename[len] = '\0';
 
 This is the equivalent of `_pgmptr`/`GetModuleFileName` on Windows.
 
+### Build a C program's call graph
+
+- Download [`egypt`](https://www.gson.org/egypt/egypt.html)
+- Add the option `-fdump-rtl-expand` to the CFLAGS
+- Compile
+- Run `egypt *.expand | tee graph.gv | dot -T pdf -o graph.pdf`
+
+Useful options:
+
+- `egypt --callees fn1,fn2...`: show only the given functions and their calless
+- `egypt --callers fn1,fn2...`: show only the given functions and their callers
+- `dot -Grotate=90`           : make a L->R graph
+
+VSC has a plugin to display Graphviz files; dotty is terrible; PDF format is good enough.
+
+Other help [here](https://www.gson.org/egypt/egypt.html).
+
 ## Compiler/builder stuff
 
 Configure compilation:
@@ -181,21 +200,40 @@ Configure compilation:
 - `-static`         : compile statically
 - `-Dmacro[=value]` : define a macro (e.g. for `ifdef`); the option is cumulative
 
-Specify the compiler for CMake:
+### CMake
 
 ```sh
-# `-D`: set variables
+# Set variables via `-D`.
+
+# Specify the compiler:
 #
 cmake -D CMAKE_C_COMPILER=$c_compiler_full_path -D CMAKE_CXX_COMPILER=$cpp_compiler_full_path $project_path
+
+# To add extra CFLAGS:
+#
+sed -i '/^project/ a set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fdump-rtl-expand")' CMakeLists.txt
+
+# Clean (`cmake --target clean`) doesn't really work, as many commands may be issued. Best thing is
+# to clean the repo.
+#
+rm .gitignore
+git clean -fd .
+git checkout .gitignore
 ```
 
 ### Find compilation commands
 
-CMake can generate the compile commands: `cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1`, which outputs to `compile_commands.json`.
+There are a few options:
 
-For desperate cases, an option is to use the `bear` tool, which generates the compile options for each file (`bear make`).
+- CMake can generate the compile commands: `cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1`, which outputs to `compile_commands.json`
+- [build-logger](https://github.com/Ericsson/codechecker/tree/master/analyzer/tools/build-logger)
+  - this also includes linking commands
+- [intercept-build](https://github.com/immunant/c2rust#-with-intercept-build)
+- `bear` tool, which generates the compile options for each file (`bear make`)
 
-[intercept-build](https://github.com/immunant/c2rust#-with-intercept-build) is also an option.
+Alternative: wrap the compiler and linker in proxy scripts that log the commands 🤓.
+
+Background [here](https://immunant.com/blog/2020/01/quake3).
 
 ## Common issues
 

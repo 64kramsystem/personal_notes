@@ -1,3 +1,24 @@
+## Fri 19/Aug/2022
+
+- Studies: C/Rust
+  - [x] Memory allocators/deallocators layout issues
+- Open Source: cargo-call-stack
+  - [x] Report bug
+- Studies: SWE
+  - [x] Test programs for callgraph generation
+    - [x] Fight CMake CFLAGS
+  - [x] Test programs to display Graphviz files
+- Studies: C/Rust
+  - [ ] Articles: https://immunant.com/blog
+    - [x] https://immunant.com/blog/2019/12/header_merging
+    - [x] https://immunant.com/blog/2020/01/quake3
+    - [x] Skim some others
+- Project: Port Catacomb II
+  - [x] Add SDLEventPayload (userdata) deallocation
+- Studies: Gamedev
+  - [ ] Tricks of the Game Programming Gurus
+    - [ ] 5. The Mysteries of the VGA Card
+
 ## Thu 18/Aug/2022
 
 - Tools: Blog
@@ -23,6 +44,7 @@
   - [x] Fight Sorbet
 - Tools: Rust
   - [ ] Search program to generate the static call graph; ask
+    - Try `cargo-call-stack`
 
 ## Wed 17/Aug/2022
 

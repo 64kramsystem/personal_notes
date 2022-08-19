@@ -372,12 +372,14 @@ for (row, source_row) in values.iter_mut().zip(source_values.chunks($order)) {
 
 #### Allocate memory
 
+External (C) programs can use memory allocated by Rust, however, deallocation must be performed by the Rust allocator!
+
 ##### Via `alloc`
 
 Closest to `malloc`; not sure if this is generally preferred to the lower-level (below):
 
 ```rs
-let layout = Layout::array::<u8>(size).unwrap();
+let layout = std::alloc::Layout::array::<u8>(size).unwrap();
 let ptr = alloc(layout);
 // ...
 dealloc(ptr, layout);
