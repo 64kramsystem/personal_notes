@@ -63,10 +63,12 @@ int main(int argc, char **argv) {
 
 #### printf
 
-No support for boolean; use `d`
-
-- `u`; `d`/`i`: int: unsigned; signed (also use for boolean)
-- `lu`; `ld`: long: unsigned, signed
+| types        | unsigned | signed  | note                  |
+| ------------ | :------: | :-----: | --------------------- |
+| int, boolean |   `u`    | `d`/`i` |                       |
+| long         |   `lu`   |  `ld`   |                       |
+| pointer      |   `p`    |    -    | must cast to `void*`! |
+| string       |   `s`    |    -    |                       |
 
 ## Preprocessor
 

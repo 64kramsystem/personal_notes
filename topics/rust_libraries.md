@@ -1823,8 +1823,10 @@ Requires the compile commands; see [C notebook strategies](c.md#find-compilation
 ```sh
 cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 $dir
 # The binary parameter is the name of the main() Rust file, without extension.
-# `--reorganize-definitions` merges the header values (see https://immunant.com/blog/2019/12/header_merging).
-c2rust transpile --binary catacomb --reorganize-definitions compile_commands.json
+# `--reorganize-definitions` should merge the header values (see https://immunant.com/blog/2019/12/header_merging),
+# however, in the test project, it seems it didn't merge anything (or almost), while adding considerable
+# noise (`c2rust::src_loc` attribute).
+c2rust transpile --binary catacomb compile_commands.json
 ```
 
 The [blog](https://immunant.com/blog) contains handling of complex real-world cases.
