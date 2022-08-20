@@ -1,3 +1,28 @@
+## Sat 20/Aug/2022
+
+- Project: Poor man's spotlight
+  - [x] Add other emojis
+  - [x] File searcher: Allow single quotes
+- Project: Port Catacomb II
+  - [x] Compare output of c2rust with merge modules
+  - [x] Compare master C2Rust version vs. release
+    - [x] Investigate constant diffs
+    - [x] Review `std::mem::size_of` vs. `core::mem::size_of`
+  - [x] Investigate RLE overflow
+  - [x] Fix bug due to levels expanding to sizes over the allocated buffer
+  - [x] Refactor newobject()
+  - [x] Add port_temp_print_arr(), intended to be the reference printing routine
+  - [x] Make some printing routines safe (and change `*meters` data structure/type)
+  - [x] Update some printing routines to new printing APIs
+  - [x] Reduce unsafe code in drawchar()
+  - [x] Make EGA() safe
+  - [x] Make flatptr() return isize; unmark it as unsafe; remove now unnecessary casts
+  - [x] Make loadgrfiles() use a &str, instead of a raw pointer
+  - [x] Remove mysterious variable CpanelState#lastgrpic
+  - [x] Remove unused functionality "inmem" from installgrfile()
+  - [x] Brutal fight: Replace PcrlibCState#charptr with an index, along with a copy of the data (`picfile`)
+  - [x] Remove unsafe from a bunch of functions
+
 ## Fri 19/Aug/2022
 
 - Studies: C/Rust

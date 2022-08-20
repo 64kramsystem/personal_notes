@@ -70,6 +70,10 @@ let ptr = myref as *mut _ as *mut libc::c_void;
 //
 // ptr: *mut libc::c_void
 let myref = &mut *(ptr as *mut PcrlibAState);
+
+// Directly reference a memory address (UB).
+//
+let address = 0x012345_usize as *mut i32
 ```
 
 Usage:
@@ -87,19 +91,9 @@ mymethod(&mut ptr, &ptr as *const i32);
 
 // Some APIs:
 //
-raw_p.write_bytes(val, cnt);         // memset
-dest_raw_p.offset_from(start_raw_p); // compute offset (pointer arithmetic). WATCH OUT!: Uses the type size as unit, not 1!
-```
-
-Referencing raw memory (undefined behavior):
-
-```rust
-let address = 0x012345_usize;
-let r = address as *mut i32;
-
-let slice: &[i32] = unsafe {
-  std::slice::from_raw_parts_mut(r, 10000)
-};
+raw_p.write_bytes(val, cnt);                // memset
+dest_raw_p.offset_from(start_raw_p);        // compute offset (pointer arithmetic). WATCH OUT!: Uses the type size as unit, not 1!
+std::slice::from_raw_parts[_mut](r, 10000); // create a slice from a raw pointer; use `to_vec()` to convert to Vec (WATCH OUT! Don't use `Vec::from_raw_parts()`)
 ```
 
 #### Functions
@@ -612,7 +606,7 @@ There are no guarantees about the struct underlying memory layout, except that t
 
 Both can be used at the same time: `#[repr(C, packed)]`.
 
-When a struct is packed, reading field references is typically UB due to misalignment; in order to do it safely, copy the field (via curly braces): `let value = &{ instance.field };`.
+When a struct is packed, reading field references is typically UB due to misalignment; in order to do it safely, copy the field (via curly braces): `if { instance.field } == ...`.
 
 Enums:
 
