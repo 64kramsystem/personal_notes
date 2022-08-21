@@ -1,3 +1,27 @@
+## Sun 21/Aug/2022
+
+- Studies: Rust
+  - [x] Investigate serialization
+    - [x] First look at solutions, and Serde
+    - [x] Fight understand Serde custom deserialization
+  - [x] Implement mini serialization crate
+- Project: Port Catacomb II
+  - [x] Rename PcrlibCState#charptr_i to `charptr`
+  - [x] Remove PcrlibCState#tileptr, which is unused (!)
+  - [x] Convert `picptr` to a usize, and update drawpic() consequently
+  - [x] Remove another unused pointer, PcrlibCState#spriteptr
+  - [x] Minor refactoring to installgrfile()
+  - [x] Fix bug introduced in d8f1c2b5 (corrupted panel graphics)
+  - [x] Refactoring: Make flatptr() a method of `farptr`
+  - [x] Extract `picfiletype` and `farptr` structs into separate module
+  - [x] cpanel.rs: Preliminary simplification of two type aliases
+  - [x] Extract `pictype` to own module
+  - [x] Extract `sprite_type` to own module
+  - [x] Add `p_m_serde` dependency, and implement `Deserialize` for `pic_type`
+  - [x] Make Cpanel.pictable load via deserialization!
+- Open Source: C2Rust
+  - [x] Verify `llvm-dev` versions, following PR discussion
+
 ## Sat 20/Aug/2022
 
 - Project: Poor man's spotlight
@@ -22,6 +46,8 @@
   - [x] Remove unused functionality "inmem" from installgrfile()
   - [x] Brutal fight: Replace PcrlibCState#charptr with an index, along with a copy of the data (`picfile`)
   - [x] Remove unsafe from a bunch of functions
+- Open Source: C2Rust
+  - [x] Open PR with README note about `llvm-dev` package
 
 ## Fri 19/Aug/2022
 

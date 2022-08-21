@@ -1939,6 +1939,9 @@ impl<T, U> Point<T, U> {
 
 ```rs
 pub fn sound<const T: usize>(indexes: [u8; T])
+
+// As of Aug/2022, `const N` can't be moved into a `where` clause
+impl<T: Deserialize + Debug, const N: usize> Deserialize for [T; N] { /* ... */ }
 ```
 
 With unstable, it's even possible to use enums:

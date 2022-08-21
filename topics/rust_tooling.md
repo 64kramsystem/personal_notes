@@ -198,6 +198,16 @@ members = ["playground", "rust_programming_by_example"]
 
 Members must have compatible dependencies, so projects can't be unrelated; without workspaces, it's possible to share artifacts by sharing the target dir.
 
+In order to nest crates, use a manifest like this on the root (and structure the project as indicated):
+
+```toml
+[workspace]
+members = [".", "p_m_serde"]
+
+[dependencies]
+p_m_serde = { path = "./p_m_serde" }
+```
+
 ### Visual Studio Code/Rust Analyzer
 
 As of Apr/2022, the alternative to creating a formal Cargo workspace is to:
