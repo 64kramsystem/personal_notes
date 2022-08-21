@@ -332,7 +332,7 @@ impl Hash for SortableFloat {
 //
 use std::io::prelude::*;                        // Convenience, when using io module methods
 r.read_to_end(&mut vec_buffer) -> Result<usize> // Read until the EOF; binary; content is appended
-r.read_exact(&mut buf)?
+r.read_exact(&mut buf)?                         // Read exactly buf.len() bytes
 r.take(n)                                       // Create an adapter reading at most n bytes
 w.write_all(&mut buf)?                          // Write the whole buffer to a writer (e.g. File)
 w.write(&mut buf)?                              // Prefer `write_all()` to `write()`, since the latter doesn't guarantee that the whole buffer is written!
@@ -345,6 +345,14 @@ fs::read_to_string(path)?              // valid UTF-8
 // Copy
 //
 let bytes_copied = std::io::copy(&reader, &mut writer)?  // copy a reader into a writer until EOF is reached
+
+// Use arrays/vecs as Read.
+//
+fn <R: Read> myread(mut r: R) {
+  r.read_exact(&mut my_buffer).unwrap(); // requires a mutable instance
+};
+myread(vec![0, 1, 2].as_slice()); // it's fine to pass an immutable slice
+myread(&[0, 1, 2][..]);           // don't forget that slice is a reference, not a range of an array!
 ```
 
 Buffered operations:
@@ -369,7 +377,7 @@ writer.write_all(b"I like pizza!\n")?;
 // `Vec` can be trivially used as `StringIO` equivalent:
 
 BufReader::new(&str.as_bytes());
-BufReader::new(vec.as_slice()); // don't forget that Read requires slices!
+BufReader::new(vec.as_slice());
 BufWriter::new(vec);
 ```
 
@@ -1697,7 +1705,7 @@ let serialized = serde_json::to_string(&MyStruct {})?;
 let deserialized: MyStruct = serde_json::from_str(&serialized)?; // must specify the type
 ```
 
-Bincode (uses `serde` as backend):
+Bincode is a convenient binary format+routines (uses `serde` as backend):
 
 ```rust
 bincode::deserialize_from(read)?;      // deserialize from Read
