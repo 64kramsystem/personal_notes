@@ -1,3 +1,22 @@
+## Mon 22/Aug/2022
+
+- Admin
+  - [x] Fight produce Serdine logo
+- Studies: Rust
+  - [x] Mutable reference to immutable slice (see https://stackoverflow.com/a/69425584/210029)
+- Project: Port Catacomb II
+  - [x] Fight write `Deserialize` procedural macro for `p_m_serde`
+  - [x] Fight add custom field deserialization to PMSerde
+  - [x] Convert `spritetype` to Deserializable/non-C, and deserialize it with the new APIs
+  - [x] Convert `picfiletype` (and also `farptr`) to Deserializable/non-C, and deserialize it with the new APIs
+  - [x] Misc cleanups (mostly removals)
+  - [x] Move the large state instantion calls to Default implementations
+  - [x] Convert demowin to a somewhat more readable format
+  - [x] Make scores.initials an u8 array, and the surrounding code safe
+  - [x] Split p_m_serde_macros into modules
+  - [x] PMSerde: Implement macro for implementing traits on numeric types
+  - [x] `installgrfile()`: follow up deserialization
+
 ## Sun 21/Aug/2022
 
 - Studies: Rust

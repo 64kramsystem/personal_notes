@@ -1,13 +1,20 @@
-# Rust Macros (WIP)
+# Rust Macros
 
-- [Rust Macros (WIP)](#rust-macros-wip)
-  - [Function-like](#function-like)
+- [Rust Macros](#rust-macros)
+  - [Declarative macros](#declarative-macros)
     - [Rules and details](#rules-and-details)
     - [Importing](#importing)
-  - [Custom derive macros](#custom-derive-macros)
+  - [Procedural/derive macro general informations](#proceduralderive-macro-general-informations)
+    - [Quoting](#quoting)
+    - [Attributes](#attributes)
+  - [Procedural (derive) macros](#procedural-derive-macros)
+    - [Project structure](#project-structure)
+    - [Macro](#macro)
   - [Attribute macros](#attribute-macros)
+    - [Project structure](#project-structure-1)
+    - [Example](#example)
 
-## Function-like
+## Declarative macros
 
 Simple, fixed expressions:
 
@@ -202,9 +209,18 @@ Interesting articles:
 
 ### Importing
 
-Sample of importing macros across files:
+Import macro from a module within a crate:
 
-```rust
+```rs
+macro_rules! bail { /* ... */ }
+
+// Trick!
+pub(crate) use bail;
+```
+
+Export macros across crates (as of Aug/2022, it doesn't work if a crate is `proc-macro`):
+
+```rs
 // helpers.rs
 //
 [macro_export]
@@ -222,7 +238,54 @@ test_sort!(collection, bubble_sort(collection));
 
 Macros are pulled in the main scope, so the `use` must not be followed by the macro enclosing module (`helpers`).
 
-## Custom derive macros
+## Procedural/derive macro general informations
+
+Two types of macros are relevant to this context/purpose:
+
+- derive macros (`proc_macro_derive(MyTrait)`)
+- attribute macros (`proc_macro_attribute`)
+
+Derive macros can't change the passed struct, they can only add other items (e.g. a trait impl), so trying to add a field will result in the struct defined twice; in order to add new fields (but can also add other items), one must use an attribute macro, which returns a new struct definition.
+
+WATCH OUT! When generating macros, make sure that the code generated is correct; if not, strange things will happen, e.g. `()` being produced, and/or output being incomplete.
+
+### Quoting
+
+When a variable is quoted, the result depends on the type; if one needs to quote a identifier, `Ident` needs to be used, otherwise, for example `String` is passed, a string (with quotes) will be generated.
+
+In order to quote an iterable (anything `IntoIterator` is supported, e.g. `Vec`), use:
+
+```rs
+// Without separator
+#(#field_deserialization)*
+
+// With separator.
+// WATCH OUT! If quoting multiple statements, embed the separator in the statements; don't use this!
+#(#field_deserialization),*
+```
+
+### Attributes
+
+Reference: https://docs.rs/syn/latest/syn/struct.Attribute.html.
+
+Field attributes can be accesses via Field#attrs:
+
+```rs
+// For easy comparisong
+let no_load_attr: syn::Attribute = parse_quote! { #[has_load_progress(none)] };
+
+for attr in &field.attrs {
+  if attr == &no_load_attr { /* ... */ }
+}
+
+In order to match attributes, one can quote them, then compare:
+
+```rs
+```
+
+## Procedural (derive) macros
+
+### Project structure
 
 Procedural macros must be defined in a crate with the crate type of proc-macro.
 
@@ -232,7 +295,7 @@ cargo new macros --lib
 # Convenience if in a workspace
 perl -i -pe 's/members = \[\K/"macros", /' Cargo.toml
 
- Append straight below `[dependencies]`.
+Append straight below `[dependencies]`:
 
 cat >> macros/Cargo.toml <<TOML
 quote = "1.0"
@@ -243,7 +306,11 @@ proc-macro = true
 TOML
 ```
 
-`lib.rs` content; macro definitions *must* reside in the root crate:
+Macro definitions *must* reside in the root crate.
+
+### Macro
+
+`lib.rs` content:
 
 ```rust
 // stdlib compiler API that allows manipulating Rust code.
@@ -255,7 +322,7 @@ use syn;
 
 use proc_macro::TokenStream;
 
-[proc_macro_derive(MyMacro)]
+#[proc_macro_derive(MyMacro)]
 pub fn my_macro_derive(input: TokenStream) -> TokenStream {
     // Replace unwrap() with better error handling on production code.
     let ast: syn::DeriveInput = syn::parse(input).unwrap();
@@ -299,7 +366,9 @@ then use!
 
 ## Attribute macros
 
-Macros must reside in a separate library crate, marked with `proc-macro`.
+### Project structure
+
+Attribute macros must reside in a separate library crate, marked with `proc-macro`.
 
 ```sh
 cargo new macro_derive --lib # macro
@@ -341,15 +410,7 @@ fn main() {
 }
 ```
 
-Macro!
-
-Two types of macros are relevant to this context/purpose:
-
-- derive macros (`proc_macro_derive(MyTrait)`)
-- attribute macros (`proc_macro_attribute`)
-
-Derive macros can't change the passed struct, they can only add other items (e.g. a trait impl), so trying to add a field will result in the struct defined twice.  
-In order to add new fields (but can also add other items), one must use an attribute macro, which returns a new struct definition.
+### Example
 
 ```rs
 // Reference: https://discord.com/channels/273534239310479360/981857974089814086
