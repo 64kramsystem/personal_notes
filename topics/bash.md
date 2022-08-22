@@ -875,8 +875,7 @@ declare -p MYHASH                    # print the AA (in declaration form)
 # Iterate.
 # in order to iterate the sorted keys, use `mapfile` as in the Arrays section
 #
-for key in "${!MYHASH[@]}"; do val=${MYHASH[$key]}; echo "$key=$val"; done
-
+5
 # Test if a variable is an associate array (!!)
 # `declare -p` prints the declaration; writes to stderr if the variable doesn't exist
 # watch out! if a variable was defined via `declare -p`, it will be printed.
