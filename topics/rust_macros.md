@@ -1,6 +1,7 @@
 # Rust Macros
 
 - [Rust Macros](#rust-macros)
+  - [General informations](#general-informations)
   - [Declarative macros](#declarative-macros)
     - [Rules and details](#rules-and-details)
     - [Importing](#importing)
@@ -12,7 +13,12 @@
     - [Macro](#macro)
   - [Attribute macros](#attribute-macros)
     - [Project structure](#project-structure-1)
-    - [Example](#example)
+      - [Macro crate](#macro-crate)
+      - [Main crate](#main-crate)
+    - [Example (basics)](#example-basics)
+    - [Example with field attributes](#example-with-field-attributes)
+
+## General informations
 
 ## Declarative macros
 
@@ -368,11 +374,12 @@ then use!
 
 ### Project structure
 
+#### Macro crate
+
 Attribute macros must reside in a separate library crate, marked with `proc-macro`.
 
 ```sh
 cargo new macro_derive --lib # macro
-cargo new main               # example binary, with trait
 
 # For some types (eg. ItemStruct), must enable syn's "full" feature.
 #
@@ -386,46 +393,14 @@ quote = "1.0"
 syn = "1.0"
 proc-macro2 = "1.0.40"
 TOML
-
-cat >> main/Cargo.toml << 'TOML'
-
-[dependencies]
-macro_derive = {path = "../macro_derive"}
-TOML
 ```
 
-Main:
+`lib.rs` contains the module imports/exports.
+
+A bail macro is convenient:
 
 ```rs
-use hello_macro_derive::*;
-
-pub trait MyTrait { fn print_my_field(&self); }
-
-#[whole_my_trait]
-struct MyStruct {}
-
-fn main() {
-    let instance = MyStruct { myfield: "foo".to_string() };
-    instance.print_my_field();
-}
-```
-
-### Example
-
-```rs
-// Reference: https://discord.com/channels/273534239310479360/981857974089814086
-
-// It's good practice to fully qualify (even with leading `::`) all the types.
-
-use proc_macro::TokenStream;
-use quote::quote;
-use syn::{
-    self,
-    parse::{self, Parser},
-    Data, DataStruct, DeriveInput, Fields,
-};
-
-type TokenStream2 = proc_macro2::TokenStream;
+// macro_derive/src/bail.rs
 
 // The appropriate way to report macro errors is using syn::Error, and converting it into proc_macro2::TokenStream
 // via into_compile_error(), then into TokenStream via into() (see below).
@@ -448,6 +423,48 @@ macro_rules! bail {
     };
 }
 
+pub(crate) use bail;
+```
+
+#### Main crate
+
+```sh
+cargo new main               # example binary, with trait
+
+cat >> main/Cargo.toml << 'TOML'
+
+[dependencies]
+macro_derive = {path = "../macro_derive"}
+TOML
+```
+
+`main.rs`:
+
+```rs
+use hello_macro_derive::*;
+
+pub trait MyTrait { fn print_my_field(&self); }
+
+#[whole_my_trait]
+struct MyStruct {}
+
+fn main() {
+    let instance = MyStruct { myfield: "foo".to_string() };
+    instance.print_my_field();
+}
+```
+
+### Example (basics)
+
+`lib.rs`:
+
+```rs
+mod bail;
+use my_actor_based::impl_my_actor_based;
+use proc_macro::TokenStream;
+
+// The proc macro public function must be declared inside lib.rs
+
 #[proc_macro_attribute]
 pub fn my_actor_based(args: TokenStream, input: TokenStream) -> TokenStream {
     let my_actor_based_impl = impl_my_actor_based(args, input);
@@ -458,6 +475,24 @@ pub fn my_actor_based(args: TokenStream, input: TokenStream) -> TokenStream {
         .unwrap_or_else(::syn::Error::into_compile_error)
         .into()
 }
+```
+
+`my_actor_based.rs`:
+
+```rs
+// Reference: https://discord.com/channels/273534239310479360/981857974089814086
+
+// It's good practice to fully qualify (even with leading `::`) all the types.
+
+use proc_macro::TokenStream;
+use quote::quote;
+use syn::{
+    self,
+    parse::{self, Parser},
+    Data, DataStruct, DeriveInput, Fields,
+};
+
+type TokenStream2 = proc_macro2::TokenStream;
 
 fn impl_my_actor_based(
     args: impl Into<TokenStream2>,
@@ -566,5 +601,120 @@ fn basic()
       impl_my_actor_based(attr_args, input).unwrap().to_string(),
       expected_output.to_string(),
   );
+}
+```
+
+### Example with field attributes
+
+This example implements the `Deserialize` trait, based on a struct fields; it allows specifying a `#[deserialize = "my_fn"]`, which replaces the default `deserialize` implementation.
+
+Extra from the project; `deserialize.rs`:
+
+```rs
+use crate::bail::bail;
+use crate::field_data::FieldData;
+
+use proc_macro2::Ident;
+use quote::quote;
+use syn::{self, parse2, Data, DataStruct, DeriveInput, Fields, Lit, Meta, MetaNameValue};
+
+type TokenStream2 = proc_macro2::TokenStream;
+
+const DESERIALIZE_ATTR: &str = "deserialize";
+const SERIALIZE_ATTR: &str = "serialize";
+
+pub(crate) fn impl_deserialize(input: impl Into<TokenStream2>) -> syn::Result<TokenStream2> {
+    let ast: DeriveInput = parse2(input.into())?;
+
+    let fields_data = find_fields(&ast)?;
+
+    let deserialize_impl = impl_deserialize_trait(&ast, fields_data)?;
+
+    Ok(quote!(
+        #deserialize_impl
+    ))
+}
+
+fn find_fields(ast: &'_ DeriveInput) -> syn::Result<Vec<FieldData>> {
+    if let Data::Struct(DataStruct {
+        fields: Fields::Named(fields),
+        ..
+    }) = &ast.data
+    {
+        let mut fields_data = vec![];
+
+        for f in &fields.named {
+            // Fields are named, so an ident is necessarily found.
+            let mut field_data = FieldData::new(f.ident.clone().unwrap());
+
+            for attr in &f.attrs {
+                let attr_meta = match attr.parse_meta() {
+                    Ok(meta) => meta,
+                    Err(error) => bail!(error),
+                };
+
+                if let Meta::NameValue(MetaNameValue {
+                    ref path, ref lit, ..
+                }) = attr_meta
+                {
+                    if path.is_ident(DESERIALIZE_ATTR) {
+                        if let Lit::Str(lit_val) = lit {
+                            field_data.deserialization_fn = Some(lit_val.to_owned());
+                        } else {
+                            bail!("The `deserialize` attribute requires a string literal");
+                        }
+                    } else if path.is_ident(SERIALIZE_ATTR) {
+                        if let Lit::Str(lit_val) = lit {
+                            field_data.serialization_fn = Some(lit_val.to_owned());
+                        } else {
+                            bail!("The `serialize` attribute requires a string literal");
+                        }
+                    }
+                }
+            }
+
+            fields_data.push(field_data);
+        }
+
+        Ok(fields_data)
+    } else {
+        bail!("Unexpected input; named fields expected")
+    }
+}
+
+fn impl_deserialize_trait(
+    ast: &'_ DeriveInput,
+    fields_data: Vec<FieldData>,
+) -> syn::Result<TokenStream2> {
+    let type_name = &ast.ident;
+
+    let fields_deserialization = fields_data.iter().map(
+        |FieldData { field, deserialization_fn, ..}| {
+            let quoted_deserialization_fn = if let Some(deserialization_fn) = deserialization_fn {
+                let deserialization_fn = Ident::new(&deserialization_fn.value(), deserialization_fn.span());
+                quote! { #deserialization_fn(&mut r) }
+            } else {
+                quote! { serdine::Deserialize::deserialize(&mut r) }
+            };
+
+            quote! { let #field = #quoted_deserialization_fn; }
+        },
+    );
+
+    let self_fields = fields_data
+        .iter()
+        .map(|FieldData { field, .. }| quote! { #field, });
+
+    Ok(quote!(
+        impl serdine::Deserialize for #type_name {
+            fn deserialize<R: std::io::Read>(mut r: R) -> Self {
+                #(#fields_deserialization)*
+
+                Self {
+                    #(#self_fields)*
+                }
+            }
+        }
+    ))
 }
 ```

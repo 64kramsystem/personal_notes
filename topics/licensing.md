@@ -10,12 +10,14 @@
     - [BSD -> GPL: Yes](#bsd---gpl-yes)
   - [GPL](#gpl)
     - [GPL -> MIT: No](#gpl---mit-no)
-  - [Apache](#apache)
+  - [Apache (2.0)](#apache-20)
     - [Apache -> MIT: Yes](#apache---mit-yes)
 
 ## MIT
 
 General info: https://www.tawesoft.co.uk/kb/article/mit-license-faq
+
+Text [here](https://opensource.org/licenses/MIT); just modify the header.
 
 ### Redistribution
 
@@ -64,7 +66,9 @@ See [MIT -> GPL](#mit---gpl-yes).
 
 ### GPL -> MIT: No
 
-## Apache
+## Apache (2.0)
+
+Text [here](https://apache.org/licenses/LICENSE-2.0); not verified what to change when adding it.
 
 ### Apache -> MIT: Yes
 

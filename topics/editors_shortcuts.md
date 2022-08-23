@@ -62,6 +62,7 @@ The VIM section requires some cleanup.
                               See option `Auto Find in Selection` (can be annoying).
 - `Ctrl+Shift+[`              Fold
 - `Ctrl+K, Ctrl+J`            Unfold all (expand)
+- `Alt+Shift+f`               Search in selected directory
 - `Ctrl+Shift+f`              Search in workspace
 
 - `Ctrl+Space`                Variables autocompletion (at least in Shell script syntax)

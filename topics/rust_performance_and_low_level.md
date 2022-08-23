@@ -30,7 +30,7 @@
     - [Functions/closures](#functionsclosures)
     - [Null pointer optimization](#null-pointer-optimization)
     - [Examine ASM (Assembler) output](#examine-asm-assembler-output)
-      - [Prevent function inlining](#prevent-function-inlining)
+      - [Mitigate code reorganizations](#mitigate-code-reorganizations)
 
 ## User-facing
 
@@ -475,10 +475,10 @@ If an integer variable is guaranteed never to be 0, one can use `NonZero*` data 
 
 ### (LLVM) Intrinsics/ASM APIs
 
-Intrinsic/ASM APIs are unstable.
+Intrinsic APIs are unstable; ASM are stable.
 
 ```rs
-#![feature(core_intrinsics)]  // Enable the (unstable) intrinsics APIs
+#![feature(core_intrinsics)]
 #![feature(link_llvm_intrinsics)]
 
 use core::intrinsics;
@@ -697,9 +697,11 @@ Other (not applicable/convenient) frontends:
 
 Note that (in release mode?), breakpoints are not reliable, and it's not clear, when the debugger stops, the correspondence with the source code.
 
-#### Prevent function inlining
+#### Mitigate code reorganizations
 
-In order to prevent inlining, one can move the functions in a library, and declare them public.
+If some logic is heavily reorganized, try wrapping values/functions `std::hint::black_box()`.
+
+Another approach to prevent inlining, is to move functions in a library, and declare them public.
 
 Cargo automatically supports both library and binary management if the files are called `src/lib.rs` and `src/main.rs`, so just create the library file, and generate the asm for it.
 
