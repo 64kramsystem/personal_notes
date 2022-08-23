@@ -1,7 +1,7 @@
 # Rust Tooling
 
 - [Rust Tooling](#rust-tooling)
-  - [Warnings](#warnings)
+  - [Warnings/Clippy](#warningsclippy)
   - [Cargo](#cargo)
     - [Workspaces](#workspaces)
     - [Visual Studio Code/Rust Analyzer](#visual-studio-coderust-analyzer)
@@ -14,7 +14,7 @@
     - [Cargo doc](#cargo-doc)
   - [Rustfmt](#rustfmt)
 
-## Warnings
+## Warnings/Clippy
 
 In order to make all warnings errors, use one of:
 
@@ -59,6 +59,8 @@ More thorough linting:
 ```
 
 Default checks described [here](https://github.com/rust-lang/rust-clippy#clippy).
+
+Clippy can be confirgured via `[.]clippy.toml`, but not all lints can be configured.
 
 ## Cargo
 

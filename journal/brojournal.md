@@ -1,3 +1,44 @@
+## Tue 23/Aug/2022
+
+- Studies: Rust
+  - [x] Copy macro notes
+- Admin: Presentation
+  - [x] Submit project to conference(s)
+- Studies: C/Rust
+  - [x] Examine compiled ASM of signed comparisons
+- Project: Serdine
+  - [x] Create project page, and move catacomb code
+  - [x] Think (basic) repository structure
+  - [x] Fight publication boilerplate
+  - [x] Prepare and add logo
+- Project: Commercial Game Sources
+  - [x] Add Ken's Labyrinth
+  - [x] Add Duke Nukem 3D
+  - [x] Add Shadow Warrior
+  - [x] Add Rise of the Triad
+  - [x] Several improvements to the org page
+  - [x] Add Rogue
+  - [x] Research/add ports for a few other games
+- Tools: C/Rust
+  - [x] Preliminary review LSP/Rust Analyzer
+  - [ ] Full review at C2Rust Refactoring Tool manual
+- Project: Port Catacomb II
+  - [x] Change the key data type (and associated logic) to u32
+  - [x] Refactor bioskey(), and reduce the unsafe scope
+  - [x] Refactor and make refresh() safe
+  - [x] Clean drawchartile() and mark as safe
+  - [x] Refactor and make safe egarefresh()
+  - [x] Make cgarefresh() safe
+  - [x] Refactor cgarefresh()
+  - [x] Simplify and make safe eraseobj()
+  - [x] Simplify and make safe drawobj()
+  - [x] Deduplicate `screenpitch` constant
+  - [x] Make drawegachartile() safe, and remove unsafe EGA() duplicate
+  - [x] Convert drawegachartile() to cleaner addressing approach
+  - [x] (Other stuff)
+- Writings: Porting C to Rust
+  - [x] Organize notes
+
 ## Mon 22/Aug/2022
 
 - Admin

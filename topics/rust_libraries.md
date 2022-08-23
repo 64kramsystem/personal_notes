@@ -754,9 +754,7 @@ Be pessimistic about the side effects of this function (typically used not to di
 ```rust
 #![feature(bench_black_box)]
 
-use test::bench::black_box;
-
-pub fn black_box<T>(dummy: T) -> T
+let abc = std::hint::black_box(-1);
 ```
 
 ## Rust utilities (`cargo install`)
@@ -1224,7 +1222,7 @@ use ahash::AHashMap;
 let mut map: AHashMap<i32, i32> = AHashMap::new();
 ```
 
-Perfect hashing (`const`-compatible):
+Perfect hashing (`phf`), `const`-compatible:
 
 ```rs
 // Requires `macros` feature
