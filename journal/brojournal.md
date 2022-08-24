@@ -1,3 +1,19 @@
+## Wed 24/Aug/2022
+
+- Project: Port Catacomb II
+  - [x] Several refactorings and minor stuff
+  - [x] Implement `Default` for `ctlpaneltype` (and a couple other types), and make use of it
+  - [x] Separate `ctlpaneltype` into own module
+  - [x] Make safe _loadctrls()
+  - [x] Make safe printchartile()
+  - [x] Make safe _loadhighscores()
+  - [x] Make `scores` type `Deserialize`
+  - [x] Convert almost all sound playback code/types to safe (also removes unsafe bloadin())
+- Studies: Gamedev
+  - [ ] Tricks of the Game Programming Gurus
+    - [x] 5. The Mysteries of the VGA Card
+    - [ ] 6. The Third Dimension
+
 ## Tue 23/Aug/2022
 
 - Studies: Rust
