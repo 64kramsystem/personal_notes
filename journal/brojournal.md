@@ -1,3 +1,24 @@
+## Thu 25/Aug/2022
+
+- Studies: C/Rust
+  - [x] Articles: https://immunant.com/blog
+    - [x] https://immunant.com/blog/2020/09/transpiled_c_safety
+- Studies: Rust
+  - [x] Fight modules import in unit tests
+- Tools: Rust
+  - [x] Copy crate publication notes
+- Project: Serdine
+  - [x] Update READMEs, and publish
+  - [x] Add floats deserialization
+  - [x] Add unit testing basic structure
+  - [x] Implement Serialize for array and floats
+  - [x] Implement Serialize macro
+- Project: Port Catacomb II
+  - [x] Fix bugs introduced by `fab5c68d Refactor and make safe (but it still uses unsafe API) _loadctrls()` 🤦
+    - [x] OB1
+    - [x] Forgot to read the file
+    - [ ] Make part of sound playback safe
+
 ## Wed 24/Aug/2022
 
 - Project: Port Catacomb II

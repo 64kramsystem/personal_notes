@@ -13,6 +13,7 @@
     - [Cross-compilation](#cross-compilation)
     - [Cargo doc](#cargo-doc)
   - [Rustfmt](#rustfmt)
+    - [Cargo manifest for publication](#cargo-manifest-for-publication)
 
 ## Warnings/Clippy
 
@@ -163,10 +164,10 @@ dev = ["bevy/dynamic"]
 
 Rust supports [PGO](https://doc.rust-lang.org/rustc/profile-guided-optimization.html)!!
 
-Versioning:
+Versioning (WATCH OUT!! It's not like Ruby!!):
 
-- "~X.Y.Z": Pessimistic versioning
-- "X.Y.Z", "^X.Y.Z": WATCH OUT!! 1. They're the same 2. They're not pessimistic, e.g. "^1.2.0" can upgrade to 1.3.0 (but not to 2.0.0)
+- `X.Y.Z`, `^X.Y.Z`: (same) confusing!!
+- `~X.Y.Z`         : X.Y.Z : same minor; X.Y < next minor; X: < next major
 
 See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -382,3 +383,35 @@ unstable_features = true
 blank_lines_upper_bound = 10             # unstable
 preserve_block_start_blank_lines = true  # unstable; seems to have disappeared (put a comment at the beginning to workaround)
 ```
+
+### Cargo manifest for publication
+
+This is a reasonable minimum:
+
+```toml
+[package]
+name = "serdine"
+version = "0.1.0"
+authors = ["Saverio Miroddi <saverio.pub2@gmail.com>"]
+edition = "2021"        # Just put the latest
+rust-version = "1.56.1" # Use `cargo-msrv` to find this
+description = "A tiny serialization library for storing types in a raw (but safe), memcpy-like, format"
+# `readme` defaults to `README.md` (and similar), so it's optional
+homepage = "https://github.com/64kramsystem/serdine"
+repository = "https://github.com/64kramsystem/serdine"
+license = "MIT"
+keywords = ["serialization"]
+categories = ["encoding"]
+
+[dependencies]
+serdine_derive = { version = "0.1.0", path = "../serdine_derive" }
+```
+
+In order to find the minimum Rust version, use .
+
+If the crate is a workspace, and there is a single `README.md` in the root:
+
+- don't forget to symlink it
+- if there are images, they must have an absolute URL!
+
+Reference: https://doc.rust-lang.org/cargo/reference/manifest.html.
