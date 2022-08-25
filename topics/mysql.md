@@ -302,7 +302,7 @@ STR_TO_DATE(@date, @format);
 - `%p` : AM or PM
 - `%r` : Time, 12-hour (hh:mm:ss followed by AM or PM)
 - `%S` : Seconds (00..59)
-- `%s` : Seconds (00..59)
+- `%s` : ^^ Seconds (00..59)
 - `%T` : Time, 24-hour (hh:mm:ss)
 - `%U` : Week (00..53), where Sunday is the first day of the week
 - `%u` : Week (00..53), where Monday is the first day of the week

@@ -1261,17 +1261,27 @@ thread::spawn(move || {
 
 ### Unit testing
 
-If files needs to be opened, the current path is the root of the current project (not workspace root!).
+In order to display `println!` output, pass `-- --show-output`.
 
 Standard testing:
 
 ```rust
+// The attribute can't be applied to a block, so the alternative it apply it once per each test module.
+
 #[cfg(test)]
 mod tests {
+  // If code under test refers to types using the name of current create, it must be imported with
+  // alias, e.g. `use crate as serdine`.
+
   use super::*;
 
   #[test]
   fn test_sort() {
+    // If files needs to be opened, the current path is the root of the current project (not workspace
+    // root!); can also use `CARGO_MANIFEST_DIR`.
+    //
+    let test_file_path = Path::new(&std::env::var("CARGO_MANIFEST_DIR").unwrap()).join("test_data/deserialize.dat");
+
     let mut $collection = &mut vec![3, 2, 1];
     $stat
     let expected_collection = &vec![1, 2, 3];
