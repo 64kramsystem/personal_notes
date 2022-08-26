@@ -612,6 +612,7 @@ Enums:
 
 - don't have a guaranteed layout, except that the first byte is the tag
 - can use `#[repr(<unsigned_type>)]` and assign a value to each variant (`WHITE = 0x00`)
+- the discriminants (associated values) are `isize` by default, but can be reduced
 
 For other interesting representations see https://doc.rust-lang.org/nomicon/other-reprs.html.
 

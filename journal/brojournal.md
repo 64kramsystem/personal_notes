@@ -1,3 +1,34 @@
+## Fri 26/Aug/2022
+
+- Project: Port Catacomb II
+  - [x] Make part of sound playback safe
+  - [x] Fix scores loading/deserialization
+  - [x] Make scores Serialize, and remove C structure (BREAKING)
+  - [x] Make _savehighscores() safe
+  - [x] Replace SaveFile with safe version
+  - [x] Implement From<T> for `u16`, for `grtype` and `soundtype`
+  - [x] Add serialization fns to ctlpaneltype, and remove C/packed (BREAKING)
+  - [x] Make _savectrls() safe
+  - [x] Make _quit() safe (except ShutdownJoysticks() call)
+  - [x] Mark several functions as safe
+  - [x] Improve ReadJoystick() safety, and restrict the unsafe scope
+  - [x] Add comments/constants to dofkeys()
+  - [x] Remove manual serialization, due to new Serdine-derive version
+  - [x] Eradicate `boolean` data type
+  - [x] Make `activeobj` and `classtype` De/Serialize, and remove packed/C repr (BREAKING)
+  - [x] Make dofkeys safe (remove last libc file operations), and refactor
+  - [x] End of unsafe! Isolate the remaining unsafe code to SDL routines
+- Open source: Clippy
+  - [x] Try and report bug
+- Studies: Rust
+  - [x] Brutal fight win `syn` parsing
+- Project: Serdine
+  - [x] derive: Add enum de/serialization support
+  - [x] Some refactorings
+  - [x] Add boolean support
+- Other
+  - [x] Review ROGUEPC test transpiling, and errors
+
 ## Thu 25/Aug/2022
 
 - Studies: C/Rust
@@ -56,9 +87,9 @@
   - [x] Several improvements to the org page
   - [x] Add Rogue
   - [x] Research/add ports for a few other games
-- Tools: C/Rust
+- Tools: Rust refactoring implementation
   - [x] Preliminary review LSP/Rust Analyzer
-  - [ ] Full review at C2Rust Refactoring Tool manual
+  - [ ] Full review of C2Rust Refactoring Tool manual
 - Project: Port Catacomb II
   - [x] Change the key data type (and associated logic) to u32
   - [x] Refactor bioskey(), and reduce the unsafe scope

@@ -14,11 +14,13 @@
     - [Arrays/Vectors/Slices](#arraysvectorsslices)
       - [Shared Vec/array methods](#shared-vecarray-methods)
     - [Hash maps](#hash-maps)
-    - [HashSet](#hashset)
+      - [HashSet](#hashset)
+      - [Manual hashing](#manual-hashing)
     - [Other data structures](#other-data-structures)
   - [Arithmetic/math APIs](#arithmeticmath-apis)
   - [Strings](#strings)
     - [String/Slice/Char-related APIs/conversions](#stringslicechar-related-apisconversions)
+    - [Chars iterator](#chars-iterator)
     - [Internal representation (bytes/chars/graphemes)](#internal-representation-bytescharsgraphemes)
   - [Control flow](#control-flow)
   - [Enums](#enums)
@@ -312,8 +314,8 @@ f64::from_bits(u64)                           // transmute from u64 (for bit-wis
 f64::is_sign_positive()                       // important! we can't use `-0.0 >= 0.0` for comparison (if sign is important)
 
 integer.to_string();                      // integer to string
-char.to_digit(RADIX).unwrap();            // (parse) convert (ASCII) char to number
-char::from_digit(4, 10);                  // (number, radix)
+char.to_digit(radix).unwrap();            // convert (ASCII) char to number
+char::from_digit(u32, radix);             // convert (number, radix) to char
 1_u8 as char;                             // only u8 can be casted to char
 std::char::from_u32(1_u32);               // cast u32 to char (not available for other data types)
 
@@ -897,7 +899,7 @@ In order to use enums as keys, annotate them with `#[derive(Eq, PartialEq, Hash)
 
 Map literals are not supported. See the `maplit` crate.
 
-### HashSet
+#### HashSet
 
 HashSet is based on HashMap, but it doesn't take space for the values, due to compiler's optimization.
 
@@ -905,6 +907,15 @@ HashSet is based on HashMap, but it doesn't take space for the values, due to co
 // Convenient constructor
 //
 HashSet::from(["Foo", "Bar"])
+```
+
+#### Manual hashing
+
+```rs
+let mut hash = DefaultHasher::new();
+instance.hash(&mut hash);
+// This doesn't reset the hasher; in order to replicate the same hash, must reinstantiate it.
+let hash_value = hash.finish();
 ```
 
 ### Other data structures
@@ -1051,11 +1062,6 @@ s.trim_end_matches("suffix");           // chomp suffix (but repeated)! also acc
 s.as_bytes();                           // byte slice (&[u8]) of the string contents
 s.into_bytes();                         // convert to Vec[u8]
 sl.bytes()
-sl.char_indices()                       // Iterator over chars and byte position
-
-// WATCH OUT! Remember that this is a (special) iterator (`Chars`), and that APIs like `len()` require `collect::<Vec<_>>()` first.
-//
-sl.chars()
 
 // Splits; there is a `rsplit*` version for each (which iterates from the right).
 // In order to convert to string and/or use slice, do `collect()`.
@@ -1122,6 +1128,22 @@ c.to_lowercase(); c.to_uppercase();             // UTF8; returns an iterator (AA
 ```
 
 See [Casting/Conversions](#castingconversions) for cast-related APIs.
+
+### Chars iterator
+
+`String#char()` is a special iterator:
+
+```rs
+let mut str_chars = "u16".chars();
+
+// Result: Some('u'), "16"
+//
+println!("{:?}, {:?}", str_chars.next(), str_chars.collect::<String>());
+```
+
+In order to get the length, must `collect()`.
+
+There is also `char_indices()`, whose type `CharIndices` iterates over (byte position, char).
 
 ### Internal representation (bytes/chars/graphemes)
 
@@ -1341,7 +1363,6 @@ opt.and(val);                     // Option -> v       (doesn't wrap)
 (a == b).then_some(value)         // bool -> Option; unstable
 opt.is_some_and(|n| func(n)) {  } // Option -> bool; unstable, equivalent to `matches!(val, Some(x) if f(x))`;
                                   // can also split in `let res = ...` -> `if Some(val) = res {}`
-
 
 // "is_none or equality_condition" is not simple; this is a reasonable approach.
 opt.unwrap_or(value) == value
