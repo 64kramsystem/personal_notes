@@ -228,9 +228,9 @@ git checkout .gitignore
 There are a few options:
 
 - CMake can generate the compile commands: `cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1`, which outputs to `compile_commands.json`
+- [intercept-build](https://github.com/immunant/c2rust#-with-intercept-build)
 - [build-logger](https://github.com/Ericsson/codechecker/tree/master/analyzer/tools/build-logger)
   - this also includes linking commands
-- [intercept-build](https://github.com/immunant/c2rust#-with-intercept-build)
 - `bear` tool, which generates the compile options for each file (`bear make`)
 
 Alternative: wrap the compiler and linker in proxy scripts that log the commands 🤓.
