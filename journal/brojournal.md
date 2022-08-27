@@ -1,3 +1,24 @@
+## Sat 27/Aug/2022
+
+- Tools: Cargo/Github/Crates.io
+  - [x] Fix Serdine crates.io logo
+    - [x] Brutal fight with relative paths, and crates.io workaround
+- Studies: Rust
+  - [x] Implement macro for implementing `TryFrom` on enum, for multiple types
+    - [x] Brutal fight with procedural macros
+      - [x] nested iteration
+      - [x] detail on recursion
+- Open Source: Anki
+  - [x] Feature request
+  - [x] Investigate source code - deck preset
+    - `qt/aqt/addcards.py` -> `self.deck_chooser = DeckChooser`
+- Project: Serdine
+  - [x] Add GH actions for caches/checks
+- Project: Port Catacomb II
+  - [x] Remove (some) unused structs/types/imports
+  - [x] Remove now unnecessary crate lints
+  - [x] Convert to binary-only crate (remove library)
+
 ## Fri 26/Aug/2022
 
 - Project: Port Catacomb II

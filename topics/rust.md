@@ -28,6 +28,7 @@
       - [Convenient Option patterns](#convenient-option-patterns)
     - [Result/Error](#resulterror)
     - [Result convient APIs, and interop with Option](#result-convient-apis-and-interop-with-option)
+    - [Convert to/from numeric](#convert-tofrom-numeric)
   - [Pattern matching](#pattern-matching)
     - [Error handling](#error-handling)
   - [Unsafe](#unsafe)
@@ -1490,6 +1491,60 @@ option.ok_or_else(|| slow_function() );
 instance.as_ref()
 instance.as_mut()
 ```
+
+### Convert to/from numeric
+
+Enums can be casted to numerics, but WATCH OUT! they will truncate silently (clippy will report this, through).
+
+Numeric to enum requires matching the variants; some crates do this, but a `TryFrom`-implementing macro will also do:
+
+```rs
+// Variation of a [StackOverflow macro](https://stackoverflow.com/a/57578431), which accepts a type:
+
+macro_rules! impl_try_from_numeric {
+    (
+        $from_type:ty,
+        $(#[$meta:meta])*
+        $vis:vis enum $name:ident {
+        $(
+            $(#[$vmeta:meta])*
+            $vname:ident $(= $val:expr)?,
+        )*
+        }
+    ) => {
+        $(#[$meta])*
+        $vis enum $name {
+        $(
+            $(#[$vmeta])*
+            $vname $(= $val)?,
+        )*
+        }
+
+        impl std::convert::TryFrom<$from_type> for $name {
+            type Error = ();
+
+            fn try_from(v: $from_type) -> Result<Self, Self::Error> {
+                match v {
+                    $(x if x == $name::$vname as $from_type => Ok($name::$vname),)*
+                    _ => Err(()),
+                }
+            }
+        }
+    }
+}
+
+impl_try_from_numeric! { u16,
+    #[repr(u16)]
+    #[derive(Clone, Copy)]
+    pub enum ClassType {
+        Lastclass = 23,
+        Guns = 22,
+        Gune = 21,
+    }
+}
+```
+
+It's possible to make the macro accept multiple types (which is a bit tricky; see blog article), but on can simply cast on-site to the desired type.
 
 ## Pattern matching
 

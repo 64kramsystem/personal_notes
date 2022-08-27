@@ -5,8 +5,8 @@
   - [Access tokens](#access-tokens)
   - [Coauthorship (multiple authors)](#coauthorship-multiple-authors)
   - [README.md](#readmemd)
-    - [Images](#images)
-    - [Link references](#link-references)
+    - [Relative link references](#relative-link-references)
+      - [Images](#images)
   - [Releases](#releases)
   - [Pages](#pages)
 
@@ -31,22 +31,28 @@ Github's specification for coauthorship is to add each additional author in the 
 
 ## README.md
 
-### Images
+### Relative link references
 
-Display an image (WATCH OUT! This won't be rendered from external sites):
+There are two base formats: file (README)-relative (`path/to/file`) and root-relative (`/path/to/file`).
+
+- the link decodes to  `$repo_path/  blob/$branch  /$rel_path/path/to/file`
+- the image decodes to `$repo_path/  raw/$branch   /$rel_path/path/to/file`
+
+Notes:
+
+- relative paths may not be supported by external sites; `crates.io` supports relative paths
+- symlinks are not followed (via interface, or HTTP links), with the exception of the `README` rendering in each directory (direct opening is not followed)
+- don't forget that naive paths (`$repo_path/$filename`) won't work, as git/hub information (tree, etc.) is required!
+- commit SHAs don't autoreference; it's not clear if there is any way (besides using a rel/abs URL)
+- if one wants to manually set the git/hub information, use `/../../$location/path/` (see [Stack Overflow](https://stackoverflow.com/a/40440270/210029))
+
+Relative links needs support in 3rd party services; e.g. `crates.io` supports them, but watch out the details (see [Cargo manifest publication info](rust_tooling.md#cargo-manifest-for-publication)).
+
+#### Images
 
 ```md
-![Highlighted block rendering](/readme_images/hightlighted_block_rendering.png?raw=true)
+![Logo](/images/serdine.jpg?raw=true)
 ```
-
-Image (raw) path: `https://github.com/64kramsystem/vscode-markdown-code-blocks-asm-syntax-highlighting/blob/master/pizza/test.png?raw=true`
-
-### Link references
-
-- Project root: prefix the path with `/../../` (see [Stack Overflow](https://stackoverflow.com/a/40440270/210029))
-  - commit SHAs don't autoreference; it's not clear if there is any way (besides using a rel/abs URL)
-  - don't forget that naive paths (`.../$repo/$filename`) won't work, as the file type and branch are required!
-- Current path: use the bare filename, without prefixes; the (dynamically generated) prefix `/blob/$current_branch/` will be automatically added
 
 ## Releases
 
