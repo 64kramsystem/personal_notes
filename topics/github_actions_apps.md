@@ -341,6 +341,8 @@ Manual Ruby Bundler caching is discouraged (as it's not trivial); see the [Ruby 
 
 Format/Clippy checks (with caching). WATCH OUT! For unclear reasons, this setup causes Clippy to check also dependencies (!).
 
+The cache is indexed by `Cargo.lock`; it may not be appropriate for all type of projects.
+
 ```yml
 # Default branch workflow
 

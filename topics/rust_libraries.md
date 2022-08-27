@@ -1577,7 +1577,7 @@ use strum::IntoEnumIterator;
 for flag in Flag::iter() { /* ... */ }
 ```
 
-Convert enums from numeric types (requires `num`, `num-traits`, `num-derive`):
+Convert to enum from numeric (requires `num`, `num-traits`, `num-derive`):
 
 ```rs
 #[derive(FromPrimitive, ToPrimitive)]
@@ -1590,15 +1590,10 @@ impl TryFrom<u32> for dirtype {
     }
 }
 
-impl From<grtype> for u16 {
-    fn from(value: grtype) -> Self {
-        value.to_u16().unwrap()
-    }
-}
-
 let mydt: dirtype = 1_u32.try_into().unwrap();
-let myu16: u16 = dirtype.into();
 ```
+
+See [Rust doc enum section](rust.md#convert-tofrom-numeric) for a macro that does the above.
 
 ### Convenience macros for operator overloading (`auto_ops`)
 

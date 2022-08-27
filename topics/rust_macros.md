@@ -4,6 +4,8 @@
   - [General informations](#general-informations)
   - [Declarative macros](#declarative-macros)
     - [Rules and details](#rules-and-details)
+    - [Nested iterations](#nested-iterations)
+    - [Recursive macros](#recursive-macros)
     - [Importing](#importing)
   - [Procedural/derive macro general informations](#proceduralderive-macro-general-informations)
     - [Quoting](#quoting)
@@ -196,22 +198,63 @@ There are some rules:
 
 Macro variable types:
 
-`expr`: Expressions that you can write after an `=` sign, such as `76+4` or `if a==1 {"something"} else {"other thing"}`.
-`ident`: An identifier or binding name, such as `foo` or `bar`.
-`path`: A qualified path. This will be a path that you could write in a use sentence, such as `foo::bar::MyStruct` or `foo::bar::my_func`.
-`ty`: A type, such as `u64` or `MyStruct`. It can also be a path to the type.
-`pat`: A pattern that you can write at the left side of an `=` sign or in a match expression, such as `Some(t)` or `(a, b, _)`.
-`stmt`: A full statement, such as a `let` binding like `let a = 43;`.
-`block`: A block element that can have multiple statements and a possible expression between braces, such as `{vec.push(33); vec.len()}`.
-`item`: What Rust calls items. For example, function or type declarations, complete modules, or trait definitions.
-`meta`: A meta element, which you can write inside of an attribute (`#[]`). For example, `cfg(feature = "foo")`.
-`tt`: Any token tree that will eventually get parsed by a macro pattern, which means almost anything. This is useful for creating recursive macros, for example.
-`literal`
+- `expr`: Expressions that you can write after an `=` sign, such as `76+4` or `if a==1 {"something"} else {"other thing"}`.
+- `ident`: An identifier or binding name, such as `foo` or `bar`.
+  - WATCH OUT! This can also be used for simple types, like `u64`
+- `path`: A qualified path. This will be a path that you could write in a use sentence, such as `foo::bar::MyStruct` or `foo::bar::my_func`.
+- `ty`: A type, such as `u64` or `MyStruct`. It can also be a path to the type.
+  - WATCH OUT! Has more constraints, when compared to `ident`.
+- `pat`: A pattern that you can write at the left side of an `=` sign or in a match expression, such as `Some(t)` or `(a, b, _)`.
+- `stmt`: A full statement, such as a `let` binding like `let a = 43;`.
+- `block`: A block element that can have multiple statements and a possible expression between braces, such as `{vec.push(33); vec.len()}`, but not a struct or so.
+- `item`: What Rust calls items. For example, function or type declarations, complete modules, or trait definitions.
+- `meta`: A meta element, which you can write inside of an attribute (`#[]`). For example, `cfg(feature = "foo")`.
+- `tt`: Any token tree that will eventually get parsed by a macro pattern, which means almost anything. This is useful for creating recursive macros, for example.
+  - Can use `$($all:tt)*` to match anything, but a `tt` alone will _not_ match anything.
+- `literal`
 
 Interesting articles:
 
 - Tutorial: https://hub.packtpub.com/creating-macros-in-rust-tutorial
 - Case study: https://notes.iveselov.info/programming/time_it-a-case-study-in-rust-macros
+
+### Nested iterations
+
+Declarative macros don't directly support nested iterations.
+
+- there are [some workarounds](https://stackoverflow.com/q/37752133), but they have limits (e.g. a single `tt` can't match a `item`)
+- it's possible to use recursion in order to achieve this (see [SO answer](https://stackoverflow.com/a/54552848)).
+
+### Recursive macros
+
+Example:
+
+```rs
+macro_rules! rec_macro {
+    (
+        $($my_types:ty),+; $val:literal
+    ) => {
+        // If the `ident` type is used instead of `ty`, it's possible _not_ to use separators in the
+        // internal calls, which is slightly simpler.
+        //
+        rec_macro!{@inner $($my_types),+; $val}
+    };
+    (@inner
+        ; $val:literal
+    ) => { println!("end") };
+    (@inner
+        // WATCH OUT!! Notice where the comma is! This is crucial for the recursion.
+        //
+        $my_type:ty $(, $my_types:ty)*; $val:literal
+    ) => {
+        let val: $my_type = $val;
+        println!("{}", val);
+        rec_macro! {@inner $($my_types),* ; $val}
+    };
+}
+
+rec_macro!(u16, i16; -5); // (correctly) causes an error, due to `let val: u16 = -5`
+```
 
 ### Importing
 
@@ -252,6 +295,8 @@ Two types of macros are relevant to this context/purpose:
 - attribute macros (`proc_macro_attribute`)
 
 Derive macros can't change the passed struct, they can only add other items (e.g. a trait impl), so trying to add a field will result in the struct defined twice; in order to add new fields (but can also add other items), one must use an attribute macro, which returns a new struct definition.
+
+In order to print debug information, set the `extra-traits` feature of the `syn` crate.
 
 WATCH OUT! When generating macros, make sure that the code generated is correct; if not, strange things will happen, e.g. `()` being produced, and/or output being incomplete.
 
@@ -606,92 +651,61 @@ fn basic()
 
 ### Example with field attributes
 
-This example implements the `Deserialize` trait, based on a struct fields; it allows specifying a `#[deserialize = "my_fn"]`, which replaces the default `deserialize` implementation.
+This example implements the `Deserialize` trait, based on a struct fields and enums; it allows specifying a `#[deserialize = "my_fn"]`, which replaces the default `deserialize` implementation.
 
-Extra from the project; `deserialize.rs`:
+`deserialize.rs`:
 
 ```rs
-use crate::bail::bail;
-use crate::field_data::FieldData;
+use crate::collection::{collect_variants_data, find_type_numeric_repr};
+use crate::fields_data::{NamedFieldData, VariantData};
+use crate::target::Target::ForDeserialization;
+use crate::{bail::bail, collection::collect_named_fields_data};
 
 use proc_macro2::Ident;
 use quote::quote;
-use syn::{self, parse2, Data, DataStruct, DeriveInput, Fields, Lit, Meta, MetaNameValue};
+use syn::{self, parse2, Data, DataStruct, DeriveInput, Fields};
 
 type TokenStream2 = proc_macro2::TokenStream;
 
-const DESERIALIZE_ATTR: &str = "deserialize";
-const SERIALIZE_ATTR: &str = "serialize";
-
 pub(crate) fn impl_deserialize(input: impl Into<TokenStream2>) -> syn::Result<TokenStream2> {
     let ast: DeriveInput = parse2(input.into())?;
+    let type_name = &ast.ident;
 
-    let fields_data = find_fields(&ast)?;
-
-    let deserialize_impl = impl_deserialize_trait(&ast, fields_data)?;
+    let deserialize_impl = match &ast.data {
+        Data::Struct(DataStruct { fields, .. }) => match fields {
+            Fields::Named(fields) => {
+                let named_fields_data = collect_named_fields_data(fields, ForDeserialization)?;
+                impl_trait_with_named_fields(type_name, named_fields_data)?
+            }
+            Fields::Unnamed(_) => bail!("Unnamed fields not supported!"),
+            Fields::Unit => bail!("Unit fields not supported!"),
+        },
+        Data::Enum(data_enum) => {
+            let enum_repr = find_type_numeric_repr(&ast)?;
+            let variants_data = collect_variants_data(data_enum)?;
+            impl_trait_with_enum_variants(type_name, enum_repr, variants_data)?
+        }
+        Data::Union(_) => bail!("Unions not supported!"),
+    };
 
     Ok(quote!(
         #deserialize_impl
     ))
 }
 
-fn find_fields(ast: &'_ DeriveInput) -> syn::Result<Vec<FieldData>> {
-    if let Data::Struct(DataStruct {
-        fields: Fields::Named(fields),
-        ..
-    }) = &ast.data
-    {
-        let mut fields_data = vec![];
-
-        for f in &fields.named {
-            // Fields are named, so an ident is necessarily found.
-            let mut field_data = FieldData::new(f.ident.clone().unwrap());
-
-            for attr in &f.attrs {
-                let attr_meta = match attr.parse_meta() {
-                    Ok(meta) => meta,
-                    Err(error) => bail!(error),
-                };
-
-                if let Meta::NameValue(MetaNameValue {
-                    ref path, ref lit, ..
-                }) = attr_meta
-                {
-                    if path.is_ident(DESERIALIZE_ATTR) {
-                        if let Lit::Str(lit_val) = lit {
-                            field_data.deserialization_fn = Some(lit_val.to_owned());
-                        } else {
-                            bail!("The `deserialize` attribute requires a string literal");
-                        }
-                    } else if path.is_ident(SERIALIZE_ATTR) {
-                        if let Lit::Str(lit_val) = lit {
-                            field_data.serialization_fn = Some(lit_val.to_owned());
-                        } else {
-                            bail!("The `serialize` attribute requires a string literal");
-                        }
-                    }
-                }
-            }
-
-            fields_data.push(field_data);
-        }
-
-        Ok(fields_data)
-    } else {
-        bail!("Unexpected input; named fields expected")
-    }
-}
-
-fn impl_deserialize_trait(
-    ast: &'_ DeriveInput,
-    fields_data: Vec<FieldData>,
+fn impl_trait_with_named_fields(
+    type_name: &Ident,
+    fields_data: Vec<NamedFieldData>,
 ) -> syn::Result<TokenStream2> {
-    let type_name = &ast.ident;
-
     let fields_deserialization = fields_data.iter().map(
-        |FieldData { field, deserialization_fn, ..}| {
+        |NamedFieldData {
+             field,
+             deserialization_fn,
+             ..
+         }| {
             let quoted_deserialization_fn = if let Some(deserialization_fn) = deserialization_fn {
-                let deserialization_fn = Ident::new(&deserialization_fn.value(), deserialization_fn.span());
+                let deserialization_fn =
+                    Ident::new(&deserialization_fn.value(), deserialization_fn.span());
                 quote! { #deserialization_fn(&mut r) }
             } else {
                 quote! { serdine::Deserialize::deserialize(&mut r) }
@@ -703,7 +717,7 @@ fn impl_deserialize_trait(
 
     let self_fields = fields_data
         .iter()
-        .map(|FieldData { field, .. }| quote! { #field, });
+        .map(|NamedFieldData { field, .. }| quote! { #field, });
 
     Ok(quote!(
         impl serdine::Deserialize for #type_name {
@@ -716,5 +730,149 @@ fn impl_deserialize_trait(
             }
         }
     ))
+}
+
+fn impl_trait_with_enum_variants(
+    type_name: &Ident,
+    enum_repr: Ident,
+    variants_data: Vec<VariantData>,
+) -> syn::Result<TokenStream2> {
+    let field_matches = variants_data.iter().map(
+        |VariantData {
+             variant,
+             discriminant,
+         }| {
+            quote! { #discriminant => Self::#variant, }
+        },
+    );
+
+    Ok(quote!(
+        impl serdine::Deserialize for #type_name {
+            fn deserialize<R: std::io::Read>(mut r: R) -> Self {
+                let mut buffer = [0; std::mem::size_of::<Self>()];
+
+                r.read_exact(&mut buffer).unwrap();
+
+                match #enum_repr::from_le_bytes(buffer) {
+                    #(#field_matches)*
+                    value => panic!("Unrecognized value for 'MyEnum' variant: {}", value),
+                }
+            }
+        }
+    ))
+}
+```
+
+`collection.rs`:
+
+```rs
+use syn::{DeriveInput, Expr, ExprLit, FieldsNamed, Ident, Lit, Meta, MetaNameValue};
+
+use crate::{
+    bail::bail,
+    fields_data::{NamedFieldData, VariantData},
+    target::Target,
+};
+
+const REPR_PATH: &str = "repr";
+
+// ////////////////////////////////////////////////////////////////////////////////
+// STRUCT WITH NAMED FIELDS
+// ////////////////////////////////////////////////////////////////////////////////
+
+pub fn collect_named_fields_data(
+    fields: &FieldsNamed,
+    target: Target,
+) -> syn::Result<Vec<NamedFieldData>> {
+    let mut fields_data = vec![];
+
+    for field in &fields.named {
+        // Fields are named, so an ident is necessarily found.
+        //
+        let mut field_data = NamedFieldData::new(field.ident.clone().unwrap());
+
+        for attr in &field.attrs {
+            let attr_meta = match attr.parse_meta() {
+                Ok(meta) => meta,
+                Err(error) => bail!(error),
+            };
+
+            if let Meta::NameValue(MetaNameValue {
+                ref path, ref lit, ..
+            }) = attr_meta
+            {
+                // There are different approaches; all a bit odd, but avoid duplicating the rest.
+                //
+                if path.is_ident(target.attribute_name()) {
+                    if let Lit::Str(lit_val) = lit {
+                        target.set_serialization_fn(&mut field_data, lit_val.to_owned());
+                    } else {
+                        bail!(format!(
+                            "The `{}` attribute requires a string literal",
+                            target.attribute_name()
+                        ));
+                    }
+                }
+            }
+        }
+
+        fields_data.push(field_data);
+    }
+
+    Ok(fields_data)
+}
+
+// ////////////////////////////////////////////////////////////////////////////////
+// ENUMS
+// ////////////////////////////////////////////////////////////////////////////////
+
+pub fn find_type_numeric_repr(ast: &'_ DeriveInput) -> syn::Result<Ident> {
+    for attr in &ast.attrs {
+        if attr.path.is_ident(REPR_PATH) {
+            if let Ok(ident) = attr.parse_args::<Ident>() {
+                // It seems that there is no way of natively identifying primitive types, so we must
+                // verify manually (see https://stackoverflow.com/q/66906261).
+
+                let ident_str = ident.to_string();
+                let mut ident_chars = ident_str.chars();
+
+                let numeric_type = ident_chars.next();
+
+                if matches!(numeric_type, Some('i') | Some('u')) {
+                    let type_width = ident_chars.collect::<String>();
+
+                    if type_width.parse::<u8>().is_ok() {
+                        return Ok(ident);
+                    }
+                }
+            }
+        };
+    }
+
+    bail!("Enum repr() not found!")
+}
+
+pub fn collect_variants_data(data_enum: &syn::DataEnum) -> syn::Result<Vec<VariantData>> {
+    let mut variants_data = vec![];
+
+    for variant in &data_enum.variants {
+        let ident = variant.ident.clone();
+        let discriminant = if let Some((
+            _,
+            Expr::Lit(ExprLit {
+                lit: Lit::Int(lit_int),
+                ..
+            }),
+        )) = &variant.discriminant
+        {
+            lit_int.clone()
+        } else {
+            bail!(format!("'{}' variant discriminant not found!", ident))
+        };
+
+        variants_data.push(VariantData::new(ident, discriminant));
+    }
+
+    Ok(variants_data)
 }
 ```
