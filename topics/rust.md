@@ -3228,7 +3228,10 @@ pub mod shared_channel {
 
 ### Mutex<T>/Arc<T>
 
-WATCH OUT! Mutex is not reentrant, so multiple calls by the same thread (unless in the same function) will deadlock.
+WATCH OUT!:
+
+- Mutex is not reentrant, so multiple calls by the same thread (unless in the same function) will deadlock.
+- When using as global, set it as `static`, not `const`!
 
 Note that an Arc can be safely modified if there is only one reference; see [the interior mutability section](#refcellt-and-interior-mutability).
 
@@ -3250,7 +3253,7 @@ for _ in 0..10 {
 // threads must be joined
 ```
 
-Note that `Arc<Mutex<T>>` can be cloned and move around, but must be extremely careful, because it's very easy to deadlock.
+Note that `Arc<Mutex<T>>` can be cloned and moved around, but must be extremely careful, because it's very easy to deadlock.
 
 The ownership of an instance in a mutex can be released, if there are no other threads holding the lock: `mutex_instance.into_inner().unwrap()`.
 
@@ -3344,37 +3347,37 @@ A [condvar](https://doc.rust-lang.org/beta/std/sync/struct.Condvar.html) allows 
 Watch out! This can't be used for as a pseudo-channel, because the mutex value could be changed between the notification, and the time the thread resumes. Example:
 
 ```rust
-  let pair = Arc::new((Mutex::new(0), Condvar::new()));
+let pair = Arc::new((Mutex::new(0), Condvar::new()));
 
-  let handle = {
-    let pair = pair.clone();
+let handle = {
+  let pair = pair.clone();
 
-    thread::spawn(move || {
-      let (lock, cvar) = &*pair;
+  thread::spawn(move || {
+    let (lock, cvar) = &*pair;
 
-      loop {
-        let cycle_number_mutex = lock.lock().unwrap();
+    let mut cycles_guard = lock.lock().unwrap();
 
-        // some work
+    loop {
+      // ... some work ...
 
-        if *cycle_number_mutex == cycles - 1 {
-          break;
-        } else {
-          cvar.wait(cycle_number_mutex).unwrap();
-        }
+      if *cycles_guard == cycles - 1 {
+        break;
+      } else {
+        cycles_guard = cvar.wait(cycles_guard).unwrap();
       }
-    })
-  };
+    }
+  })
+};
 
-  let (lock, cvar) = &*pair;
+let (lock, cvar) = &*pair;
 
-  for cycle_number in 0..cycles {
-    let mut mutex_cycle_number = lock.lock().unwrap();
-    *mutex_cycle_number = cycle_number;
-    cvar.notify_one();
-  }
+for cycle_number in 0..cycles {
+  let mut cycles_mutex = lock.lock().unwrap();
+  *cycles_mutex = cycle_number;
+  cvar.notify_one();
+}
 
-  handle.join();
+handle.join().unwrap();
 ```
 
 ### Busy waiting/spin loops (pause)

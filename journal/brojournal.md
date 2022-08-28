@@ -1,3 +1,26 @@
+## Sun 28/Aug/2022
+
+- Project: Port Catacomb II
+  - [x] Remove Default implementation from PcrlibCState
+  - [x] Convert SDL_DisplayMode to Rust
+  - [x] Convert SDL_GetDisplayBounds to Rust
+  - [x] Convert Window to Rust
+  - [x] Convert Renderer to Rust `Canvas<Window>`; remove stored PcrlibCState#window
+  - [x] Copy some comments/whitespace/constants from the SDL port
+  - [x] Convert Texture to Rust, with interesting lifetime workaround
+  - [x] Remove unnecessary array clearings in _setupgame()
+  - [x] Convert audio initialization to Rust
+  - [x] StartupSound(): Split the audio mutex/device init/checking
+  - [x] Cleanup UpdateSPKR()
+  - [x] Unimplement Default for PcrlibAState
+  - [ ] Attempt exit via flag
+  - [ ] Start review how audio works in the Rust library
+  - [x] Replace SDL Mutex with standard Rust mutex
+  - [x] Replace SDL semaphore implementation with Rust Mutex+Condvar
+    - [x] Study SDL Semaphore
+  - [x] Remove `PcrlibAState` from many function args, since it's now unused
+  - [x] Remove SDL_Memset()
+
 ## Sat 27/Aug/2022
 
 - Tools: Cargo/Github/Crates.io
@@ -18,6 +41,10 @@
   - [x] Remove (some) unused structs/types/imports
   - [x] Remove now unnecessary crate lints
   - [x] Convert to binary-only crate (remove library)
+  - [x] Convert SDL2 init/cleanup to Rust lib
+  - [x] Convert EventWatch to Rust lib
+  - [x] Type handling simplification in _setupgame()
+  - [ ] Move PcrlibCState initialization inside _setupgame()
 
 ## Fri 26/Aug/2022
 
