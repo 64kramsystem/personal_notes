@@ -9,7 +9,7 @@
   - [Functions/Closures](#functionsclosures)
   - [Collections](#collections)
     - [Iterators](#iterators)
-      - [Ranges and `std::iter::Iterator` methods](#ranges-and-stditeriterator-methods)
+      - [Ranges and iterable APIs](#ranges-and-iterable-apis)
       - [Method chaining](#method-chaining)
     - [Arrays/Vectors/Slices](#arraysvectorsslices)
       - [Shared Vec/array methods](#shared-vecarray-methods)
@@ -477,7 +477,7 @@ fn my_closure() -> Box<dyn Fn(i32) -> i32> {
 
 ### Iterators
 
-#### Ranges and `std::iter::Iterator` methods
+#### Ranges and iterable APIs
 
 General form: `[start] .. [[=]end]`. Technically they're `Iterator`s of types `Range(Inclusive|From|To|Full)?`.
 
@@ -485,7 +485,7 @@ For `Iterator` details, see the [related section](#iterator-traitassociated-type
 
 Iterators are lazy; !! they implement arithmetic operators !!
 
-`std::iter::Iterator` methods (also implemented by Range):
+`std::iter::Iterator` methods (also implemented by Range).
 
 ```rust
 map(|x| x * 2)               // Ruby :map
@@ -537,18 +537,8 @@ iterator1.lt(iterator2)
 any(|x| x == 33)             // terminates on the first true
 all(|x| x % 2 == 0)          // terminates on the first false
 
-// Can't unpack directly in the `for` with these, since they're refutable patterns.
-
-// Splitting APIs
-// Typical variations: `r...`, `...n`, and `..._mut`.
-split(|x| myfn(x))
-chunks(n)                    // iterate in chunks of n elements; includes last chunk, if smaller
-chunks_exact(n)              // (preferred) iterate in chunks of n elements; does not include the last chunk, if smaller
-coll.iter().step_by(2).zip(coll.iter().skip(1).step_by(2)) // Manual implementation of chunks(2), where not available
-
-// Other splitting APIs; may not support all the variations
-split_at(); split_first(); split_last()
-windows(n)                   // like chunks, but with overlapping slices (Ruby :each_cons); doesn't have variations
+// Manual implementation of chunks(2), where not available
+coll.iter().step_by(2).zip(coll.iter().skip(1).step_by(2))
 
 // Quasi-Ruby :flatten. WATCH OUT! flattens only one level.
 // !! Since None() evaluates to empty iterator, invoking on an Iterator<Option> performs Ruby :compact !!
@@ -618,6 +608,20 @@ cycle()                // Endless repeating
 //
 Some(v), Ok(v) // iterator with v
 None, Err(e)   // empty iterator
+```
+
+Array/Vec "block" APIs:
+
+```rs
+// `_mut()` variations are available.
+
+// split() typical additional variations: `r...`, `...n`.
+split(|x| myfn(x))
+split_at(); split_first(); split_last()
+
+chunks(n)                    // iterate in chunks of n elements; includes last chunk, if smaller
+chunks_exact(n)              // (preferred) iterate in chunks of n elements; does not include the last chunk, if smaller
+windows(n)                   // like chunks, but with overlapping slices (Ruby :each_cons); doesn't have variations
 ```
 
 #### Method chaining
@@ -714,6 +718,15 @@ vec[range].copy_from_slice(&source);    // memcpy; see array example
 //
 vec.try_into().unwrap();
 TryInto::<&[f64; 3]>::try_into(vec);
+
+// Convert an array of a wider type (e.g. u32) to a vec/array of narrower type (e.g. u8) (two approaches)
+//
+source.iter().flat_map(|v| v.to_le_bytes()).collect::<Vec<_>>();
+//
+let mut dest = [0; 16];
+for (dest_c, source_e) in dest.chunks_exact_mut(4).zip(source.iter()) {
+    dest_c.copy_from_slice(&source_e.to_le_bytes())
+}
 
 // Vectors can be received as array reference type (mutable, if required).
 //
