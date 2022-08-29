@@ -232,7 +232,7 @@ A trick to avoid contention between Rust Analyzer and terminal builds is to spec
 
 ### Debugging information
 
-If one needs to debug in release mode, the debug information needs to be retained:
+If one needs to debug in release mode (e.g. Godbolt), the debug information needs to be retained:
 
 - via rustc, specify `-C debuginfo=2 -C opt-level=3`
 - or via Cargo, add `[profile.release] debug = true`

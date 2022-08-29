@@ -1,3 +1,50 @@
+## Mon 29/Aug/2022
+
+- Open Source: Punchy
+  - [x] Review reported issue
+- Studies: Rust
+  - [x] Investigate best ways to transmute an `u32` aray into `u8`
+    - [x] Investigate generated ASM
+- Project: Port Catacomb II
+  - [x] Convert PcrlibCState#updateRect to Rust
+  - [x] Convert SDL_RenderCopy to Rust
+  - [x] Convert SDL_RenderPresent to Rust
+  - [x] Convert SDL_RenderClear to Rust
+  - [x] Convert SDL_UpdateTexture to Rust
+  - [x] Refactor get()
+  - [x] Convert SDL_GetKeyFromScancode to Rust
+  - [x] Refactoring: Convert CpanelState "ok" C pseudo-booleans to Rust bools
+  - [x] Refactor ProbeJoysticks()
+  - [x] Convert SDL_NumJoysticks() to Rust
+  - [x] Add convenient type RcSdl
+  - [x] Replace Sdl instance with RcSdl
+  - [x] Pass RcSdl instance to WatchUIEvents()
+  - [x] Add RcSdl#mouse()
+  - [x] Refactor CheckMouseMode()
+  - [x] Convert SDL_SetRelativeMouseMode() to Rust
+  - [x] Convert SDL_Delay() to Rust
+  - [x] Replace SDL_GetMouseFocus() with Rust
+  - [x] Add RcSdl#event_pump()
+  - [x] Convert SDL_PumpEvents() to Rust
+  - [x] Refactor ControlMouse()
+  - [x] Convert SDL_GetRelativeMouseState() to Rust
+  - [x] Replace timer delay call with thread::sleep()
+  - [x] Add owned Timer to RcSdl
+  - [x] Convert safe_SDL_AddTimer() to Rust (non-trivial restructuring required)
+    - [x] Fight lifetime issues
+  - [x] (Failed) attempt to break the loops as a mean of quitting
+  - [x] Convert SDL_DestroyWindow() to Rust
+  - [x] Make PcrlibCState#renderer Option, in preparation for quitting
+  - [x] Convert SDL_DestroyRenderer() to Rust (manual drop)
+  - [x] Refactor ShutdownJoysticks()
+  - [x] Refactor ProbeJoysticks()
+  - [x] Restructure `joyinfo_t` to be Rusty (but still holding raw pointers)
+  - [x] pcrlib_c.rs: Add comments, and made some very minor code adjustments
+  - [x] Convert SDL_PollEvent with Rust (and remove some types)
+  - [x] Remove a large amount of junk types added by C2Rust
+  - [x] Cosmetic cleanups/Comments addition
+  - [x] Fight `Rc<RefCell>` borrowing
+
 ## Sun 28/Aug/2022
 
 - Project: Port Catacomb II
