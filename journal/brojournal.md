@@ -1,3 +1,50 @@
+## Tue 30/Aug/2022
+
+- Open Source: Punchy
+  - [x] Test and trace new issue with flopping
+- Studies: Gamedev/SDL2
+  - [ ] Event handling
+- [x] SDL Game Development
+    - ~~1. Getting Started with SDL~~
+    - [x] 2. Drawing in SDL
+    - [x] 3. Working with Game Objects
+    - [x] 4. Exploring Movement and Input Handling
+    - ~~5. Handling Game States~~
+    - ~~6. Data-driven Design~~
+    - ~~7. Creating and Displaying Tile Maps~~
+    - ~~8. Creating Alien Attack~~
+    - ~~9. Creating Conan the Caveman~~
+- Studies: Rust
+  - [x] Convenient design for arc/mutexed inner variable
+- Project: Port Catacomb II
+  - [ ] Design `PcrlibAState` sharing
+    - [x] Discuss solution
+  - [ ] Investigate WatchUIEvents access conflict potential bug
+    - [x] Investigate SDL event pump access patterns/project implementation
+    - [~] Discuss SDL event pump access patterns
+  - [ ] Convert audio
+    - [x] Fight find correct device open API
+    - [ ] Think `PcrlibAState` sharing design
+    - [x] Convert SDL_JoystickUpdate() to Rust
+    - [x] Convert joyinfo_t joy index from i32 to u32
+    - [x] Convert SDL_Joystick* to Rust (requires minor restructuring)
+    - [x] Remove device id from joyinfo_t::Joy
+    - [x] Convert SDL_GameController* to Rust (also removes device id from joyinfo_t::Controller)
+    - [x] Convert SDL_IsGameController() to Rust
+    - [x] Remove orphan variable PcrlibAState#vblsem
+    - [x] Remove unused (unread) variable PcrlibAState#xormask
+    - [x] Remove now unnecessary PcrlibAState parameter from drawpanel()
+    - [x] Remove unused fields PcrlibCState: democount, demoval
+    - [x] Remove never read field PcrlibCState#mode, and rename the variable that was used as source
+    - [x] Disable window focus workaround in WatchUIEvents()
+    - [x] Convert PcrlibAState#_dontplay to Rust bool
+    - [x] Convert SdlManager#sdl to Option, and add convience method sdl()
+    - [x] Move the timer system and instance to the global (main) scope, from PcrlibAState
+    - [x] Adjust SdlManager borrow type for the upcoming quit() change
+      - [x] Brutal fight with lifetimes
+      - [ ] Brutal fight with EventWatch generic type
+    - [x] New quit approach, via SdlManager#quit(), which drops the Sdl instance
+
 ## Mon 29/Aug/2022
 
 - Open Source: Punchy
