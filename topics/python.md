@@ -5,6 +5,7 @@
     - [Strings/Printing](#stringsprinting)
     - [Data types](#data-types)
     - [Classes](#classes)
+    - [Control flow](#control-flow)
     - [Collections](#collections)
       - [Lists](#lists)
       - [Dicts](#dicts)
@@ -47,7 +48,20 @@ isinstance(instance, class)  # check instance class
 Klass()                      # instantiate a class
 ```
 
+### Control flow
+
+```py
+if condition:
+  stat1
+else:
+  stat2
+
+stat1 if condition else stat2
+```
+
 ### Collections
+
+WATCH OUT! At least empty arrays evaluate to false.
 
 ```python
 a, _, c = collections       # unpack tuple/list

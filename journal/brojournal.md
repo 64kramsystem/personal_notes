@@ -1,3 +1,16 @@
+## Wed 31/Aug/2022
+
+- Project: Port Catacomb II
+  - [x] Investigate window bug (from SDL port)
+    - When player control is via mouse, if the window is moved, when clicking on the window bar, the window suddenly moves down
+  - [x] Quit SDL also in (non-realistic) case of error
+  - [x] Rework PcrlibAState to be thread-safe (BREAKING)
+  - [x] Simplify the (obtained) audio spec, by retaining only the frequency
+  - [x] Demanding refactoring of UpdateSPKR() (also prepare for an iteration)
+  - [x] Remove libc dependency and build.rs
+  - [x] SdlManager: export audio instance
+  - [x] Convert audio to Rust; only one unsafe function remaining!
+
 ## Tue 30/Aug/2022
 
 - Open Source: Punchy
