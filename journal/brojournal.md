@@ -1,3 +1,11 @@
+## Thu 01/Sep/2022
+
+- Studies: Rust
+  - [x] Try implementing Deref/Mut
+- Project: Port Catacomb II
+  - [x] Test converting WatchUIEvents to safe by integrating in the existing loop
+  - [ ] Preliminary look at lints to apply
+
 ## Wed 31/Aug/2022
 
 - Project: Port Catacomb II
