@@ -1,3 +1,22 @@
+## Fri 02/Sep/2022
+
+- Open Source: Rust
+  - [x] File clippy bug
+- Project: Port Catacomb II
+  - [x] Convert WatchUIEvents by moving in the other loops (port_watch_ui_events_move)
+  - [x] Review all lints, and fix or allow
+  - [x] Remove ToPrimitive implementations
+  - [x] Apply all lints
+  - [x] Various removals (obsolete code, `pub` modifiers, etc.)
+  - [x] Added/extended various comments
+  - [x] Drop event watching logic, in favour of direct processing in ProcessEvents()
+  - [x] Refactor bioskey()
+  - [x] Update/extend README
+- Open Source: rust-gamedev.github.io
+  - [x] Open PR with Catacomb 2-64k entry
+- Project: Serdine
+  - [x] Update/extend README
+
 ## Thu 01/Sep/2022
 
 - Studies: Rust
@@ -372,7 +391,7 @@
 - Studies: C
   - [ ] Investigate numeric literals
 - Studies: C/Rust
-  - [x] Study [Rust out your C](https://www.youtube.com/watch?v=SKGVItFlK3w)
+  - [x] Study c
 - Project: Port Catacomb II
   - [x] Double check and update overflow snippet
 - Project: Geet
