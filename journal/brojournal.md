@@ -1,3 +1,12 @@
+## Sat 03/Sep/2022
+
+- Writings: Porting C to Rust
+  - [x] Flush current notes
+- Open Source: Rust
+  - [x] Report diagnostics issue (dead code not detected)
+- Open Source: Rust Game Port
+  - [x] Full review of the bunner-macroquad PR
+
 ## Fri 02/Sep/2022
 
 - Open Source: Rust
