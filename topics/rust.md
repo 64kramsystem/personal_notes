@@ -771,6 +771,7 @@ Slices apply to arrays as well:
 ```rust
 let array = [8u32; 5];          // type is [u32; _]
 let slice = &array[..];         // type is `&[u32]`
+let slice = &array[n..][..4]    // arguably convenient form of [n..n+4]
 ```
 
 See the [ownership chapter](#ownership), for the related properties.
@@ -824,8 +825,7 @@ use std::collections::HashMap;
 //
 let mut map = HashMap::new();
 
-map.insert("b", 10);
-map.insert("b", 10);            // Overwrites the existing value
+map.insert("b", 10); // if the value was existing, `Some(old_value)` is returned; otherwise, `None`
 map.remove("b");
 
 // Getters, and basic mutable access to values
@@ -920,7 +920,9 @@ HashSet is based on HashMap, but it doesn't take space for the values, due to co
 ```rs
 // Convenient constructor
 //
-HashSet::from(["Foo", "Bar"])
+let set = HashSet::from(["Foo", "Bar"])
+
+set.insert(value)    // returns true if the value was in the set; false if not
 ```
 
 #### Manual hashing
@@ -1378,19 +1380,21 @@ opt.and(val);                     // Option -> v       (doesn't wrap)
 opt.is_some_and(|n| func(n)) {  } // Option -> bool; unstable, equivalent to `matches!(val, Some(x) if f(x))`;
                                   // can also split in `let res = ...` -> `if Some(val) = res {}`
 
-// "is_none or equality_condition" is not simple; this is a reasonable approach.
-opt.unwrap_or(value) == value
-opt.unwrap_or(impossible_value) != value
+// There are more compact ways, but they're not as clear
+opt.is_none() || opt.unwrap() == value
 
 // Convenient pattern. Companion APIs:
 //
 // - `unwrap_or`:         eagerly evaluated
 // - `unwrap_or_default`: invokes the `default()` (!!)
 //
-opt.unwrap_or_else(|err | {
+opt.unwrap_or_else(|err| {
   println!("Problem parsing arguments: {}", err);
   std::process::exit(1);
 });
+
+// Return the value, or set (and return) it if not set
+opt.get_or_insert_with(|| value)
 ```
 
 ### Result/Error
@@ -2908,6 +2912,19 @@ value2.try_borrow_mut()?.value = 10; // try version
 // Dereference and cast to trait object.
 //
 &*value as &dyn MyTrait;
+
+// Convenient design to access internal Rc<RefCell> values. `Deref(Mut)` can't be implemented, because
+// it returns a reference, while we need to return an owned instance.
+// WATCH OUT! importing `borrow::BorrowMut` will mess with cause troubles.
+//
+// When the field belongs to Self
+pub fn field_mut(&self) -> RefMut<u32> { (*self.field).borrow_mut() }
+//
+// When the field belongs to an enclosed type
+pub fn field_mut(&self) -> RefMut<u32> {
+    let inner_bm = self.inner.borrow_mut();
+    RefMut::map(inner_bm, |inner| &mut inner.foo)
+}
 ```
 
 ### Modifying Rc/Arc without inner mutable types (and conversion Box -> RC type)
@@ -3269,6 +3286,18 @@ for _ in 0..10 {
 Note that `Arc<Mutex<T>>` can be cloned and moved around, but must be extremely careful, because it's very easy to deadlock.
 
 The ownership of an instance in a mutex can be released, if there are no other threads holding the lock: `mutex_instance.into_inner().unwrap()`.
+
+Convenient design to access a mutex value from the outside the enclosing type (the same strategy of `RefMut` can't be applied):
+
+```rs
+// inner: Arc<Mutex<InnerType>>;
+pub fn lock<R, F: FnMut(&mut InnerType) -> R>(&self, mut fx: F) -> R {
+    let mut lock = (*self.inner).lock().unwrap();
+    fx(&mut lock)
+}
+
+instance.guard(|inner| /* ... */);
+```
 
 ### Atomic primitive type wrappers
 
