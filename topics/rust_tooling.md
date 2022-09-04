@@ -409,11 +409,6 @@ serdine_derive = { version = "0.1.0", path = "../serdine_derive" }
 
 If the README is in a workspace (subdirectory), and it's symlinked to a file somewhere else the relative links (e.g. images) will be relative to the workspace README; in order to solve this, set the README, e.g. if the symlink is to the parent, use `readme=../README.md` (this will generate a warning on creation).
 
-In order to find the minimum Rust version, use .
-
-If the crate is a workspace, and there is a single `README.md` in the root:
-
-- don't forget to symlink it
-- if there are images, they must have an absolute URL!
+In order to find the minimum Rust version, use `cargo-msrv`.
 
 Reference: https://doc.rust-lang.org/cargo/reference/manifest.html.

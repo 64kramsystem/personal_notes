@@ -1,3 +1,15 @@
+## Sun 04/Sep/2022
+
+- Studies: Rust/Gamedev
+  - [x] Check sources for compiling the original doom
+  - [x] Test c2rust on Chocolate Doom
+- Studies: Rust
+  - [x] First look at Rust in Motion
+- Admin
+  - [ ] Flush (2 weeks) pool
+- Project: Commercial Game Sources
+  - Add Double Dragon II
+
 ## Sat 03/Sep/2022
 
 - Writings: Porting C to Rust
