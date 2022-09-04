@@ -360,6 +360,7 @@ myTest "foo" && echo "bar"      # prints `bar`!
 
 Metacharacters:
 
+- `?` : supported
 - `\w`: not supported; use `[:alnum:]`, but *doesn't match underscore*
 - `\d`: not supported; use `[0-9]` or `[:digit:]`
 - `\S`: not supported
