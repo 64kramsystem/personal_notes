@@ -65,8 +65,9 @@ ps -p $pid > dev/null
 #
 ps x -o pid,ppid,ni,args --forest
 
-# pgrep/pkill use regexes.
-# character classes are a trick not to match itself (especially useful when sudo killing)
+# Pgrep/pkill use regexes.
+# Character classes are a trick not to match its ancestor on sudo; this functionality will be supported
+# via `-A` on procps 4.0.1.
 #
 sudo pkill -f '[p]rocessname'
 

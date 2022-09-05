@@ -167,7 +167,7 @@ Rust supports [PGO](https://doc.rust-lang.org/rustc/profile-guided-optimization.
 Versioning (WATCH OUT!! It's not like Ruby's pessimistic; see [here](https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html)):
 
 - `X.Y.Z`, `^X.Y.Z`: (same) confusing!!
-- `~X.Y.Z`         : X.Y.Z : same minor; X.Y < next minor; X: < next major
+- `~X.Y.Z`         : X.Y.Z : >= same patch, < next minor; X.Y < next minor; X: < next major
 
 See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

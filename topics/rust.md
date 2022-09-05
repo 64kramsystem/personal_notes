@@ -1056,7 +1056,7 @@ s.start_with("pref");
 sl.is_char_boundary(i)
 s1 == s2;                               // String comparison (all comparisons supported); char-based (not graph.cl.!)
 
-s += &s2;                               // concatenate via overloaded operator; can take &str or &String
+s += &s2;                               // concatenate via overloaded operator (`+`/`+=`); can take &str or &String
 s.push_str(&str);                       // concatenate (append) strings
 s.strip_suffix(&str) -> Option<&str>    // strip a suffix; returns the stripped string; None if the suffix was not found
 s.push('c');
