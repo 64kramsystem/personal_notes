@@ -1,3 +1,29 @@
+## Mon 05/Sep/2022
+
+- Tools
+  - [x] Workaround remote server display bug
+- Tools: Private browser script
+  - [x] Fix not bringing browser to focus in the last week
+  - [x] Match logged on mode by domain, instead of full match
+- Studies: Rust
+  - [ ] Rust in Motion
+    - ~~U01~~
+    - ~~U02M01~~
+    - [x] U02M02 What is ownership?
+    - [x] U02M03 Ownership exercise solutions
+    - [x] U02M04 Borrowing
+    - [x] U02M05 Slices
+    - [x] U02M06 Borrowing and mutability
+    - [x] U02M07 Borrowing code patterns
+    - [x] U02M08 Ownership of more than just memory
+    - [x] U04M01 Unit overview
+    - [x] U04M02 An exploration of concrete lifetimes
+    - [x] U04M03 Visualizing lifetimes to understand borrow checker errors
+    - [ ] U04M04 An exploration of generic lifetimes
+- Project: Serdine
+  - [x] Make De/Serialize return Result
+  - [x] Remove Debug trait requirement on array Deserialize implementation
+
 ## Sun 04/Sep/2022
 
 - Studies: Rust/Gamedev
