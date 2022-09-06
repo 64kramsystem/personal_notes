@@ -1,3 +1,30 @@
+## Tue 06/Sep/2022
+
+- Projects: QEMU-pinning
+  - [x] Update patch for v7.1.0
+- Tools
+  - QEMU
+    - [ ] Fight SMB not working anymore
+    - [x] Fight Virgl/Virtio
+  - VMWare
+    - [x] Fight periodic slowdown
+- Open Source: Rust Game Ports
+  - [x] Review bunner-macroquad (+minor changes)
+- Admin
+  - [x] System: Fight sending monitor to sleep
+  - [x] Planning: Flush (2 weeks) pool
+- Studies: Rust
+  - [x] Fight find reviewers/tutors
+- Project: Serdine
+  - [x] Update README: Extend `Status` section, with potential functionalities
+- Studies: Rust
+  - [ ] Rust in Motion
+    - [x] U04M04 An exploration of generic lifetimes
+    - [x] U04M05 A short introduction to generics
+    - [x] U04M06 Lifetime parameters are a kind of generic
+    - [x] U04M07 Lifetime parameters are descriptive, not prescriptive
+    - [x] U04M08 Lifetime elision
+
 ## Mon 05/Sep/2022
 
 - Tools

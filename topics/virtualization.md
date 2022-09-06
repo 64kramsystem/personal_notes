@@ -1,35 +1,21 @@
 # Virtualization
 
 - [Virtualization](#virtualization)
-  - [Software-specific](#software-specific)
-    - [VMWare](#vmware)
-    - [VirtualBox](#virtualbox)
   - [Virtual disks](#virtual-disks)
     - [Creation/copy/conversion:](#creationcopyconversion)
     - [Zeroing/compacting/compressing an image](#zeroingcompactingcompressing-an-image)
     - [Working with an image content](#working-with-an-image-content)
       - [Filesystem operations](#filesystem-operations)
       - [Mount an image](#mount-an-image)
-    - [VirtualBox-specific](#virtualbox-specific)
-  - [QEMU](#qemu)
-    - [Usermode](#usermode)
-    - [RISC-V](#risc-v)
+  - [Software-specific](#software-specific)
+    - [VMWare](#vmware)
+    - [VirtualBox](#virtualbox)
+    - [QEMU](#qemu)
+      - [Usermode](#usermode)
+      - [RISC-V](#risc-v)
   - [Vagrant](#vagrant)
   - [WINE](#wine)
   - [DOSBox](#dosbox)
-
-## Software-specific
-
-### VMWare
-
-AMD GPU virtualization may not be supported; if so, add `mks.gl.allowUnsupportedDrivers=TRUE` to either `~/.vmware/preferences` or the VM cfg file.
-
-### VirtualBox
-
-```sh
-# Rebuild modules.
-/sbin/vboxconfig
-```
 
 ## Virtual disks
 
@@ -242,7 +228,22 @@ qemu-nbd --disconnect /dev/nbd0
 rmmod nbd
 ```
 
-### VirtualBox-specific
+## Software-specific
+
+### VMWare
+
+AMD GPU virtualization may not be supported; if so, add `mks.gl.allowUnsupportedDrivers=TRUE` to either `~/.vmware/preferences` or the VM cfg file.
+
+If the VM experiences sudden, periodic slowdowns (including, when focusing out and in the program window), don't start from a snapshot (verified on 16.2.3).
+
+Rebuild modules (can also be used to restart all services): `vmware-modconfig --console --install-all`
+
+### VirtualBox
+
+```sh
+# Rebuild modules.
+/sbin/vboxconfig
+```
 
 Change an image UUID:
 
@@ -265,7 +266,7 @@ vboxmanage internalcommands createrawvmdk -filename $image.vdi -rawdisk /dev/$de
 usermod -a -G disk $(whoami)
 ```
 
-## QEMU
+### QEMU
 
 Run a machine in the background, and shut it down:
 
@@ -284,7 +285,7 @@ Other options:
 
 - `-nographic`: runs in the foreground, in the terminal (without window)
 
-### Usermode
+#### Usermode
 
 ```sh
 # `/lib` suffix is implied, and must not be specified!
@@ -293,7 +294,7 @@ qemu-riscv64 -L /usr/riscv64-linux-gnu pigz
 qemu-riscv64 -L /path/to/riscv-gnu-toolchain/build/sysroot pigz
 ```
 
-### RISC-V
+#### RISC-V
 
 See https://risc-v-getting-started-guide.readthedocs.io/en/latest/linux-qemu.html.
 
