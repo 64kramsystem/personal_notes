@@ -52,6 +52,7 @@
     - [Convenience macros for operator overloading (`auto_ops`)](#convenience-macros-for-operator-overloading-auto_ops)
     - [Indented Heredoc-like strings (`indoc`)](#indented-heredoc-like-strings-indoc)
     - [User directories (`dirs`)](#user-directories-dirs)
+    - [UTF8-only paths (`camino`)](#utf8-only-paths-camino)
     - [Traverse filesystem (`walkdir`)](#traverse-filesystem-walkdir)
     - [Error conveniences (`failure`, `thiserror`)](#error-conveniences-failure-thiserror)
     - [Clipboard management (`cli-clipboard`, `copypasta`)](#clipboard-management-cli-clipboard-copypasta)
@@ -449,7 +450,8 @@ file.seek(SeekFrom::Current(0))?; // get current position
 
 ### Directories/filenames/paths handling
 
-(for user paths/directories, see the crates section)
+- for user paths/directories, see the [`dirs` crate](#user-directories-dirs))
+- for UTF8-only paths, see the [`camino` crate](#utf8-only-paths-camino)
 
 WATCH OUT!! Path separators in simple strings are not translated across platforms; the correct way to build paths is `PathBuf::new(...).join(...)`).
 
@@ -1633,6 +1635,10 @@ dirs::desktop_dir();
 
 dirs::home_dir().unwrap().join(path); // home
 ```
+
+### UTF8-only paths (`camino`)
+
+(WRITEME)
 
 ### Traverse filesystem (`walkdir`)
 

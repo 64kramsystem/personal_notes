@@ -80,25 +80,30 @@ grep -Pzo '(?s)void\srb_backtrace\(.*?\n\}' --include="*.c" -r .
 ### Operators
 
 ```perl
-# !!!!!!!!!!!!!!!!!!!!!!!!! Custom search delimiter !!!!!!!!!!!!!!!!!!!!!!!!!
+# Custom search delimiter (!!!)
+#
 s|from|to|
 
 # Ternary operator
+#
 CONDITION ? TRUE_BRANCH : FALSE_BRANCH
 
-# Flip-flop; works also with line numbers (!!!!!!)
+# Flip-flop; works also with line numbers (!!!)
 #
 print if /DELIMITER ;;$/ .. /DELIMITER ;$/
 print if /match/ .. -1                       # print all the lines after /match/ (included)
 
 # String boolean operators (!!! DON'T USE == !!!)
+#
 'a' eq 'a' # 1
 'a' ne 'b' # 1
 
 # String repetition operator
+#
 'a' x 3
 
 # Negative hashmap test
+#
 !$myhash{"mykey"}
 ```
 
@@ -366,13 +371,13 @@ printf "0\n1\n2" | perl -lpe 'BEGIN { print "abc" }'      # !! doesn't work inpl
 printf "0\n1\n2" | perl -lpe 'END { print "abc" }'        # !! doesn't work inplace !!
 printf "0\n1\n2" | perl -ne 'eof && print'                # match and print last line
 
-printf "0\n1\n2" | perl -0777 -ne 'print $1 if /(.+)\n1$/m' # print line before a match (previous line)
+printf "0\n1\n2" | perl -0777 -ne 'print $1 if /(.+)\n1$/m' # print the line before a match (previous line)
 
-printf "0\n1\n2" | perl -lpe '$. == 2 && print "abc"'        # print before a numbered line (1-based)
-printf "0\n1\n2" | perl -pe '$_ .= "abc\n" if /1/'           # print after a match; !! `/regex/ && ...` doesn't work! !!
-printf "0\n1\n2" | perl -pe 'print $_; print "abc\n" if /1/' # print after a match (alternative)
+printf "0\n1\n2" | perl -lpe '$. == 2 && print "abc"'        # print string before a numbered line (1-based)
+printf "0\n1\n2" | perl -ne '$_ .= "abc\n" if /1/'           # print string after a match; !! `/regex/ && ...` doesn't work! !!
+printf "0\n1\n2" | perl -ne 'print $_; print "abc\n" if /1/' # print string after a match (alternative)
 
-printf "0\n0\n0" | perl -pe '$_ .= "abc\n" if /0/ && ++$cnt == 2' # print after 2nd occurrence of the pattern
+printf "0\n0\n0" | perl -pe '$_ .= "abc\n" if /0/ && ++$cnt == 2' # print string after 2nd occurrence of the pattern
 ```
 
 ### Useful examples
@@ -521,16 +526,16 @@ echo 'abc.txt:12:XXX' | awk -F: '{ system("echo git blame "$1" -L "$2","$2) }' #
 ### Useful examples
 
 ```sh
-# Print a line after (following) a match
+# Print the line after (following) a match
 #
 echo $'1\n2' | awk '/1/ { getline; print }' # 2
 
-# Print a line preceding a match
+# Print the line preceding a match
 /# Alternative solution: filter via tac, and print following line :)
 #
 echo $'1\n2' | awk '/2/ { print prev } { prev = $0 }' #1
 
-# Add a line to Nth line (0-based)
+# Add a string on the Nth line (0-based)
 #
 awk -i inplace 'NR==1{print; print "export LD_LIBRARY_PATH=/usr/local/mysql/lib:$LD_LIBRARY_PATH"} NR!=1' /etc/init/mysql.server
 
@@ -641,6 +646,7 @@ sed -z 's/FOO/FOO\nBAR/2'
 echo $'FOO1\nFOO2\nFOO3' | sed -Ez 's/FOO.\n//2'         # match EOL terminator; works as expected
 echo $'FOO1\nFOO2\nFOO3' | sed -Ez 's/(^|\n)FOO./\1/2'   # match BOL terminator; INEXACT: replaces #2 with an empty line
 echo $'FOO1\nFOO2\nFOO3' | sed -Ez 's/(^|\n)FOO.\n/\1/2' # match both terminators; UNEXPECTED: replaces #3 instead of #2
+echo $'FOO1\nFOO2\nFOO3' | sed -n '2 p'                  # print Nth line (`-n` disables printing; `p` prints)
 ```
 
 ## Ruby

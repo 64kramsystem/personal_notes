@@ -64,7 +64,8 @@ It's possible to create a cache directory (`vendor/cache`), but it's all-or-noth
 
 ### Commands
 
-- `bundler package`: download gems into `vendor/cache`
+- `bundle $command --gemfile=$gemfile` : specify the gemfile
+- `bundler package`                   : download gems into `vendor/cache`
 
 ## Gem
 

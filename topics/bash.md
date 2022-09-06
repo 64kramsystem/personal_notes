@@ -353,7 +353,7 @@ myTest "foo" && echo "bar"      # prints `bar`!
 !! WATCH OUT !!
 
 1. They're not PCRE;
-2. The expressions don't need to be quoted;
+2. Don't quote the regex (use backslahes to escape spaces)!!
 3. Use a temporary variable (or cmd subsitution) when using metacharacters with backslash (but not `.`);
 4. `^` and `$` refer to the *whole string*, not the line;
 5. DON'T WRAP with ruby regex slashes!!!

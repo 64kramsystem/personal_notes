@@ -54,6 +54,7 @@
     - [Borrowing](#borrowing)
     - [Dangling pointers](#dangling-pointers)
     - [Lifetimes](#lifetimes)
+      - [Elision rules](#elision-rules)
     - [Slices](#slices)
   - [Smart pointers](#smart-pointers)
     - [Box<T>](#boxt)
@@ -2682,7 +2683,7 @@ fn not_dangling() -> String {
 
 ### Lifetimes
 
-Functions may need to know the lifetime of an object, in order to make sure that the resource is not freed prematurely.
+Lifetimes describe the scope where a reference lives; the compiler must be sure that the lifetime of a reference is contained within that of the value it references - if the value is dropped/moved during the lifetime of a reference, the reference will be invalid!
 
 For example, here, the returned vector is bound to the matches; if `matches` is freed, the content of the vector may be dangling!
 
@@ -2693,6 +2694,18 @@ fn extract_interval_arguments<'a>(matches: &'a clap::ArgMatches) -> Vec<&'a str>
       .unwrap()
       .collect::<Vec<&str>>()
 }
+```
+
+The `'static` lifetime refers to a reference that is valid across the whole program lifetime; example of valid one:
+
+```rs
+static MYARRAY: [i32, 3] = [0, 1, 2];
+
+fn return_myarray_slice() -> &'static [i32] {
+  &MYARRAY[..2]
+}
+
+// Other typical refs with static lifetime are hardcoded strings
 ```
 
 Structs can have lifetimes, but they must be applied to all the members.
@@ -2706,20 +2719,6 @@ struct ImportantExcerpt<'a> {
 //
 impl<'a> ImportantExcerpt<'a> {
   fn level(&self) -> i32 { 3 }
-}
-```
-
-In some cases, Rust can infer lifetimes, so they don't need to be specified.
-
-Syntax notes:
-
-```rust
-// lifetimes + mutable + generics
-//
-fn method<'a, T>(var: &'a mut T) {
-  // The `'static` lifetime lasts for the entire program execution (typically, hardcoded strings).
-  //
-  let str: &'static str = "hardcoded";
 }
 ```
 
@@ -2775,6 +2774,28 @@ fn parse_context<'a>(context: &'a Context) -> &'a str {
   Parser { context }.parse()
 }
 ```
+
+#### Elision rules
+
+In some cases, Rust can infer lifetimes, so they don't need to be specified. There are three rules:
+
+```rs
+// The lifetimes defined are added by the compiler.
+
+// 1. Each param reference gets its own lifetime.
+//
+fn myfn(foo: &'a str, b:&'b str) { /* ... */ }
+
+// 2. If there is only one param ref, the return ref gets the same lifetime
+//
+fn myfn(foo: &'a str) -> &'a str  { /* ... */ }
+
+// 3. If there is ref among the param refs, the return ref gets the same lifetime
+//
+fn myfn(&'a self, foo: &'b str) -> &'a str  { /* ... */ }
+```
+
+Lifetime elision depends exclusively on the signature, not on the body!!
 
 ### Slices
 
