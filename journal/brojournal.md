@@ -1,3 +1,16 @@
+## Wed 07/Sep/2022
+
+- Studies: Rust
+  - [ ] Rust in Motion
+    - ~~U03M01 Unit overview~~
+    - [x] U03M02 Panicking when something goes wrong
+    - [x] U03M03 Handling results and options
+    - [ ] U03M04 Writing a function that returns a result and using the question mark operator
+- Admin
+  - [x] System: Brutal fight and conclusion to sending monitor to sleep
+- Open Source: Rust Game Ports
+  - [x] Discuss [introducing new workflows](https://github.com/rust-gamedev/rust-game-ports/issues/140)
+
 ## Tue 06/Sep/2022
 
 - Projects: QEMU-pinning

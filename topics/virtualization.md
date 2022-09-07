@@ -13,6 +13,7 @@
     - [QEMU](#qemu)
       - [Usermode](#usermode)
       - [RISC-V](#risc-v)
+      - [VFIO](#vfio)
   - [Vagrant](#vagrant)
   - [WINE](#wine)
   - [DOSBox](#dosbox)
@@ -297,6 +298,23 @@ qemu-riscv64 -L /path/to/riscv-gnu-toolchain/build/sysroot pigz
 #### RISC-V
 
 See https://risc-v-getting-started-guide.readthedocs.io/en/latest/linux-qemu.html.
+
+#### VFIO
+
+Lots of interesting stuff on the [Arch Wiki](https://wiki.archlinux.org/title/PCI_passthrough_via_OVMF).
+
+Interesting script (from the wiki above, with minor cleanups) to check the resettable devices:
+
+```sh
+for iommu_group in $(find /sys/kernel/iommu_groups/ -maxdepth 1 -mindepth 1 -type d | sort -t/ -n -k 5); do
+  echo "IOMMU group $(basename "$iommu_group")"
+  for device in $(ls -1 "$iommu_group"/devices/); do
+    [[ -e $iommu_group/devices/$device/reset ]] && echo -n "[RESET]"
+    echo -n $'\t'
+    lspci -nns "$device"
+  done
+done
+```
 
 ## Vagrant
 
