@@ -163,8 +163,7 @@ mutt -e 'set copy=no' -a attachment.xz -s 'Subject' destination@mail.com <<< "Bo
 
 ```sh
 openssl rsa -in $private_key -pubout   # Generate a public key from private
-ssh-keygen -e [-f $private_key]        # Generate a public key from private, for SSH usage
-ssh-keygen -y                          # Same as previous, but requires user input
+ssh-keygen -y -f $private_key          # Generate a public key from private, for SSH usage; the `-e` formats are not appropriate
 
 ssh-copy-id -i $private_key $user@$host # Authorize a user (key) on a host!
 ssh-keygen [-E md5] -lf $pub_key_file   # Display the hash (SHA256/MD5) of public key (requires file)

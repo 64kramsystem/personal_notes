@@ -1077,4 +1077,6 @@ mkswap /dev/mapper/$swapdev
 # From host
 
 perl -i -pe "s/GRUB_CMDLINE_LINUX_DEFAULT=.*\K\"/ resume=/dev/mapper/$swapdev\"/" /etc/default/grub
+update-grub
+# => reboot
 ```

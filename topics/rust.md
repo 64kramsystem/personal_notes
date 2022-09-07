@@ -2688,6 +2688,8 @@ Lifetimes describe the scope where a reference lives; the compiler must be sure 
 For example, here, the returned vector is bound to the matches; if `matches` is freed, the content of the vector may be dangling!
 
 ```rust
+// Pronounce: "tick a"
+//
 fn extract_interval_arguments<'a>(matches: &'a clap::ArgMatches) -> Vec<&'a str> {
     matches
       .values_of("INTERVALS")
