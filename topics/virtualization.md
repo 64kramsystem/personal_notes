@@ -233,11 +233,13 @@ rmmod nbd
 
 ### VMWare
 
-AMD GPU virtualization may not be supported; if so, add `mks.gl.allowUnsupportedDrivers=TRUE` to either `~/.vmware/preferences` or the VM cfg file.
+AMD GPU virtualization may not be supported; if so, add `mks.gl.allowUnsupportedDrivers = "TRUE"` to either `~/.vmware/preferences` or the VM cfg file.
 
-If the VM experiences sudden, periodic slowdowns (including, when focusing out and in the program window), don't start from a snapshot (verified on 16.2.3).
+In order to autoattach USB devices, add `usb.autoConnect.device0 = "0xcafe:0xbabe"` to the VM cfg file.
 
 Rebuild modules (can also be used to restart all services): `vmware-modconfig --console --install-all`
+
+The VMWare Player 16.2.3 suffered periodic slowdowns; it's not clear what caused it; VMWare Workstation Pro is currently under testing.
 
 ### VirtualBox
 
