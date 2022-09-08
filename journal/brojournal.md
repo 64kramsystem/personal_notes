@@ -1,3 +1,16 @@
+## Thu 08/Sep/2022
+
+- Studies: Rust
+  - [x] Review [This Week in Rust #459](https://this-week-in-rust.org/blog/2022/09/07/this-week-in-rust-459)
+  - [ ] Rust in Motion
+    - [x] U03M04 Writing a function that returns a result and using the question mark operator
+    - [x] U03M05 Advantages of Rust's error handling strategy
+    - [x] U03M06 Custom error types
+    - [x] U03M07 Error handling crates
+  - [x] Search other reviewers/tutors
+- Admin
+  - [x] Tools: Test other 3d virtualization
+
 ## Wed 07/Sep/2022
 
 - Studies: Rust

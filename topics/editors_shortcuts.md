@@ -330,3 +330,9 @@ Slack:
 
 - `→`/`T`                  When on a thread message, open the thread panel
 - `Ctrl+.`                  Open/close the right panel
+
+VMWare:
+
+- `Ctrl+B`                 Start
+- `Ctrl+J`                 Suspend
+- `Cltr+E`                 Shutdown
