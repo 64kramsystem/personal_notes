@@ -1,3 +1,21 @@
+## Fri 09/Sep/2022
+
+- Studies: Rust
+  - [x] Review and rewrite all error notes
+  - [x] Rust in Motion
+    - [x] U03M08 Useful methods on result and option
+- Open Source: Rust Game Ports
+  - [x] Discuss Unity book porting details
+- Open Source: Redox
+  - [x] Request join chat
+- Tools: QEMU
+  - [x] Brutal fight to find SMB problem
+  - [x] Test extra Nvidia GT 1030 consumption
+- Admin: System
+  - [x] Brutal fight with motherboard broken audio
+- Studies: Gamedev
+  - [x] Listen: "Fyrox with Dmitry Stepanov" podcat
+
 ## Thu 08/Sep/2022
 
 - Studies: Rust
