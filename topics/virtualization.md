@@ -318,6 +318,8 @@ for iommu_group in $(find /sys/kernel/iommu_groups/ -maxdepth 1 -mindepth 1 -typ
 done
 ```
 
+AMD reset problem discussion: https://www.reddit.com/r/VFIO/comments/gq0emj/amd_reset_bug_what_are_we_waiting_for.
+
 ## Vagrant
 
 Find SSH key:

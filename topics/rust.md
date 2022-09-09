@@ -26,11 +26,12 @@
   - [Enums](#enums)
     - [Option](#option)
       - [Convenient Option patterns](#convenient-option-patterns)
-    - [Result/Error](#resulterror)
-    - [Result convient APIs, and interop with Option](#result-convient-apis-and-interop-with-option)
+    - [Result, convient APIs, and interop with Option](#result-convient-apis-and-interop-with-option)
     - [Convert to/from numeric](#convert-tofrom-numeric)
+  - [Error handling](#error-handling)
+    - [Basic patterns](#basic-patterns)
+    - [Complex error handling](#complex-error-handling)
   - [Pattern matching](#pattern-matching)
-    - [Error handling](#error-handling)
   - [Unsafe](#unsafe)
     - [Interoperability with other languages (C)](#interoperability-with-other-languages-c)
   - [Structs](#structs)
@@ -1398,97 +1399,23 @@ opt.unwrap_or_else(|err| {
 opt.get_or_insert_with(|| value)
 ```
 
-### Result/Error
+### Result, convient APIs, and interop with Option
 
-Result:
-
-```rs
-// !!!!!! WATCH OUT! The Result error enum is `Err`, not `Error` !!!!!!
-
-// Return the (Option<>) source that caused the error, when there has been a chain.
-//
-err.source();
-
-// Check if a result is Ok and discard the content.
-if result.is_ok() { /* ... */ }
-
-// Pattern for ignoring an error, useful in some cases
-//
-let _ = writeln!(stderr(), "error: {}", err);
-
-// Question mark ('?') operator: convenient syntax for returning None/Err from the function, if it's the value of an Option/Result.
-// If the Error type is different and From<T> is implemented, it's invoked.
-//
-fn mine() -> Result<String, io::Error> {
-  let value = errorable_operation()?;
-  result = process(value);
-  Ok(result)
-}
-//
-// Desugared version.
-//
-let result = match Try::into_result(expression) {
-    Ok(v) => v,
-    Err(e) => return Try::from_error(From::from(e)),
-};
-
-// Match only a certain error!
-//
-match compile_project() {
-    Ok(()) => return Ok(()),
-    Err(err) => {
-      if let Some(mse) = err.downcast_ref::<MissingSemicolonError>() {
-       // ...
-    }
-    return Err(err);
-}
-
-// Catch-all version of Error; aliased for convenience.
-//
-type GenericError = Box<dyn std::error::Error + Send + Sync + 'static>;
-type GenericResult<T> = Result<T, GenericError>;
-```
-
-Error:
-
-```rs
-// Conversion between error types
-//
-// Manual:
-//
-Err(GenericError::from(another_error))
-//
-// via From/Into:
-//
-impl From<bincode::Error> for BlobError {
-    fn from(e: bincode::Error) -> Self {
-        Self::Bincode(e)
-    }
-}
-
-// Error type definition:
-//
-#[derive(Debug, Clone)]
-pub struct JsonError {
-    pub message: String,
-    pub line: usize,
-}
-impl fmt::Display for JsonError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
-        write!(f, "{}:{}", self.message, self.line)
-    }
-}
-impl std::error::Error for JsonError { }
-```
-
-### Result convient APIs, and interop with Option
+WATCH OUT!!! The Result error enum is `Err`, not `Error` !!!!!!
 
 Many of the methods are common between `Option` and `Result`.
 
 ```rs
-// Convert Result to Option, and discard the error (use this if it's sure that there can't be an error)
+// Return the (Option<>) source that caused the error, when there has been a chain.
+//
+err.source();
+
+// Convert Result to Option; if Err, the error is discarded
 //
 result.ok();
+
+// Check if a result is Ok and discard the content.
+if result.is_ok() { /* ... */ }
 
 // Try multiple result values; for functions, use or_else().
 //
@@ -1563,6 +1490,93 @@ impl_try_from_numeric! { u16,
 ```
 
 It's possible to make the macro accept multiple types (which is a bit tricky; see blog article), but on can simply cast on-site to the desired type.
+
+## Error handling
+
+### Basic patterns
+
+```rs
+// Question mark ('?') operator: convenient syntax for returning None/Err from the function, if it's the value of an Option/Result.
+// If the Error type is different and From<T> is implemented, it's invoked; it's therefore possible for the function to return a
+// Box<dyn Error> or the specific Error type.
+//
+fn mine() -> Result<String, io::Error> {
+  let value = errorable_operation()?;
+  result = process(value);
+  Ok(result)
+}
+
+// Pattern for ignoring an error, useful in some cases
+//
+let _ = writeln!(stderr(), "error: {}", err);
+
+// Match only a certain error! Possible because `dyn Error` implements `downcast_ref()`.
+//
+match result_box_dyn_error {
+    Ok(()) => return Ok(()),
+    Err(err) => {
+      if let Some(pie) = err.downcast_ref::<ParseIntError>() { /* ... */ }
+      // ...
+    }
+}
+```
+
+Unspecific error handling (see downside in the next chapter):
+
+```rs
+// Catch-all version of Error; aliased for convenience.
+//
+type GenericError = Box<dyn std::error::Error + Send + Sync + 'static>;
+
+// Manual conversion from another error type. Possible because the above `Box<dyn Error...>` implements `From<Error...>`.
+//
+let converted_err: Box<dyn Error...> = GenericError::from(another_error);
+```
+
+### Complex error handling
+
+If a function returns `Box<dyn Error>`, it's not possible to infer the error type (ignoring `downcast_ref()`).
+
+The typical solution is to create an enum, and implement the required traits, plus a convenient Result typedef:
+
+```rs
+#[derive(Debug)]
+pub enum MyError {
+    FileOpenError(&'str),
+    WrongFileError(&'str),
+}
+
+// The `description()` method is optional.
+//
+impl Error for MyError {}
+
+impl Display for MyError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", match_self_something)
+    }
+}
+
+impl From<io::Error> for MyError {
+    fn from(_: io::Error) -> Self {
+        todo!()
+    }
+}
+
+// Convenient, to avoid boilerplate.
+//
+pub type MyResult<T> = Result<T, MyError>;
+
+pub fn myfailfn() -> MyResult<File> {
+    // Because of the `From<io::Error>` implementation, the error is automatically converted.
+    let result = File::open("abc")?;
+
+    if !correct_file(result ) {
+      return WrongFileError(123);
+    }
+
+    Ok(result)
+}
+```
 
 ## Pattern matching
 
@@ -1670,17 +1684,6 @@ match center {
 // Match an enum inside a struct (!!!):
 //
 if let Event::Window { win_event: WindowEvent::SizeChanged(new_width, new_height), .. } = event { /* ... */ }
-```
-
-### Error handling
-
-Handle errors via enum matching:
-
-```rust
-let num: u32 = match num_string.parse() {
-  Ok(num) => num,
-  Err(_)  => panic!("Custom error!"),
-};
 ```
 
 ## Unsafe

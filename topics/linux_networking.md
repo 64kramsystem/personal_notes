@@ -275,9 +275,15 @@ When searching keys in servers via fingerprint, the prefix `0x` must be added.
 ### Samba (SMB)
 
 ```sh
-# Mount a share
+# Mount a share.
+# WATCH OUT!! Requires the package `cifs-utils`, otherwise an odd error `mount: /path/to/mountdir: bad option
+# is raised; additionally fstab SMB mount works without it.
 #
 mount -t cifs "//192.168.178.20/clonezy" /home/partimag -o user="saverio",vers=3.0
+
+# Run a custom configuration, for testing pursposes. Debug levels >2 are very verbose.
+#
+smbd --interactive --configfile smb.conf --debuglevel 2
 
 # Create a guest (no user/password) share, read only, browseable. Access from windows at \\ip\share_name.
 #
@@ -286,6 +292,8 @@ aptitude install samba
 mkdir /path/to/share
 chmod 777 /path/to/share	# inverse of `writeable`
 
+# WATCH OUT!! wide links require the package `samba-vfs-modules`.
+#
 cat >> /etc/samba/smb.conf <<CFG
 [share_name]			      # don't forget to change this!
 path = /path/to/share

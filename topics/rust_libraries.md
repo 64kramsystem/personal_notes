@@ -54,7 +54,7 @@
     - [User directories (`dirs`)](#user-directories-dirs)
     - [UTF8-only paths (`camino`)](#utf8-only-paths-camino)
     - [Traverse filesystem (`walkdir`)](#traverse-filesystem-walkdir)
-    - [Error conveniences (`failure`, `thiserror`)](#error-conveniences-failure-thiserror)
+    - [Error handling conveniences (several crates)](#error-handling-conveniences-several-crates)
     - [Clipboard management (`cli-clipboard`, `copypasta`)](#clipboard-management-cli-clipboard-copypasta)
     - [De/serialization](#deserialization)
       - [`serde`/`bincode`](#serdebincode)
@@ -1667,10 +1667,10 @@ walker
 
 See [pm-spotlight](https://github.com/64kramsystem/pm-spotlight/blob/d99f6798/src/search/file_searcher.rs#L95) for example of skipping/including entries.
 
-### Error conveniences (`failure`, `thiserror`)
+### Error handling conveniences (several crates)
 
 ```rust
-// Convient Error types handling:
+// `failure`: convient Error types handling
 
 use failure_derive::*;
 
@@ -1684,7 +1684,7 @@ pub enum BlobError {
     Bincode(bincode::Error),
 }
 
-// Easy error messages definition:
+// `thiserro`: easy error messages definition
 
 use thiserror::Error;
 
@@ -1696,6 +1696,12 @@ pub struct JsonError {
     column: usize,
 }
 ```
+
+Other convenient error crates (all implement `Display`):
+
+- `error-chain`: `From` conversions + backtraces
+- `quick-error`: `From` conversions
+- `failure`    : backtraces
 
 ### Clipboard management (`cli-clipboard`, `copypasta`)
 
