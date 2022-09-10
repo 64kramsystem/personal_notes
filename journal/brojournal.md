@@ -1,3 +1,20 @@
+## Sat 10/Sep/2022
+
+- Project: Commercial Game Sources
+  - [x] Add Wolfenstein 3d
+- Open Source: Openscripts
+  - [x] download_ubuntu_packages: Make compatible with Ruby 3.0
+- Open source: Redox OS
+  - [x] Discuss beginner tasks
+    - [x] Fight find beginner issues
+- Admin: Systems
+  - [x] Upgrade O/S on laptop (test O/S+hibernation)
+    - [ ] Update install script
+- Admin: Tools
+  - [x] Restructure and split installation script
+    - Not tested
+    - No automatic panel setup
+
 ## Fri 09/Sep/2022
 
 - Studies: Rust
@@ -105,7 +122,7 @@
 - Admin
   - [ ] Flush (2 weeks) pool
 - Project: Commercial Game Sources
-  - Add Double Dragon II
+  - [x] Add Double Dragon II
 
 ## Sat 03/Sep/2022
 

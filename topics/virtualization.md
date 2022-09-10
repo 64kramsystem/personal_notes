@@ -243,6 +243,8 @@ The VMWare Player 16.2.3 suffered periodic slowdowns; it's not clear what caused
 
 ### VirtualBox
 
+BIOS key: EFI=Esc, Legacy=F12 (must tap very quickly)
+
 ```sh
 # Rebuild modules.
 /sbin/vboxconfig
