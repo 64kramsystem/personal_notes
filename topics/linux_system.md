@@ -558,7 +558,7 @@ apt-key del 2ED65CC0
 
 ```sh
 debconf-show packagename                      # show properties of an installed package
-debconf-get-selections | grep packagename/    # more detailed, but requires `debconf-utils package`
+debconf-get-selections | grep packagename/    # more detailed, but requires the `debconf-utils` package
 ```
 
 Example of seeding:
@@ -1065,18 +1065,15 @@ mount -t ecryptfs /mnt/home/.ecryptfs/saverio/.Private /mnt                     
 
 Ubuntu creates a too small swap partition, and doesn't set the swap volume kernel option.
 
-```sh
-# From live CD
+Run from live CD, after the installation is completed:
 
+```sh
 apt install partitionmanager
 partitionmanager
-# => unlock the volume, refresh, and resize the partitions
-mkswap /dev/mapper/$swapdev
-# => reboot
 
-# From host
+# ... resize the partitions ...
 
-perl -i -pe "s/GRUB_CMDLINE_LINUX_DEFAULT=.*\K\"/ resume=/dev/mapper/$swapdev\"/" /etc/default/grub
-update-grub
-# => reboot
+mkswap "$(ls -1 /dev/mapper/*swap*)"
+
+# now reboot
 ```

@@ -59,6 +59,8 @@
 Basic (important):
 
 ```sh
+# Shell opts can't be set on a single line
+
 set -o pipefail
 set -o errexit
 set -o nounset
