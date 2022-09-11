@@ -327,6 +327,13 @@ for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD)
 #
 ls-remote --get-url origin | ruby -ne 'print $_[/(\w+)\.git/, 1]'
 
+# Get the local remote branches of a repo, without cloning.
+# Must create a phony repository.
+#
+git init
+git remote add origin https://github.com/FFmpeg/FFmpeg.git
+git ls-remote --quiet | perl -lne 'print $1 if /refs\/heads\/release\/([\d.]+)/' | sort -V | tail -n 1
+
 # Repository root path
 #
 rev-parse --show-toplevel
@@ -407,6 +414,8 @@ push --tags [--force]                                    # push [tags] informati
 push $remote :$branch                                    # delete a remote branch
 push $remote :heads/$branch                              # delete a remote branch
 push $remote :refs/tags/$tag                             # delete a remote tag
+
+clone --depth 1 https://path/to/repo/foo.git -b $branch  # shallow clone (of a branch)
 ```
 
 Examples:

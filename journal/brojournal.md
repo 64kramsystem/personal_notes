@@ -1,3 +1,18 @@
+## Sun 11/Sep/2022
+
+- Admin
+  - [x] Review/book Rust event
+- Admin: Tools
+  - [ ] Restructure and split installation script
+    - [x] Full testing
+    - [x] A few improvements
+    - [x] Make FFmpeg clone shallow
+- System
+  - [x] Extra test audio breakage
+  - [x] Verify if `resume` kernel option is required
+- Open Source: Openscripts
+  - [x] `download_ubuntu_packages`: Fight with Ruby/HTTP/Jammy certificate issue on Ubuntu packages website
+
 ## Sat 10/Sep/2022
 
 - Project: Commercial Game Sources
