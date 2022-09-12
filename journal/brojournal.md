@@ -1,9 +1,30 @@
+## Mon 12/Sep/2022
+
+- Admin: System
+  - [x] Transfer email address books to new client version
+- [x] Project: Next Port
+  - [x] Review doom ports
+  - List of games
+    - hovertank   =  7k; port: 20k (?)
+    - catacomb 3d = 18k; reflection (multigame)
+    - wolf 3d     = 35k; wolf4sdl: https://github.com/11001011101001011/Wolf4SDL
+    - doom        = 44k; chocolate doom (multigame) or doomgeneric
+  - [x] Quick review of Wolf3D/Doom memory allocators
+- Writings: ISO article
+  - [x] Update and expand
+- Tools: O/S Install script
+  - [x] Test desktop+hwe mode
+    - [x] Some fixes
+- Open Source: ClamAV
+  - [ ] First look at ClamAV code
+    - [x] Build/compile
+
 ## Sun 11/Sep/2022
 
 - Admin
   - [x] Review/book Rust event
-- Admin: Tools
-  - [ ] Restructure and split installation script
+- Tools: O/S Install script
+  - [ ] Restructure and split
     - [x] Full testing
     - [x] A few improvements
     - [x] Make FFmpeg clone shallow

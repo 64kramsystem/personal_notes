@@ -8,7 +8,6 @@
   - [Disable SMT (hyperthreading)](#disable-smt-hyperthreading)
   - [Disable mouse/keyboard](#disable-mousekeyboard)
   - [Screen stuff](#screen-stuff)
-    - [Disable blanking](#disable-blanking)
     - [Add new resolution (HiDPI problem)](#add-new-resolution-hidpi-problem)
   - [Audio](#audio)
   - [Disconnect and power off a device](#disconnect-and-power-off-a-device)
@@ -115,17 +114,23 @@ xinput set-int-prop 3 "Device Enabled" 8 1
 
 ## Screen stuff
 
-Set resolution:
-
 ```sh
+# Set resolution
 # Find the output device using `xrandr -q`.
+#
 xrandr --output DisplayPort-2 --mode 1920x1080
-```
 
-### Disable blanking
+# Check if the monitor is not sleeping
+#
+xset -q | grep -q "Monitor is On"
 
-```sh
+# Disable blanking (may not work anymore)
+#
 setterm -blank 0 -powersave off -powerdown 0 => xset s off
+
+# Send the screen to sleep. WATCH OUT! Doesn't work; conflicts with the GNOME screensaver.
+#
+xset dpms force off
 ```
 
 ### Add new resolution (HiDPI problem)

@@ -98,6 +98,8 @@ Note: file traversal ordering is not guaranteed.
 -size [+|-]<value>[c|k|M]         # bigger or greater than <value>; c/k/M = bytes/kilo/mega
 -empty                            # empty files/directories
 
+-not -path '*/.*'                 # skip hidden files (see https://askubuntu.com/q/266179)
+
 -print                            # when passing the content to the pipe, adds the filename to the start of every line
 -print0 | xargs -0                # use null-char to separate filenames (useful for filenames with spaces)
 -print -quit                      # print one entry and quit; useful to check if there is one or more files in a directory (or matching)
