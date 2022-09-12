@@ -7,6 +7,7 @@
     - [Process tree display](#process-tree-display)
   - [Memory (measurement)](#memory-measurement)
   - [Security](#security)
+    - [Sudo](#sudo)
   - [Filesystems/partitions/mounts](#filesystemspartitionsmounts)
     - [Partitions](#partitions)
     - [In-memory filesystems](#in-memory-filesystems)
@@ -168,17 +169,6 @@ who am i | awk '{print $1}'
 #
 getent passwd $username | cut -f6 -d:
 
-$SUDO_USER              # User who invoked sudo
-[[ $EUID -eq 0 ]]       # Shell (all) check for user being root
-```
-
-Passwordless sudo (run as regular user):
-
-```sh
-echo "$(whoami) ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee "/etc/sudoers.d/$(whoami)_no_sudo_pwd"
-sudo chmod 440 !$
-```
-
 Passwordless ssh:
 
 ```sh
@@ -196,6 +186,28 @@ Limit number of concurrent user logins (but not sudo); useful in rare circumstan
 
 ```sh
 echo "@user            -       maxlogins       1" >> /etc/security/limits.conf
+```
+
+### Sudo
+
+```sh
+$SUDO_USER              # User who invoked sudo
+[[ $EUID -eq 0 ]]       # Shell (all) check for user being root
+
+# Passwordless sudo (run as regular user)
+#
+echo "$(whoami) ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee "/etc/sudoers.d/$(whoami)_no_sudo_pwd"
+sudo chmod 440 !$
+
+# Pass the env vars to the root env.
+#
+sudo -E $command
+
+# WATCH OUT! $PATH is special, and it's not passed if `secure_path` is set in `/etc/sudoers`. The
+# below is a solution; if it's not usable, the `sudoers` file can be hacked, but in complex scripts,
+# it's not reliable. An alternative solution is to add temporary symlinks to /usr/bin, or similar.
+#
+sudo -E env "PATH=$PATH" $command`
 ```
 
 ## Filesystems/partitions/mounts
