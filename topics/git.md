@@ -289,8 +289,9 @@ Diff/Patching:
 
 ```sh
 # Patch with metadata retain (and commit).
+# WATCH OUT!! The begin is the parent commit!
 # $end_commit defaults to HEAD.
-# Use `$commit~..$commit` to transfer a single commit.
+# Use `$parent_commit..$commit` to transfer a single commit.
 # One patch per commit is created.
 # `--reject`: in case of problems, partially apply the applicable patches, instead of not applying any
 #
@@ -300,7 +301,7 @@ am [--reject] $patchfile
 # "Transfer" one or more commits between two repositories, while changing the files path.
 # Don't forget the `g` regex modifier!
 #
-git -C ~/code/riscv_images format-patch --stdout $start_commit[..$end_commit] |
+git -C ~/code/riscv_images format-patch --stdout $parent_start_commit[..$end_commit] |
   perl -pe 's| [ab]/ruby||g' |
   git am
 
