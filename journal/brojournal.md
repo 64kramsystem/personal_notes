@@ -1,3 +1,19 @@
+## Tue 13/Sep/2022
+
+- Tools: O/S Install script
+  - [ ] Cleanups/minor improvements
+    - [x] Move `gem install mysql2` before `bundle install` (and remove `gem uninstall`)
+    - [x] Refactoring: Encapsulate logging inside a function (in `shared.sh`)
+    - [x] log errors to debug on step 4, instead of disabling errors
+    - [x] Perform strace on manually installed packages, and automate them (not all)
+    - [x] Fix repository `.liste` bug
+- Project: Openscripts
+  - [x] `download_ubuntu_packages`: improve support for downloading multiple packages
+- Open Source: Rust Game Ports
+  - [x] Prepare and add Catacomb II-64k
+- Studies: Rust
+  - [ ] Unsafe Rust pointers
+
 ## Mon 12/Sep/2022
 
 - Admin: System
