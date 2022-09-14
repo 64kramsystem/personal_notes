@@ -5,6 +5,7 @@
     - [std::mem APIs](#stdmem-apis)
     - [Unsafe](#unsafe)
       - [Raw pointers](#raw-pointers)
+        - [Dangers](#dangers)
       - [Functions](#functions)
     - [FFI](#ffi)
       - [C to Rust types mapping](#c-to-rust-types-mapping)
@@ -95,6 +96,28 @@ raw_p.write_bytes(val, cnt);                // memset
 dest_raw_p.offset_from(start_raw_p);        // compute offset (pointer arithmetic). WATCH OUT!: Uses the type size as unit, not 1!
 std::slice::from_raw_parts[_mut](r, 10000); // create a slice from a raw pointer; use `to_vec()` to convert to Vec (WATCH OUT! Don't use `Vec::from_raw_parts()`)
 ```
+
+##### Dangers
+
+Mutable raw pointers have some pitfalls when aliased, for example:
+
+```rs
+pub fn foo(x: &mut i32, y: &mut i32) -> i32 {
+    (*x, *y) = (42, 99);
+    *x
+}
+
+let mut n = 0;
+let n_ptr = &mut n as *mut i32;
+let (n_mut1, n_mut2)  = unsafe { (&mut *n_ptr, &mut *n_ptr) };
+
+// Prints 42 in release mode; the compiler assumes that the function params can't be aliase of the
+// same pointer, so it optimizes the return value, and hardcodes it.
+//
+println!("OUTPUT: {}", foo(n_mut1, n_mut2));
+```
+
+For an intro, see [Unsafe Rust is not C](https://www.youtube.com/watch?v=DG-VLezRkYQ).
 
 #### Functions
 

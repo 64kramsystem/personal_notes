@@ -1,3 +1,12 @@
+## Wed 14/Sep/2022
+
+- Studies: Rust
+  - [x] [Unsafe Rust is not C](https://www.youtube.com/watch?v=DG-VLezRkYQ)
+- Project: Next Port
+  - [ ] Full review of Wolf3D/Doom memory allocators
+- Admin: System
+  - [x] Fight (dus) produce Linux flash key that boots to ram
+
 ## Tue 13/Sep/2022
 
 - Tools: O/S Install script
@@ -12,7 +21,7 @@
 - Open Source: Rust Game Ports
   - [x] Prepare and add Catacomb II-64k
 - Studies: Rust
-  - [ ] Unsafe Rust pointers
+  - [ ] [Unsafe Rust is not C](https://www.youtube.com/watch?v=DG-VLezRkYQ)
 
 ## Mon 12/Sep/2022
 

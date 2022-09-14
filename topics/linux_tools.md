@@ -519,12 +519,11 @@ In some workflows, it's convenient to set `IGNOREEOF`, in order to prevent accid
 
 ## Clonezilla
 
-
 ```sh
 # Setup, from 20.04.4 live CD. The package is a complete distaster; dependencies are not installed:
 #
 # - one old Ubuntus, partclone was not installed
-# - the compressions programs need to be installed
+# - the compressions programs need to be installed (22.04 has zstd preinstalled)
 #
 # In case of error, disable the GUI to see the underlying message (see https://unix.stackexchange.com/a/589650).
 #
