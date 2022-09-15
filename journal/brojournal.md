@@ -1,3 +1,17 @@
+## Thu 15/Sep/2022
+
+- Open Source: Openscripts
+  - [x] `download_ubuntu_packages`: Fix bug in SSL skipping option
+- Tools: O/S Install script
+  - [x] Convert last programs setup to unattended
+  - [x] Other fixes
+  - [x] Panels configuration
+  - [ ] Hibernation workaround
+- Admin: System
+  - [x] Complete setup laptop
+- Studies: Rust
+  - [ ] [The Borrow Checker - A deep dive](https://is.gd/5DRSRB)
+
 ## Wed 14/Sep/2022
 
 - Studies: Rust
