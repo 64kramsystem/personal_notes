@@ -6,7 +6,7 @@
     - [Signals/exit codes/suspension](#signalsexit-codessuspension)
     - [Process tree display](#process-tree-display)
   - [Memory (measurement)](#memory-measurement)
-  - [Security](#security)
+  - [Security (Permissions)](#security-permissions)
     - [Sudo](#sudo)
   - [Filesystems/partitions/mounts](#filesystemspartitionsmounts)
     - [Partitions](#partitions)
@@ -124,7 +124,7 @@ echo q | htop -p $(pgrep -f qemu-sys) | aha --black --line-fix > /tmp/htop.html
 
 Measuring memory is a complex topic. A simple and accurate enough tool that can be used is [`ps_mem`](https://github.com/pixelb/ps_mem).
 
-## Security
+## Security (Permissions)
 
 ```sh
 chown $name $file...                        # change owner
@@ -180,6 +180,12 @@ passwd -d $user
 # On some system, like Debian, also run the following,
 # and ensure that ChallengeResponseAuthentication is set to `no`.
 perl -i -pe 's/^UsePAM \K\w+/no/'                       /etc/ssh/sshd_config
+```
+
+On Ubuntu, root can't modify `/tmp` files belonging to another user; fix using (see https://askubuntu.com/a/1340909/46091):
+
+```sh
+sysctl fs.protected_regular=0
 ```
 
 Limit number of concurrent user logins (but not sudo); useful in rare circumstances, but typically discouraged:
