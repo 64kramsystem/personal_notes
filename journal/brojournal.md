@@ -1,3 +1,15 @@
+## Fri 16/Sep/2022
+
+- Studies: Rust
+  - [x] [The Borrow Checker - A deep dive](https://is.gd/5DRSRB)
+  - [x] Review [discussion about unsafe pointers](https://discord.com/channels/273534239310479360/1009244570674012212)
+  - [x] [How do I return a reference to something inside a RefCell without breaking encapsulation?](https://stackoverflow.com/q/29401626)
+  - [x] [Is a MutexGuard if I never assign it to a variable?](https://stackoverflow.com/q/51335679)
+- Admin: System
+  - [x] Fix Rust Jammy libssl problem
+- Studies: Bash
+  - [x] [Bash functions ignore set -e](https://stackoverflow.com/q/50785352)
+
 ## Thu 15/Sep/2022
 
 - Open Source: Openscripts

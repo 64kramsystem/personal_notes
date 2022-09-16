@@ -2941,14 +2941,16 @@ value2.try_borrow_mut()?.value = 10; // try version
 
 // Convenient design to access internal Rc<RefCell> values. `Deref(Mut)` can't be implemented, because
 // it returns a reference, while we need to return an owned instance.
+// The methods can also return RefMut; `impl` just hides it.
 // WATCH OUT! importing `borrow::BorrowMut` will mess with cause troubles.
 //
-// When the field belongs to Self
-pub fn field_mut(&self) -> RefMut<u32> { (*self.field).borrow_mut() }
+// Case where the field belongs to Self:
 //
-// When the field belongs to an enclosed type
-pub fn field_mut(&self) -> RefMut<u32> {
-    let inner_bm = self.inner.borrow_mut();
+pub fn field_mut(&self) -> impl DerefMut<Target = u32> + '_ { (*self.field).borrow_mut() }
+//
+// Case where the field belongs to an enclosed type:
+//
+pub fn val_mut(&self) -> impl DerefMut<Target = u32> + '_ {
     RefMut::map(inner_bm, |inner| &mut inner.foo)
 }
 ```
