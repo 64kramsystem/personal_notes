@@ -32,7 +32,9 @@
   - [Script operational concepts/Useful scripts](#script-operational-conceptsuseful-scripts)
     - [Split a string (single/multi-char delimiter)](#split-a-string-singlemulti-char-delimiter)
     - [Ask for input (keypress)](#ask-for-input-keypress)
-    - [Trapping errors (hooks)](#trapping-errors-hooks)
+    - [Error handling](#error-handling)
+      - [Simulating error bubbling (unexpected `set -o errexit` behavior)](#simulating-error-bubbling-unexpected-set--o-errexit-behavior)
+      - [Trapping errors (hooks)](#trapping-errors-hooks)
     - [Log a script output/Enable debugging [log]](#log-a-script-outputenable-debugging-log)
     - [Print to stdout while setting a variable](#print-to-stdout-while-setting-a-variable)
     - [Check if there's data in stdin](#check-if-theres-data-in-stdin)
@@ -975,7 +977,33 @@ Input one char; if `variable_name` is specified, the input is stored in the vari
 read -rsn1 [<variable_name>]
 ```
 
-### Trapping errors (hooks)
+### Error handling
+
+#### Simulating error bubbling (unexpected `set -o errexit` behavior)
+
+WATCH OUT! This doesn't work as expected (using `set -o errexit`):
+
+```sh
+{
+  echo foo
+  false
+  echo bar
+} || log_error "Error!"
+```
+
+it will execute `echo bar` (see https://stackoverflow.com/q/50785352/210029) !!!
+
+Do like this:
+
+```sh
+{
+  echo foo &&
+  false    &&
+  echo bar &&
+} || log_error "Error!"
+```
+
+#### Trapping errors (hooks)
 
 Execute a (explicit) command on exit; generally convenient to trap `ERR` + `INT`, or `EXIT`.
 
