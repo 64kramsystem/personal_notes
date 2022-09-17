@@ -1,3 +1,13 @@
+## Sat 17/Sep/2022
+
+- Studies: Rust
+  - [x] [Nine Rules for Elegant Rust Library APIs](https://youtu.be/6-8-9ZV-2WQ)
+  - [ ] [Live-coding a Rust crate for short EC2 jobs (part 1)](https://youtu.be/Zdudg5TV9i4)
+- System: Laptop/Ubuntu
+  - [x] Fight fix BT mic recording
+- Open Source: Ubuntu
+  - [x] Report speakers issue
+
 ## Fri 16/Sep/2022
 
 - Studies: Rust

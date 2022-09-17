@@ -416,7 +416,7 @@ push $remote :$branch                                    # delete a remote branc
 push $remote :heads/$branch                              # delete a remote branch
 push $remote :refs/tags/$tag                             # delete a remote tag
 
-clone --depth 1 https://path/to/repo/foo.git -b $branch  # shallow clone (of a branch)
+clone --depth 1 https://path/to/repo/foo.git -b $branch  # shallow clone (of a branch/tag)
 ```
 
 Examples:

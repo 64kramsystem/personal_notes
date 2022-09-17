@@ -1570,7 +1570,7 @@ pub fn myfailfn() -> MyResult<File> {
     // Because of the `From<io::Error>` implementation, the error is automatically converted.
     let result = File::open("abc")?;
 
-    if !correct_file(result ) {
+    if !correct_file(result) {
       return WrongFileError(123);
     }
 
