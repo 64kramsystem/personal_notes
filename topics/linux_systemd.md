@@ -27,7 +27,7 @@ If an underlying service is *not* started via Systemd, from the perspective of t
 ## Systemctl
 
 ```sh
-systemctl enable|disable $service     # enable/disable start on boot
+systemctl enable|disable [--now] $service # enable/disable start on boot; --now will also start/stop
 systemctl start|stop $service         # start/stop immediately
 systemctl reload $service             # reload; not always functional
 systemctl reload-or-restart $service  # if reload is not defined (or has no effect), restart; WATCH OUT! don't define `ExecReload`
