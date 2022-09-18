@@ -135,6 +135,8 @@ Misc:
 `Alt + PgUp/Down`           Switch panel
 `Alt + Shift + ←/→`        Pull change from Left/Right
 `Alt + ←/→`                Pust change to Left/Right
+`Alt + Delete`              Delete
+`Alt + [/]`                 Copy above Left/Right
 
 ## Less
 

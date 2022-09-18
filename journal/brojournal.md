@@ -1,3 +1,20 @@
+## Sun 18/Sep/2022
+
+- System: Laptop
+  - [x] Update laptop bios
+    - [x] Prepare Win to go
+- Project: Commercial Game Sources
+  - [x] Add Witchaven
+  - [x] Add Witchaven II
+- Project: VGA Passthrough
+  - [x] Rename section 2, and update the "word of caution" section
+  - [x] Add section about USB ports
+  - [x] Add section about AMD GPU reset
+- Tools
+  - [x] Update system update management
+- Admin: Writings
+  - [x] Create the pages site for the nonprof blog
+
 ## Sat 17/Sep/2022
 
 - Studies: Rust

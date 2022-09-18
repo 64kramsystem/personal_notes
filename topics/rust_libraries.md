@@ -214,7 +214,7 @@ show_it_generic(&*s); // works - manually deref
 `AsRef` represents a type where `&T` can be borrowed efficiently. Typically used to make functions flexible:
 
 ```rs
-// Example implementors: String, str...
+// Example implementors: String, str... even Iter (!).
 fn open<P: AsRef<Path>>(path: P) -> Result<File>
 
 // Accepts String, &str...

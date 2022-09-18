@@ -13,7 +13,9 @@
     - [QEMU](#qemu)
       - [Usermode](#usermode)
       - [RISC-V](#risc-v)
-      - [VFIO](#vfio)
+  - [VFIO](#vfio)
+    - [Driver switch](#driver-switch)
+    - [Reset problem](#reset-problem)
   - [Vagrant](#vagrant)
   - [WINE](#wine)
   - [DOSBox](#dosbox)
@@ -303,9 +305,15 @@ qemu-riscv64 -L /path/to/riscv-gnu-toolchain/build/sysroot pigz
 
 See https://risc-v-getting-started-guide.readthedocs.io/en/latest/linux-qemu.html.
 
-#### VFIO
+## VFIO
 
 Lots of interesting stuff on the [Arch Wiki](https://wiki.archlinux.org/title/PCI_passthrough_via_OVMF).
+
+### Driver switch
+
+It seems that AMD cards may run cool also with the `vfio` driver (tried with the 6600 XT).
+
+### Reset problem
 
 Interesting script (from the wiki above, with minor cleanups) to check the resettable devices:
 
