@@ -205,6 +205,12 @@ $SUDO_USER              # User who invoked sudo
 echo "$(whoami) ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee "/etc/sudoers.d/$(whoami)_no_sudo_pwd"
 sudo chmod 440 !$
 
+# Run a specific command without asking sudo password.
+#
+# The typical alternative to `root` is `ALL`, which allow running as any target user.
+#
+echo "$(whoami) ALL=(root) NOPASSWD: /path/to/command param1 paramN" | sudo tee "/etc/sudoers.d/mysetting"
+
 # Pass the env vars to the root env.
 #
 sudo -E $command
