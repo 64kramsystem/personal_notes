@@ -1,3 +1,17 @@
+## Mon 19/Sep/2022
+
+- Studies: Git
+  - [x] Review alias autocompletion for edge case
+- Studies: Rust
+  - [x] [What are the semantics for dereferencing raw pointers?](https://stackoverflow.com/q/48882391)
+  - [ ] [Live-coding a Rust crate for short EC2 jobs (part 1)](https://youtu.be/Zdudg5TV9i4)
+  - [ ] [Desktop and editor setup for Rust development](https://youtu.be/ycMiMDHopNc)
+- Tools: Mail management
+  - [x] Refactor existing script: isolate client APIs
+    - [x] Investigate client low-level working
+  - [x] Write new quarterly archival script
+    - [x] Update quarter sales naming
+
 ## Sun 18/Sep/2022
 
 - System: Laptop

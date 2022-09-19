@@ -652,15 +652,16 @@ Interpret a date: `date -d $input`
 
 ### Formatting
 
-Symbols:
+Formatting symbols (apply via `+` param):
 
 - `%a/%A`    : short/full day of the week
-- `%b/%B`    : short/full month
+- `%b/%B`    : short/full eng. month
 - `%H:%M:%s`
-- `%Y-%m-%d`
+- `%Y-%m-%d` : `%m` has leading 0
 - `%F %T`    : same as `%Y-%m-%d %H:%M:S` (time without seconds: `%R`)
 - `%T.%3N`   : time with milliseconds (`%N` is nanoseconds; `.%3` prints 3 digits)
-- `+%s`      : date in seconds
+- `%s`       : date in seconds
+- `%-m`      : don't pad (in this case, month without leading 0)
 
 The output language is the system one; in order to change, set `LC_ALL`:
 
@@ -691,7 +692,7 @@ WATCH OUT!! The `month` calculations are not intuitive (see https://stackoverflo
 # Today: Di 31. Aug 12:06:26 CEST 2021
 
 $ date --date='-2 month'
-Do 1. Jul 12:06:37 CEST 2021
+Do 1. Jul 12:06:37 CEST 2021 # not 30/Jun!
 
 $ date --date='next month'
 Fr 1. Okt 12:06:51 CEST 2021

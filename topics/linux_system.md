@@ -465,9 +465,10 @@ Package/file operations:
 #
 apt-get install $package=$version
 
-# Mark a package as manually installed (apt[itude])
+# Mark a package as manually installed (apt[itude]) - prevents automatic deletion.
 #
 aptitude install "${package}&m"
+apt-mark manual linux-firmware amd64-microcode iucode-tool
 
 # Install/remove package ignoring dependencies, via dpkg
 #
