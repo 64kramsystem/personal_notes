@@ -1,3 +1,21 @@
+## Tue 20/Sep/2022
+
+- Studies: Kernel development
+  - [ ] Linux Kernel Programming
+    - ~~1. Kernel Workspace Setup~~
+    - [x] 2. Building the 5.x Linux Kernel from Source - Part 1
+    - [ ] 3. Building the 5.x Linux Kernel from Source - Part 2
+- Studies: Rust
+  - Crust of Rust
+    - [ ] [Live-coding a linked hash map in Rust](https://youtu.be/k6xR2kf9hlA)
+- Open Source: ClamAV
+  - [ ] First look at ClamAV code
+    - [x] Read docs
+    - [x] Review general build/Rust parts
+    - [ ] `message.c`
+      - [x] Transpile
+      - [ ] Try to integrate in project
+
 ## Mon 19/Sep/2022
 
 - Studies: Git
