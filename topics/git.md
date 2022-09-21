@@ -122,6 +122,14 @@ cs = "!bash -c 'cd \"${GIT_PREFIX:-.}\"; git checkout --$1 \"${@:2}\" && git add
 # Alternative form for complex commands (via function).
 #
 stsh = "!f() { git stash show -p stash@{${1-0}}; }; f"
+
+# In order to autocomplete alias functions, on Zsh, use Zsh's autocomplete functionality
+#
+function git_full_delete_branch {                           # this and next in the init script
+  git branch -D "$1" && git push origin :"$1"
+}
+compdef _git git_full_delete_branch=git-branch
+git config --global 'alias.brddx' '!git_full_delete_branch' # run this once
 ```
 
 ### Ignore commands/Gitignore

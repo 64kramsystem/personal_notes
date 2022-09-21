@@ -49,7 +49,9 @@
       - [Inheritance: making overridden methods private](#inheritance-making-overridden-methods-private)
     - [Trait limitations/workarounds](#trait-limitationsworkarounds)
     - [Downcasting/Upcasting](#downcastingupcasting)
-    - [Iterator trait/Associated types/impl trait](#iterator-traitassociated-typesimpl-trait)
+    - [Associated types](#associated-types)
+    - [impl trait](#impl-trait)
+    - [Iterator trait](#iterator-trait)
   - [Ownership](#ownership)
     - [Move](#move)
     - [Borrowing](#borrowing)
@@ -2032,6 +2034,20 @@ impl<T, U> Point<T, U> {
 }
 ```
 
+Default generics allow not specifying the generic in the implementation:
+
+```rs
+trait Axx<Rhs = Self> {
+    fn axx(&self, rhs: &Rhs);
+}
+
+// No `Axx<Self>` required (meh).
+//
+impl Axx for MyType {
+    fn axx(&self, rhs: &Self) { /* ... */ }
+}
+```
+
 ### Const Generics
 
 ```rs
@@ -2442,7 +2458,43 @@ let super_ref = &my_better_display as &fmt::Display;
 let super_ref = &(my_better_display as fmt::Display);
 ```
 
-### Iterator trait/Associated types/impl trait
+### Associated types
+
+```rs
+impl Iterator for PhonyCounter {
+  // Associated type; restricts the allowed type. If a generic type was used, the user could specify
+  // multiple implementations for the PhonyCounter iterator, which would require each iteration to
+  // specify the type.
+  //
+  type Item = u32;
+
+  fn next(&mut self) -> Option<Self::Item> {
+    Some(0)
+  }
+}
+```
+
+### impl trait
+
+`impl <Trait>` is a convenience that:
+
+1. simplifies complex generics
+2. avoids the overhead of using Box
+
+It's different from generics, because with generics, the caller defines the type, while with impl trat, the method body defines it.
+
+```rs
+fn cyclical_zip(v: Vec<u8>, u: Vec<u8>) -> iter::Cycle<iter::Chain<IntoIter<u8>, IntoIter<u8>>> {
+    v.into_iter().chain(u.into_iter()).cycle()
+}
+
+fn cyclical_zip(v: Vec<u8>, u: Vec<u8>) -> impl Iterator<Item=u8> { /* ... */ }
+
+// WATCH OUT! This doesn't work for trait objects, since it's static dispatching, and the return type
+// must be known!
+```
+
+### Iterator trait
 
 Terminology:
 
@@ -2514,32 +2566,12 @@ Basic `Iterator` implementation:
 
 ```rust
 impl Iterator for PhonyCounter {
-  // Associated type. Similar to generics, however, doesn't require the type to be specified every
-  // time the related methods (in this case, `next()`) are invoked.
-  // In this case, a default is specified, which is optional.
-  //
-  type Item = u32;
+    type Item = u32;
 
-  fn next(&mut self) -> Option<Self::Item> {
-    Some(0)
-  }
+    fn next(&mut self) -> Option<Self::Item> {
+        Some(0)
+    }
 }
-```
-
-`impl <Trait>` is a convenience that:
-
-1. simplifies complex generics
-2. avoids the overhead of using Box
-
-```rs
-fn cyclical_zip(v: Vec<u8>, u: Vec<u8>) -> iter::Cycle<iter::Chain<IntoIter<u8>, IntoIter<u8>>> {
-    v.into_iter().chain(u.into_iter()).cycle()
-}
-
-fn cyclical_zip(v: Vec<u8>, u: Vec<u8>) -> impl Iterator<Item=u8> { /* ... */ }
-
-// WATCH OUT! This doesn't work for trait objects, since it's static dispatching, and the return type
-// must be known!
 ```
 
 If a type can be iterated, it should implement `IntoIterator`:

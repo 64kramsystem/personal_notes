@@ -1,3 +1,17 @@
+## Wed 21/Sep/2022
+
+- Studies: Kernel development
+  - [ ] Linux Kernel Programming
+    - [ ] 3. Building the 5.x Linux Kernel from Source - Part 2
+- Studies: Rust
+  - [x] Advanced traits, from reference Rust book
+  - [x] [Rust Reference: Linkage](https://doc.rust-lang.org/reference/linkage.html)
+- Open Source: Jumpy/Punchy
+  - [x] Investigate Jumpy codebase/design
+    - [x] Discuss Bevy port
+- Open Source: ClamAV
+  - [ ] First look at Rust code
+
 ## Tue 20/Sep/2022
 
 - Studies: Kernel development
