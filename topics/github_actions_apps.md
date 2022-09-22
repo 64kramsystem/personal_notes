@@ -6,6 +6,7 @@
     - [Expressions](#expressions)
     - [Conditionals](#conditionals)
     - [Variables](#variables)
+    - [Branch filtering](#branch-filtering)
     - [Caching](#caching)
   - [Examples](#examples)
     - [Cancel existing actions for the same PR (branch)](#cancel-existing-actions-for-the-same-pr-branch)
@@ -88,6 +89,33 @@ In order to set and read variables across jobs, can do the following:
 - run:  echo "script/ci/test_if_run_suite.sh ${{ github.job }}
 # Step 2
 - if: env.RUN_CURRENT_SUITE == 1
+```
+
+### Branch filtering
+
+```yml
+# https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#on
+#
+on:
+  push:
+    # WATCH OUT!! Don't put `$default-branch` on concrete workflows! It's valid only in templates,
+    # and it's converted to the branch name on instantiation (see https://github.com/orgs/community/discussions/26597).
+    #
+    branches: [ master ]
+  # Leave without values in order to to disable filtering.
+  #
+  pull_request:
+
+  # Other examples:
+  #
+  page_build:
+  release:
+    types: # This configuration does not affect the page_build event above
+      - created
+
+# Simplified form (also single string accepted)
+#
+on: [push, pull_request]
 ```
 
 ### Caching
@@ -198,22 +226,8 @@ name: Ruby CI
 #
 on:
   push:
-    branches: [ master ] # Can't use `$default-branch` here!!!
-  # Leave without values in order to to disable filtering.
-  #
+    branches: [ master ]
   pull_request:
-  #
-  # Other examples:
-  #
-  # page_build:
-  # release:
-  #   types: # This configuration does not affect the page_build event above
-  #     - created
-
-# Simplified form (also single string accepted)
-#
-# on: [push, pull_request]
-#
 
 jobs:
   test:
@@ -315,7 +329,7 @@ clippy_correctness_checks:
 
 on:
   push:
-    branches: [ $default-branch ]
+    branches: [ master ]
 jobs:
   build_ruby_cache:
     name: Build Ruby cache
@@ -350,7 +364,7 @@ name: Build caches
 
 on:
   push:
-    branches: [ $default-branch ]
+    branches: [ master ]
 jobs:
   # Watch out! Clippy (cache) data is shared with build data, but it's not the same.
   # In order to cache build, add a separate job (or extend this).
