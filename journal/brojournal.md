@@ -1,3 +1,11 @@
+## Thu 22/Sep/2022
+
+- Open Source: ClamAV
+  - [x] Integrate rust code in the project
+  - [ ] `message.c`
+    - [ ] First look
+      - [x] Minor cleanups to c2rust junk
+
 ## Wed 21/Sep/2022
 
 - Studies: Kernel development
