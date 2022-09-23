@@ -1,3 +1,12 @@
+## Fri 23/Sep/2022
+
+- Admin: System
+  - [ ] Fight MIME associations
+- Open Source: ClamAV
+  - [ ] Port `message.c`
+    - [x] Minor cleanup to allow port
+    - [x] Think approach to gradually convert port to safe
+
 ## Thu 22/Sep/2022
 
 - Open Source: ClamAV
