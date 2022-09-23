@@ -7,7 +7,8 @@
       - [Raw pointers](#raw-pointers)
         - [Dangers](#dangers)
       - [Functions](#functions)
-    - [FFI](#ffi)
+    - [(C) Interop](#c-interop)
+      - [Linking Rust from C](#linking-rust-from-c)
       - [C to Rust types mapping](#c-to-rust-types-mapping)
       - [Extern functions/Build scripts](#extern-functionsbuild-scripts)
       - [C library patterns](#c-library-patterns)
@@ -150,7 +151,50 @@ let (slice1, slice2) = unsafe {
 };
 ```
 
-### FFI
+### (C) Interop
+
+#### Linking Rust from C
+
+`lib.rs` (minimal):
+
+```rs
+#[no_mangle]
+pub extern "C" fn sum(a: i32, b: i32) -> i32 {
+    a + b
+}
+```
+
+`Cargo.toml` (minimal); generates `target/debug/libmyrslib.a`:
+
+```toml
+[lib]
+# Alternatve: `cdylib`, but not `dylib`.
+crate-type = ["staticlib"]
+
+[package]
+name = "myrslib"
+version = "0.1.0"
+```
+
+`main.c`:
+
+```c
+#include <stdint.h>
+#include <stdio.h>
+
+int32_t sum(int32_t, int32_t);
+
+int main(int argc, char *argv) {
+  int32_t result = sum(1, 2);
+  printf("Result: %i", result);
+}
+```
+
+Compile:
+
+```sh
+cc main.c -l myrslib -L ./target/debug
+```
 
 #### C to Rust types mapping
 

@@ -9,6 +9,7 @@
     - [Features](#features)
     - [Conditional build (ifdef-like)](#conditional-build-ifdef-like)
     - [Toolchain (Rustup)](#toolchain-rustup)
+    - [Linking (types)](#linking-types)
     - [Build times (profile/improve)](#build-times-profileimprove)
     - [Cross-compilation](#cross-compilation)
     - [Cargo doc](#cargo-doc)
@@ -276,6 +277,22 @@ echo nightly > rust-toolchain
 ```
 
 The `rust-toolchain` is not read outside a workspace (ie. directory including it). It can't be specified in the Cargo configuration.
+
+### Linking (types)
+
+Rust-related:
+
+- `dylib`: generates `.so`; for Rust dependency; it includes the full crate metadata, dynamically links against libstd and exports all symbols (see https://github.com/rust-lang/rfcs/pull/3028#issuecomment-756167656)
+- (other)
+- `cdylib`   : generates `.so`; for C; use `LD_LIBRARY_PATH` when running
+- `staticlib`: generates `.a`; also for C
+
+LTO will remove dead code.
+
+For other info, see:
+
+- https://doc.rust-lang.org/reference/linkage.html
+- https://users.rust-lang.org/t/what-is-the-difference-between-dylib-and-cdylib/28847/3
 
 ### Build times (profile/improve)
 

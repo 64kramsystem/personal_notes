@@ -1064,10 +1064,10 @@ Associate an extension based on the filename rather than the MIME type:
 cat > /usr/share/mime/packages/maff.xml << 'XML'
 <?xml version="1.0" encoding="UTF-8"?>
 <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
-<mime-type type="application/x-maff">
-<comment>Maff File</comment>
-<glob pattern="*.maff"/>
-</mime-type>
+  <mime-type type="application/x-maff">
+    <comment>Maff File</comment>
+    <glob pattern="*.maff"/>
+  </mime-type>
 </mime-info>
 XML
 

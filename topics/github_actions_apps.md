@@ -10,6 +10,7 @@
     - [Caching](#caching)
   - [Examples](#examples)
     - [Cancel existing actions for the same PR (branch)](#cancel-existing-actions-for-the-same-pr-branch)
+    - [Block autosquash commits](#block-autosquash-commits)
     - [tmate debuggin'!](#tmate-debuggin)
     - [Minimal conditional execution](#minimal-conditional-execution)
     - [Run command (e.g. install package)](#run-command-eg-install-package)
@@ -52,10 +53,12 @@ Expressions are wrapped in double curly braces: `{{ expression }}`.
 Contexts:
 
 - `github.*`: information about the workflow/event ([reference](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context))
-  - `github.workspace`: where the repo is checked out
+  - `github.workspace`   : where the repo is checked out
   - `github.event.number`: PR number ([reference](https://github.com/actions/checkout/issues/58#issuecomment-663103947))
-  - `github.job`: job id (yaml key value)
-  - `github.workspace`: project (workspace) directory
+  - `github.job`         : job id (yaml key value)
+  - `github.workspace`   : project (workspace) directory
+  - `github.ref`         : current branch, in format `refs/heads/$name`
+  - `github.token`       : same as `secrets.GITHUB_TOKEN`
 - `secrets.<SECRET_NAME>`: secrets
 
 There are environment variables, but must check the conditions, e.g. if they persist across jobs ([reference](https://docs.github.com/en/actions/learn-github-actions/environment-variables#default-environment-variables)):
@@ -136,6 +139,7 @@ Use [this](https://github.com/marketplace/actions/cancel-workflow-action):
 jobs:
   cancel-previous-runs:
     runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/master'
     steps:
     - name: Cancel Previous Runs
       uses: styfle/cancel-workflow-action@0.9.1
@@ -143,6 +147,19 @@ jobs:
         access_token: ${{ github.token }}
   other-jobs:
 #   ...
+```
+
+### Block autosquash commits
+
+```yml
+block-autosquash-commits:
+  runs-on: ubuntu-latest
+  if: github.ref != 'refs/heads/master'
+  steps:
+    - name: Block Autosquash Commits
+      uses: xt0rted/block-autosquash-commits-action@v2
+      with:
+        repo-token: ${{ github.token }}
 ```
 
 ### tmate debuggin'!
@@ -252,7 +269,7 @@ jobs:
     # Conditionals can also be at step level.
     # When expressions are in an `if` key, curly braces are optional.
     #
-    if: matrix.suite == 'rspec
+    if: matrix.suite == 'rspec'
     # See caching section.
     #
     steps:
@@ -268,7 +285,7 @@ jobs:
       run: bundle install
     - name: Run tests
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ github.token }}
       run: bundle exec rspec
 ```
 
