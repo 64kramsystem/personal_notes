@@ -1037,6 +1037,8 @@ rm "~/.local/share/applications/mimeinfo.cache"
 ### Adding and associating a new application
 
 ```sh
+# If there is ambiguity with another mime type (or if it's not registered), associate the extension (see following section).
+
 # Partial; see `/usr/share/applications/firefox.desktop` for a full example.
 #
 cat > ~/.local/share/applications/ << 'CONF'
@@ -1051,6 +1053,7 @@ CONF
 perl -i -lpe '$. == 1 && print "location:/home/saverio/.local/share/applications/browser.desktop"' ~/.config/mate-menu/applications.list
 
 # Register!
+# WATCH OUT!! Don't use the full path to the .desktop file!!
 #
 xdg-mime default "browser.desktop" "x-scheme-handler/http"
 xdg-mime default "browser.desktop" "x-scheme-handler/https"

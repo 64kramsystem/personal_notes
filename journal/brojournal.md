@@ -1,7 +1,17 @@
+## Sat 24/Sep/2022
+
+- Admin: System
+  - [x] Sort out MIME associations
+- Studies: Kernel development
+  - [ ] Linux Kernel Programming
+    - [ ] 3. Building the 5.x Linux Kernel from Source - Part 2
+
 ## Fri 23/Sep/2022
 
 - Admin: System
   - [ ] Fight MIME associations
+- Studies: Rust
+  - [x] Review and note linking
 - Open Source: ClamAV
   - [ ] Port `message.c`
     - [x] Minor cleanup to allow port
