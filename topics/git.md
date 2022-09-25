@@ -203,6 +203,7 @@ script --return --quiet -c "git --no-pager log --no-color --graph --oneline" /de
 log --branches=$branch $file        # search in another branch
 
 log --merges --first-parent         # search only [merges] commits, only in the [first-parent] (eg. master when run from master)
+log --no-walk --tags                # display only tagged commits
 
 log -$n                             # show the latest $n commits, e.g. -1 for the last
 

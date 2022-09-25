@@ -1,3 +1,21 @@
+## Sun 25/Sep/2022
+
+- Project: Openscripts
+  - [x] Several improvements to `convert_cb_archive_to_pdf`
+- Misc
+  - [x] Review Linux 6.0 new commits
+- Studies: Kernel development
+  - [ ] Linux Kernel Programming
+    - [x] Review and copy notes
+      - [x] 3. Building the 5.x Linux Kernel from Source - Part 2
+      - [ ] 4. Writing Your First Kernel Module - LKMs Part 1
+- Open Source: ClamAV
+  - [x] Set design details for integration with the project
+    - [x] Fight type conflicts
+  - [x] Brutal fight with bindings generation in build
+  - [ ] Port `message.c`
+    - [x] Port `messageGetMimeType()`
+
 ## Sat 24/Sep/2022
 
 - Admin: System
