@@ -56,8 +56,9 @@ int main(int argc, char **argv) {
 
 ### Data types
 
-- `char`: i8
-- `short`: i16
+- `char`            : i8
+- `[unsigned] short`: 2 bytes
+- `[unsigned] int`  : 2/4 bytes (typically 4)
 
 ### Base functions
 

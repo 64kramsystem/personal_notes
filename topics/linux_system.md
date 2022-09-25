@@ -406,12 +406,27 @@ UDEV
 
 ## Add swap file
 
+WATCH OUT! Doesn't work on ZFS (see below)
+
 ```sh
-fallocate -l 512M /swapfile                           # use dd if=/dev/zero if this fails because of holes
+dd if=/dev/zero of=/swapfile bs=1M count=512 status=progress # don't use fallocate, as it may fail
 chmod 600 /swapfile
 mkswap /swapfile
 swapon /swapfile
 echo '/swapfile swap swap defaults 0 0' >> /etc/fstab # activate on restart
+```
+
+ZFS:
+
+```sh
+zfs create -V 8G -b $(getconf PAGESIZE) -o logbias=throughput -o sync=always -o primarycache=metadata -o com.sun:auto-snapshot=false mypool/myswap
+mkswap -f /dev/zvol/mypool/myswap
+swapon /dev/zvol/mypool/myswap
+
+# after usage:
+
+swapoff /dev/zvol/mypool/myswap
+zfs destroy mypool/myswap
 ```
 
 ## Packages
