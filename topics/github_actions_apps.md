@@ -11,10 +11,11 @@
   - [Examples](#examples)
     - [Cancel existing actions for the same PR (branch)](#cancel-existing-actions-for-the-same-pr-branch)
     - [Block autosquash commits](#block-autosquash-commits)
-    - [tmate debuggin'!](#tmate-debuggin)
+    - [tmate debugging!](#tmate-debugging)
     - [Minimal conditional execution](#minimal-conditional-execution)
     - [Run command (e.g. install package)](#run-command-eg-install-package)
     - [Dynamically generate a matrix](#dynamically-generate-a-matrix)
+      - [Perform jobs on for directories that have been changed](#perform-jobs-on-for-directories-that-have-been-changed)
     - [Ruby generic tasks](#ruby-generic-tasks)
     - [Rust Cargo Clippy on multiple targets](#rust-cargo-clippy-on-multiple-targets)
   - [Preset CIs](#preset-cis)
@@ -56,7 +57,7 @@ Contexts:
   - `github.workspace`   : where the repo is checked out
   - `github.event.number`: PR number ([reference](https://github.com/actions/checkout/issues/58#issuecomment-663103947))
   - `github.job`         : job id (yaml key value)
-  - `github.workspace`   : project (workspace) directory
+  - `github.workspace`   : project (workspace) directory (full path)
   - `github.ref`         : current branch, in format `refs/heads/$name`
   - `github.token`       : same as `secrets.GITHUB_TOKEN`
 - `secrets.<SECRET_NAME>`: secrets
@@ -162,7 +163,7 @@ block-autosquash-commits:
         repo-token: ${{ github.token }}
 ```
 
-### tmate debuggin'!
+### tmate debugging!
 
 ```yml
 - name: Setup tmate session
@@ -222,12 +223,67 @@ check_code_formatting:
     fail-fast: false
     matrix:
       cfg: ${{ fromJson(needs.generate_projects_matrix.outputs.matrix) }}
+  # Important!! Otherwise, an error is raised on empty matrices.
+  if: ${{ needs.generate_projects_matrix.outputs.matrix != '[]' }}
   steps:
     - uses: actions/checkout@v3
     - uses: actions-rs/cargo@v1
       with:
         command: fmt
         args: --all --manifest-path=${{ matrix.cfg.port_manifest }} -- --check
+```
+
+#### Perform jobs on for directories that have been changed
+
+This can be performed via a convenient action.
+
+```yml
+# WATCH OUT! Must include fetch-depth, otherwise the commit is not usable for diffing.
+# Possibly, a depth of 2 (smaller size) works for squash merges.
+#
+- uses: actions/checkout@v3
+  with:
+    fetch-depth: 0
+
+- name: Get changed files
+  id: changed-files
+  uses: tj-actions/changed-files@v31
+  with:
+    # Newlines are better, but are currently unsupported (https://github.com/tj-actions/changed-files#known-limitation);
+    # commas are equally safe for this project, though.
+    separator: ","
+    dir_names: true
+- id: generate-matrix
+  run: echo ::set-output name=matrix::$(.github/workflows/generate-projects-matrix.sh ${{ steps.changed-files.outputs.all_changed_files }})
+```
+
+Script (simplified):
+
+```sh
+# Filters in the project directories, located under the workspace root, which include a `Cargo.toml`
+# file; prints a JSON5 document with an array of `{ "port_manifest": "<relative_port_dir>/Cargo.toml" }`
+# entries.
+#
+# - we assume that we don't need quoting;
+# - we include only the root directories, if they include a `Cargo.toml` file;
+# - the JSON is actually JSON5, since a trailing comma is present inside the array; screw JSON.
+
+# Input dirs, relative to workspace root, separated by ','.
+mapfile -td, changed_dirs <<< "$1"
+
+echo -n "["
+
+for changed_dir in "${changed_dirs[@]}"; do
+  if [[ $changed_dir != . && $(dirname "$changed_dir") == . ]]; then
+    local cargo_file=$changed_dir/Cargo.toml
+
+    if [[ -f $cargo_file ]]; then
+      echo "  { \"port_manifest\": \"$cargo_file\" },"
+    fi
+  fi
+done
+
+echo -n "]"
 ```
 
 ### Ruby generic tasks

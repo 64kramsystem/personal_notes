@@ -1,3 +1,20 @@
+## Mon 26/Sep/2022
+
+- Admin: System
+  - [x] Try laptop patches and kernel update
+- Open Source: Lenovo speaker fix
+  - [x] Open issue with result
+- Writings: Kernel building article
+  - [x] Simplify procedure for building the deb packages
+- Studies: Kernel development
+  - [ ] Linux Kernel Programming
+    - [x] Copy current notes
+- Open Source: Rust Game Ports
+  - [x] CI: Remove comments related to source projects
+  - [x] CI: Fight include only projects changed by the current PR
+- Open Source: ClamAV
+  - [x] Review port strategy; plan new approach
+
 ## Sun 25/Sep/2022
 
 - Project: Openscripts

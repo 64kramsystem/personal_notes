@@ -1118,18 +1118,20 @@ make olddefconfig
 scripts/config --set-str SYSTEM_TRUSTED_KEYS ""
 scripts/config --set-str SYSTEM_REVOCATION_KEYS ""
 
-# Disable debug package build, programmatically (safer from GUI, since this has changed across kernel
-# versions).
+# If running the `deb-pkg` task (instead of `bindeb-pkg`), and don't want to include debug info in
+# the packages, must disable it.
 #
 # From GUI: "Kernel hacking" -> "Compile-time checks and compiler options" -> "Compile the kernel with debug info"
 #
-scripts/config --undefine DEBUG_INFO
-scripts/config --undefine DEBUG_INFO_COMPRESSED
-scripts/config --undefine DEBUG_INFO_REDUCED
-scripts/config --undefine DEBUG_INFO_SPLIT
-scripts/config --undefine GDB_SCRIPTS
-scripts/config --set-val DEBUG_INFO_DWARF5 n
-scripts/config --set-val DEBUG_INFO_NONE y
+# Programmatically (less safe, since in theory, the settings may change):
+#
+# scripts/config --undefine DEBUG_INFO
+# scripts/config --undefine DEBUG_INFO_COMPRESSED
+# scripts/config --undefine DEBUG_INFO_REDUCED
+# scripts/config --undefine DEBUG_INFO_SPLIT
+# scripts/config --undefine GDB_SCRIPTS
+# scripts/config --set-val DEBUG_INFO_DWARF5 n
+# scripts/config --set-val DEBUG_INFO_NONE y
 
 # There are two GUI options for interactive configuration.
 # The easiest way to turn interactive changes into non-interactive is to use the interactive mode,
@@ -1158,7 +1160,7 @@ Build:
 # The firmware files are not included, so include the latest `linux-firmware` package, if needed.
 # The official firmware repo is https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git.
 #
-make -j $(nproc) deb-pkg LOCALVERSION=-sav
+make -j $(nproc) bindeb-pkg LOCALVERSION=-sav
 
 # If the build is interrupted, run these, otherwise wacky errors may happen, and restart from scratch.
 # mrproper does not checkout (git) changed files.
