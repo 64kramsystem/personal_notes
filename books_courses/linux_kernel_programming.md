@@ -4,6 +4,7 @@
   - [Useful infos/tools](#useful-infostools)
   - [Configuration/Building](#configurationbuilding)
     - [Built objects](#built-objects)
+    - [Cross compilation](#cross-compilation)
   - [Initramfs](#initramfs)
 
 ## Useful infos/tools
@@ -45,6 +46,20 @@ Related targets:
 - `vmlinux`   : uncompressed image (for debug; includes debug info)
 - `System.map`: symbols addresses
 - `bzImage`   : compressed image (output dir: `arch/$ARCH/boot`)
+
+### Cross compilation
+
+Basic cross compilation; for more advanced use-cases, see [here](https://www.raspberrypi.org/documentation/linux/kernel/building.md).
+
+```sh
+apt install -y ​crossbuild-essential-armhf # 32bit, or `​crossbuild-essential-arm64` (64bit)
+
+# - `kernel7`/`arm`       : 32-bit kernel/arch
+# - `arm-linux-gnueabihf-`: tools prefix
+# - `bcm2709_defconfig`   : board (see [here](https://raspberrypi.stackexchange.com/q/840))
+#
+KERNEL=kernel7 make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bcm2709_defconfig
+```
 
 ## Initramfs
 

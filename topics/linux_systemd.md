@@ -226,7 +226,7 @@ At least certain entries are additive, e.g. `OnCalendar`; in order to clear the 
 
 ### Hooks
 
-If the `Type=oneshot`, `ExecPostStart` can be used to specify a command to execute on successful exit; the entry is additive.
+If the `Type=oneshot`, `[Service] ExecStartPost` can be used to specify a command to execute on successful exit; the entry is additive.
 
 ## Timers (scheduled events)
 
