@@ -12,6 +12,7 @@
     - [Callbacks](#callbacks)
     - [Metadata](#metadata-1)
     - [SQL queries streaming](#sql-queries-streaming)
+  - [Cache](#cache)
 
 ## Metadata
 
@@ -197,3 +198,10 @@ MyModel.columns_hash['my_attribute'].limit
 ### SQL queries streaming
 
 For streaming of direct SQL, one must use the `mysql2` gem APIs - see its [notes section](ruby_libraries.md#mysql2); the low-level connection is retrieved via `connection.raw_connection`.
+
+## Cache
+
+```rb
+Rails.cache.write(key, value, expires_in: duration) # ActiveSupport::Duration works
+Rails.cache.delete(key)
+```

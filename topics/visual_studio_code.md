@@ -12,6 +12,7 @@
     - [Multi-root and makefile warning](#multi-root-and-makefile-warning)
     - [Find compile commands](#find-compile-commands)
     - [Includes/Macros](#includesmacros)
+      - [Configuration/errors handling](#configurationerrors-handling)
 
 ## Extensions
 
@@ -87,6 +88,11 @@ Configuring file type:
 }
 ```
 
+See https://code.visualstudio.com/docs/editor/variables-reference for variables; some:
+
+- `userHome`
+- `workspaceFolder`
+
 ## C/C++
 
 ### Setting up a project
@@ -114,12 +120,17 @@ Follow [C notebook strategies](c.md#find-compilation-commands); then add `"compi
 Add include paths; for unclear reasons, some defines raise an error, even if go to definition works.
 
 ```json
+// In settings.json
+"C_Cpp.default.includePath": [
+  "/path/to/lib"
+],
+
 // In c_cpp_properties.json
 
 "includePath": [
-    "${workspaceFolder}/**", // default
-    "/usr/include/SDL2",
-    "/usr/include/x86_64-linux-gnu/sys"
+  "${workspaceFolder}/**", // default
+  "/usr/include/SDL2",
+  "/usr/include/x86_64-linux-gnu/sys"
 ],
 
 // For unclear reasons, some entries must be manually added to `browse.path`, otherwise, a warning is raised:
@@ -131,7 +142,7 @@ Add include paths; for unclear reasons, some defines raise an error, even if go 
 },
 ```
 
-Define macros (not clear):
+Define macros:
 
 ```json
 // In settings.json
@@ -140,9 +151,17 @@ Define macros (not clear):
   "__UNIX__",
 ]
 
-// or in c_cpp_properties.json (in a configuration)?
+// or in c_cpp_properties.json
 
 "defines": [
-    "THREAD_SYSTEM_DEPENDENT_IMPLEMENTATION"
+  "THREAD_SYSTEM_DEPENDENT_IMPLEMENTATION"
 ]
 ```
+
+#### Configuration/errors handling
+
+- if the project is managed by CMake, and CMake Tools doesn't gather the configuration:
+  - make sure that the `c_cpp_properties.json` exists
+  - make sure to configure the right cmake binary (e.g. if provided via python)
+  - generate the compile commands, and extract the defines/includes from there
+- in order to solve include problems, just click on the lighbulb, and select the appropriate option

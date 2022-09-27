@@ -1,3 +1,18 @@
+## Tue 27/Sep/2022
+
+- Project: Commercial Game Sources
+  - [x] Add Eye of the Beholder II
+- Studies: Kernel development
+  - [ ] Linux Kernel Programming
+- Open Source: ClamAV
+  - [x] Transpile `message.c` and `mbox.c`, and make project compile
+    - [x] Take note of (generic) steps
+  - [x] Plan basic refactoring tools
+  - [x] Investigate duplicate definitions (`#[linkage = "external"]`)
+    - See https://github.com/rust-lang/rust/issues/61820
+  - [x] Fight configure VSC/CMake Tools for project
+  - [ ] Port `message.c`/`mbox.c`
+
 ## Mon 26/Sep/2022
 
 - Admin: System

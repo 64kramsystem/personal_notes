@@ -1861,6 +1861,8 @@ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 $dir
 #
 # Use `--emit-build-files` instead of `--binary X` in order to produce a library crate.
 #
+# The location of the generated files is independent from the current path.
+#
 c2rust transpile --binary catacomb compile_commands.json
 ```
 
