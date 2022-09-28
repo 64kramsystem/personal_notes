@@ -1,3 +1,18 @@
+## Wed 28/Sep/2022
+
+- Open Source: C2Rust
+  - [x] Open issue [Generate code fails to compile, when there are multiple linkage = "external" methods](https://github.com/immunant/c2rust/issues/695)
+    - [x] Prepare and provide script for automatically triggering the error
+- Studies: Kernel development
+  - [ ] Linux Kernel Programming
+    - [ ] 4. Writing Your First Kernel Module - LKMs Part 1
+- Open Source: Rust Game Ports
+  - [x] Submit to up-for-grabs.net
+    - [x] Review procedure
+- Admin: Misc
+  - [x] Review up-for-grabs.net projects
+  - [x] Review Kerla issues
+
 ## Tue 27/Sep/2022
 
 - Project: Commercial Game Sources
