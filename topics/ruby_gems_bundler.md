@@ -5,6 +5,7 @@
     - [Gemfile](#gemfile)
     - [Cache directory](#cache-directory)
     - [Commands](#commands)
+    - [Context](#context)
   - [Gem](#gem)
     - [Programmatic APIs](#programmatic-apis)
     - [Gemspec](#gemspec)
@@ -65,7 +66,15 @@ It's possible to create a cache directory (`vendor/cache`), but it's all-or-noth
 ### Commands
 
 - `bundle $command --gemfile=$gemfile` : specify the gemfile
-- `bundler package`                   : download gems into `vendor/cache`
+- `bundler package`                    : download gems into `vendor/cache`
+
+### Context
+
+When one wants to run outside of the bundler context:
+
+```rb
+Bundler.with_unbundled_env { `passenger-status` }
+```
 
 ## Gem
 
