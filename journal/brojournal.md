@@ -1,3 +1,22 @@
+## Fri 30/Sep/2022
+
+- Open Source: Openscripts
+  - download_ubuntu_packages
+    - [x] Add automatic finding of the latest release
+    - [x] Add address-only mode
+  - clean_kernel_packages
+    - [x] Many improvements
+- Admin: Tools
+  - [x] Update system update script
+
+## Thu 29/Sep/2022
+
+- Project: ZFS Installer
+  - [x] Review and merge 22.04 update contributed PR
+- Studies: Kernel developme,nt
+  - [ ] Linux Kernel Programming
+    - [ ] 4. Writing Your First Kernel Module - LKMs Part 1
+
 ## Wed 28/Sep/2022
 
 - Open Source: C2Rust
