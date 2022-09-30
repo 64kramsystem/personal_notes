@@ -30,6 +30,7 @@
   - [Handle system date/time](#handle-system-datetime)
   - [Job scheduling](#job-scheduling)
     - [Cron](#cron)
+      - [Subminute granularity](#subminute-granularity)
     - [At](#at)
   - [Apparmor](#apparmor)
   - [fstab](#fstab)
@@ -440,14 +441,21 @@ apt show $package
 dpkg --list $package
 
 # Check if a package is installed, in the most standard way possible.
+# States found: `install`, `hold`, `deinstall`; the last seems only cfg installed.
 #
-if dpkg --get-selections | grep -qP '^trash-cli\s$'; then echo installed; fi
+if dpkg --get-selections trash-cli | grep -qP '\s+(install|hold)$'; then echo installed; fi
 
 # Advanced filtering with aptitude.
 #
-# Aptitude uses regexes by default, but it doesn't support all the patterns.
 # In order to filter out i386 packages, use the suffix `~rnative`.
 # The option `-F %p` prints only the package name.
+#
+# Aptitude uses regexes by default, but it doesn't support all the patterns; tested metachars:
+#
+# - ^,$ : supported
+# - \b  : supported
+# - ?   : supported, but not for groups
+# - |   : supported
 #
 aptitude search -F %p 'suld-driver2-[0-9.]+$~rnative'
 
@@ -790,6 +798,33 @@ crontab -d   # delete
 ```
 
 `MAILTO=dest@email.com` (put on top) sends email.
+
+#### Subminute granularity
+
+(the following approaches handle the repetition inside cron)
+
+If the job exits almost immediately, can run:
+
+```cron
+# The `&` is correct (the shell is dash)
+* * * * * for i in 0 1 2; do some_job & sleep 15; done; some_job
+```
+
+If the job doesn't exit immediately, but takes less than the interval:
+
+```cron
+* * * * * sleep 00; some_job
+* * * * * sleep 15; some_job
+* * * * * sleep 30; some_job
+* * * * * sleep 45; some_job
+```
+
+If the job can potentially take more than the interval, and must be killed if when this happens, use the GNU `timeout` program:
+
+```cron
+* * * * * sleep 00; timeout 15s some_job
+# ...
+```
 
 ### At
 
