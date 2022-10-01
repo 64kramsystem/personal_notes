@@ -6,6 +6,7 @@
     - [Built objects](#built-objects)
     - [Cross compilation](#cross-compilation)
   - [Initramfs](#initramfs)
+  - [PAG 116](#pag-116)
 
 ## Useful infos/tools
 
@@ -79,3 +80,5 @@ Tools:
 
 - `mkinitramfs`:       generates and installes the initramfs file
 - `lsinitramfs $file`: list the content of an initramfs file
+
+## PAG 116
