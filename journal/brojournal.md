@@ -1,3 +1,13 @@
+## Sat 01/Oct/2022
+
+- Admin: Tools
+  - [x] System update script
+    - [x] Fix firmware/microcode version detection
+- Studies: Kernel development
+  - [ ] Linux Kernel Programming
+    - [x] 4. Writing Your First Kernel Module - LKMs Part 1
+    - [ ] 5. Writing Your First Kernel Module - LKMs Part 2
+
 ## Fri 30/Sep/2022
 
 - Open Source: Openscripts
@@ -7,7 +17,8 @@
   - clean_kernel_packages
     - [x] Many improvements
 - Admin: Tools
-  - [x] Update system update script
+  - [x] System update script
+    - [x] Add firmware/microcode updates
 
 ## Thu 29/Sep/2022
 
