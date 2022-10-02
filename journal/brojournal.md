@@ -1,3 +1,14 @@
+## Sun 02/Oct/2022
+
+- Studies: Rust
+  - [x] RustLab 2022: Workshops
+- Admin: Tools
+  - System update script
+    - [x] Restructure permissions
+  - System install script
+    - [x] Update with new patches
+    - [x] Fix system gems
+
 ## Sat 01/Oct/2022
 
 - Admin: Tools
