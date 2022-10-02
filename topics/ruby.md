@@ -224,6 +224,8 @@ Generic conversion examples (consider constraints, where specified, e.g. "codepo
 |        65         |           chr            | `A`                                                    | non-ASCII chars are escaped              |
 |      "FFFF"       |          65535           | `hex` / `to_i(16)`                                     |                                          |
 |       4095        |          "fff"           | `to_s(16)`                                             | no padding!!                             |
+|       "123"       |           123            | `Integer(123)`                                         | (1) raise an error if invalid            |
+|       123.2       |           123            | `Integer(123.2)`                                       | (2) truncates                            |
 
 (brackets are used as block vars due to an issue with the VSC plugin)
 
