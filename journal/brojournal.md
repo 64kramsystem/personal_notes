@@ -1,3 +1,11 @@
+## Mon 03/Oct/2022
+
+- Studies: Rust
+  - [x] RustLab 2022: Talks
+- Studies: Kernel development
+  - [ ] Linux Kernel Programming
+    - [ ] Copy notes
+
 ## Sun 02/Oct/2022
 
 - Studies: Rust
