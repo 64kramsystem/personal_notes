@@ -3,6 +3,7 @@
 - [Rust Tooling](#rust-tooling)
   - [Warnings/Clippy](#warningsclippy)
   - [Cargo](#cargo)
+    - [Build.rs](#buildrs)
     - [Workspaces](#workspaces)
     - [Visual Studio Code/Rust Analyzer](#visual-studio-coderust-analyzer)
     - [Debugging information](#debugging-information)
@@ -179,6 +180,36 @@ The cargo configuration file (see custom configs below) `toml` extension is comm
 - `~/.cargo/config.toml` (last)
 
 The generic project Cargo options (e.g. profile optimizations) can also be stored in the config files above.
+
+### Build.rs
+
+In order to display the `build.rs` output, must run with `cargo build -vv`.
+
+**WATCH OUT**! `build.rs` is run by default only if a file in the package is changed (or if the target is cleaned); for workaround see [here](https://stackoverflow.com/q/49077147. It's suggested to use `rerun-if-changed` to narrow down to the related subset of files.
+
+Sample:
+
+```rs
+fn main() {
+    // WATCH OUT! The `cargo:` commands order is meaningful!
+
+    // Tell Cargo that if the given file/directory changes (via mtime), to rerun this build script.
+    println!("cargo:rerun-if-changed=src/hello.c");
+
+    // Example with `cc` crate.
+    cc::Build::new().file("src/hello.c").compile("hello");
+}
+```
+
+Dependencies are declared in the `[build-dependencies]` manifest section; (dev) dependencies are not available to build dependencies and viceversa.
+
+Intermediate file must be created in the env var `$OUT_DIR`.
+
+See [here](https://doc.rust-lang.org/cargo/reference/build-scripts.html#outputs-of-the-build-script) for a list of the `cargo:` commands.
+
+See [here](https://doc.rust-lang.org/cargo/reference/build-scripts.html#-sys-packages) for conventions about the FFI module.
+
+See [here](https://doc.rust-lang.org/cargo/reference/build-script-examples.html) for examples.
 
 ### Workspaces
 

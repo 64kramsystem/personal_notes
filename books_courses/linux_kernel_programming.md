@@ -5,15 +5,19 @@
   - [Configuration/Building](#configurationbuilding)
     - [Built objects](#built-objects)
     - [Cross compilation](#cross-compilation)
+    - [Symbols for debugging](#symbols-for-debugging)
   - [Initramfs](#initramfs)
   - [Kernel architecture overview](#kernel-architecture-overview)
   - [LKM Framework/Modules](#lkm-frameworkmodules)
     - [Module tools/general info](#module-toolsgeneral-info)
     - [Sample module](#sample-module)
+    - [Module Makefile](#module-makefile)
+    - [Modules interop](#modules-interop)
   - [Logging](#logging)
     - [Console levels](#console-levels)
     - [Rate limiting](#rate-limiting)
-  - [PAG b194](#pag-b194)
+    - [Macros, data types, printk specifiers](#macros-data-types-printk-specifiers)
+  - [PAG b239](#pag-b239)
 
 ## Useful infos/tools
 
@@ -73,6 +77,37 @@ apt install -y ​crossbuild-essential-armhf # 32bit, or `​crossbuild-essentia
 KERNEL=kernel7 make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bcm2709_defconfig
 ```
 
+See [module makefile](#module-makefile) for module-specific details.
+
+### Symbols for debugging
+
+Useful symbols for debugging (`Kernel Hacking` submenu)
+
+- `CONFIG_DEBUG_INFO`
+- `CONFIG_DEBUG_FS` (the debugfs pseudo filesystem)
+- `CONFIG_MAGIC_SYSRQ` (the Magic SysRq hotkeys feature)
+- `CONFIG_DEBUG_KERNEL`
+- `CONFIG_DEBUG_MISC`
+- Memory debugging:
+  - `CONFIG_SLUB_DEBUG`
+  - `CONFIG_DEBUG_MEMORY_INIT`
+  - `CONFIG_KASAN` (some archs only)
+- `CONFIG_DEBUG_SHIRQ`
+- `CONFIG_SCHED_STACK_END_CHECK`
+- Lock debugging:
+  - `CONFIG_PROVE_LOCKING` (selects others)
+  - `CONFIG_LOCK_STAT`
+- `CONFIG_DEBUG_ATOMIC_SLEEP`
+- `CONFIG_STACKTRACE`
+- `CONFIG_DEBUG_BUGVERBOSE`
+- `CONFIG_FTRACE` (within its sub-menu, select at least a couple of "tracers")
+- `CONFIG_BUG_ON_DATA_CORRUPTION`
+- `CONFIG_KGDB` (kernel GDB; optional)
+- `CONFIG_UBSAN`
+- `CONFIG_EARLY_PRINTK`
+- `CONFIG_DEBUG_BOOT_PARAMS`
+- `CONFIG_UNWINDER_FRAME_POINTER` (selects `FRAME_POINTER` and `CONFIG_STACK_VALIDATION`)
+
 ## Initramfs
 
 Boot sequence (legacy):
@@ -110,7 +145,8 @@ Kernel modules live in kernel space, and run with kernel privileges.
 
 - `modinfo /path/to/module.ko`: generic info
 - `lsmod`: list modules; 4th column is depending modules; 3rd col includes processes using a module, so it can be higher than the depending ones
-- `rmmod [-r]`
+- `rmmod [-r] $mod1 ... $modN`: modules are removed from 1st to last
+- `/sys/module/$module/parameters/$param`: live module param value
 
 All the module programs are symlink to `/sbin/kmod`!
 
@@ -162,6 +198,57 @@ static void __exit helloworld_lkm_exit(void)
 module_init(helloworld_lkm_init);
 module_exit(helloworld_lkm_exit);
 ```
+
+### Module Makefile
+
+Extract; includes cross-compiling concepts.
+
+When cross compiling, at least a partial kernel build should be performed (page b210), but for simplicity, just fully compile it.
+
+```Makefile
+PWD := $(shell pwd)
+
+# object files to build as `m`odules
+# use `obj-y` for build as core (`y`es)
+#
+obj-m += printk_loglvl.o
+
+# 'KDIR' is the Linux 'kernel headers' package on the host system
+#
+# In case of another architecture, we need to point to the specific source tree
+ifeq ($(ARCH),arm)
+  KDIR ?= ~/rpi_work/kernel_rpi/linux
+else
+  KDIR ?= /lib/modules/$(shell uname -r)/build
+endif
+
+all:
+  # - `C`hange directory, in order to build against the current source tree
+  # - then, change to the `M`odule directory, and build that
+  #
+  make -C $(KDIR) M=$(PWD) modules
+```
+
+### Modules interop
+
+Compositional approach to using modules as libraries:
+
+```Makefile
+obj-m                 += lowlevel_mem_lib.o
+lowlevel_mem_lib-objs := lowlevel_mem.o ../../klib_llkd.o # 2nd is the dependency
+```
+
+Export a symbol to the global namespace; this apporach is "module stacking".
+
+```c
+int my_glob = 5;
+EXPORT_SYMBOL(my_glob);
+
+// Export the symbol only to modules with GPL in their MODULE_LICENSE().
+EXPORT_SYMBOL_GPL(my_glob);
+```
+
+Compositional approach is preferrable.
 
 ## Logging
 
@@ -231,4 +318,19 @@ Can use `echo Y > /sys/module/printk/parameters/ignore_loglevel` to ignore the m
 
 Default = 10 messages allowed every 5 jiffies.
 
-## PAG b194
+### Macros, data types, printk specifiers
+
+- `BITS_PER_LONG`: 32/64
+- `CONFIG_ARM`   : defined on ARM
+- `__BIG_ENDIAN` : undefined on little endian
+
+- `[s]size_t` : `zd`/`zu`
+- pointers
+  - `pK`: hashed
+  - `px`: generic
+  - `pa`: physical address
+  - `*ph`: raw buffer as string of chars (up to 64 chars)
+    - more than 64 chars: use `print_hex_dump_bytes()`
+- ip addresses (v4/v6): `pI4`, `pI6`
+
+## PAG b239

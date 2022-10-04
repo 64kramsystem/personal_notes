@@ -59,6 +59,7 @@ int main(int argc, char **argv) {
 - `char`            : i8
 - `[unsigned] short`: 2 bytes
 - `[unsigned] int`  : 2/4 bytes (typically 4)
+- `[s]size_t`       : alias; approximately Rust usize/isize (`s`igned)
 
 ### Base functions
 
@@ -69,7 +70,10 @@ int main(int argc, char **argv) {
 | int, boolean |   `u`    | `d`/`i` |                       |
 | long         |   `lu`   |  `ld`   |                       |
 | pointer      |   `p`    |    -    | must cast to `void*`! |
+| size_t       |   `zu`   |  `zd`   |                       |
 | string       |   `s`    |    -    |                       |
+
+For kernel-related types, see the [kernel programming notes](../books_courses/linux_kernel_programming.md#logging).
 
 ## Preprocessor
 
