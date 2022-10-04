@@ -47,6 +47,10 @@ systemctl list-units                  # active loaded units
 systemctl list-unit-files [$pattern]  # all units, with their states; glob pattern
 systemctl [--user] list-timers        # list timers
 systemctl --failed                    # show units that failed to start
+
+# Check if a unit exists (.service is required):
+#
+systemctl list-unit-files --user pipewire.service | grep -q '1 unit files listed'
 ```
 
 If a unit is stored with ill-formed content, it won't be found by commands, which print instead a confusing `No files found` message.

@@ -117,7 +117,7 @@ Follow [C notebook strategies](c.md#find-compilation-commands); then add `"compi
 
 ### Includes/Macros
 
-Add include paths; for unclear reasons, some defines raise an error, even if go to definition works.
+Add include paths:
 
 ```json
 // In settings.json
@@ -165,3 +165,4 @@ Define macros:
   - make sure to configure the right cmake binary (e.g. if provided via python)
   - generate the compile commands, and extract the defines/includes from there
 - in order to solve include problems, just click on the lighbulb, and select the appropriate option
+  - for unclear reasons, this is not always available

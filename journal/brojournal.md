@@ -1,10 +1,22 @@
+## Tue 04/Oct/2022
+
+- Studies: Rust
+  - [x] RustLab 2022: Talks
+  - [x] Cargo [build scripts](https://doc.rust-lang.org/cargo/reference/build-scripts.html)
+- Admin: System
+  - [x] Fix to audio system workaround
+- Open Source: Marco
+  - [x] Fight try compiling statically
+- Open Source: ClamAV
+  - [~] Integrate transpiled modules into main Rust project
+
 ## Mon 03/Oct/2022
 
 - Studies: Rust
   - [x] RustLab 2022: Talks
 - Studies: Kernel development
   - [ ] Linux Kernel Programming
-    - [ ] Copy notes
+    - [x] Copy notes
 
 ## Sun 02/Oct/2022
 
