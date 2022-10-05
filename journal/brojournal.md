@@ -1,3 +1,10 @@
+## Wed 05/Oct/2022
+
+- Studies: Kernel development
+  - [ ] Linux Kernel Programming
+    - [x] 5. Writing Your First Kernel Module - LKMs Part 2
+    - [ ] 6. Kernel Internals Essentials - Processes and Threads
+
 ## Tue 04/Oct/2022
 
 - Studies: Rust
