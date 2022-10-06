@@ -1,3 +1,9 @@
+## Thu 06/Oct/2022
+
+- Studies: Kernel development
+  - [ ] Linux Kernel Programming
+    - [ ] 6. Kernel Internals Essentials - Processes and Threads
+
 ## Wed 05/Oct/2022
 
 - Studies: Kernel development
