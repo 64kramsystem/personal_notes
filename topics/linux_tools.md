@@ -848,6 +848,12 @@ mp3binder 1.mp3 2.mp3 --output tmp.mp3
 vbrfixc --XingFrameCrcProtectIfCan tmp.mp3 all.mp3 && rm tmp.mp3
 ```
 
+Rip audio cD:
+
+```sh
+cdparanoia -vB
+```
+
 ## Formatting/diff operations
 
 ```sh

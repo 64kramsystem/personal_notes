@@ -4,6 +4,7 @@
   - [Shell key bindings](#shell-key-bindings)
   - [Shellopts](#shellopts)
     - [Related operations](#related-operations)
+    - [Madness references](#madness-references)
   - [Special variables](#special-variables)
   - [Variables](#variables)
   - [Strings](#strings)
@@ -96,6 +97,10 @@ set +o shellopt                           # disables a shellopt
 [[ $SHELLOPTS =~ $(echo '\bnounset\b') ]] # clean/easy way to test shellopts
 export SHELLOPTS                          # pass the shell options to subshells!
 ```
+
+### Madness references
+
+- https://mywiki.wooledge.org/BashFAQ/105
 
 ## Special variables
 
@@ -658,7 +663,7 @@ Watch out!!:
 - bash arithmetic handles only integers (use `bc` for floating point)
 - use brackets!!! priority is not as expected: `2 & 1 == 0` == `2 & (1 == 0)` == `0` (false)
 - empty string equals to 0
-- operations will cause exit if they evaluate to 0 and the `errexit` shellopt is set (also applies to `let`)
+- operations *can* cause exit if they evaluate to 0 and the `errexit` shellopt is set (also applies to `let`)
 - command substitutions inside arithmetic expansion will not exit if they fail
 
 ```sh
@@ -671,6 +676,7 @@ b=$((++a))                        # variables don't need `$`
 ((a ** 2))                        # power
 ((a || b && c))                   # boolean operators supported
 ((a & b | c))                     # bitwise operators supported
+let '! a'; ((! a))                # negation (quotes are necessary for let; space is necessary for brackets)
 
 `true`/`false`                    # not supported in arithmetic...
 ((! a))                           # ... however, 0/'' are evaluated as false, and any other number as true (strings
@@ -906,6 +912,8 @@ echo ${#MYHASH[@]} # 2
 ```
 
 ## Shellcheck
+
+Use `shellcheck disable=all` to disable all checks.
 
 In order to generically solve the `SC1091` issue:
 
