@@ -1,3 +1,8 @@
+## Fri 07/Oct/2022
+
+- Studies: Bash
+  - [x] Brutal fight with pipes/processes
+
 ## Thu 06/Oct/2022
 
 - Studies: Kernel development
