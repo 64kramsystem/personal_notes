@@ -1102,6 +1102,8 @@ Repositories:
 - `git://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/focal`: Canonical versions for the given release, including HWE etc. (see [here](https://wiki.ubuntu.com/Kernel/Dev/KernelGitGuide))
 - `git://git.launchpad.net/~ubuntu-kernel-test/ubuntu/+source/linux/+git/mainline-crack`: Canonical mainline (testing) versions
 
+Run `make help` to display the targets help.
+
 Procedure:
 
 ```sh
@@ -1158,7 +1160,7 @@ make menuconfig # terminal
 Build:
 
 ```sh
-# This also runs `make clean`, and builds the kernel.
+# This also runs `make clean`, and builds the kernel (binary packages only; no source ones).
 # If there are errors, the last error message is not informative; either scroll up, or run without
 # `-j` (which makes the last error message informative).
 # All the deb packages are required.

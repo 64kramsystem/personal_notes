@@ -2,7 +2,7 @@
 
 - [RSpec](#rspec)
   - [Structure examples](#structure-examples)
-    - [Before](#before)
+    - [Hooks](#hooks)
   - [Setup/configuration](#setupconfiguration)
     - [Add helpers to example groups (`describe`)](#add-helpers-to-example-groups-describe)
     - [Hooks and execution params](#hooks-and-execution-params)
@@ -58,12 +58,20 @@ describe MessagesController
       it "renders the new template"
 ```
 
-### Before
+### Hooks
 
 ```ruby
 # Appends the block at the beginning of the `before` list in the same scope, rather than appending.
 #
 prepend_before { }
+
+# Surround examples with the given code.
+#
+around :each do |example|
+  Timecop.freeze(REFERENCE_DATE) do
+    example.run
+  end
+end
 ```
 
 ## Setup/configuration
