@@ -1,3 +1,22 @@
+## Sat 08/Oct/2022
+
+- Studies: Bash
+  - [x] Investigate Go solution
+- Open Source: Schedule Manager
+  - [x] Fix build failure
+  - [x] Several refactorings
+  - [x] Add JSON listing output
+    - [x] Implement limit removal
+- Tools: Calendar manager
+  - [x] Implement sync with Schedule Manager
+  - [x] Several refactorings
+  - [x] Split into own repository
+- Writings: Kernel building article
+  - [x] Revert last commit (but leave better make target)
+- Open Source: Marco
+  - [x] Find out fat binary cause
+  - [x] Review official Ubuntu source package
+
 ## Fri 07/Oct/2022
 
 - Studies: Bash
