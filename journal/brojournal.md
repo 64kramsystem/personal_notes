@@ -1,3 +1,11 @@
+## Sun 09/Oct/2022
+
+- Admin tools
+  - [x] Test/fix email client folders archival APIs
+- Studies: Kernel development
+  - [ ] Linux Kernel Programming
+    - [ ] 6. Kernel Internals Essentials - Processes and Threads
+
 ## Sat 08/Oct/2022
 
 - Studies: Bash
