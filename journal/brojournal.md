@@ -1,3 +1,16 @@
+## Mon 10/Oct/2022
+
+- Tools
+  - [x] Music sync script: Refactor + Add sync from server
+- Projects
+  - Schedule manager
+    - [x] Export: Add "event" event type
+    - [x] Rename 'json' mode to 'export', and separate it from the former
+  - Calendar manager
+    - [x] Add support for multiple calendars
+- Open Source
+  - [x] VirtualBox 7.0: Test and report bug
+
 ## Sun 09/Oct/2022
 
 - Admin tools

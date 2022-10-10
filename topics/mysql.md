@@ -509,7 +509,7 @@ Add a JSON column and, separately, a MVI, allowing for arrays storage:
 
 ```sql
 CREATE TABLE clients (
-  id          INT PRIMARY KEY,
+  id          INT PRIMARY KEY AUTO_INCREMENT,
   client_tags JSON
 )
 SELECT 1 `id`, '["foo", "bar", "baz"]' `client_tags`;
@@ -530,7 +530,7 @@ JSON search functions. WATCH OUT!! Searches must be performed on `<column> -> $`
 -- -> Filter: json'"foo"' member of (cast(json_extract(client_tags,_utf8mb4'$') as char(64) array))  (cost=0.35 rows=1)
 --     -> Index lookup on clients using client_tags (cast(json_extract(client_tags,_utf8mb4'$') as char(64) array)=json'"foo"')  (cost=0.35 rows=1)
 --
-SELECT 'foo' MEMBER OF (client_tags -> '$') FROM clients;
+SELECT COUNT(*) FROM clients WHERE 'foo' MEMBER OF (client_tags -> '$');
 
 -- Boolean (AND) search of multiple terms.
 --
@@ -541,8 +541,8 @@ SELECT COUNT(*) FROM clients WHERE JSON_CONTAINS(client_tags -> '$', '["foo", "b
 --
 SELECT COUNT(*) FROM clients WHERE JSON_OVERLAPS(client_tags -> '$', '["foo", "bax"]'); # 1
 
--- Path search.
--- Doesn't use index, as of v8.0.28; see https://dev.mysql.com/doc/refman/8.0/en/create-index.html#create-index-multi-valued -> "Using multi-valued Indexes"
+-- Path search. Doesn't use index, as of v8.0.28, even for prefix searches see
+-- https://dev.mysql.com/doc/refman/8.0/en/create-index.html#create-index-multi-valued -> "Using multi-valued Indexes"
 --
 -- Uses the LIKE-style patterns (`%`, `_`).
 --
