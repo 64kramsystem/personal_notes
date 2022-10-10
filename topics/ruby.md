@@ -567,8 +567,8 @@ arr[5] ||= nil                             # other resize/extend, in arguably le
 arr.delete(obj)                         # delete an object matching via `==`; returns self
 arr.delete_at(i)                        # delete an object at index `i`; returns the value deleted, or nil if no deletion
 
-arr.delete_if { |e| fx(e) }             # WATCH OUT! The deleted items are lost (self is returned)
-drr, arr = arr.partition { |e| fx(e) }  # delete items, retaining the deleted values (in drr)
+arr.delete_if { |e| fx(e) }                    # WATCH OUT! The deleted items are lost (self is returned)
+deleted, arr = arr.partition { |e| del_fx(e) } # useful way to perform a "splitting" delete_if
 
 arr.slice!(interval)                    # removes and returns the slice; e.g. `array.slice(3..)`
 
