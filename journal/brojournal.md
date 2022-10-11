@@ -1,3 +1,11 @@
+## Tue 11/Oct/2022
+
+- Admin
+  - [x] Reinstall mobile O/S
+  - [ ] Upgrade desktop O/S
+    - [x] Minor script fixes/updates
+    - [ ] Brutal fight with all sort of Ubuntu stuff
+
 ## Mon 10/Oct/2022
 
 - Tools
