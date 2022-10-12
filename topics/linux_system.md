@@ -52,6 +52,9 @@
   - [Encryption](#encryption)
     - [Mount encrypted (.ecryptfs) home](#mount-encrypted-ecryptfs-home)
     - [Setup hibernation on Ubuntu-setup LUKS volume](#setup-hibernation-on-ubuntu-setup-luks-volume)
+  - [Ubuntu hell](#ubuntu-hell)
+    - [Ubuntu vs. ZFS vs. Recent Linux](#ubuntu-vs-zfs-vs-recent-linux)
+    - [Ubuntu with encrypted Btrfs](#ubuntu-with-encrypted-btrfs)
 
 ## Processes
 
@@ -1157,3 +1160,26 @@ mkswap "$(ls -1 /dev/mapper/*swap*)"
 
 # now reboot
 ```
+
+## Ubuntu hell
+
+### Ubuntu vs. ZFS vs. Recent Linux
+
+Jammy caused lots of problems; the provided ZFS version doesn't support the 5.19 kernel. The mainline PPA packages caused problems when trying to update the ZFS modules, so the Tuxinvader PPA is required, which is built only for Focal (but compatible with Jammy), and requires the now obsolete Libssl 1.1.
+
+Cubic setup:
+
+```sh
+add-apt-repository -n -y ppa:tuxinvader/lts-mainline
+perl -i -pe 's/jammy/focal/' /etc/apt/sources.list.d/*tux*
+add-apt-repository -n -y ppa:nrbrtx/libssl1
+add-apt-repository -n -y ppa:jonathonf/zfs
+apt update
+apt install -y aptitude
+aptitude purge linux.*5.15
+apt install -y zfs-dkms linux-generic-5.19
+```
+
+### Ubuntu with encrypted Btrfs
+
+Probably the most stable (dependency-wise) solution. See [here](https://mutschler.dev/linux/pop-os-btrfs-22-04); it seems it should work with minimal and evident changes on Ubuntu.

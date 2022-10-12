@@ -9,6 +9,9 @@
       - [Mount an image](#mount-an-image)
   - [Software-specific](#software-specific)
     - [VMWare](#vmware)
+      - [Modules compilation/install](#modules-compilationinstall)
+      - [General issues/tweaks](#general-issuestweaks)
+      - [Network fix](#network-fix)
     - [VirtualBox](#virtualbox)
     - [QEMU](#qemu)
       - [Usermode](#usermode)
@@ -235,20 +238,59 @@ rmmod nbd
 
 ### VMWare
 
-AMD GPU virtualization may not be supported; if so, add `mks.gl.allowUnsupportedDrivers = "TRUE"` to either `~/.vmware/preferences` or the VM cfg file.
+The VMWare Player/Workstation 16.2.3 suffered periodic slowdowns on the previous O/S installation.
 
-In order to autoattach USB devices, add `usb.autoConnect.device0 = "0xcafe:0xbabe"` to the VM cfg file.
+#### Modules compilation/install
 
-Rebuild modules (can also be used to restart all services): `vmware-modconfig --console --install-all`
+```sh
+make clean
+make build
+make tarballs
+sudo mv -f *.tar /usr/lib/vmware/modules/source
+# Also restarts the services
+sudo vmware-modconfig --console --install-all
+```
 
-The VMWare Player 16.2.3 suffered periodic slowdowns; it's not clear what caused it; VMWare Workstation Pro is currently under testing.
+#### General issues/tweaks
+
+General configuration file is `~/.vmware/preferences`; where general is not specified, it doesn't apply.
+
+- AMD GPU virtualization may not be supported; if so, add `mks.gl.allowUnsupportedDrivers = "TRUE"` to general/VM cfg
+- In order to autoattach USB devices, add `usb.autoConnect.device0 = "0xcafe:0xbabe"` to VM cfg
+- Symlinks are not followed by default in shared folders; add one `sharedFolder0.followSymlinks = "TRUE"` to the VM cfg for each shared folder
+
+#### Network fix
+
+The network connection doesn't go up (internally, it actually goes up and down); see https://fluentreports.com/blog/?p=717.
+
+```diff
+commit bb84e4f278d24d6ffce5edde1f06dd692f17a16e (HEAD -> workstation-16.2.4)
+Author: Saverio Miroddi <saverio.pub2@gmail.com>
+Date:   Wed Oct 12 19:29:27 2022 +0200
+
+    Networking fix
+
+diff --git a/vmnet-only/userif.c b/vmnet-only/userif.c
+index 2c5a24a..c98178b 100644
+--- a/vmnet-only/userif.c
++++ b/vmnet-only/userif.c
+@@ -1012,6 +1012,8 @@ VNetUserIfSetUplinkState(VNetPort *port, uint8 linkUp)
+    VNet_LinkStateEvent event;
+    int retval;
+ 
++   if (!linkUp) return 0;
++
+    userIf = (VNetUserIF *)port->jack.private;
+    hubJack = port->jack.peer;
+```
 
 ### VirtualBox
 
 BIOS key: EFI=Esc, Legacy=F12 (must tap very quickly)
 
+Rebuild modules:
+
 ```sh
-# Rebuild modules.
 /sbin/vboxconfig
 ```
 
