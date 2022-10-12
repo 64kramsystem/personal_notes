@@ -30,7 +30,7 @@
     - [Shell prompt](#shell-prompt)
     - [Correct whitespaces problems](#correct-whitespaces-problems)
     - [Revert/recover common mistakes](#revertrecover-common-mistakes)
-    - [Find the default branch](#find-the-default-branch)
+    - [Find/set the default branch](#findset-the-default-branch)
     - [Checkout a GitHub PR (of a private repository)](#checkout-a-github-pr-of-a-private-repository)
 
 ## Document notes
@@ -600,21 +600,27 @@ gitk --all $(git fsck --no-reflog | awk '/dangling commit/ {print $3}')
 git show $(git fsck --unreachable | git cat-file --batch-check | awk '/commit/ { print $3 }')
 ```
 
-### Find the default branch
+### Find/set the default branch
+
+The rev-parse strategy works only for cloned repositories (see https://stackoverflow.com/q/17639383/210029), so if it's not present, we add it.
 
 ```sh
-# Offline.
-#
-git rev-parse --abbrev-ref $remote/HEAD | awk -F/ '{print $NF}'
+if ! git branch --remotes | grep -qP "^\s+$c_remote/HEAD "; then
+  git remote set-head "$c_remote" -a
+fi
 
-# Online.
-#
-git remote show $remote | awk '/^  HEAD branch:/ {print $NF}'
+git rev-parse --abbrev-ref "$c_remote/HEAD" | perl -ne "print /$c_remote\/(\w+)/" | tee >(xsel -ib)
 ```
 
-Convenient configuration:
+Other:
 
 ```sh
+# Online; always works.
+#
+git remote show $remote | awk '/^  HEAD branch:/ {print $NF}'
+
+# Personal; use for special cases.
+#
 git config custom.development-branch devel
 ```
 

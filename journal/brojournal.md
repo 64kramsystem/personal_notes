@@ -1,3 +1,20 @@
+## Wed 12/Oct/2022
+
+- Admin
+  - [ ] Upgrade desktop O/S
+    - [x] Minor script fixes/updates
+    - [ ] Other fight with all sort of Ubuntu stuff
+  - [x] Hypervisors 3D test
+    - [x] Fight networking issue
+    - [x] Benckmark
+  - [x] Switch hypervisor
+- Open Source: Openscripts
+  - [x] Add `git_find_default_branch`
+- Tools
+  - Repository syncing script
+    - [x] Add branch check
+    - [x] Minor improvemnts
+
 ## Tue 11/Oct/2022
 
 - Admin
