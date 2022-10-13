@@ -123,7 +123,7 @@ create_table id: false, primary_key: :column, options: 'ENGINE=MyISAM' do |t|
   t.column :column_name, :type, **column_options
 
   t.string
-  t.text :info, limit: 64.kilobytes, null: false    # create a mediumtext (<64k is text)
+  t.text :info, limit: 64.kilobytes, null: false    # create a MEDIUMTEXT (remove :limit for the TEXT default)
   t.integer
   t.float
   t.decimal
@@ -142,6 +142,8 @@ end
 # :bulk perfoms all the changes in one statement (defaults to false)
 #
 change_table :table, bulk: true do |t|
+  t.mytype, :myname, ...               # add a column
+
   t.change                             # changes the column definition
   t.change_default                     # changes the column default
   t.rename                             # rename a column

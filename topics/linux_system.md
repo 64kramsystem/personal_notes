@@ -285,7 +285,7 @@ parted -s $disk_device rm $part_number_1_based
 In order to unmount encrypted partitions, see [ejectdisk](https://github.com/64kramsystem/openscripts/blob/416f4a456412210df86a574a4d19a649481133b2/ejectdisk#L76); this involves:
 
 ```sh
-lsblk -n -o NAME,TYPE,MOUNTPOINT $device       # find the given device tree
+lsblk -n -o NAME,TYPE,MOUNTPOINT,UUID $device  # find the given device tree properties
 udisksctl unmount -b /dev/mapper/$luks_device  # unmount the encrypted partition(s)
 udisksctl lock -b /dev/$luks_device            # lock the LUKS device
 ```

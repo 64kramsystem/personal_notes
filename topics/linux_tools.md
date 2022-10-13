@@ -231,6 +231,8 @@ cat /proc/self/environ | xargs -0 -L 1        # print the env vars (null-termina
 
 ## tar
 
+WATCH OUT!! When compressing as sudo files owned by other users, use `--no-recursion`, otherwise on extraction, intermediate dirs may be [owned by root](https://superuser.com/q/1175794).
+
 ```sh
 tar -C /tmp xvz                                        # Extract to a different directory
 tar --exclude='parsec-benchmark/.git' parsec-benchmark # Exclude (glob pattern); if `/` is not prefixed, matches at any level

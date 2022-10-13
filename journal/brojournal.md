@@ -1,3 +1,18 @@
+## Thu 13/Oct/2022
+
+- Studies: Git
+  - [x] Test `--update-refs`
+- Admin: System
+  - [x] Hypervisor: Complete guest O/S configuration
+  - [x] Add mirror device
+- Misc: Rust projects
+  - [x] Search Hacktoberfest: `curl -H "Accept: application/vnd.github.mercy-preview+json" 'https://api.github.com/search/repositories?q=topic:hacktoberfest+language:rust'`
+- Project: System setup script
+  - [x] Add Windows partition mount
+  - [x] Disable GRUB splash screen
+- Admin: Planning
+  - [x] Flush pool/plan cycle
+
 ## Wed 12/Oct/2022
 
 - Admin
