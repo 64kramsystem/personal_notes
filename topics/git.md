@@ -408,6 +408,8 @@ GIT_SEQUENCE_EDITOR="sed -i -re 's/^pick /e /'" git rebase -i "$(git merge-base 
 
 It's possible to preserve merges using `--rebase-merges`, although it's not entirely clear how to do funky manipulations of history.
 
+If a modification is applied to the history of a branch built on top of others and  `--update-refs` is specified (or the config `rebase.updateRefs` set), when rebasing interactively, the ancestor branches will also be updated!! In the interactive list, the references will show as `update-ref name_of_ancestor_branch`. WATCH OUT! This doesn't work the other way around (for descendant branches).
+
 ## Remotes
 
 ```sh
