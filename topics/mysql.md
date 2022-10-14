@@ -374,6 +374,7 @@ Not supported:
 
 - backreferences
 - lookahead
+- groups capturing
 
 !! The backslash needs to be escaped, e.g. `\\.`/`\\b` !!
 
