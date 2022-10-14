@@ -1,3 +1,12 @@
+## Fri 14/Oct/2022
+
+- Admin: System
+  - [x] Investigate separate laptops card reading problem
+- Open Source: Rust
+  - [x] Review Rust grants campaign, and up-for-grabs issues
+- Admin: Blog
+  - [x] Prepare a cutdown version of the professional blog (improvements/setup)
+
 ## Thu 13/Oct/2022
 
 - Studies: Git
