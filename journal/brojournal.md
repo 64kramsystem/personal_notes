@@ -1,3 +1,13 @@
+## Sat 15/Oct/2022
+
+- Open Source: VGA Passthrough
+  - [x] Fix two image links
+- Studies: Kernel development
+  - [ ] Linux Kernel Programming
+    - [x] 6. Kernel Internals Essentials - Processes and Threads
+- Tools
+  - [ ] Investigate VirtualBox 3d support
+
 ## Fri 14/Oct/2022
 
 - Admin: System
