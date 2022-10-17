@@ -134,6 +134,7 @@ create_table id: false, primary_key: :column, options: 'ENGINE=MyISAM' do |t|
   t.binary
   t.boolean
   t.timestamps
+  t.enum :mycol, ['Value', ...]
 
   t.index :column_name{, column_name_N}, unique: true, name: index_name
 end

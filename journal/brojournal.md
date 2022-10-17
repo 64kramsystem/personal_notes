@@ -1,3 +1,16 @@
+## Sun 16/Oct/2022
+
+- Tools
+  - [x] Investigate VirtualBox 3d support
+  - [x] Investigate VMWare 3d performance
+- Studies: Kernel development
+  - [ ] Linux Kernel Programming
+    - [ ] 7. Memory Management Internals - Essentials
+- Open Source: Rust Grants
+  - [x] Review past applications, and discuss
+- Projects: ZFS installer
+  - [x] Write project closure section, and close project
+
 ## Sat 15/Oct/2022
 
 - Open Source: VGA Passthrough
