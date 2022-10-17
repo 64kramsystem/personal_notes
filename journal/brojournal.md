@@ -1,3 +1,16 @@
+## Mon 17/Oct/2022
+
+- Open Source
+  - Rust Foundantion Grants
+    - [x] Review all docs
+    - [x] Review and discuss potential projects
+- Admin: System
+  - [x] Fight hidpi desktop scaling
+- Admin: Tools
+  - [x] Update calendars
+- Studies: Bash
+  - [ ] Study solution for bash pipe reader error detection
+
 ## Sun 16/Oct/2022
 
 - Tools
