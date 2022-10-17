@@ -115,10 +115,17 @@ xinput set-int-prop 3 "Device Enabled" 8 1
 ## Screen stuff
 
 ```sh
-# Set resolution
-# Find the output device using `xrandr -q`.
+# For xrandr
 #
-xrandr --output DisplayPort-2 --mode 1920x1080
+screen_name=$(xrandr | awk '/ connected/ {print $1}')
+
+# Set resolution
+#
+xrandr --output $screen_name --mode 1920x1080
+
+# Set scaling factor (=new resolution)
+#
+xrandr --output $screen_name --scale 0.75x0.75
 
 # Check if the monitor is not sleeping
 #
