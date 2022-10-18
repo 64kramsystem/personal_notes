@@ -1,3 +1,17 @@
+## Tue 18/Oct/2022
+
+- Project: Commercial Game Sources
+  - [x] Add Penumbra Overture
+- Open Source: ZFS installer
+  - [x] Reply user email
+- Studies: Kernel development
+  - [ ] Linux Kernel Programming
+    - [ ] 7. Memory Management Internals - Essentials
+    - (halted)
+- Studies: Gamedev
+  - Tricks of the Game Programming Gurus
+    - [ ] 6. The Third Dimension
+
 ## Mon 17/Oct/2022
 
 - Open Source

@@ -25,6 +25,7 @@
   - [Arithmetic operations](#arithmetic-operations)
   - [Redirections](#redirections)
   - [Substitutions](#substitutions)
+  - [Pipes error handling](#pipes-error-handling)
   - [Wildcards/ranges](#wildcardsranges)
   - [Arrays](#arrays)
     - [Snippets](#snippets)
@@ -740,8 +741,17 @@ command < "$filename"
 
 WATCH OUT! See the [background processes section](#background-processesjobs-management) for notes about cmd substitution + background jobs.
 
-## Wildcards/ranges
+## Pipes error handling
 
+Pipes in bash have a very serious issue - in case of write error, a reader only gets an EOF, not an error.
+
+In order to work this around, there are two approaches.
+
+If it's acceptable for readers cleanup to be performed separately, inspect `PIPESTATUS[@]` (one entry for each pipe command) after the failure and act accordingly.
+
+If it isn't, and readers must be killed before receiving EOF, and a complex (and ugly) approach is required - see [here](https://stackoverflow.com/a/32699218/210029)
+
+## Wildcards/ranges
 
 ```sh
 # Brace expansion: generate a sequence; $end is included. Spaces and expressions are not allowed; better
