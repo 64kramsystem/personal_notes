@@ -526,10 +526,11 @@ In some workflows, it's convenient to set `IGNOREEOF`, in order to prevent accid
 #
 # - one old Ubuntus, partclone was not installed
 # - the compressions programs need to be installed (22.04 has zstd preinstalled)
+# - smartctl is also used, although it's not strictly required
 #
 # In case of error, disable the GUI to see the underlying message (see https://unix.stackexchange.com/a/589650).
 #
-apt install -y clonezilla zstd
+apt install -y clonezilla zstd smartmontools
 ln -s $images_parent_dir /home/partimag
 
 # Backup

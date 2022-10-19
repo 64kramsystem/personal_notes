@@ -1,3 +1,9 @@
+## Wed 19/Oct/2022
+
+- Studies: Gamedev
+  - Tricks of the Game Programming Gurus
+    - [ ] 6. The Third Dimension
+
 ## Tue 18/Oct/2022
 
 - Project: Commercial Game Sources
