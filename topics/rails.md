@@ -9,8 +9,10 @@
     - [Batching](#batching)
     - [Updating](#updating)
     - [Migrations](#migrations)
-    - [Callbacks](#callbacks)
-    - [Metadata](#metadata-1)
+    - [Models](#models)
+      - [Associations](#associations)
+      - [Callbacks](#callbacks)
+      - [Metadata](#metadata-1)
     - [SQL queries streaming](#sql-queries-streaming)
   - [Cache](#cache)
 
@@ -35,19 +37,6 @@ Predefined variables:
 
 ## ActiveRecord
 
-Query hints (6.0+):
-
-```ruby
-Article.joins(:user).optimizer_hints("JOIN_ORDER(articles, users)").to_sql
-# => SELECT /*+ JOIN_ORDER(articles, users) */ `articles`.* FROM `articles` INNER JOIN `users` ON `users`.`id` = `articles`.`user_id`
-```
-
-Table aliases require manual AREL:
-
-```rb
-MyModel.from(Arel::Table.new(:table_name).alias("alias")).where(...)
-```
-
 ### Querying
 
 ```ruby
@@ -67,6 +56,17 @@ column: 1..     # column >= 1
 column: 1...    # column >= 1 (!)
 column: ...7    # column < 7
 column: 1..7    # column BETWEEN 1 AND 7
+
+Hints (6.0+):
+
+Article.joins(:user).optimizer_hints("JOIN_ORDER(articles, users)").to_sql
+# => SELECT /*+ JOIN_ORDER(articles, users) */ `articles`.* FROM `articles` INNER JOIN `users` ON `users`.`id` = `articles`.`user_id`
+```
+
+Table aliases require manual AREL:
+
+```rb
+MyModel.from(Arel::Table.new(:table_name).alias("alias")).where(...)
 ```
 
 Scopes:
@@ -112,10 +112,13 @@ Reference: https://apidock.com/rails/ActiveRecord/ConnectionAdapters/SchemaState
 Table creation/table column operations:
 
 ```ruby
+# On modern Rails versions, references are BIGINT, not INT anymore.
+#
 create_table id: false, primary_key: :column, options: 'ENGINE=MyISAM' do |t|
-  # :type: can be a string, e.g. 'MEDIUMINT UNSIGNED NOT NULL'
-  #
-  # :column_options (valid for all the column methods):
+  t.primary_key :id, :int, auto_increment: true       # create an INT PK; also adds the column
+
+  # :type can be a string, e.g. 'MEDIUMINT UNSIGNED NOT NULL'
+  # column_options: (valid for all the column methods):
   #   :null:    true/false
   #   :limit:   int; number of chars for string, bytes otherwise
   #   :default
@@ -123,8 +126,8 @@ create_table id: false, primary_key: :column, options: 'ENGINE=MyISAM' do |t|
   t.column :column_name, :type, **column_options
 
   t.string
-  t.text :info, limit: 64.kilobytes, null: false    # create a MEDIUMTEXT (remove :limit for the TEXT default)
-  t.integer
+  t.text :mytext, limit: 64.kilobytes, null: false    # create a MEDIUMTEXT (remove :limit for the TEXT default)
+  t.integer :myint, unsigned: true, limit: 2          # the limit is in bytes (!)
   t.float
   t.decimal
   t.datetime
@@ -134,9 +137,11 @@ create_table id: false, primary_key: :column, options: 'ENGINE=MyISAM' do |t|
   t.binary
   t.boolean
   t.timestamps
-  t.enum :mycol, ['Value', ...]
+  t.enum :myenum, ['Value', ...]
 
-  t.index :column_name{, column_name_N}, unique: true, name: index_name
+  t.index :column_names, unique: true, name: index_name # use array on multiple col. names
+  t.foreign_key :ref_table [, column_name: fk_col]      # see https://api.rubyonrails.org/v7.0.4/classes/ActiveRecord/ConnectionAdapters/SchemaStatements.html#method-i-add_foreign_key
+  t.references :blah, ...                               # very confusing
 end
 
 # The create_table methods also apply here.
@@ -148,12 +153,11 @@ change_table :table, bulk: true do |t|
   t.change                             # changes the column definition
   t.change_default                     # changes the column default
   t.rename                             # rename a column
-  t.references
   t.belongs_to
+  t.add_foreign_key
 
   t.remove :column_name                # remove a column
   t.remove_index :column_name{, column_name_N}  # replace also be used like `Pathname.new(__FILE__).relative_path_from(Rails.root)``name: index_name` if non-rails naming
-  t.remove_references
   t.remove_belongs_to
   t.remove_timestamps
 end
@@ -170,7 +174,7 @@ remove_index :table, ...  # see options in :change_table
 
 # Foreign keys
 #
-add_foreign_key :articles, :authors
+add_foreign_key :articles, :authors, [to_table: ref_table]
 remove_foreign_key :articles, [:authors | column: author_id | name: fk_abc123]
 ```
 
@@ -180,7 +184,23 @@ Irreversible migration error:
 raise ActiveRecord::IrreversibleMigration
 ```
 
-### Callbacks
+### Models
+
+#### Associations
+
+`inverse_of` is required to establish bidirectional associations, *only* when they have a scope or use :through/:foreign_key (see [here](https://stackoverflow.com/a/39670478/210029)).
+
+```rb
+class Client
+  has_many :client_extras, foreign_key: :instance_id, inverse_of: :client
+end
+
+class ClientExtra
+  belongs_to :client, foreign_key: :instance_id, inverse_of: :client_attributes
+end
+```
+
+#### Callbacks
 
 In order to find the difference on save, use:
 
@@ -189,7 +209,7 @@ In order to find the difference on save, use:
 
 The format is `{"field" => [before, after]}`; unchanged fields are not included.
 
-### Metadata
+#### Metadata
 
 ```ruby
 # Columns metadata. Watch out: they (obviously) depend on the DB existence; if, for example, Rake tasks
