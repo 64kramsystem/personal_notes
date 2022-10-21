@@ -1,3 +1,14 @@
+## Fri 21/Oct/2022
+
+- Studies: Gamedev
+  - Tricks of the Game Programming Gurus
+    - [x] 6. The Third Dimension
+- Admin: Misc
+  - [x] Review Linux 6.0.3 commits
+- Open source: PPA
+  - [ ] Create updated project PPAs
+    - [ ] Study PPA creation post
+
 ## Thu 20/Oct/2022
 
 - Studies: Gamedev
