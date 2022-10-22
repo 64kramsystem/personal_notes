@@ -45,6 +45,8 @@
   - [Docker](#docker)
   - [Wine](#wine)
   - [Build the Linux kernel](#build-the-linux-kernel)
+    - [Building the Ubuntu mainline kernel](#building-the-ubuntu-mainline-kernel)
+    - [Other config notes](#other-config-notes)
 
 ## ls
 
@@ -1095,15 +1097,13 @@ winetricks dotnet472 corefonts
 
 ## Build the Linux kernel
 
-A good reference is the [`tuxbuilder` builder](https://github.com/TuxInvader/focal-mainline-builder/blob/main/build.sh), but it does some things differently.
-
 Explanation of the Ubuntu kernel versioning [here](https://ubuntu.com/kernel).
 
 Repositories:
 
-- `git@github.com:torvalds/linux.git`: Official kernel repository; doesn't include patch versions
+- `git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git`: reference
+- `git@github.com:torvalds/linux.git`: alternative, lags a bit
 - `git://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/focal`: Canonical versions for the given release, including HWE etc. (see [here](https://wiki.ubuntu.com/Kernel/Dev/KernelGitGuide))
-- `git://git.launchpad.net/~ubuntu-kernel-test/ubuntu/+source/linux/+git/mainline-crack`: Canonical mainline (testing) versions
 
 Run `make help` to display the targets help.
 
@@ -1115,8 +1115,6 @@ Procedure:
 # Copies the running kernel config (if .config is not present), and apply defaults for the new settings
 # of the new kernel version.
 # The running kernel config can be found in `/boot`.
-# It's not straightforward/possible to extract the kernel config from non-running kernels, for example,
-# the script `extract-ikconfig` requires a certain compile-time setting.
 #
 make olddefconfig
 
@@ -1188,3 +1186,40 @@ Old references:
 - [What does “make oldconfig” do exactly in the Linux kernel makefile?](https://stackoverflow.com/questions/4178526/what-does-make-oldconfig-do-exactly-in-the-linux-kernel-makefile)
 - [Where can I get the 11.04 kernel .config file?](https://askubuntu.com/questions/28047/where-can-i-get-the-11-04-kernel-config-file)
 - [make config vs oldconfig vs defconfig vs menuconfig vs savedefconfig](http://embeddedguruji.blogspot.com/2019/01/make-config-vs-oldconfig-vs-defconfig.html)
+
+### Building the Ubuntu mainline kernel
+
+The mainline kernel is *not* built the standard way; the .config file is not directly involved.
+
+A good reference is the [`tuxbuilder` builder](https://github.com/TuxInvader/focal-mainline-builder/blob/main/build.sh), which does, more or less:
+
+```sh
+git clone --depth=1 -b cod/mainline/v6.0.3 git://git.launchpad.net/~ubuntu-kernel-test/ubuntu/+source/linux/+git/mainline-crack
+cd mainline-crack
+
+# Must build only for amd64 (see [issue](https://github.com/TuxInvader/focal-mainline-builder/issues/30)):
+#
+perl -i -pe 's/archs="amd64\K.+/"/' debian.master/etc/kernelconfig
+
+fakeroot debian/rules clean defaultconfigs
+fakeroot debian/rules clean
+
+# Use `build=source` to build the source package, although it requires extra configuration.
+#
+dpkg-buildpackage --build=binary -aamd64 -d
+
+# The metapackage requires extra configuration; see `do_metapackage()`.
+```
+
+The Canonical configurations are under `debian.master/config/amd64`; they're not included in the `defconfig` target, and can be merged, but they won't build with the standard method.
+
+### Other config notes
+
+It's not straightforward/possible to extract the kernel config from non-running kernels, for example, the script `extract-ikconfig` requires a certain compile-time setting.
+If it's not found how to generate the Ubuntu mainline config from the mainline-crack repo, in theory one could set `CONFIG_IKCONFIG=m`, build the kernel, extract the image, and run `extract-ikconfig`.
+
+Configurations can be merged via script: `scripts/kconfig/merge_config.sh .config debian.master/config/amd64/config.*`.
+
+The frame size errors can be ignored by setting `CONFIG_FRAME_WARN=0` (but this should not be necessary in first place).
+
+The arch config can be found at `https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/linux/trunk/config`, but it's very different from the Ubuntu one.
