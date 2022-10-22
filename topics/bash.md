@@ -1069,6 +1069,9 @@ exec 2>&1
 exec 5> "$logfile"
 BASH_XTRACEFD="5"
 set -x
+
+# Make debugging log more informative.
+export PS4='+ ${BASH_SOURCE:-}:${FUNCNAME[0]:-}:L${LINENO:-}:   '
 ```
 
 The `:` command can be used to add pseudo-comments that are displayed in the debug log:

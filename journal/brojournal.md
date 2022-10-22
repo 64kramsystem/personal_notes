@@ -1,3 +1,14 @@
+## Sat 22/Oct/2022
+
+- Admin
+  - [x] Discuss about Rust grant
+  - [ ] Future plans
+- Open Source
+  - [x] Publish source code from Tricks of the Game-Programming Gurus
+- [ ] Project: Create updated project PPAs
+  - [x] Brutal fight with Ubuntu kernel config production
+  - [x] Search self-updating PPA
+
 ## Fri 21/Oct/2022
 
 - Studies: Gamedev
