@@ -1,3 +1,21 @@
+## Sun 23/Oct/2022
+
+- Admin
+  - [x] Future plans: complete big cleanup
+  - [x] Tools: fight find appropriate pdf annotator
+- Studies: Gamedev
+  - Tricks of the Game Programming Gurus
+- Studies: Rust
+  - [x] Check Ruby<>Rust integrations: Rutie, Helix (abandoned)
+- Open Source: Ubuntu
+  - [x] Follow up with laptop support on Launchpad
+- SWE: Practice
+  - [ ] CodeCrafters: SQLite/Rust
+    - [x] Stage 1
+    - [x] Stage 2
+    - [x] Stage 3
+      - [x] Brutal fight with unintuitive pages numbering
+
 ## Sat 22/Oct/2022
 
 - Admin
