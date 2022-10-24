@@ -1,10 +1,36 @@
+## Mon 24/Oct/2022
+
+- Projects: Commercial Game Sources
+  - [x] Add Digger (Remastered)
+- Projects: Poor Man's Spotlight
+  - [x] Cleanup lints
+  - [x] Add invalid entry concept, and don't panic on invalid file searches
+- Admin
+  - [x] Launchpad: Rename user id
+- Studies: Gamedev
+  - Tricks of the Game Programming Gurus
+    - [x] 7. Advanced Bit-Mapped Graphics and Special FX
+- Open Source: PPAstats
+  - [x] Update Automake version
+- Projects: PPA Packaging
+  - [x] Remove Xenial support
+  - [x] Investigate the valid licenses
+  - [x] Derive supported distro, instead of hardcoding them
+  - [x] Add Ubuntu Jammy support
+  - [x] Make dh_make accepted licenses list dynamic
+  - [x] README updates
+  - [x] Split the debian version, and add a default for it
+  - [x] Derive VCS browser field from the VCS git value
+
 ## Sun 23/Oct/2022
 
 - Admin
   - [x] Future plans: complete big cleanup
-  - [x] Tools: fight find appropriate pdf annotator
+  - [x] Tools: Fight find appropriate pdf annotator
+  - [x] Launchpad: clean obsolete PPAs
 - Studies: Gamedev
   - Tricks of the Game Programming Gurus
+    - [ ] 7. Advanced Bit-Mapped Graphics and Special FX
 - Studies: Rust
   - [x] Check Ruby<>Rust integrations: Rutie, Helix (abandoned)
 - Open Source: Ubuntu
@@ -26,6 +52,9 @@
 - [ ] Project: Create updated project PPAs
   - [x] Brutal fight with Ubuntu kernel config production
   - [x] Search self-updating PPA
+- Studies: Gamedev
+  - Tricks of the Game Programming Gurus
+    - [ ] 7. Advanced Bit-Mapped Graphics and Special FX
 
 ## Fri 21/Oct/2022
 
