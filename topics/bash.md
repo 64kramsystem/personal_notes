@@ -825,7 +825,7 @@ printf '%s\n' "${array[@]}"                      # print the entries (one per li
                                                  # work with other parameters
 declare -p array                                 # very convenient, although debug-style format
 
-# Joining arrays.
+# Joining arrays; slicing is supported.
 #
 # The pure multi-char bash version is ugly (see https://stackoverflow.com/a/17841619 and https://dev.to/meleu/how-to-join-array-elements-in-a-bash-script-303a).
 #
