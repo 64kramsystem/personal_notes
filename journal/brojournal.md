@@ -1,3 +1,17 @@
+## Tue 25/Oct/2022
+
+- Admin: Tools
+  - [x] Calendar manager: Use Ruby APIs to parse date option in work wrapper script
+- Open Source
+  - [x] Reply query on Gamedev WG channel
+- Projects: PPA Packaging
+  - [x] Skip `.git` directory in project
+  - [x] Add support for customizing the autoconfigure task
+  - [x] Add support for finding/filtering and using the latest tag of a repository
+    - [x] Brutal fight with Ruby build from repo
+    - [x] Add support for customizing the autoconfigure task
+  - [x] Fight find list of DH commands
+
 ## Mon 24/Oct/2022
 
 - Projects: Commercial Game Sources
@@ -21,6 +35,7 @@
   - [x] README updates
   - [x] Split the debian version, and add a default for it
   - [x] Derive VCS browser field from the VCS git value
+  - [ ] Add support for finding/filtering and using the latest tag of a repository
 
 ## Sun 23/Oct/2022
 
