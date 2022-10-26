@@ -1,3 +1,19 @@
+## Wed 26/Oct/2022
+
+- SWE: Practice
+  - [ ] CodeCrafters: SQLite/Rust
+- Projects: PPA Packaging
+  - [x] Add captured groups support (from tag) to the package name
+  - [x] Generalize support for dh overrides/hooks
+  - [x] Split Ruby preset into tarball/repository versions
+  - [x] Test DOSBox-X PPA
+  - [x] Allow setting the dh overrides via file
+- Open Source
+  - [x] Propose PPA to DOSBox-X maintainers
+- Studies: Gamedev
+  - Tricks of the Game Programming Gurus
+    - [ ] 8. High-Speed 3-D Sprites
+
 ## Tue 25/Oct/2022
 
 - Admin: Tools
@@ -11,6 +27,9 @@
     - [x] Brutal fight with Ruby build from repo
     - [x] Add support for customizing the autoconfigure task
   - [x] Fight find list of DH commands
+- Studies: Gamedev
+  - Tricks of the Game Programming Gurus
+    - [ ] 8. High-Speed 3-D Sprites
 
 ## Mon 24/Oct/2022
 

@@ -336,12 +336,14 @@ for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD)
 #
 ls-remote --get-url origin | ruby -ne 'print $_[/(\w+)\.git/, 1]'
 
-# Get the local remote branches of a repo, without cloning.
-# Must create a phony repository.
+# Find the branches/tags of a remote repo, without cloning (and print the last).
+# Use --tags to get the tags; can be combined with --heads.
 #
-git init
-git remote add origin https://github.com/FFmpeg/FFmpeg.git
-git ls-remote --quiet | perl -lne 'print $1 if /refs\/heads\/release\/([\d.]+)/' | sort -V | tail -n 1
+git ls-remote --heads https://github.com/FFmpeg/FFmpeg.git | perl -lne 'print $1 if /refs\/\w+\/release\/([\d.]+)/' | sort -V | tail -n 1
+
+# Find the tags reachable by the current head.
+#
+git log --simplify-by-decoration --pretty=format:'%D' | perl -lne '/^tag: (\S+)/ && print $1'
 
 # Repository root path
 #
