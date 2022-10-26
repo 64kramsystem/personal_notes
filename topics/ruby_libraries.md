@@ -1010,10 +1010,20 @@ YAML.load(yaml_string)
 
 ### Rubocop
 
-Disable multiple cops:
-
 ```rb
-# rubocop:disable Style/NumericPredicate, Style/ZeroLengthPredicate
+# To disable on one line, comment on the side
+#
+puts 123 # rubocop:disable Foo/Bar
+
+# Disable multiple cops
+#
+# rubocop:disable Foo/Bar, Baz/Qux
+puts 123
+
+# "Todo" disabling; works like disable, but convenient
+#
+# rubocop:todo Foo/Bar
+puts 123
 ```
 
 ### GC (garbage collection)
