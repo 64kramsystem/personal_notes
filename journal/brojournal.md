@@ -1,7 +1,23 @@
+## Thu 27/Oct/2022
+
+- Project: Commercial Game Sources
+  - [x] Add Amnesia: The Dark Descent
+- Studies: Gamedev
+  - Tricks of the Game Programming Gurus
+    - ~~9. Sound FX and Music~~
+    - ~~10. Implementing Computer Game Music~~
+    - [ ] 11. Video Game Algorithms, Data Structures, and Methodologies
+- Projects: PPA Packaging
+  - [x] Split PPA address into separate variables
+  - [x] Make preset scripts runnable
+- Projects: System setup script
+  - [x] Separate Hypervisors laptop <> desktop
+  - [x] Kill autostarted VPN client on installation
+- Open Source
+  - [x] Discord: Reply question about Rust engines
+
 ## Wed 26/Oct/2022
 
-- SWE: Practice
-  - [ ] CodeCrafters: SQLite/Rust
 - Projects: PPA Packaging
   - [x] Add captured groups support (from tag) to the package name
   - [x] Generalize support for dh overrides/hooks
@@ -12,7 +28,7 @@
   - [x] Propose PPA to DOSBox-X maintainers
 - Studies: Gamedev
   - Tricks of the Game Programming Gurus
-    - [ ] 8. High-Speed 3-D Sprites
+    - [x] 8. High-Speed 3-D Sprites
 
 ## Tue 25/Oct/2022
 
