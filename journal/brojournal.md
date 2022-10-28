@@ -1,3 +1,15 @@
+## Fri 28/Oct/2022
+
+- Projects: Openscripts
+  - `download_ubuntu_packages`
+    - [x] Minor fix to a regex
+    - [x] Improve last Ubuntu version detection
+- Projects: System setup script
+  - [x] Automate latest ubuntu version finding
+- Studies: Gamedev
+  - Tricks of the Game Programming Gurus
+    - [ ] 11. Video Game Algorithms, Data Structures, and Methodologies
+
 ## Thu 27/Oct/2022
 
 - Project: Commercial Game Sources

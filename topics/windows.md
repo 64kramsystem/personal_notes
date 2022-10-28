@@ -1,8 +1,14 @@
 # Windows
 
 - [Windows](#windows)
+  - [Screen Capture](#screen-capture)
   - [License operations](#license-operations)
   - [Exit on Windows 11 first boot installation (OOBE)](#exit-on-windows-11-first-boot-installation-oobe)
+
+## Screen Capture
+
+- Program: Snipping tool
+- Shortcut: Win + Shift + S
 
 ## License operations
 
