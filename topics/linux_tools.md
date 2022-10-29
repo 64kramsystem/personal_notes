@@ -46,6 +46,7 @@
   - [Wine](#wine)
   - [Build the Linux kernel](#build-the-linux-kernel)
     - [Building the Ubuntu mainline kernel](#building-the-ubuntu-mainline-kernel)
+      - [Ubuntu 6.1+ packaging/config](#ubuntu-61-packagingconfig)
     - [Other config notes](#other-config-notes)
 
 ## ls
@@ -1127,20 +1128,19 @@ make olddefconfig
 scripts/config --set-str SYSTEM_TRUSTED_KEYS ""
 scripts/config --set-str SYSTEM_REVOCATION_KEYS ""
 
-# If running the `deb-pkg` task (instead of `bindeb-pkg`), and don't want to include debug info in
-# the packages, must disable it.
+# Without these, a large debug info package is generated.
 #
 # From GUI: "Kernel hacking" -> "Compile-time checks and compiler options" -> "Compile the kernel with debug info"
 #
 # Programmatically (less safe, since in theory, the settings may change):
 #
-# scripts/config --undefine DEBUG_INFO
-# scripts/config --undefine DEBUG_INFO_COMPRESSED
-# scripts/config --undefine DEBUG_INFO_REDUCED
-# scripts/config --undefine DEBUG_INFO_SPLIT
-# scripts/config --undefine GDB_SCRIPTS
-# scripts/config --set-val DEBUG_INFO_DWARF5 n
-# scripts/config --set-val DEBUG_INFO_NONE y
+scripts/config --undefine DEBUG_INFO
+scripts/config --undefine DEBUG_INFO_COMPRESSED
+scripts/config --undefine DEBUG_INFO_REDUCED
+scripts/config --undefine DEBUG_INFO_SPLIT
+scripts/config --undefine GDB_SCRIPTS
+scripts/config --set-val DEBUG_INFO_DWARF5 n
+scripts/config --set-val DEBUG_INFO_NONE y
 
 # There are two GUI options for interactive configuration.
 # The easiest way to turn interactive changes into non-interactive is to use the interactive mode,
@@ -1169,7 +1169,7 @@ Build:
 # The firmware files are not included, so include the latest `linux-firmware` package, if needed.
 # The official firmware repo is https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git.
 #
-make -j $(nproc) bindeb-pkg LOCALVERSION=-sav
+make -j $(nproc) bindeb-pkg LOCALVERSION=-tuxinvader-sav
 
 # If the build is interrupted, run these, otherwise wacky errors may happen, and restart from scratch.
 # mrproper does not checkout (git) changed files.
@@ -1201,17 +1201,31 @@ cd mainline-crack
 #
 perl -i -pe 's/archs="amd64\K.+/"/' debian.master/etc/kernelconfig
 
+# Specific GCC versions are required for each Canonical kernel build; when not installed, the error
+# is not obvious (`WARNING: x86_64-linux-gnu-gcc not installed`).
+# This makes sure that the correct GCC version is installed.
+#
+apt install -y "$(perl -ne 'print /gcc\?=(gcc-\d+)/' debian/rules.d/0-common-vars.mk)"
+
 fakeroot debian/rules clean defaultconfigs
 fakeroot debian/rules clean
 
 # Use `build=source` to build the source package, although it requires extra configuration.
 #
-dpkg-buildpackage --build=binary -aamd64 -d
+# Above, the archs other than amd64 have been removed; without that step, this command requires `-aamd64`.
+#
+dpkg-buildpackage --build=binary -d
 
 # The metapackage requires extra configuration; see `do_metapackage()`.
 ```
 
 The Canonical configurations are under `debian.master/config/amd64`; they're not included in the `defconfig` target, and can be merged, but they won't build with the standard method.
+
+#### Ubuntu 6.1+ packaging/config
+
+Versions from 6.1 onwards include additional packages; one of them is `linux-buildinfo`, which includes the configuration.
+
+If it's possible to generate only that package, it could be the quickest way to extract the configuration.
 
 ### Other config notes
 

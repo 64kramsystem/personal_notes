@@ -1,3 +1,10 @@
+## Sat 29/Oct/2022
+
+- Studies: Gamedev
+  - Tricks of the Game Programming Gurus
+    - [x] 12. Surreal Time, Interrupts, and Multitasking
+    - [ ] 13. Synthetic Intelligence
+
 ## Fri 28/Oct/2022
 
 - Projects: Openscripts
@@ -8,7 +15,7 @@
   - [x] Automate latest ubuntu version finding
 - Studies: Gamedev
   - Tricks of the Game Programming Gurus
-    - [ ] 11. Video Game Algorithms, Data Structures, and Methodologies
+    - [ ] 12. Surreal Time, Interrupts, and Multitasking
 
 ## Thu 27/Oct/2022
 
@@ -18,7 +25,8 @@
   - Tricks of the Game Programming Gurus
     - ~~9. Sound FX and Music~~
     - ~~10. Implementing Computer Game Music~~
-    - [ ] 11. Video Game Algorithms, Data Structures, and Methodologies
+    - [x] 11. Video Game Algorithms, Data Structures, and Methodologies
+    - [ ] 12. Surreal Time, Interrupts, and Multitasking
 - Projects: PPA Packaging
   - [x] Split PPA address into separate variables
   - [x] Make preset scripts runnable
