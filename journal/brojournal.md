@@ -1,3 +1,15 @@
+## Sun 30/Oct/2022
+
+- Admin
+  - [x] Plan cycle
+- Projects: System setup script
+  - [x] Improve `git ls-remote` usage
+- Projects: Openscripts
+  - [x] clean_kernel_packages: Remove all orphan module dirs
+- Studies: Gamedev
+  - Tricks of the Game Programming Gurus
+    - [ ] 13. Synthetic Intelligence
+
 ## Sat 29/Oct/2022
 
 - Studies: Gamedev

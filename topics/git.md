@@ -337,7 +337,7 @@ for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD)
 ls-remote --get-url origin | ruby -ne 'print $_[/(\w+)\.git/, 1]'
 
 # Find the branches/tags of a remote repo, without cloning (and print the last).
-# Use --tags to get the tags; can be combined with --heads.
+# Use `--tags --refs` to get the tags (see https://stackoverflow.com/a/12939216); can be combined with --heads.
 #
 git ls-remote --heads https://github.com/FFmpeg/FFmpeg.git | perl -lne 'print $1 if /refs\/\w+\/release\/([\d.]+)/' | sort -V | tail -n 1
 
