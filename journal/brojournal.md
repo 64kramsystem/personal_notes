@@ -1,7 +1,24 @@
+## Mon 31/Oct/2022
+
+- Project: PPA Packaging
+  - [x] Investigate and skip 'dh_clean' command
+  - [x] Handle `debian` directory (clean and check)
+  - [x] Several refactorings, primarily splitting the test/build function into multiple ones
+  - [x] Clean source package files on exit
+  - [x] Add kinetic support
+- SWE: Practice
+  - [ ] CodeCrafters: SQLite/Rust
+    - [x] Stage 04
+      - [x] Brutal fight with record decoding
+      - [x] Significant refactorings
+    - [x] Stage 05
+    - [x] Stage 06
+
 ## Sun 30/Oct/2022
 
 - Admin
   - [x] Plan cycle
+  - [x] Check Linux RC3 content
 - Projects: System setup script
   - [x] Improve `git ls-remote` usage
 - Projects: Openscripts

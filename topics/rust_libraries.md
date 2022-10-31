@@ -61,6 +61,7 @@
       - [TOML, simplest parsing (`toml`)](#toml-simplest-parsing-toml)
       - [Guaranteed endianness storage (`byteorder`)](#guaranteed-endianness-storage-byteorder)
     - [Resource-light image size detection (`imagesize`)](#resource-light-image-size-detection-imagesize)
+    - [Parser generator: rust-peg](#parser-generator-rust-peg)
   - [C2Rust: Port C to Rust](#c2rust-port-c-to-rust)
 
 ## Standard library
@@ -940,9 +941,15 @@ for cap in re.captures_iter(text) {
 }
 ```
 
+Search/replace:
+
+```rs
+Regex::new(r"\s+").unwrap().replace(str, " ");
+```
+
 Match multiple regexes:
 
-```rust
+```rs
 lazy_static::lazy_static! {
   static ref VERTEX_REGEX: Regex = Regex::new(r"^v (-?1(?:\.\d+)) (-?1(?:\.\d+)) (-?1(?:\.\d+))$").unwrap();
   static ref FACE_REGEX: Regex = Regex::new(r"^f (\d+) (\d+) (\d+)$").unwrap();
@@ -1844,6 +1851,108 @@ Small crate, and reads the smallest possible amount of data.
 
 ```rs
 let ImageSize { width, height } = imagesize::size(path).unwrap();
+```
+
+### Parser generator: rust-peg
+
+```rs
+// This allows differentiating expressions via type system; in theory, strings could be used (via
+// `$(...)`), but then the consumer should parse again.
+//
+#[derive(Debug)]
+pub enum Expression {
+    Identifier(String),
+    CountStar,
+}
+
+peg::parser! {
+    // Fit for the purpose as minimally as possible.
+    //
+    pub grammar sql_parser() for str {
+        // Case-insensitive match (see https://github.com/kevinmehall/rust-peg/issues/216).
+        //
+        rule i(literal: &'static str) =
+            input:$([_]*<{literal.len()}>)
+            {
+                ? if input.eq_ignore_ascii_case(literal) { Ok(()) } else { Err(literal) }
+            }
+
+        rule word_chars() = ['a'..='z' | 'A'..='Z' | '0'..='9' | '_']
+        rule whitespace() = [' ' | '\n' | '\t']+;
+
+        // The $ is a convenience to return the &str; here it needs to be returned because letters()
+        // doesn't return a value. See below for another example.
+        //
+        rule identifier() -> Expression =
+            word_chars:$(word_chars()+)
+            {
+                Expression::Identifier(word_chars.to_string())
+            }
+
+        rule count_star() -> Expression =
+            i("count") "(*)"
+            {
+                Expression::CountStar
+            }
+
+        // The count rule must be the first, otherwise, the parser starts matching the identifier,
+        // and stumbles at the open parenthesis.
+        //
+        rule expression() -> Expression =
+            count:count_star()
+            {
+                count
+            }
+            / identifier:identifier()
+            {
+                identifier
+            }
+
+        // Here the `$` si convenient, otherwise we need to match the Expression.
+        //
+        rule column_definition() -> String =
+            name:$(identifier())
+            defines:$(whitespace() identifier())*
+            {
+                name.to_string()
+            }
+
+        // `++` is a repetition operator (one or more); another one is `**` (zero or more, which
+        // can be quantified, like `**<1,>`).
+        //
+        pub rule create_table() -> (String, Vec<String>) =
+            i("create") whitespace() i("table") whitespace() table_name:$(identifier()) whitespace()*
+            "(" whitespace()*
+            column_defs:(column_definition() ++ (whitespace()* "," whitespace()*))
+            whitespace()* ")"
+            {
+                (
+                    table_name.to_string(),
+                    column_defs
+                )
+            }
+
+        pub rule select() -> (Vec<Expression>, String) =
+            i("select")
+            whitespace()+
+            expressions:(expression() ++ (whitespace()* "," whitespace()*))
+            whitespace()+
+            i("from")
+            whitespace()+
+            table_name:$(identifier())
+        {
+            (
+                expressions,
+                table_name.to_string(),
+            )
+        }
+    }
+}
+
+// Ok(("mytable", ["id", "mystr"]))
+println!("> {:?}", create_table_parser::create_table("CREATE TABLE mytable (id INT, mystr VARCHAR)"));
+// Ok(([CountStar, Identifier("mycol")], "mytable"))
+println!("> {:?}", create_table_parser::select("SELECT COUNT(*), mycol FROM mytable"));
 ```
 
 ## C2Rust: Port C to Rust
