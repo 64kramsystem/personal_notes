@@ -1,3 +1,16 @@
+## Tue 01/Nov/2022
+
+- Open Source: RustDesk
+  - [x] Open PR with fixes to incorrect locking
+  - [x] Report bug
+- Open Source: Up for Grabs
+  - [x] Request addition of Jumpy and Punchy projects
+- SWE: Practice
+  - [ ] CodeCrafters: SQLite/Rust
+    - [x] Stage 07
+    - [ ] Stage 08
+      - [ ] Brutal fight with finding detailed info about b-tree duplicates key strategies
+
 ## Mon 31/Oct/2022
 
 - Project: PPA Packaging
