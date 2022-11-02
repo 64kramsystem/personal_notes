@@ -149,6 +149,7 @@ WATCH OUT! Don't forget to bring `std::io::Write` into scope, when using write-r
 ```rust
 println!("{:#?}", vec);                 // generic pretty printing
 println!("{:?}", vec);                  // `Debug` format (requires the `Debug` trait; if generic, requires `use std::fmt::Debug`)
+println!("{myvar} {myvar2:?}");         // interpolate a variable (!), also with modifiers; expressions are not accepted
 
 eprintln!("Error!");                    // print on stderr!
 
@@ -1387,7 +1388,7 @@ opt.is_some_and(|n| func(n)) {  } // Option -> bool; unstable, equivalent to `ma
 // There are more compact ways, but they're not as clear
 opt.is_none() || opt.unwrap() == value
 
-// Convenient pattern. Companion APIs:
+// Convenient pattern for error handling. Companion APIs:
 //
 // - `unwrap_or`:         eagerly evaluated
 // - `unwrap_or_default`: invokes the `default()` (!!)
@@ -1423,7 +1424,7 @@ if result.is_ok() { /* ... */ }
 //
 res.or(res2);
 
-// Control flow based on return value
+// Control flow based on return value (error handling; leaves the value inside the Option).
 //
 res.or_else(|e| f(e)).or_else(|e| f2(e));
 
