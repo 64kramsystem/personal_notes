@@ -1,3 +1,10 @@
+## Wed 02/Nov/2022
+
+- Studies: Gamedev
+  - Tricks of the Game Programming Gurus
+    - [x] 13. Synthetic Intelligence
+    - [ ] 14. Linking Up
+
 ## Tue 01/Nov/2022
 
 - Open Source: RustDesk
