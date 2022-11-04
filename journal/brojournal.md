@@ -1,3 +1,9 @@
+## Fri 04/Nov/2022
+
+- Studies: Gamedev
+  - Tricks of the Game Programming Gurus
+    - [x] 14. Linking Up
+
 ## Thu 03/Nov/2022
 
 - Studies: Gamedev
