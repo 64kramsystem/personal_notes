@@ -18,12 +18,7 @@
     - [Print a stack trace on segfault](#print-a-stack-trace-on-segfault)
     - [Find the current executable filename](#find-the-current-executable-filename)
     - [Build a C program's call graph](#build-a-c-programs-call-graph)
-  - [Compiler/builder stuff](#compilerbuilder-stuff)
-    - [CMake](#cmake)
-    - [Find compilation commands](#find-compilation-commands)
   - [Common issues](#common-issues)
-    - [Error `glibconfig.h: No such file or directory`](#error-glibconfigh-no-such-file-or-directory)
-    - [Error `cannot find install-sh, install.sh, or shtool in ...`](#error-cannot-find-install-sh-installsh-or-shtool-in-)
     - [Error `multiple definition of '<variable>'` (linker)](#error-multiple-definition-of-variable-linker)
 
 ## Requirements
@@ -200,78 +195,9 @@ VSC has a plugin to display Graphviz files; dotty is terrible; PDF format is goo
 
 Other help [here](https://www.gson.org/egypt/egypt.html).
 
-## Compiler/builder stuff
-
-Configure compilation:
-
-- `-static`         : compile statically
-- `-Dmacro[=value]` : define a macro (e.g. for `ifdef`); the option is cumulative
-
-### CMake
-
-```sh
-# Set variables via `-D`.
-
-# Specify the compiler:
-#
-cmake -D CMAKE_C_COMPILER=$c_compiler_full_path -D CMAKE_CXX_COMPILER=$cpp_compiler_full_path $project_path
-
-# To add extra CFLAGS:
-#
-sed -i '/^project/ a set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fdump-rtl-expand")' CMakeLists.txt
-
-# Clean (`cmake --target clean`) doesn't really work, as many commands may be issued. Best thing is
-# to clean the repo.
-#
-rm .gitignore
-git clean -fd .
-git checkout .gitignore
-```
-
-### Find compilation commands
-
-There are a few options:
-
-- CMake can generate the compile commands: `cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1`, which outputs to `compile_commands.json`
-- [intercept-build](https://github.com/immunant/c2rust#-with-intercept-build)
-- [build-logger](https://github.com/Ericsson/codechecker/tree/master/analyzer/tools/build-logger)
-  - this also includes linking commands
-- `bear` tool, which generates the compile options for each file (`bear make`)
-
-Alternative: wrap the compiler and linker in proxy scripts that log the commands 🤓.
-
-Background [here](https://immunant.com/blog/2020/01/quake3).
-
 ## Common issues
 
-### Error `glibconfig.h: No such file or directory`
-
-See https://github.com/dusty-nv/jetson-inference/issues/6:
-
-```sh
-sudo ln -s /usr/lib/x86_64-linux-gnu/glib-2.0/include/glibconfig.h /usr/include/glib-2.0/
-```
-
-or try this:
-
-```sh
-gcc pkg-config --cflags glib-2.0 test.c pkg-config --libs glib-2.0
-```
-
-or suggested include path (maybe should be `/usr/lib/x86_64-linux-gnu/glib-2.0/include/glibconfig.h`?):
-
-```
-${workspaceFolder}/** /usr/include/glib-2.0/**
-```
-
-### Error `cannot find install-sh, install.sh, or shtool in ...`
-
-Execute:
-
-```sh
-autoreconf -vif
-# follow up with ./configure etc.
-```
+See also [build errors](c_compiling_building_makefile.md#build-errors).
 
 ### Error `multiple definition of '<variable>'` (linker)
 
