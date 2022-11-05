@@ -1,8 +1,29 @@
+## Sat 05/Nov/2022
+
+- Studies: Gamedev
+  - [x] Tricks of the Game Programming Gurus
+    - [x] 14. Linking Up
+    - ~~15. The Toolchest~~
+    - ~~16. Creating Art for Your Game~~
+    - [x] 17. Parallax Scrolling Techniques
+    - [x] 18. Optimization Techniques
+    - [x] 19. Warlock
+- Open Source: mysql2 gem
+  - [x] Fight investigate gem grash
+    - [x] Report findings on GH issue
+- Studies: Rust
+  - [x] Fight investigate reason for BCK error (-> Rust edition (!!!))
+- Open Source: CodeCrafter SQLite Starter Rust
+  - [x] Open PR with cleanups
+- Studies: Gamedev/Algos/Maths
+  - [ ] Super Fast Ray Casting in Tiled Worlds using DDA
+  - [ ] Review webcasts
+
 ## Fri 04/Nov/2022
 
 - Studies: Gamedev
   - Tricks of the Game Programming Gurus
-    - [x] 14. Linking Up
+    - [ ] 14. Linking Up
 
 ## Thu 03/Nov/2022
 
