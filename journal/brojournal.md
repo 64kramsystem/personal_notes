@@ -1,3 +1,14 @@
+## Sun 06/Nov/2022
+
+- Open Source: CodeCrafter SQLite Starter Rust
+  - [x] Add other suggestion to the PR
+- SWE: Practice
+  - [x] CodeCrafters: SQLite/Rust
+  - [ ] Brutal fight with last stage
+    - [x] Report bug+fix
+    - [x] Solution with test db
+    - [ ] Unclear issue with new test db (?)
+
 ## Sat 05/Nov/2022
 
 - Studies: Gamedev
