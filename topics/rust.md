@@ -601,12 +601,13 @@ inspect(|v|)           // Executes the function, without affecting the chain (us
 by_ref()               // Converts the iterator to mutable references (e.g. `String.lines().by_ref()...`)
 cycle()                // Endless repeating
 
-// Ruby :times can be emulated via ranges.
+// Ruby :times can be emulated via ranges or repeat_with().
 // Range supports only the `into_iter()` iterator, but no iterator invocation is actually needed.
 // There is `[try_]for_each()`, but they provide no advantage over a standard iteration.
 //
 (0..SHARKS_COUNT).map(|x| 2 * x).collect::<Vec<_>>();
 (0..SHARKS_COUNT).for_each(|x| println!("{}", x)); // for_each() returns no values
+iter::repeat_with(|| next_value()).take(COUNT).collect::<Vec<_>>;
 
 // !! Option and Result are iterators !!
 // This is very clever, as it explains some neat iterator APIs design
@@ -1585,6 +1586,12 @@ pub fn myfailfn() -> MyResult<File> {
 
 `let` can be used to destructure (e.g. a struct) even without being an `if let`!
 
+`let else` pattern; the difference with `if let` is in the scope of the inner value:
+
+```rs
+let Expression::Identifier(table_name) = table_name else { panic!() };
+```
+
 (for testing a value directly, one can use `value.is_none()`/`value.is_some()`).
 
 ```rust
@@ -1929,6 +1936,8 @@ Some operators:
 - `std::ops::Add/Sub/Mul/Div/Rem`: `self.add`, etc -> `Output` (`Rem`=%)
 - `PartialEq`: `&self.eq`
 - `std::ops::Neg`: `self.neg` -> `Output` (unary negation)
+
+Use (`Partial`)`Ord` in order to overload comparison operators.
 
 In order to overload on a trait, use the following syntax:
 
