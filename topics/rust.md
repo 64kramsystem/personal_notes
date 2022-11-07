@@ -404,6 +404,18 @@ where F: FnMut(&mut Player),
     let player = self.players.borrow_mut(player_h);
     f(player)
 }
+
+// Function returning different (but compatible) closures.
+// The return value can be passed around as fat pointer (&*).
+//
+fn build_values_filter() -> Box<dyn Fn(&Value) -> bool> {
+    if true {
+        let right_string = prepare_right_string();
+        Box::new(|value| { value.inner_string() == right_string })
+    } else {
+        Box::new(|_| true)
+    }
+}
 ```
 
 Functions can be assigned to variables (function pointers); their type is `fn` (don't confuse with `Fn`!!). However, they can't reference the context, and functions defined inside a function can't be assigned to a variable.

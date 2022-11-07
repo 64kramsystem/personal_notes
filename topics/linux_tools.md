@@ -46,7 +46,6 @@
   - [Wine](#wine)
   - [Build the Linux kernel](#build-the-linux-kernel)
     - [Building the Ubuntu mainline kernel](#building-the-ubuntu-mainline-kernel)
-      - [Ubuntu 6.1+ packaging/config](#ubuntu-61-packagingconfig)
     - [Other config notes](#other-config-notes)
 
 ## ls
@@ -1220,12 +1219,7 @@ dpkg-buildpackage --build=binary -d
 ```
 
 The Canonical configurations are under `debian.master/config/amd64`; they're not included in the `defconfig` target, and can be merged, but they won't build with the standard method.
-
-#### Ubuntu 6.1+ packaging/config
-
-Versions from 6.1 onwards include additional packages; one of them is `linux-buildinfo`, which includes the configuration.
-
-If it's possible to generate only that package, it could be the quickest way to extract the configuration.
+Versions from 6.1 onwards include additional packages; one of them is `linux-buildinfo`, which includes the configuration, but it seems that it's not possible to build that alone.
 
 ### Other config notes
 
