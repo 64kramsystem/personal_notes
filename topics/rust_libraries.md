@@ -773,6 +773,8 @@ cargo add [--features=a,b] $crate_ref            # by default, the version speci
 
 ## Crates
 
+List of popular/suggested crates: https://blessed.rs/crates.
+
 ### Partial/more flexible defaults (`smart-default`)
 
 ```rust

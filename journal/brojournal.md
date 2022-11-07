@@ -1,3 +1,17 @@
+## Mon 07/Nov/2022
+
+- SWE: Practice
+  - [x] CodeCrafters: Send feedback
+- Project: Commercial Game Sources
+  - [x] Add Amnesia: A Machine For Pigs
+  - [x] Add Blake Stone: Planet Strike
+  - [x] Add Pinball Fantasies
+- Admin
+  - [x] Flush pool
+- Tools
+  - [x] Study PlantUML, applied to nested tables
+    - [x] Implement SQLite interior index page
+
 ## Sun 06/Nov/2022
 
 - Open Source: CodeCrafter SQLite Starter Rust
