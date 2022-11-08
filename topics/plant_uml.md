@@ -2,9 +2,14 @@
 
 - [PlantUML](#plantuml)
   - [General info](#general-info)
+  - [Visual Configuration](#visual-configuration)
+    - [Text Styling](#text-styling)
+    - [Blocks Layout](#blocks-layout)
   - [Class diagram](#class-diagram)
-    - [JSON (also best for tables/nesting)](#json-also-best-for-tablesnesting)
+    - [JSON](#json)
+    - [Styling](#styling)
   - [Nesting](#nesting)
+    - [JSON: Table (non-annotated) version:](#json-table-non-annotated-version)
     - [Class diagram: Class pointing to other classes](#class-diagram-class-pointing-to-other-classes)
     - [Class diagram: Package with classes inside](#class-diagram-package-with-classes-inside)
     - [Sequence diagram](#sequence-diagram)
@@ -12,13 +17,73 @@
 ## General info
 
 - Online editor: https://www.planttext.com
-- Class diagram: https://plantuml.com/class-diagram
 - Object diagram: https://plantuml.com/object-diagram
 - General metadata: https://plantuml.com/commons
 
 The header (`@startuml`) and footer (`@enduml`) are optional.
 
+Inline comments are generally not supported.
+
+## Visual Configuration
+
+### Text Styling
+
+```plantuml
+' list fonts; must be the only command in the doc
+'
+' listfonts
+
+' set global background (behind class boxes) color
+'
+skinparam backgroundColor Green
+
+' set font; the font style, e.g. monospaced, is set directly on the text, not here.
+' styling does not affect edge referencing.
+'
+skinparam classFontName "DejaVu Sans"
+
+' Double quotes: monospaced
+' Color tag: text color
+'
+class MyClass {
+  ""Foo foo""
+  <color:green>""Foo foo""
+}
+```
+
+### Blocks Layout
+
+Aligning is not directly supported; there are [different workarounds](https://stackoverflow.com/q/11557426):
+
+```plantuml
+' The Graphviz directive works, but it's applied to the whole document
+'
+' left to right direction
+
+' Via aligned edges:
+'
+class vic << Vic >> {
+  VicMemory vic_memory
+}
+' For bidirectional edges, define two directed edges
+vic::vic_memory -right-> vic_memory
+vic::vic_memory <-left- vic_memory
+
+' Hidden edges work if no edges are required:
+'
+Bob -[hidden] Alice
+
+' Grouping is suggested, but doesn't work if there are edges across members:
+'
+together {
+  class A
+  class B
+}
+```
+
 ## Class diagram
+
+Reference: https://plantuml.com/class-diagram
 
 Nice way to create boxes with entries, and connect them (also with entries).
 
@@ -51,13 +116,13 @@ class vic << Vic >> {
 vic::vic_memory --> vic_memory
 ```
 
-### JSON (also best for tables/nesting)
+### JSON
 
 Reference: https://plantuml.com/json
 
-Annotated form: probably the best of all; looks great!
+Annotated form: probably the best for nesting; looks great (althought it relies on a hack - duplicate keys).
 
-The alignment is inherent; non-string values are separated from the parent, connected with a dotted arrow:
+The alignment is inherent; non-string values are separated from the parent, connected with a dotted arrow.
 
 ```plantuml
 ' It seems that `title`, `caption` and so on have no effect (likely because it's formally not UML).
@@ -65,33 +130,44 @@ The alignment is inherent; non-string values are separated from the parent, conn
 ' Can use `\\n` to display on multiple lines.
 '
 @startjson
-' Can annotate with the following, but won't work in this case, since this is a hack because of the
-' multiple keys:
-'
-' #highlight "u8[]"
-'
+' See the next chapter for styling notes.
+#highlight "Page Header"
+#highlight "u16[]"
+#highlight "u8[]"
+#highlight "Cell[]"
+
+#highlight "Page Header" / "u8"
+#highlight "Page Header" / "u16"
+#highlight "Page Header" / "u16 "
+#highlight "Page Header" / "u16  "
+#highlight "Page Header" / "u8"
+
+#highlight "Cell[]" / "Payload" / "Record Header"
+#highlight "Cell[]" / "Payload" / "Record Header" / "varint"
+#highlight "Cell[]" / "Payload" / "Record Header" / "varint[]"
+
+#highlight "Cell[]" / "Payload" / "Record Body"
 {
-   "<color:green>Page Header": {
-     ' Styling (color) here. In this case, we display the shared elements across all page types.
-     "<color:green>u8":  "Page type",
-     "<color:green>u16": "(ignore)",
-     "<color:green>u16": "Cells count",
-     "<color:green>u16": "(ignore)",
-     "<color:green>u8":  "(ignore)",
-     "u32":              "Rightmost pointer"
+   "Page Header": {
+     "u8":    "Page type",
+     "u16":   "(ignore)",
+     "u16 ":  "Cells count",
+     "u16  ": "(ignore)",
+     "u8":    "(ignore)",
+     "u32":   "Rightmost pointer"
    },
-   "<color:green>u16[]":  "Cell pointers",
-   "<color:green>u8[]":   "(ignore)",
-   "<color:green>Cell[]": {
-     "u32":               "Left child pointer",
+   "u16[]":  "Cell pointers",
+   "u8[]":   "(ignore)",
+   "Cell[]": {
+     "u32":          "Left child pointer",
      "Payload": {
-       "<color:green>Record Header": {
-         "<color:green>varint":   "Total header size",
-         "<color:green>varint[]": "Serial (column) types"
+       "Record Header": {
+         "varint":   "Total header size",
+         "varint[]": "Serial (column) types"
        },
-       "<color:green>Record Body": {
+       "Record Body": {
          "u8[][]": "Keys",
-         "varint":  "RowId"
+         "varint": "RowId"
        }
      }
    }
@@ -99,11 +175,47 @@ The alignment is inherent; non-string values are separated from the parent, conn
 @endjson
 ```
 
-Table (non-annotated) version:
+### Styling
+
+The text of a cell can be colored by tagging (prefixing) the value string, however, this doesn't allow coloring "pointer" cells (e.g. the empty cell for "Value2").
+
+```puml
+@startjson
+{
+   "<color:green>Key": "Value",
+   "Key2" : {}
+}
+@endjson
+```
+
+The background color of full tuples can be colored via highlight (solving the former problem), but must use a workaround (appending trailing spaces) to address duplicate keys:
+
+```puml
+@startjson
+
+#highlight "Key2" / "Key3 "
+#highlight "Key2" / "Key3" / "0"
+
+{
+   "Key1": "Value1",
+   "Key2" : {
+     "Key3": ["Value3a", "Value3b"],
+     "Key3 ": "Value3c"
+   }
+}
+@endjson
+```
+
+## Nesting
+
+It seems that nesting is not supported (it doesn't make sense); there are different approaches.
+
+### JSON: Table (non-annotated) version:
 
 ```plantuml
 ' Spaces are not supported in the header.
 ' Interfaces are supported but not single brackets.
+'
 json InteriorIndexPage << No overflow >> {
    "PageHeader": {
      "u8":   "Page type",
@@ -130,10 +242,6 @@ json InteriorIndexPage << No overflow >> {
    }
 }
 ```
-
-## Nesting
-
-It seems that nesting is not supported (it doesn't make sense); there are different approaches.
 
 ### Class diagram: Class pointing to other classes
 

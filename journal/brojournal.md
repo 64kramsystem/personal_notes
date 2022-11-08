@@ -1,3 +1,32 @@
+## Tue 08/Nov/2022
+
+- Project: Schedule manager
+  - [x] Minor refactorings
+  - [x] List mode: Start from today on export mode
+- Project: Calendar manager
+  - [x] Minor refactorings
+  - [x] Sync mode: Start from today
+  - [x] Sync mode: Commit by default, and convert commit option to "no commit"
+- Admin
+  - [ ] Plan cycle
+  - [x] Minor updates to GH profile
+- Studies
+  - [x] Perl: Ask question about matching variables
+  - [x] PlantUML: Experiment with alternative styling
+- Project: PPA Packaging
+  - [x] Fix prepare_ruby_repository metadata (and update format)
+  - [x] Use regex (instead of printf) format for the package name (in repository mode)
+  - [x] Update README, describing both workflows
+- Writings: CodeCrafters SQLite doc/article
+  - [x] Create repository
+  - [x] Write db page diagrams
+    - [x] Improve Interior index page styling
+    - [x] Leaf index page
+    - [x] Interior index page
+    - [x] Leaf table page
+  - [x] Write article
+    - [x] Fight deployed version missing article
+
 ## Mon 07/Nov/2022
 
 - SWE: Practice
@@ -10,7 +39,9 @@
   - [x] Flush pool
 - Tools
   - [x] Study PlantUML, applied to nested tables
-    - [x] Implement SQLite interior index page
+- Writings: CodeCrafters SQLite doc/article
+  - [ ] Write db page diagrams
+    - [x] Interior index page
 
 ## Sun 06/Nov/2022
 
