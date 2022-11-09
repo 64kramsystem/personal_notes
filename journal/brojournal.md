@@ -1,3 +1,17 @@
+## Wed 09/Nov/2022
+
+- Studies
+  - PlantUML
+    - [x] Font styling
+- Admin
+  - [x] Plan cycle
+    - [x] Search next (/others) ray casting book/resource
+- Project: 10Rogue Rust port
+  - [x] Find 10Rogue code walkthrough
+  - [x] Prepare repo
+- Studies: Gamedev/Algos/Maths
+  - [ ] Ray-Casting Tutorial For Game Development And Other Purposes
+
 ## Tue 08/Nov/2022
 
 - Project: Schedule manager
