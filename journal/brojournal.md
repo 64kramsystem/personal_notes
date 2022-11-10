@@ -1,3 +1,11 @@
+## Thu 10/Nov/2022
+
+- Project: 10Rogue Rust port
+  - [x] Copy analysis to repo
+  - [x] Read code review: https://www.maizure.org/projects/decoded-rogue/index.html
+- Studies: Gamedev/Algos/Maths
+  - [ ] Ray-Casting Tutorial For Game Development And Other Purposes
+
 ## Wed 09/Nov/2022
 
 - Studies
