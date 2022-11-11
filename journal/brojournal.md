@@ -1,10 +1,25 @@
+## Fri 11/Nov/2022
+
+- Project: PPA packaging
+  - [x] Improve handling of package name replacement regex variable
+- SWE: Linux tools
+  - [x] Perl: Review using template as regex replacement
+- Tools: C2Rust
+  - [x] Fight compilation issue
+    - [x] Investigate and report on GH Issue
+- Project: Rogue Rust port
+  - [x] Fix code to build in Rust
+  - [x] Merge main() methods
+  - [ ] Port randomization routines
+    - [x] Investigate 16-bit data types width
+
 ## Thu 10/Nov/2022
 
-- Project: 10Rogue Rust port
+- Project: Rogue Rust port
   - [x] Copy analysis to repo
   - [x] Read code review: https://www.maizure.org/projects/decoded-rogue/index.html
 - Studies: Gamedev/Algos/Maths
-  - [ ] Ray-Casting Tutorial For Game Development And Other Purposes
+  - [x] Ray-Casting Tutorial For Game Development And Other Purposes
 
 ## Wed 09/Nov/2022
 
@@ -14,8 +29,8 @@
 - Admin
   - [x] Plan cycle
     - [x] Search next (/others) ray casting book/resource
-- Project: 10Rogue Rust port
-  - [x] Find 10Rogue code walkthrough
+- Project: Rogue Rust port
+  - [x] Find Rogue code walkthrough
   - [x] Prepare repo
 - Studies: Gamedev/Algos/Maths
   - [ ] Ray-Casting Tutorial For Game Development And Other Purposes
