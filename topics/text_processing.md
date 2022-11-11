@@ -349,6 +349,13 @@ Apply operations inside regexes (see https://perldoc.perl.org/perlrebackslash.ht
 # Convert next character: `\u`: upper case, `\l`: lower case
 #
 perl -i -pe 's/- (\w)/- \u$1/'
+
+# Use env vars as templates. WATCH OUT! They need double interpretation (see https://stackoverflow.com/a/6082338),
+# which also implies that the replacement is a Perl statement, not a string.
+#
+echo foo | REPL='"$1$1"' perl -pe 's/(foo)/$ENV{REPL}/ee'           # foofoo
+echo foo | REPL='$1.$1'  perl -pe 's/(foo)/$ENV{REPL}/ee'           # foofoo
+echo foo | REPL='$1$1'   perl -pe 's/(foo)/"\"".$ENV{REPL}."\""/ee' # foofoo
 ```
 
 ### Formatting/printing

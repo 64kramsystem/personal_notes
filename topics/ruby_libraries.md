@@ -47,6 +47,7 @@
       - [SMTP](#smtp)
       - [Ping (ICMP)](#ping-icmp)
       - [Convert curl request to Ruby](#convert-curl-request-to-ruby)
+      - [TCP Server](#tcp-server)
   - [Solargraph](#solargraph)
   - [Databases](#databases)
     - [SQLite 3](#sqlite-3)
@@ -1160,6 +1161,21 @@ send_email(SENDER_EMAIL, RECIPIENT_EMAILS, email_text, password, cc: CC_EMAILS, 
 #### Convert curl request to Ruby
 
 See https://jhawthorn.github.io/curl-to-ruby.
+
+#### TCP Server
+
+```rb
+require 'socket'
+
+server = TCPServer.new(2000) # port
+
+loop do
+  client = server.accept    # Wait for a client to connect
+  message = client.gets     # WATCH OUT! gets() expects a newline terminator
+  client.puts "Response!"
+  client.close
+end
+```
 
 ## Solargraph
 

@@ -54,7 +54,12 @@ int main(int argc, char **argv) {
 - `char`            : i8
 - `[unsigned] short`: 2 bytes
 - `[unsigned] int`  : 2/4 bytes (typically 4)
+- `long`            : 8 bytes (4 for 32 bits o/s)
 - `[s]size_t`       : alias; approximately Rust usize/isize (`s`igned)
+
+To verify, run `printf("Size: %ld\n", sizeof(myvar));`
+
+For old O/Ss, see [here](http://synfare.com/JO59hw/hwdocs/sizes.html).
 
 ### Base functions
 

@@ -762,6 +762,12 @@ let abc = std::hint::black_box(-1);
 
 ## Rust utilities (`cargo install`)
 
+```sh
+# Install crate from main branch of a repository.
+#
+cargo install --git https://the.url.com/of/repo
+```
+
 ### Cargo crates handling (`cargo-edit`)
 
 ```sh
