@@ -1,3 +1,17 @@
+## Sat 12/Nov/2022
+
+- Project: OpenScripts
+  - [x] Improvements and refactorings to `clean_kernel_packages`/`KernelVersion`
+  - [x] clean_kernel_packages: Remove orphan headers
+- Project: Post-C2Rust Refactoring Tool
+  - [x] Fight find out how to connect to a Rust Analyzer VSC instance
+- Project: Rogue Rust port
+  - [x] Check how to display proper fonts
+  - [x] Merge `c2rust-lib` module into `main`
+  - [x] De-extern `seed`
+  - [x] De-extern rnd()
+  - [x] Port randomization functions
+
 ## Fri 11/Nov/2022
 
 - Project: PPA packaging

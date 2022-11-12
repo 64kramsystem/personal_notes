@@ -1168,7 +1168,7 @@ Build:
 # The firmware files are not included, so include the latest `linux-firmware` package, if needed.
 # The official firmware repo is https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git.
 #
-make -j $(nproc) bindeb-pkg LOCALVERSION=-tuxinvader-sav
+make -j $(nproc) bindeb-pkg LOCALVERSION=-sav
 
 # If the build is interrupted, run these, otherwise wacky errors may happen, and restart from scratch.
 # mrproper does not checkout (git) changed files.
