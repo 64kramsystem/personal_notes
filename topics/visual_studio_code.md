@@ -160,9 +160,10 @@ Define macros:
 
 #### Configuration/errors handling
 
+- a general approach to solve include/define problems is to set `compileCommands` in `c_cpp_properties.json`
 - if the project is managed by CMake, and CMake Tools doesn't gather the configuration:
   - make sure that the `c_cpp_properties.json` exists
   - make sure to configure the right cmake binary (e.g. if provided via python)
   - generate the compile commands, and extract the defines/includes from there
-- in order to solve include problems, just click on the lighbulb, and select the appropriate option
+- in order to solve specific include problems, just click on the lighbulb, and select the appropriate option
   - for unclear reasons, this is not always available
