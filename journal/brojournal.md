@@ -1,15 +1,28 @@
+## Sun 13/Nov/2022
+
+- Studies: Rust
+  - [x] Review all options for static vars and lazy initialization
+- Project: Post-C2Rust Refactoring Tooling
+  - [ ] `deextern_vars`
+    - [x] Preliminary implementation
+- Admin: Tools
+  - [x] Fight find app to read codebases on the ipad
+  - [ ] Fight configure intellisense for the Rogue Rust SDL project
+- Studies: Gamedev/Algos/Maths
+  - [ ] Super Fast Ray Casting in Tiled Worlds using DDA
+
 ## Sat 12/Nov/2022
 
 - Project: OpenScripts
   - [x] Improvements and refactorings to `clean_kernel_packages`/`KernelVersion`
   - [x] clean_kernel_packages: Remove orphan headers
-- Project: Post-C2Rust Refactoring Tool
+- Project: Post-C2Rust Refactoring Tooling
   - [x] Fight find out how to connect to a Rust Analyzer VSC instance
 - Project: Rogue Rust port
   - [x] Check how to display proper fonts
   - [x] Merge `c2rust-lib` module into `main`
   - [x] De-extern `seed`
-  - [x] De-extern rnd()
+  - [x] Port rnd()
   - [x] Port randomization functions
 
 ## Fri 11/Nov/2022

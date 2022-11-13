@@ -45,8 +45,7 @@
       - [Macro-based RSpec-style testing (`demonstrate`)](#macro-based-rspec-style-testing-demonstrate)
       - [Cucumber](#cucumber)
       - [Utilities](#utilities)
-    - [Static/global variables (`lazy_static`, `once_cell`, `thread_local!`)](#staticglobal-variables-lazy_static-once_cell-thread_local)
-    - [Single-time initialization (`std::sync::Once`)](#single-time-initialization-stdsynconce)
+    - [Static/global variables and initialization (several crates)](#staticglobal-variables-and-initialization-several-crates)
     - [Concurrency (multithreading) tools (`rayon`/`crossbeam`)](#concurrency-multithreading-tools-rayoncrossbeam)
     - [Enum utils, e.g. iterate (`strum`)/convert(`num`)](#enum-utils-eg-iterate-strumconvertnum)
     - [Convenience macros for operator overloading (`auto_ops`)](#convenience-macros-for-operator-overloading-auto_ops)
@@ -1501,7 +1500,7 @@ assert_float_absolute_eq!(3.0, 3.9, 1.0);
 asserting(&"test condition").that(&1).is_equal_to(&2);
 ```
 
-### Static/global variables (`lazy_static`, `once_cell`, `thread_local!`)
+### Static/global variables and initialization (several crates)
 
 Static variables can be defined inside a function (c-style) or at the root level; they need a const expression. They are unsafe when mutable. The difference from const is that they're associated with only one memory location.
 
@@ -1511,38 +1510,57 @@ static HELLO_WORLD: u32 = 1000;
 
 Vanilla mutable static vars are unsafe; the safe alternatives are using [atomics](rust.md#atomic-primitive-type-wrappers) (if the architecture supports it) or wrapping with a `Mutex`/`RwLock` (both Rust 1.63+).
 
-Thread-local variables:
+Static init:
+
+```rs
+// There are several different options; check them out in the [project readme](https://gitlab.com/okannen/static_init)
+//
+#[dynamic]
+static mut L1: Vec<i32> = vec![1,2,3,4,5,6];
+```
+
+Lazy static:
+
+```rs
+lazy_static::lazy_static! {
+  // For mutability, wrap in a Mutex.
+  //
+  static ref VERTEX_REGEX: Regex = Regex::new(r"\w$").unwrap();
+}
+```
+
+Once cell:
+
+```rs
+static INSTANCE: OnceCell<Logger> = OnceCell::new();
+
+INSTANCE.set(logger).unwrap();
+let logger = INSTANCE.get().unwrap();
+```
+
+Thread-local variables (std):
 
 ```rust
-// In stdlib.
-//
 thread_local!(static TL_VAR: RefCell<u32> = RefCell::new(123));
 
 TL_VAR.with(|tl_var_cell| {
   let mut tl_var_ref = tl_var_cell.borrow_mut();
   *tl_var_ref = 32;
 });
-
-TL_VAR.with(|tl_var_cell| {
-  let tl_value = tl_var_cell.borrow();
-  println!("TLV: {}", tl_value); // 32
-});
 ```
 
-### Single-time initialization (`std::sync::Once`)
+Once - use to invoke a certain function only once:
 
 ```rs
-// Makes sure that this initialization is invoked only once, even if called multiple times.
-//
-fn ensure_initialized() {
-    static ONCE: std::sync::Once = std::sync::Once::new();
-    ONCE.call_once(|| unsafe {
-        check(raw::git_libgit2_init()).expect("initializing libgit2 failed");
-        assert_eq!(libc::atexit(shutdown), 0);
-    });
-}
-```
+static ONCE: Once = Once::new();
 
+// Safe to invoke multiple times.
+//
+ONCE.call_once(|| unsafe {
+    check(raw::git_libgit2_init()).expect("initializing libgit2 failed");
+    assert_eq!(libc::atexit(shutdown), 0);
+});
+```
 
 ### Concurrency (multithreading) tools (`rayon`/`crossbeam`)
 
@@ -1886,3 +1904,16 @@ c2rust transpile --binary catacomb compile_commands.json
 ```
 
 The [blog](https://immunant.com/blog) contains handling of complex real-world cases.
+
+General procedure:
+
+- Move files to another dir, splitting base dir and `src`
+- Prepend `src` to paths in `Cargo.toml`
+- Configure `build.rs` with required libraries
+- `cargo fmt`
+- Merge `c2rust-lib` module into `main`
+  - move all the imports into `main`
+  - delete `c2rust-lib.rs`
+  - remove the library configuration from `Cargo.toml`
+- Merge two main functions
+- `cargo clippy --fix`
