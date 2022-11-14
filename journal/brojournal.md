@@ -1,3 +1,10 @@
+## Mon 14/Nov/2022
+
+- Project: Schedule Manager
+  - [x] Reworker: Update leftover term whitelisting approach
+- Admin: Tools
+  - [x] Brutally fight configure VSC for the Rogue Rust SDL project
+
 ## Sun 13/Nov/2022
 
 - Studies: Rust
@@ -7,7 +14,7 @@
     - [x] Preliminary implementation
 - Admin: Tools
   - [x] Fight find app to read codebases on the ipad
-  - [ ] Fight configure intellisense for the Rogue Rust SDL project
+  - [ ] Fight configure VSC for the Rogue Rust SDL project
 - Studies: Gamedev/Algos/Maths
   - [ ] Super Fast Ray Casting in Tiled Worlds using DDA
 

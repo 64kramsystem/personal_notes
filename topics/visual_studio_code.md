@@ -9,10 +9,9 @@
   - [Configuration](#configuration)
   - [C/C++](#cc)
     - [Setting up a project](#setting-up-a-project)
-    - [Multi-root and makefile warning](#multi-root-and-makefile-warning)
-    - [Find compile commands](#find-compile-commands)
-    - [Includes/Macros](#includesmacros)
-      - [Configuration/errors handling](#configurationerrors-handling)
+      - [Makefile-only projects](#makefile-only-projects)
+    - [CMake](#cmake)
+    - [Manually set Includes/Macros](#manually-set-includesmacros)
 
 ## Extensions
 
@@ -97,25 +96,51 @@ See https://code.visualstudio.com/docs/editor/variables-reference for variables;
 
 ### Setting up a project
 
-The `Makefile tools` extension takes care of the project configuration.
+_READ THE WHOLE CHAPTER, AS THE MAKE TOOLS ARE A CLUSTERF*CK_
 
-Setup the basic options via UI (`C/C++: Edit Configurations (UI)`), which will create `.vscode/c_cpp_properties.json`, then tweak it, if necessary.
+The `Makefile tools` extension takes care of the project configuration; make sure to launch `C/C++: Edit Configurations (UI)`, which creates `.vscode/c_cpp_properties.json`.
 
-Some options can be found by observing `./configure`, and/or via bear (see below).
+The error "Makefile entry point not found" can be ignored; it can be worked around by symlinking the Makefile into the workspace root dir (`settings.json#makefilePath` won't fix the error).
+
+#### Makefile-only projects
+
+WATCH OUT!! Configuration errors may not be visible!!
+
+```json
+  // Sample configuration for a project that is built via `make all`; becomes the default.
+  //
+  "makefile.configurations": [
+    {
+      "name": "Default",
+      "makeArgs": [ "all" ],
+      // Add if the Makefile is not in the root directory.
+      //
+      "makeDirectory": "${workspaceFolder}/sdl_port_project/src"
+    }
+  ]
+```
+
+It seems that the extension own build result is the only way to configure defines/includes: settings configured in `settings.json`/`c_cpp_properties.json` (including `compileCommands`) don't have any effect.
+
+In order to test the configuration (some changes may *not* be applied):
+
+- there may be an internal confguration db, so run "Makefile: Clean configure" command
+- reset via "Reset the Makefile Tools Extension" command, and close/reopen the given file
+- errors can sometimes be detected by running the task `Makefile: Build the current target`, however, it may not display anything even in case of error
+
+### CMake
+
+Make sure to configure the right cmake binary (e.g. if provided via python).
 
 When a project is opened, the extension will perform a build dry run; it's better to run build (make) the project before, since some operations may be performed (e.g. generating files), that the dry run doesn't.
 
-### Multi-root and makefile warning
+NOT VERIFIED: the option `c_cpp_properties.json#compileCommands` may apply to this build type.
 
-In a multi-root setup, typically, a makefile warning is raised when the project is opened.
+### Manually set Includes/Macros
 
-If the projects are not actually executed, just touch a phony Makefile in the root directory.
+WATCH OUT! Remember that in Makefile-only projects, this section may not apply.
 
-### Find compile commands
-
-Follow [C notebook strategies](c.md#find-compilation-commands); then add `"compileCommands": "${workspaceFolder}/compile_commands.json"` to `.vscode/c_cpp_properties.json`.
-
-### Includes/Macros
+In order to solve specific include problems, click on the lighbulb, and select the appropriate option (for unclear reasons, this is not always available).
 
 Add include paths:
 
@@ -157,13 +182,3 @@ Define macros:
   "THREAD_SYSTEM_DEPENDENT_IMPLEMENTATION"
 ]
 ```
-
-#### Configuration/errors handling
-
-- a general approach to solve include/define problems is to set `compileCommands` in `c_cpp_properties.json`
-- if the project is managed by CMake, and CMake Tools doesn't gather the configuration:
-  - make sure that the `c_cpp_properties.json` exists
-  - make sure to configure the right cmake binary (e.g. if provided via python)
-  - generate the compile commands, and extract the defines/includes from there
-- in order to solve specific include problems, just click on the lighbulb, and select the appropriate option
-  - for unclear reasons, this is not always available
