@@ -30,6 +30,7 @@
   - [Handle system date/time](#handle-system-datetime)
   - [Job scheduling](#job-scheduling)
     - [Cron](#cron)
+      - [Schedule format](#schedule-format)
       - [Subminute granularity](#subminute-granularity)
     - [At](#at)
   - [Apparmor](#apparmor)
@@ -803,6 +804,14 @@ crontab -d   # delete
 ```
 
 `MAILTO=dest@email.com` (put on top) sends email.
+
+#### Schedule format
+
+In order to run something on boot, use `@reboot`, and *double check that it works* (see https://unix.stackexchange.com/a/109805):
+
+```sh
+@reboot date >> /var/log/reboots
+```
 
 #### Subminute granularity
 

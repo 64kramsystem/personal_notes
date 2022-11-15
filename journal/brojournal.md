@@ -1,3 +1,17 @@
+## Tue 15/Nov/2022
+
+- Admin: Studies
+  - [x] Search and buy old gamedev books
+- Admin: Tools
+  - [x] Some other investigations into VSC C projects handling
+- Project: Commercial Game Sources
+  - [x] Add Forsaken
+- Tools
+  - [x] Fight with finding pdf cropping program/service
+- Studies: Gamedev
+  - [ ] Black Art of 3D Game Programming
+    - [ ] Chapter 1: The Genesis of 3D Games
+
 ## Mon 14/Nov/2022
 
 - Project: Schedule Manager

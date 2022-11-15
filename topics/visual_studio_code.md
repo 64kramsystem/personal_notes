@@ -96,15 +96,17 @@ See https://code.visualstudio.com/docs/editor/variables-reference for variables;
 
 ### Setting up a project
 
-_READ THE WHOLE CHAPTER, AS THE MAKE TOOLS ARE A CLUSTERF*CK_
+_WATCH OUT! The whole C/C++ extensions ecosystem is a dumpster fire_; restarts is the only way to ensure that a configuration change is applied. When configuring a project, try if using `c_cpp_properties.json#compileCommands` is enough (and restart!), before enabling any extension.
 
-The `Makefile tools` extension takes care of the project configuration; make sure to launch `C/C++: Edit Configurations (UI)`, which creates `.vscode/c_cpp_properties.json`.
+When Intellisense doesn't work properly, `Go to definition` will send to the declaration, instead.
 
-The error "Makefile entry point not found" can be ignored; it can be worked around by symlinking the Makefile into the workspace root dir (`settings.json#makefilePath` won't fix the error).
+Make sure, in any case, to launch `C/C++: Edit Configurations (UI)`, which creates `.vscode/c_cpp_properties.json`.
 
 #### Makefile-only projects
 
-WATCH OUT!! Configuration errors may not be visible!!
+The `Makefile tools` extension handles Makefile-only projects, however *it overrides the C/C++ extension settings* (including `compile_commands.json`); the defines/includes are set based on the inspection of it automatic build result.
+
+The error "Makefile entry point not found" can be ignored; it can be worked around by symlinking the Makefile into the workspace root dir (`settings.json#makefilePath` won't fix the error).
 
 ```json
   // Sample configuration for a project that is built via `make all`; becomes the default.
@@ -120,9 +122,7 @@ WATCH OUT!! Configuration errors may not be visible!!
   ]
 ```
 
-It seems that the extension own build result is the only way to configure defines/includes: settings configured in `settings.json`/`c_cpp_properties.json` (including `compileCommands`) don't have any effect.
-
-In order to test the configuration (some changes may *not* be applied):
+WATCH OUT!! Configuration errors may not have a visible effect!! In order to test the configuration (some changes may *not* be applied):
 
 - there may be an internal confguration db, so run "Makefile: Clean configure" command
 - reset via "Reset the Makefile Tools Extension" command, and close/reopen the given file
@@ -133,8 +133,6 @@ In order to test the configuration (some changes may *not* be applied):
 Make sure to configure the right cmake binary (e.g. if provided via python).
 
 When a project is opened, the extension will perform a build dry run; it's better to run build (make) the project before, since some operations may be performed (e.g. generating files), that the dry run doesn't.
-
-NOT VERIFIED: the option `c_cpp_properties.json#compileCommands` may apply to this build type.
 
 ### Manually set Includes/Macros
 
