@@ -1,3 +1,22 @@
+## Wed 16/Nov/2022
+
+- Open Source
+  - [x] GameDev WG: Help beginner on FFI
+- Project: Openscripts
+  - [x] `clean_kernel_packages`: Print a special message when there is nothing to remove
+- Admin: Tools
+  - [x] Make update system script use new `clean_kernel_packages` information
+- Writings
+  - [x] Lesstechno article: Choosing components to optimally charge a laptop via USB-C
+- Admin: Studies
+  - [x] Sort and quickly review C64 ASM books
+- Gamedev/Rust
+  - [ ] Port Warlock (Tricks of the Game Programming Gurus) to Rust
+    - [x] Prepare DOS emulator
+    - [x] Prepare compiler/env
+      - [x] Review DOS-compatible compilers
+      - [x] Setup env (compile test program)
+
 ## Tue 15/Nov/2022
 
 - Admin: Studies
