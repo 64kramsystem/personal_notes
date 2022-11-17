@@ -1508,7 +1508,7 @@ Static variables can be defined inside a function (c-style) or at the root level
 static HELLO_WORLD: u32 = 1000;
 ```
 
-Vanilla mutable static vars are unsafe; the safe alternatives are using [atomics](rust.md#atomic-primitive-type-wrappers) (if the architecture supports it) or wrapping with a `Mutex`/`RwLock` (both Rust 1.63+).
+Vanilla mutable static vars are unsafe; the safe alternatives are using [atomics](rust.md#atomic-primitive-type-wrappers) (if the architecture supports it) or wrapping with a `Mutex`/`RwLock` (but allocations are not supported).
 
 Static init:
 
@@ -1522,9 +1522,11 @@ static mut L1: Vec<i32> = vec![1,2,3,4,5,6];
 Lazy static:
 
 ```rs
+static GLOBAL_STR: Mutex<Lazy<String>> = Mutex::new(Lazy::new(|| String::from("123")));
+
+// Version with macro; for mutability, wrap in a Mutex
+//
 lazy_static::lazy_static! {
-  // For mutability, wrap in a Mutex.
-  //
   static ref VERTEX_REGEX: Regex = Regex::new(r"\w$").unwrap();
 }
 ```
