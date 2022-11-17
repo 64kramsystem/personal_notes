@@ -1,3 +1,15 @@
+## Thu 17/Nov/2022
+
+- Open Source
+  - [x] Investigate and report `purple-facebook` breakage
+- Studies: Rust
+  - [x] Minor review options for global variables
+- Studies: Gamedev
+  - [ ] Black Art of 3D Game Programming
+    - [x] Chapter 1: The Genesis of 3D Games
+    - [x] Chapter 2: Elements of the Game
+    - [ ] Chapter 3: The Mysterious VGA Card
+
 ## Wed 16/Nov/2022
 
 - Open Source
