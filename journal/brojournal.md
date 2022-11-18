@@ -1,3 +1,11 @@
+## Fri 18/Nov/2022
+
+- Studies: Gamedev
+  - [ ] Black Art of 3D Game Programming
+    - [x] Chapter 3: The Mysterious VGA Card
+    - ~~Chapter 4: Waking the Dead with Animation~~
+    - ~~Chapter 5: Communicating with the Outside World~~
+
 ## Thu 17/Nov/2022
 
 - Open Source
