@@ -701,6 +701,10 @@ a+=1                              # WRONG!!! this is a string operation (if not 
 { mycommand 3>&2 2>&1 1>&3 | grep -v "skipme" >&3; } 3>&2 2>&1  # apply a filter to stderr output (see https://stackoverflow.com/a/40336333)
 
 exec 200> "$filename"                                   # associate a file to a file descriptor (create if not existing)
+
+# Send stdout/err to two different outputs! See https://stackoverflow.com/a/692407.
+#
+my_command > >(tee -a stdout.log) 2> >(tee -a stderr.log >&2)
 ```
 
 ## Substitutions
@@ -712,7 +716,7 @@ WATCH OUT!! Failing subtituted commands don't cause P.S. to exit with error!! Se
 For input file; typically used to feed output of multiple commands to another command:
 
 ```sh
-meld <(command_list_1) <(command_list_2)>
+meld <(command_list_1) <(command_list_2)
 ```
 
 For output file; typically used with tee, to both print to stdout and redirect to a pipeline:

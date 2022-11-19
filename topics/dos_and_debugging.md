@@ -2,6 +2,10 @@
 
 See virtualization DOSBox [section](virtualization.md#dosbox).
 
+For general resources, see [Awesome DOS](https://github.com/balintkissdev/awesome-dos).
+
+For compiling C programs, see C [section](c.md#compilers-for-16-bit-dos-target).
+
 ## DEBUG.COM commands
 
 - `U [address]`          disassemble

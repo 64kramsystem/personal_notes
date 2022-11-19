@@ -18,6 +18,7 @@
     - [Print a stack trace on segfault](#print-a-stack-trace-on-segfault)
     - [Find the current executable filename](#find-the-current-executable-filename)
     - [Build a C program's call graph](#build-a-c-programs-call-graph)
+  - [Compilers for (16-bit) DOS target](#compilers-for-16-bit-dos-target)
   - [Common issues](#common-issues)
     - [Error `multiple definition of '<variable>'` (linker)](#error-multiple-definition-of-variable-linker)
 
@@ -199,6 +200,19 @@ Useful options:
 VSC has a plugin to display Graphviz files; dotty is terrible; PDF format is good enough.
 
 Other help [here](https://www.gson.org/egypt/egypt.html).
+
+## Compilers for (16-bit) DOS target
+
+Use the OpenWatcom compiler; example:
+
+```sh
+export WATCOM=~/local/open_watcom_c # Required
+export PATH=$PATH:$WATCOM/binl64 # Many bins must be in the path
+# Large memory model; see other models at https://ptspts.blogspot.com/2020/04/openwatcom-exeprog.html
+owcc -bdos -mcmodel=l -I=$WATCOM/h -o ow-dosl.exe myprog.c
+```
+
+See also [djgpp](https://www.delorie.com/djgpp).
 
 ## Common issues
 

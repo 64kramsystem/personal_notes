@@ -1,3 +1,18 @@
+## Sat 19/Nov/2022
+
+- Open Source
+  - [x] Review and discuss ECS Bench Suite project status
+- Writings
+  - [x] Add article "Cropping PDFs to read them on tablets"
+- Studies: Gamedev
+  - [ ] Black Art of 3D Game Programming
+    - [x] Chapter 6: Dancing with Cyberdemons
+- Tools
+  - [x] System update: Continue if can't download extra packages
+  - [x] Repositories sync: Minor updates
+- Project: Openscripts
+  - [x] Open source `send_display_to_sleep` (supersedes `set_display_sleep_time`)
+
 ## Fri 18/Nov/2022
 
 - Studies: Gamedev
