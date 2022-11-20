@@ -1,3 +1,11 @@
+## Sun 20/Nov/2022
+
+- Gamedev/Rust
+  - [ ] Port Warlock (Tricks of the Game Programming Gurus) to Rust
+    - [x] Setup DOSBox
+    - [x] Compile with the original toolchain
+      - [x] Brutal fight with all the programs involved in the compilation
+
 ## Sat 19/Nov/2022
 
 - Open Source
@@ -7,6 +15,7 @@
 - Studies: Gamedev
   - [ ] Black Art of 3D Game Programming
     - [x] Chapter 6: Dancing with Cyberdemons
+    - [x] Chapter 7: The Magick of Thought
 - Tools
   - [x] System update: Continue if can't download extra packages
   - [x] Repositories sync: Minor updates
