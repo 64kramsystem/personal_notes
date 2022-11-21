@@ -21,7 +21,11 @@
     - [Reset problem](#reset-problem)
   - [Vagrant](#vagrant)
   - [WINE](#wine)
-  - [DOSBox](#dosbox)
+  - [DOSBox(-X)](#dosbox-x)
+    - [Key bindings](#key-bindings)
+    - [Floppy](#floppy)
+    - [Tools](#tools)
+    - [Basic configuration](#basic-configuration)
 
 ## Virtual disks
 
@@ -385,10 +389,61 @@ vagrant ssh-config $host | awk '/IdentityFile/ {print $NF}'
 
 If fonts are not rendering correctly, install the core fonts: `winetricks corefonts`.
 
-## DOSBox
+## DOSBox(-X)
 
-Sample execution:
+### Key bindings
+
+- `F12 + C`: for the configuration GUI
+- `F12 + O`: swap floppy (unclear if there is a GUI option)
+
+### Floppy
+
+IMGs can be mounted via `IMGMOUNT` command; multiple images can be mounted (only via command), and swapped via key binding:
 
 ```sh
-dosbox -c 'MOUNT C "."' -c 'C:' -c 'DEBUG SAMPLE.COM'
+# See bindings for swapping.
+#
+IMGMOUNT A ms_c-cpp_compiler_19920818/*.IMG
+```
+
+### Tools
+
+There is a bundled DPMI host (`CWSDPMI`), but it's not very robust. A better one is [HX](https://github.com/Baron-von-Riedesel/HX); run `C:\HX_PATH\BIN\HDPMI32` (`/r` make it resident).
+
+Under `Z:\TEXTUTILS` there are tools to change the text mode (e.g. to `80x50`), but beware that they may interfere with programs.
+
+### Basic configuration
+
+Full config reference: https://github.com/joncampbell123/dosbox-x/blob/master/dosbox-x.reference.full.conf.
+
+```conf
+[sdl]
+maximize = true
+
+[dosbox]
+fastbioslogo = true
+startbanner = false
+quit warning = false
+
+[render]
+aspect = true
+
+[cpu]
+# 486DX at 33MHz (https://dosbox-x.com/wiki/Guide%3ACPU-settings-in-DOSBox%E2%80%90X#_cycles)
+# PII/300 = 200000
+cycles = 12019
+# Enable for fastest CPU speed. WATCH OUT! This disables automatically after a keypress; see
+# https://dosbox-x.com/wiki/Guide%3AInstalling-Windows-3.x.
+turbo = false
+
+[fdc, primary]
+# Enable for fastest floppy speed. It's not clear if the controller should be enabled or not.
+instant mode = false
+
+[autoexec]
+# By default, the free size is whole disk; it's not clear if GBs of free size may cause programs to
+# crash, so better restrict it. Size is in MB.
+MOUNT C . -freesize 128
+C:
+IMGMOUNT A ms_c-cpp_compiler_19920818/*.IMG
 ```
