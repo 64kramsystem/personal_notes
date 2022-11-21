@@ -317,6 +317,14 @@ printf "k1: a\nk2: b\nk3: c" | perl -0777 -ne 'print join(",", m/^k[13]: (.+)$/m
 #
 echo 250.jpg | perl -pe 's/(\d+)/"0" x (5 - length($1)) . $1/e' # 00250.jpg
 
+# WATCH OUT! In order to use a backreference set inside an env variable (essentially, templates), must
+# use double interpretation (`/ee`)!! See https://stackoverflow.com/a/6082338.
+# This also implies that the replacement is a Perl statement, not a string, so must be careful.
+#
+echo foo | REPL='"$1$1"' perl -pe 's/(foo)/$ENV{REPL}/ee'           # foofoo
+echo foo | REPL='$1.$1'  perl -pe 's/(foo)/$ENV{REPL}/ee'           # foofoo
+echo foo | REPL='$1$1'   perl -pe 's/(foo)/"\"".$ENV{REPL}."\""/ee' # foofoo
+
 # Regex matches print the groups.
 # A group can be excluded via non-capturing group, however, blank lines will be printed for non-matching
 # lines, so in this case, it's best to use a conditional.
@@ -349,13 +357,6 @@ Apply operations inside regexes (see https://perldoc.perl.org/perlrebackslash.ht
 # Convert next character: `\u`: upper case, `\l`: lower case
 #
 perl -i -pe 's/- (\w)/- \u$1/'
-
-# Use env vars as templates. WATCH OUT! They need double interpretation (see https://stackoverflow.com/a/6082338),
-# which also implies that the replacement is a Perl statement, not a string.
-#
-echo foo | REPL='"$1$1"' perl -pe 's/(foo)/$ENV{REPL}/ee'           # foofoo
-echo foo | REPL='$1.$1'  perl -pe 's/(foo)/$ENV{REPL}/ee'           # foofoo
-echo foo | REPL='$1$1'   perl -pe 's/(foo)/"\"".$ENV{REPL}."\""/ee' # foofoo
 ```
 
 ### Formatting/printing

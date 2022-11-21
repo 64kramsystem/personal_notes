@@ -1,3 +1,29 @@
+## Mon 21/Nov/2022
+
+- Project: Openscripts
+  - [x] Update `generate_wiki_home_toc`
+    - [x] Refactorings
+    - [x] Don't include the root header, if there are no files in the root
+  - [x] Add `mkfloppy`
+- Open Source: DOSBox-X
+  - [x] Reproduce and report presumed dosbox issue with recompiled Warlock
+    - Was related the program 132x50
+  - [x] Reproduce, report and discuss cwsdpmi crash
+- Admin
+  - [x] Plan cycle
+- Project: Commercial Game Sources
+  - [x] Add Little Big Adventure
+  - [x] Add Little Big Adventure 2
+- Project: Blog engine
+  - [x] Fix wrong tag list URLs if blog is on sub-site
+- Studies: Maths
+  - [x] 2D Rotation Matrix Derivation
+- Studies: Gamedev
+  - [ ] Black Art of 3D Game Programming
+    - [x] Chapter 8: The Art of Possession
+    - ~~Chapter 9: Multiplayer Game Techniques~~
+    - [ ] Chapter 10: 3D Fundamentals
+
 ## Sun 20/Nov/2022
 
 - Gamedev/Rust
@@ -5,6 +31,9 @@
     - [x] Setup DOSBox
     - [x] Compile with the original toolchain
       - [x] Brutal fight with all the programs involved in the compilation
+- Studies: Gamedev
+  - [ ] Black Art of 3D Game Programming
+    - [ ] Chapter 8: The Art of Possession
 
 ## Sat 19/Nov/2022
 

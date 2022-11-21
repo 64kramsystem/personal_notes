@@ -19,6 +19,8 @@
     - [Find the current executable filename](#find-the-current-executable-filename)
     - [Build a C program's call graph](#build-a-c-programs-call-graph)
   - [Compilers for (16-bit) DOS target](#compilers-for-16-bit-dos-target)
+    - [Cross compilation](#cross-compilation)
+    - [Native compilation (including ASM)](#native-compilation-including-asm)
   - [Common issues](#common-issues)
     - [Error `multiple definition of '<variable>'` (linker)](#error-multiple-definition-of-variable-linker)
 
@@ -203,6 +205,8 @@ Other help [here](https://www.gson.org/egypt/egypt.html).
 
 ## Compilers for (16-bit) DOS target
 
+### Cross compilation
+
 Use the OpenWatcom compiler; example:
 
 ```sh
@@ -212,7 +216,51 @@ export PATH=$PATH:$WATCOM/binl64 # Many bins must be in the path
 owcc -bdos -mcmodel=l -I=$WATCOM/h -o ow-dosl.exe myprog.c
 ```
 
-See also [djgpp](https://www.delorie.com/djgpp).
+The DJGPP compiler (`binutils-djgpp` package) is an option, but it targets 386+.
+
+### Native compilation (including ASM)
+
+Microsoft C/C++ 7.0 and MASM 6.11 can be used. Example, with quirks:
+
+```bat
+REM From Warlock-64k's [COMPILE.BAT](https://github.com/64kramsystem/warlock-64k/blob/6481fd35cce9437d9e522ee9f738a2a6d8cbaf70/COMPILE.BAT):
+
+SET PATH=%PATH%;C:\C700\BIN;C:\MASM611\BIN
+SET LIB=C:\C700\LIB
+
+REM The book doesn't explain how to compile the ASM files and how to link.
+REM See note in the CL full linking comment, about the relationship with ML and CL.
+REM
+MASM DRAWG.ASM
+MASM RENDERB.ASM
+MASM SLIVER.ASM
+
+REM [HX Extender](https://github.com/Baron-von-Riedesel/HX), required by CL
+REM
+HX\BIN\HDPMI32.EXE
+
+REM -c : Don't link
+REM -AM: Medium model
+REM -Gs: Remove stack-check calls
+REM -G2: 286 instructions
+REM
+REM %LIB% is required; see above
+REM
+CL -c -AM -Gs -G2 -IC700/INCLUDE *.C
+
+REM It's possible to link directly via CL; note that:
+REM
+REM - `-link GRAPHICS.LIB` must be the last parameter
+REM - the ASM files *must* be compiled via `ML (-c)`, otherwise `MASM` sets an option (`/Zm`, Enable
+REM   MASM 5.10 compatibility), that, for unclear reasons, causes CL not to find the symbols exported
+REM   by the ASM object files.
+REM
+REM CL -AM -Gs -G2 -IC700/INCLUDE -FeWARLOCK.EXE DRAWG.OBJ RENDERB.OBJ SLIVER.OBJ *.C -link GRAPHICS.LIB
+
+REM The empy spaces (between separators) are, in order, the mapfile and the deffile.
+REM
+LINK DRAWG.OBJ+RENDERB.OBJ+SLIVER.OBJ+graphics.obj+sndlib.obj+warlock.obj,WARLOCK.EXE,,GRAPHICS.LIB,;
+```
 
 ## Common issues
 

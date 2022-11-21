@@ -9,6 +9,7 @@
     - [General functions](#general-functions)
   - [Jekyll](#jekyll)
     - [(Some) Metadata](#some-metadata)
+    - [Using URLs](#using-urls)
     - [Define site-wide collections](#define-site-wide-collections)
     - [Redirect old pages](#redirect-old-pages)
 
@@ -102,12 +103,20 @@ Reference to a page:
 
 - `page.date`
 - `page.title`
-- `page.url`
+- `page.url`        : relative!
 - `site.baseurl`
 - `site.description`
 - `site.name`
 - `site.url`
-- `site.posts`: important! collection of posts
+- `site.baseurl`    : baseurl, when set
+- `site.posts`      : important! collection of posts
+
+
+### Using URLs
+
+WATCH OUT!! If there is a baseurl, links must be represented as `{{ site.baseurl }}{{ instance.url }}`.
+
+See https://mademistakes.com/mastering-jekyll/site-url-baseurl.
 
 ### Define site-wide collections
 
