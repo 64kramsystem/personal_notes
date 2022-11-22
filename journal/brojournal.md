@@ -1,3 +1,17 @@
+## Tue 22/Nov/2022
+
+- Project: OpenScripts
+  - [x] Add cpfloppy
+    - [x] Fight with Bash arrays error exit from function
+    - [x] Brutal fight with Bash arrays slicing
+- Studies: Gamedev
+  - [ ] Black Art of 3D Game Programming
+    - [x] Chapter 10: 3D Fundamentals
+    - [ ] Chapter 11: Building a 3D Graphics Engine
+- Tools: DOSBox
+  - [x] Test C700 installation from a single directory
+  - [x] Time floppy instant mode with C700 installation
+
 ## Mon 21/Nov/2022
 
 - Project: Openscripts

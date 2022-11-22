@@ -5,12 +5,10 @@
   - [Visual Studio Code](#visual-studio-code)
     - [Bindings](#bindings)
       - [Extensions](#extensions)
-  - [Sublime Text](#sublime-text)
-    - [bindings](#bindings-1)
-      - [search/replace](#searchreplace)
   - [Meld](#meld)
   - [Less](#less)
-    - [bindings](#bindings-2)
+    - [bindings](#bindings-1)
+  - [Anki](#anki)
   - [Vim](#vim)
     - [Misc](#misc)
     - [settings](#settings)
@@ -21,8 +19,6 @@
     - [history](#history)
     - [vimdiff](#vimdiff)
     - [modeline](#modeline)
-    - [plugins](#plugins)
-    - [Peepcode notes](#peepcode-notes)
   - [Other program shortcuts](#other-program-shortcuts)
 
 ## Notes
@@ -97,39 +93,6 @@ The VIM section requires some cleanup.
 - `Ctrl+Shift+G, B`           GitLens: Blame file
 - `Ctrl+Shift+G, C`           GitLens: Show commit details (and operations)
 
-## Sublime Text
-
-### bindings
-
-`Ctrl+K, Ctrl+P`            duplicate line or selection
-`Ctrl[+K]+D`                when a word is selected, goes to the next instance and selects the current; if [+K], skips the current
-`Ctrl+Alt+(select)`         start rectangular selection
-`Ctrl+Shift+(Up/Down)`   		move a line
-`Alt+Shift+2`               two columns (split screen)
-`Alt+F,E`                   open another view of the same file
-
-#### search/replace
-
-Search:
-
-`Alt + R `                  Toggle Regular Expressions
-`Alt + C `                  Toggle Case Sensitivity
-`Alt + W `                  Toggle Exact Match
-`Enter `                    Find Next
-`Shift + Enter `            Find Previous
-`Alt + Enter `              Find All
-
-Replace:
-
-`Ctrl + Shift + H`          Replace Next
-`Ctrl + Alt + Enter`        Replace All
-
-Misc:
-
-`F3`                        Search Forward Using Most Recent Pattern
-`Shift + F3`                Search Backwards Using Most Recent Pattern
-`Alt + F3`                  Select All Matches Using Most Recent Pattern
-
 ## Meld
 
 `Alt + PgUp/Down`           Switch panel
@@ -143,6 +106,11 @@ Misc:
 ### bindings
 
 `Shift + F`					        Follow (like tail -f)
+
+## Anki
+
+`Ctrl + E`                  Add new card (it calls it "note"); WATCH OUT! The preselect deck is broken
+`Ctrl + M, M`               Insert Matjax
 
 ## Vim
 
@@ -259,29 +227,6 @@ set modelines=5
 Format. put on top, or bottom of file:
 
 `vim: setting=value{:setting=value}+`
-
-### plugins
-
-`Command-T`                 Textmate "Go to File" functionality
-`snipMate`                  snippets
-`BufExplorer`               having window showing open buffers
-
-### Peepcode notes
-
-`d2/end`                    Delete [d] until 2nd [2] occurance [s] (=> search) of word 'end'. the 2nd occurrance is not included.
-`d3w`                       Delete [3] words [w]
-`:h <command>`              Help
-`:bd`                       Delete buffer; e.g. exit from help
-
-Upper case commands are generally "extended" versions of the correspective lower case ones.
-
-`I`                         Insert text at the start of the line
-`w/b`                       Move forward/backward one word
-`W/B`                       Move forward/backward one \S+ (e.g. myobject.mymethod)
-
-`o`                         Create a new line under the current, and switch to insert mode
-`c<cmd>`                    Change <command> (=> goes to insert). e.g. cw = change word
-`f<char>`                   Go to the next occurence of <char>
 
 ## Other program shortcuts
 

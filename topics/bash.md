@@ -37,7 +37,7 @@
     - [Error handling](#error-handling)
       - [Simulating error bubbling (unexpected `set -o errexit` behavior)](#simulating-error-bubbling-unexpected-set--o-errexit-behavior)
       - [Trapping errors (hooks)](#trapping-errors-hooks)
-    - [Log a script output/Enable debugging [log]](#log-a-script-outputenable-debugging-log)
+    - [Log a script output/Enable debugging (log)](#log-a-script-outputenable-debugging-log)
     - [Print to stdout while setting a variable](#print-to-stdout-while-setting-a-variable)
     - [Check if there's data in stdin](#check-if-theres-data-in-stdin)
     - [Check if a script is `source`d](#check-if-a-script-is-sourced)
@@ -150,8 +150,7 @@ declare -x                          # export; can add to `-g`
 #
 echo $'l\'s\n'          # prints `l's` and newline
 
-# Slice a string!
-# Both indexes are zero-based (so -1 is the beforelast); the interval is inclusive.
+# If the variable is a string, can slice using a negative value for the end index (!!)
 #
 slice=${str[*]:1:-1}
 
@@ -812,11 +811,29 @@ unset 'coordinates[1]'               # delete an entry
 coordinates[1]=b                     # set an indexed value
 echo ${#coordinates[@]}              # size (length)
 
-# Array slicing (see https://stackoverflow.com/a/1336245)
+# Array slicing (see https://stackoverflow.com/a/1336245):
 #
-slice=("${coordinates[@]:2}")        # Interval [2..-1]
-slice=("${@:2}")                     # Syntax to for the `$@` variable
-echo "${coordinates[@]:2}"           # When printing a slice, don't use the round brackets
+# - indexes are zero-based
+# - only the first can be negative (WATCH OUT! PREFIX WITH SPACE, due to disambiguation with `${var:-val}`)
+# - the first can be blank
+# - the interval is left-closed, right-open
+# - spaces are accepted, and interpolation, too
+#
+slice=("${coordinates[@]:2}")                           # Ruby Interval [2..]
+slice=("${coordinates[@]:2:3}")                         # Ruby Interval [2, 3]
+slice=("${coordinates[@]: -2:3}")                       # Ruby Interval [-2, 3]; WATCH OUT! NOTE THE SPACE
+slice=("${coordinates[@]:2: ${#coordinates[@]} -2-1 }") # Ruby Interval [2, len - 3] = [2..-1]
+echo "${coordinates[@]:2}"                              # When printing a slice, don't use the round brackets
+
+# WATCH OUT! $@ is insane!! (same applies to $*)
+#
+echo "${@[1]}"        # NOT SUPPORTED!
+echo "${@:1:1}"       # Use this to access a single entry
+echo "${@:-1}"        # Use this to access the last entry
+echo "${@}"           # DAFUQ!!! Doesn't include $0
+echo "${@:0}"         # Includes $0
+echo "${@:1:${#@}-1}" # DAFUQ!!! $#@ doesn't count $0, so must account when accessing by a length expression
+echo ${*:${#@}}       # Last element
 
 # Simple inclusion tests (there is no direct way)
 #
@@ -1060,7 +1077,7 @@ function register_exit_hook {
 }
 ```
 
-### Log a script output/Enable debugging [log]
+### Log a script output/Enable debugging (log)
 
 ```sh
 # General log

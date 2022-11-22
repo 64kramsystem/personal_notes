@@ -10,6 +10,7 @@
 ```latex
 x^2  x^{2}          % exponentiation/superscript
 x_1  x_{1}  E_{r,c} % subscript
+\prime              % prime
 
 \sqrt{x}            % square root
 \vec{V}             % vector (overhead arrow)

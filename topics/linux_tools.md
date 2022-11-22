@@ -7,6 +7,7 @@
       - [Search text inside multiple PDFs](#search-text-inside-multiple-pdfs)
   - [xargs](#xargs)
   - [tar](#tar)
+  - [cp](#cp)
   - [mkfifo](#mkfifo)
   - [Files](#files)
     - [lsof](#lsof)
@@ -248,6 +249,19 @@ tar xv -O -f "$tarfile" metadata.gz | gunzip > "$outfile" # Extract a single fil
 # - Use --show-transform to display transformed names
 #
 tar xvz --transform="s/^parsec-3.0/parsec-benchmark/"
+```
+
+## cp
+
+In order to copy the content of a directory including hidden files, use:
+
+```sh
+# `-T`(--no-target-directory): will create the dest dir if it not exists; if it exists, it will copy
+#     inside it. Without this, if dest dir exists, `source` will be created inside it.
+#
+# source can include a trailing slash
+#
+cp -rT /source /dest
 ```
 
 ## mkfifo

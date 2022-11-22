@@ -983,8 +983,16 @@ logger [-t $tag] $message           # write to system logger; --[t]ag
 
 ### Logrotate
 
+Command:
+
 ```sh
 logrotate -d -f $config_file        # test configuration; --[d]ebug: dry run; --[f]orce: force file rotation
+```
+
+Configuration:
+
+```conf
+notifempty                    # Don't rotate empty files (`ifempty` is the default)
 ```
 
 Logrotate automatically sends the `HUP` signal to the processes, so that the files are reopened after move. If the service doesn't support it, either:
