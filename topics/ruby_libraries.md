@@ -18,7 +18,7 @@
       - [XPath](#xpath)
       - [Builder](#builder)
     - [YAML/Psych](#yamlpsych)
-    - [OpenStruct [ostruct]/Struct](#openstruct-ostructstruct)
+    - [OpenStruct (ostruct)/Struct](#openstruct-ostructstruct)
       - [Convert Hash/Array to recursive openstruct](#convert-hasharray-to-recursive-openstruct)
     - [Optparse](#optparse)
     - [open-uri](#open-uri)
@@ -29,7 +29,8 @@
       - [Thread-safe data structures (Queue)](#thread-safe-data-structures-queue)
       - [IO.pipe for IPC](#iopipe-for-ipc)
     - [I/O and terminal](#io-and-terminal)
-    - [Zip (rubyzip)](#zip-rubyzip)
+    - [Compression](#compression)
+    - [Hashing](#hashing)
     - [Encryption (openssl)](#encryption-openssl)
     - [SecureRandom](#securerandom)
     - [Flock](#flock)
@@ -481,7 +482,7 @@ YAML.dump(object[, io])   # Convert to string, optionally into IO
 object.to_yaml            # ... convenience
 ```
 
-### OpenStruct [ostruct]/Struct
+### OpenStruct (ostruct)/Struct
 
 Struct is in the stdlib; it doesn't accept new arguments.
 
@@ -608,6 +609,7 @@ open('http://cippa-lippa').read
 File.dirname(path)                              # Parent dir
 File.extname(fname)                             # Extract the extension (including leading dot); if there are multiple dots, only the last
                                                 # one is extracted
+File.size(fname)
 
 Dir.pwd                                         # working path
 Dir.chdir(path) { }                             # Change current dir; WATCH OUT! not thread safe! see https://bugs.ruby-lang.org/issues/9785
@@ -837,7 +839,9 @@ TTY::Screen.width    # => 280; aliases: columns/col
 TTY::Screen.height   # => 51;  aliases: rows/lines
 ```
 
-### Zip (rubyzip)
+### Compression
+
+Zip (rubyzip):
 
 ```rb
 # Create a zip archive
@@ -848,6 +852,25 @@ Zip::File.open(archive_filename, create: true) do |zipfile|
     rows.each { |row| zip_entry_io.write(row.to_csv) }
   end
 end
+```
+
+Gzip:
+
+```rb
+# Long form
+gz = Zlib::GzipWriter.new(io)
+gz.write 'content...'
+gz.close                       # This *must* be invoked
+
+# Short forms!
+Zlib::GzipWriter.wrap(io, ...) { |gz| ... }
+Zlib::GzipReader.wrap(StringIO.new(source), &:read)
+```
+
+### Hashing
+
+```rb
+Digest::MD5.hexdigest 'abc'      #=> "90015098..."
 ```
 
 ### Encryption (openssl)

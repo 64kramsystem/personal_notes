@@ -398,6 +398,8 @@ If fonts are not rendering correctly, install the core fonts: `winetricks corefo
 
 ### Floppy
 
+WATCH OUT! When installing a program from multiple floppies, try to copy all of their content to a single dir, and install from there; some installers support this.
+
 IMGs can be mounted via `IMGMOUNT` command; multiple images can be mounted (only via command), and swapped via key binding:
 
 ```sh
@@ -432,18 +434,20 @@ aspect = true
 # 486DX at 33MHz (https://dosbox-x.com/wiki/Guide%3ACPU-settings-in-DOSBox%E2%80%90X#_cycles)
 # PII/300 = 200000
 cycles = 12019
-# Enable for fastest CPU speed. WATCH OUT! This disables automatically after a keypress; see
+# Enable for fastest CPU speed. WATCH OUT! This is disabled automatically after a keypress; see
 # https://dosbox-x.com/wiki/Guide%3AInstalling-Windows-3.x.
 turbo = false
 
-[fdc, primary]
-# Enable for fastest floppy speed. It's not clear if the controller should be enabled or not.
-instant mode = false
+# For the purpose of fastest installation from floppies, this didn't make any difference when running
+# on turbo.
+#
+# [fdc, primary]
+# Enable for fastest floppy speed; it's not clear how faster it is, and if `enabled = true` is necessary.
+# instant mode = false
 
 [autoexec]
 # By default, the free size is whole disk; it's not clear if GBs of free size may cause programs to
 # crash, so better restrict it. Size is in MB.
 MOUNT C . -freesize 128
 C:
-IMGMOUNT A ms_c-cpp_compiler_19920818/*.IMG
 ```
