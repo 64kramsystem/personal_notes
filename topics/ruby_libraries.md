@@ -493,31 +493,21 @@ os['surname'] = "Smith"       # alternate assignment form
 puts os.name, os.surname
 os.delete_field(:surname)     # remove a field
 
-# !!! Substruct.new(a: 1).a => 1 !!!
-# This works because Struct.new returns a class (!); if not subclasses, it's accessed as Struct.new(...).new
+# Enclose whe whole block in a module in order to namespace.
 #
-class SubStruct < Struct.new(:a, :b); end
-
-# Struct - form with explicit class naming.
-# It seems that this doesn't accept scoping (= forces the Struct module)
-#
-klazz = Struct.new('MyStruct', :a, :b) do
+Klazz = Struct.new(:a, :b) do
   def mymethod; end
 end
-klazz.new('aval', 'bval')
 
-klazz.members # defined members ([:a, :b])
-klazz.to_a    # values array    (['aval', 'bval'])
-klazz.to_h    # values hash     ({a: 'aval', b: 'bval'})
+Klazz.new('aval', 'bval')
 
-# Struct with implicit name modules.
-# Struct::MyStruct won't exist, in this case.
+Klazz.members # defined members ([:a, :b])
+Klazz.to_a    # values array    (['aval', 'bval'])
+Klazz.to_h    # values hash     ({a: 'aval', b: 'bval'})
+
+# Alternative form, yields `Struct::Klass`.
 #
-module MyModule
-  MyStruct = Struct.new(:a, :b)
-end
-
-MyModule::MyStruct.new('aval', 'bval')
+Struct.new('Klass', :a, :b)
 ```
 
 #### Convert Hash/Array to recursive openstruct

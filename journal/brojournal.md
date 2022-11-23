@@ -1,3 +1,11 @@
+## Wed 23/Nov/2022
+
+- SWE: Practice: CodeCrafters
+  - [x] Redis/Ruby
+- Studies: Gamedev
+  - [ ] Black Art of 3D Game Programming
+    - [ ] Chapter 11: Building a 3D Graphics Engine
+
 ## Tue 22/Nov/2022
 
 - Project: OpenScripts
