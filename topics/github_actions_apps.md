@@ -4,8 +4,9 @@
   - [Actions (CI)](#actions-ci)
   - [Concepts](#concepts)
     - [Expressions](#expressions)
-    - [Conditionals](#conditionals)
+    - [Conditionals/Functions](#conditionalsfunctions)
     - [Variables](#variables)
+      - [Contexts](#contexts)
     - [Branch filtering](#branch-filtering)
     - [Caching](#caching)
   - [Examples](#examples)
@@ -38,34 +39,28 @@ WATCH OUT! The configuration files are not legal YAML (!).
 
 ### Expressions
 
+Reference: https://docs.github.com/en/actions/learn-github-actions/expressions.
+
 Expressions are wrapped in double curly braces: `{{ expression }}`.
 
-### Conditionals
+### Conditionals/Functions
 
 ```yaml
 # For variables, expressions braces are not required.
 #
 - name: Use WASM target for Clippy
   if: matrix.config.target == 'wasm32-unknown-unknown'
+
+- name: Test label
+  if: "contains(github.event.pull_request.labels.*.name, 'Tests: Legacy')"
+  run: echo "RUN_CURRENT_SUITE=1" >> $GITHUB_ENV
 ```
 
+Available functions:
+
+- `contains($collection, value)`
+
 ### Variables
-
-Contexts:
-
-- `github.*`: information about the workflow/event ([reference](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context))
-  - `github.workspace`   : where the repo is checked out
-  - `github.event.number`: PR number ([reference](https://github.com/actions/checkout/issues/58#issuecomment-663103947))
-  - `github.job`         : job id (yaml key value)
-  - `github.workspace`   : project (workspace) directory (full path)
-  - `github.ref`         : current branch, in format `refs/heads/$name`
-  - `github.token`       : same as `secrets.GITHUB_TOKEN`
-- `secrets.<SECRET_NAME>`: secrets
-
-There are environment variables, but must check the conditions, e.g. if they persist across jobs ([reference](https://docs.github.com/en/actions/learn-github-actions/environment-variables#default-environment-variables)):
-
-- `env.GITHUB_WORKSPACE`
-- `env.GITHUB_ENV`
 
 In order to access variables/secrets from scripts, pass them via env (but predefined env vars are already available):
 
@@ -94,6 +89,23 @@ In order to set and read variables across jobs, can do the following:
 # Step 2
 - if: env.RUN_CURRENT_SUITE == 1
 ```
+
+#### Contexts
+
+- `github.*`: information about the workflow/event ([reference](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context))
+  - `github.workspace`                       : where the repo is checked out
+  - `github.event.number`                    : PR number ([reference](https://github.com/actions/checkout/issues/58#issuecomment-663103947))
+  - `github.event.pull_request.labels.*.name`: Use this to get all the label names of a PR
+  - `github.job`                             : job id (yaml key value)
+  - `github.workspace`                       : project (workspace) directory (full path)
+  - `github.ref`                             : current branch, in format `refs/heads/$name`
+  - `github.token`                           : same as `secrets.GITHUB_TOKEN`
+- `secrets.<SECRET_NAME>`: secrets
+
+There are environment variables, but must check the conditions, e.g. if they persist across jobs ([reference](https://docs.github.com/en/actions/learn-github-actions/environment-variables#default-environment-variables)):
+
+- `env.GITHUB_WORKSPACE`
+- `env.GITHUB_ENV`
 
 ### Branch filtering
 
@@ -182,11 +194,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Test if current suite is run
-      run:  echo "RUN_CURRENT_SUITE=$(script/ci/test_if_run_suite.sh "shellcheck")" >> $GITHUB_ENV
-    - name: Run Shellcheck
+    - name: Test label
+      if: "contains(github.event.pull_request.labels.*.name, 'Tests: SomeCategory')"
+      run: echo "RUN_CURRENT_SUITE=1" >> $GITHUB_ENV
+    - name: Run TestSuite
       if: env.RUN_CURRENT_SUITE == 1
-      run: script/ci/run_shellcheck.sh
+      run: /path/to/test_suite.sh
 ```
 
 ### Run command (e.g. install package)
