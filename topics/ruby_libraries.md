@@ -709,6 +709,12 @@ Dir.tmpdir
 
 ### Concurrency
 
+Thread-local variables:
+
+```rb
+Thread.current[:pending_inputs]
+```
+
 #### Mutex
 
 ```ruby

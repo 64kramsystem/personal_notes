@@ -438,9 +438,6 @@ cycles = 12019
 # https://dosbox-x.com/wiki/Guide%3AInstalling-Windows-3.x.
 turbo = false
 
-# For the purpose of fastest installation from floppies, this didn't make any difference when running
-# on turbo.
-#
 # [fdc, primary]
 # Enable for fastest floppy speed; it's not clear how faster it is, and if `enabled = true` is necessary.
 # instant mode = false

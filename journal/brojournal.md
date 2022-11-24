@@ -1,3 +1,10 @@
+## Thu 24/Nov/2022
+
+- Studies: Gamedev
+  - [ ] Black Art of 3D Game Programming
+    - [x] Chapter 11: Building a 3D Graphics Engine
+    - [ ] Chapter 12: Solid Modeling and Shading
+
 ## Wed 23/Nov/2022
 
 - SWE: Practice: CodeCrafters
