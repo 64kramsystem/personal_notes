@@ -1,3 +1,13 @@
+## Sat 26/Nov/2022
+
+- Studies: Gamedev
+  - [ ] Black Art of 3D Game Programming
+    - [ ] Chapter 12: Solid Modeling and Shading
+- Open Source
+  - [x] Publish "Dungeons of Discovery" companion CD on a repo
+- Gamedev
+  - [x] Preliminary review of "Dungeons of Discovery"
+
 ## Thu 24/Nov/2022
 
 - Studies: Gamedev
