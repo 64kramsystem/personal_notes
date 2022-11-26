@@ -1,5 +1,18 @@
 ## Sat 26/Nov/2022
 
+- Tools
+  - [x] Test updated VMW/VB 3D acceleration
+  - [x] Aptitude search patterns
+  - [x] Final attempt to setup VFIO again
+- Studies: Gamedev
+  - [ ] Black Art of 3D Game Programming
+    - [ ] Chapter 12: Solid Modeling and Shading
+  - [ ] Dungeons of Discovery
+    - [ ] Further review
+    - [ ] Preliminary WinG review
+
+## Sat 26/Nov/2022
+
 - Studies: Gamedev
   - [ ] Black Art of 3D Game Programming
     - [ ] Chapter 12: Solid Modeling and Shading

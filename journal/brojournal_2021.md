@@ -1832,9 +1832,6 @@ RACC took most of the week (more than expected); one day vga-passthrough, and a 
     - [x] Add configuration management (https://github.com/64kramsystem/nv-switch/issues/2)
   - vga-passthrough
     - [x] Measure cards consumption
-      - [x] 1030 (nv) + 6600 (amd)  = 46/48W
-      - [x] 1030 (nv) + 6600 (vfio) = 58/59W
-      - [x] 6600 (amd)              = 62/63W
     - [x] Try 6600 XT passthrough, with update
       - [x] Test `nouveau`
       - [x] Check if `nvidia` supports `/dev/dri/by-path`, which includes bus id (and `/dev/dri/card*` reference)

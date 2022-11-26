@@ -17,8 +17,8 @@
       - [Usermode](#usermode)
       - [RISC-V](#risc-v)
   - [VFIO](#vfio)
-    - [Driver switch](#driver-switch)
-    - [Reset problem](#reset-problem)
+    - [Cards consumption](#cards-consumption)
+    - [nvidia-smi](#nvidia-smi)
   - [Vagrant](#vagrant)
   - [WINE](#wine)
   - [DOSBox(-X)](#dosbox-x)
@@ -42,7 +42,7 @@ Create:
 # - it's possible to create a diff image of a diff image
 # - WATCH OUT!: It's possible to specify a size, but in at least one instance, it caused subtle issues.
 #
-qemu-img create [-f $format] [-b $backing_iamge] $image [20G]
+qemu-img create [-f $image_format] $image [-F $backing_image_format] [-b $backing_image] [20G]
 
 # Create a qcow image (with NTFS filesystem) from a directory:
 #
@@ -356,26 +356,60 @@ See https://risc-v-getting-started-guide.readthedocs.io/en/latest/linux-qemu.htm
 
 Lots of interesting stuff on the [Arch Wiki](https://wiki.archlinux.org/title/PCI_passthrough_via_OVMF).
 
-### Driver switch
-
-It seems that AMD cards may run cool also with the `vfio` driver (tried with the 6600 XT).
-
-### Reset problem
-
-Interesting script (from the wiki above, with minor cleanups) to check the resettable devices:
+IOMMU groups, with reset info:
 
 ```sh
-for iommu_group in $(find /sys/kernel/iommu_groups/ -maxdepth 1 -mindepth 1 -type d | sort -t/ -n -k 5); do
+for iommu_group in $(ls -dv /sys/kernel/iommu_groups/*/); do
   echo "IOMMU group $(basename "$iommu_group")"
   for device in $(ls -1 "$iommu_group"/devices/); do
-    [[ -e $iommu_group/devices/$device/reset ]] && echo -n "[RESET]"
     echo -n $'\t'
+    [[ -e $iommu_group/devices/$device/reset ]] && echo -n "[RESET] "
     lspci -nns "$device"
   done
 done
 ```
 
 AMD reset problem discussion: https://www.reddit.com/r/VFIO/comments/gq0emj/amd_reset_bug_what_are_we_waiting_for.
+
+With `AutoAddGPU = false`, there is no process running on the card 1 (there is, without it), but still, unbinding hangs.
+
+### Cards consumption
+
+- 6600 XT
+  - 1'  : 58/59W
+  - ~30': 47/48 (!!)
+- GT 1030 (active) + 6600 XT (vfio)
+  - 1'  : 62/65W
+- 6600 XT (active) + GT 1030 (vfio)
+  - 1'  : 68/69W
+
+
+See: https://wiki.archlinux.org/title/AMDGPU#Power_profiles.
+
+### nvidia-smi
+
+`persistenced` reference: https://docs.nvidia.com/deploy/driver-persistence/index.html#persistence-daemon
+
+```sh
+nvidia-smi --help-query-supported-clocks
+nvidia-smi --help-query-gpu
+
+nvidia-smi -i 1 --format=csv --query-supported-clocks=mem
+nvidia-smi -i 1 --format=csv --query-supported-clocks=gr
+
+nvidia-smi -i 1 --format=csv,noheader -l 1 --query-gpu=pstate,power.draw,clocks.mem,clocks.gr # P8, 13.54 W, 405 MHz, 300 MHz
+
+## Power state can't be set.
+## This is the clocks, but it seems it can't be set.
+##
+nvidia-smi -i 1 -ac 405,300 # mem/gr; not supported!
+
+## Power limits can be set, but the minimum may be too high.
+## Setting an invliad
+##
+nvidia-smi -i 1 --format=csv --query-gpu=power.power.min_limit,power.max_limit
+sudo nvidia-smi -i 1 -pl 16.66
+```
 
 ## Vagrant
 
