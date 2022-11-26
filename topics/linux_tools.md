@@ -20,7 +20,7 @@
     - [Waits on condvar](#waits-on-condvar)
     - [Sleep times](#sleep-times)
   - [GNU Screen](#gnu-screen)
-  - [Clonezilla](#clonezilla)
+  - [Partclone/Clonezilla](#partcloneclonezilla)
   - [Dump CDs (safely)](#dump-cds-safely)
   - [Sleep](#sleep)
   - [Watch](#watch)
@@ -546,7 +546,19 @@ screen -r $session_name -X stuff 'ls^M' # ^M is enter
 
 In some workflows, it's convenient to set `IGNOREEOF`, in order to prevent accidental exits from the screen session.
 
-## Clonezilla
+## Partclone/Clonezilla
+
+Partclone:
+
+```sh
+# Backup
+partclone -c -s /dev/sdX | pzstd > /path/to/dumpfile
+
+# Restore
+zstd -d /path/to/dumpfile | partclone -r -o /dev/sdX
+```
+
+Clonezilla:
 
 ```sh
 # Setup, from 20.04.4 live CD. The package is a complete distaster; dependencies are not installed:

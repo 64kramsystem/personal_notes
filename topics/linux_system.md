@@ -463,7 +463,14 @@ if dpkg --get-selections trash-cli | grep -qP '\s+(install|hold)$'; then echo in
 # - ?   : supported, but not for groups
 # - |   : supported
 #
-aptitude search -F %p 'suld-driver2-[0-9.]+$~rnative'
+# Prefixes:
+#
+# - ~n : package name
+# - ~r : arch
+#
+# Search terms reference: https://www.debian.org/doc/manuals/aptitude/ch02s04s05.en.html
+#
+aptitude search -F %p '~nxserver-xorg-video-nvidia-[[:digit:]]+$~ramd64'
 
 # Better use this than `apt search`; the latter is undocumented and has an atrocious output.
 #
