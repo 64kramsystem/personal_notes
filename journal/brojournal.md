@@ -1,3 +1,22 @@
+## Sun 27/Nov/2022
+
+- Project: Schedule manager
+  - [x] Refactorings
+  - [x] Export Remove title notes (in square brackets)
+- Open Source: ECS Bench Suite
+  - [x] Add status, and archive (see https://github.com/rust-gamedev/wg/issues/130
+- Gamedev/Retro
+  - [x] [A Whirlwind Tour of WinG](https://www.gamedeveloper.com/programming/a-whirlwind-tour-of-wing)
+- Project: Commercial Game Sources
+  - [x] Add STALKER: Call of Pripyat
+- Tools
+  - [x] PDF annotator: Send support email with details of working in PDF annotators
+  - [x] Stack Exchange: Find programmatic way to find the sites with highest number of questions for a tag
+- Admin
+  - [x] Plan cycle
+- Studies: Git
+  - [x] Review pull strategy option
+
 ## Sat 26/Nov/2022
 
 - Tools

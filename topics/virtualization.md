@@ -382,7 +382,7 @@ With `AutoAddGPU = false`, there is no process running on the card 1 (there is, 
   - 1'  : 62/65W
 - 6600 XT (active) + GT 1030 (vfio)
   - 1'  : 68/69W
-
+  - 5'  : decreased
 
 See: https://wiki.archlinux.org/title/AMDGPU#Power_profiles.
 
