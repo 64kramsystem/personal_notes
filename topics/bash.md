@@ -1045,6 +1045,16 @@ Do like this:
 } || log_error "Error!"
 ```
 
+WATCH OUT!! There may be bug in Bash; the following error exits the function, but not the script!:
+
+```sh
+function foo { echo "${@:0:-1}"; echo skipped_here; }
+
+set -o errexit
+foo "$@"
+echo reaches_here
+```
+
 #### Trapping errors (hooks)
 
 Execute a (explicit) command on exit; generally convenient to trap `ERR` + `INT`, or `EXIT`.
