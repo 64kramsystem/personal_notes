@@ -1,3 +1,18 @@
+## Mon 28/Nov/2022
+
+- Project: Geet
+  - [x] Create PR: Add retry prompt on branch push failure
+- Tools: Blog
+  - [x] Update script: Include baseurl in the TOC
+- Project: OpenScripts
+  - [ ] Find most popular stack exchange for given tag
+- Writings/Project: Learn Bevy's ECS by ripping off someone else's project
+  - [x] Review and fix https://github.com/64kramsystem/learn_bevy_ecs_by_ripping_off-code/issues/2
+    - [x] Stupid fight with misspelled `target-dir`
+- Studies: Gamedev
+  - [ ] Black Art of 3D Game Programming
+    - [ ] Chapter 12: Solid Modeling and Shading
+
 ## Sun 27/Nov/2022
 
 - Project: Schedule manager

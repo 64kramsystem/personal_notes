@@ -43,7 +43,7 @@
   - [YARD documentation (+Solargraph)](#yard-documentation-solargraph)
   - [Misc](#misc)
     - [Terminal](#terminal)
-    - [Poor man's deep_dup (deep duplicate objects)](#poor-mans-deep_dup-deep-duplicate-objects)
+    - [Poor man's deep\_dup (deep duplicate objects)](#poor-mans-deep_dup-deep-duplicate-objects)
     - [Debug a live process (print current stacktrace)](#debug-a-live-process-print-current-stacktrace)
 
 ## General syntax/concepts
@@ -553,6 +553,10 @@ end
 ```
 
 ## Collections
+
+```ruby
+collection.none?(pattern)               # supports String, Regex and Proc. DON'T USE FOR HASHES, it's confusing
+```
 
 ### Array
 
