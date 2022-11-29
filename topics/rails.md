@@ -154,7 +154,7 @@ change_table :table, bulk: true do |t|
   t.change_default                     # changes the column default
   t.rename                             # rename a column
   t.belongs_to
-  t.add_foreign_key
+  t.foreign_key                        # see :add_foreign_key
 
   t.remove :column_name                # remove a column
   t.remove_index :column_name{, column_name_N}  # replace also be used like `Pathname.new(__FILE__).relative_path_from(Rails.root)``name: index_name` if non-rails naming
@@ -174,7 +174,7 @@ remove_index :table, ...  # see options in :change_table
 
 # Foreign keys
 #
-add_foreign_key :articles, :authors, [to_table: ref_table]
+add_foreign_key :articles, :authors, [to_table: ref_table, column: base_col_name]
 remove_foreign_key :articles, [:authors | column: author_id | name: fk_abc123]
 ```
 
