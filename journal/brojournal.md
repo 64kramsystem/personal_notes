@@ -1,3 +1,11 @@
+## Tue 29/Nov/2022
+
+- Studies: Gamedev
+  - [ ] Black Art of 3D Game Programming
+    - [x] Chapter 12: Solid Modeling and Shading
+    - [x] Chapter 13: Universal Transformations
+    - [ ] Chapter 14: Hidden Surface and Object Removal
+
 ## Mon 28/Nov/2022
 
 - Project: Geet
