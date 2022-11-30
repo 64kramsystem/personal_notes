@@ -947,7 +947,7 @@ Etc.getpwuid.dir              # Get current user home dir. For generic users, us
 #
 StringIO.new("start_string", File::RDWR | File::APPEND)
 
-# Check size (there's no :empty method in StringIO).
+# Check size (there's no :empty? method in StringIO).
 #
 StringIO.new.size
 

@@ -1,3 +1,10 @@
+## Wed 30/Nov/2022
+
+- Studies: Gamedev
+  - [ ] Black Art of 3D Game Programming
+    - [x] Chapter 14: Hidden Surface and Object Removal
+    - [ ] Chapter 15: Clipping and Rendering the Final View
+
 ## Tue 29/Nov/2022
 
 - Studies: Gamedev
