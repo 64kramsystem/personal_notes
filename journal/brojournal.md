@@ -1,3 +1,9 @@
+## Thu 01/Dec/2022
+
+- Studies: Gamedev
+  - [ ] Black Art of 3D Game Programming
+    - [ ] Chapter 15: Clipping and Rendering the Final View
+
 ## Wed 30/Nov/2022
 
 - Studies: Gamedev
