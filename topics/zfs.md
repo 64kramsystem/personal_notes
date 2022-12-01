@@ -133,21 +133,29 @@ zpool replace $pool $old_device [$new_device]
 #
 zpool add $pool $device
 
-# Attach a new device to a mirror (convert the pool to a mirror, if it isn't already so).
-# Resilvering will start immediately.
-# Note that $device_in_mirror is the name of the device as defined in the pool status.
-#
-zpool attach $pool $device_in_mirror $new_device
-
 # Add a new top level mirror
 #
 zpool add $pool mirror $device1 $device2
+
+# Attach a new device to a mirror (convert the pool to a mirror, if it isn't already so).
+# Resilvering will start immediately.
+# If a device is detached and reattached, it will still take a long time to resilver (use offline/online
+# for that use case).
+# Best to use the /dev/disk/by-id device for both.
+#
+zpool attach $pool $device_in_mirror $new_device
 
 # Detach a device from a pool (/mirror):
 #
 zpool detach $pool $device
 
+# Temporarily disconnect a device (from a mirror); resumes quickly.
+#
+zpool offline $pool $device
+zpool online $pool $device
+
 # Delete a device
+#
 zfs destroy $pool/$device
 
 # ZFS mirroring with different sector sizes (9=512, 12=4096). Watch out! It has a significant impact on performance.
