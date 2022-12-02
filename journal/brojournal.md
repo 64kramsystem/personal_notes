@@ -1,3 +1,10 @@
+## Fri 02/Dec/2022
+
+- Studies: Gamedev
+  - [ ] Black Art of 3D Game Programming
+    - [ ] Chapter 15: Clipping and Rendering the Final View
+      - [x] Extra reserach BSP trees
+
 ## Thu 01/Dec/2022
 
 - Studies: Gamedev
