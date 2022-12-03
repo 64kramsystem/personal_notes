@@ -14,6 +14,7 @@
   - [Database metadata](#database-metadata)
   - [Convenient operations](#convenient-operations)
     - [Skip the indexes on mysqldump dumps](#skip-the-indexes-on-mysqldump-dumps)
+  - [RDS-specific procedures](#rds-specific-procedures)
   - [Mydumper/myloader](#mydumpermyloader)
 
 ## Privileges
@@ -209,6 +210,12 @@ The leading comma could be deleted with some text processing trickery, but this 
 
 ```sh
 mysqldump $db | perl -pe 's/^  (UNIQUE |FULLTEXT )?KEY.+?(,)?$/  CHECK(TRUE)$2'
+```
+
+## RDS-specific procedures
+
+```sql
+CALL mysql.rds_kill(pid)             # kill a query/thread
 ```
 
 ## Mydumper/myloader
