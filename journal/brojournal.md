@@ -1,9 +1,17 @@
+## Sat 03/Dec/2022
+
+- Studies: Gamedev
+  - [ ] Black Art of 3D Game Programming
+    - [x] Chapter 15: Clipping and Rendering the Final View
+- Admin/Studies: System/Linux
+  - [x] Brutal fight with finding way to enable S3 on laptop
+
 ## Fri 02/Dec/2022
 
 - Studies: Gamedev
   - [ ] Black Art of 3D Game Programming
     - [ ] Chapter 15: Clipping and Rendering the Final View
-      - [x] Extra reserach BSP trees
+      - [x] Extra research BSP trees
 
 ## Thu 01/Dec/2022
 
