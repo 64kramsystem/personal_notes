@@ -1,3 +1,12 @@
+## Sun 04/Dec/2022
+
+- Studies/Writings: Linux
+  - [x] Investigate GRUB ways of providing a custom DSDT table
+- Studies: Gamedev
+  - [ ] Black Art of 3D Game Programming
+    - [x] Chapter 16: Voxel Graphics
+    - [ ] Chapter 17: Optimizing the 3D Engine
+
 ## Sat 03/Dec/2022
 
 - Studies: Gamedev
