@@ -1,3 +1,9 @@
+## Mon 05/Dec/2022
+
+- Studies: Gamedev
+  - [ ] Black Art of 3D Game Programming
+    - [ ] Chapter 17: Optimizing the 3D Engine
+
 ## Sun 04/Dec/2022
 
 - Studies/Writings: Linux
