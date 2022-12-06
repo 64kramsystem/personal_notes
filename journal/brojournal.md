@@ -1,3 +1,14 @@
+## Tue 06/Dec/2022
+
+- Open Source: Linux Kernel PPA
+  - [x] Review broken package, and notify developer
+- Writings: (Yoga) S3 Sleep
+  - [x] Review of sleep states
+  - [x] Write article
+- Studies: Gamedev
+  - [ ] Black Art of 3D Game Programming
+    - [ ] Chapter 17: Optimizing the 3D Engine
+
 ## Mon 05/Dec/2022
 
 - Studies: Gamedev
