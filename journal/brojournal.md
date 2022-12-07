@@ -1,3 +1,11 @@
+## Wed 07/Dec/2022
+
+- Project:
+  - [x] Fix reported issue: [ActivateItem is a event not component](https://github.com/64kramsystem/learn_bevy_ecs_by_ripping_off-code/issues/3)
+- Studies: Gamedev
+  - [ ] Black Art of 3D Game Programming
+    - [ ] Chapter 17: Optimizing the 3D Engine
+
 ## Tue 06/Dec/2022
 
 - Open Source: Linux Kernel PPA
