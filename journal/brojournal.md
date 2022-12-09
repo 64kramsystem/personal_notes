@@ -1,3 +1,9 @@
+## Fri 09/Dec/2022
+
+- Studies: Gamedev
+  - [ ] Black Art of 3D Game Programming
+    - [x] Chapter 18: Kill or Be Killed
+
 ## Thu 08/Dec/2022
 
 - Studies: Gamedev
