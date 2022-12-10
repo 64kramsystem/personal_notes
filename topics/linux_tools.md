@@ -235,7 +235,7 @@ cat /proc/self/environ | xargs -0 -L 1        # print the env vars (null-termina
 
 ## tar
 
-WATCH OUT!! When compressing as sudo files owned by other users, use `--no-recursion`, otherwise on extraction, intermediate dirs may be [owned by root](https://superuser.com/q/1175794).
+WATCH OUT!! When compressing as sudo files owned by other users, use `--no-recursion`, otherwise on extraction, intermediate dirs may be [owned by root](https://superuser.com/q/1175794); however, if doing so, all the directories must be specified (check: if may be possible to mix `--recursion` and `--no-recursion`).
 
 ```sh
 tar -C /tmp xvz                                        # Extract to a different directory

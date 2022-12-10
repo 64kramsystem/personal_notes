@@ -969,13 +969,14 @@ umount -R /mnt                    # `R`ecursively
 In some cases, the standard GRUB procedures (`os-probe`, etc.) may not work; in this case, manually add an entry:
 
 ```sh
-# This is the second partition of the third disk.
-# The bootloader path can be found by looking into the EFI partition.
+# Windows EFI partition, NOT Windows partition!
 #
+win_efi_uuid=$(lsblk -n -o UUID /dev/sda2)
+
 cat >> /etc/grub.d/40_custom <<GRUB
-menuentry "Windows 10" {
-    set root='(hd2,gpt2)'
-    chainloader /EFI/Microsoft/Boot/bootmgfw.efi
+menuentry 'Windows 10' {
+    search --fs-uuid --no-floppy --set=root $win_efi_uuid
+    chainloader (\${root})/EFI/Microsoft/Boot/bootmgfw.efi
 }
 GRUB
 

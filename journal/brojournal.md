@@ -1,8 +1,16 @@
+## Sat 10/Dec/2022
+
+- Admin: System
+  - [x] Brutal fight with assembling system
+- Studies: Gamedev
+  - [ ] Black Art of 3D Game Programming
+    - [ ] Chapter 18: Kill or Be Killed
+
 ## Fri 09/Dec/2022
 
 - Studies: Gamedev
   - [ ] Black Art of 3D Game Programming
-    - [x] Chapter 18: Kill or Be Killed
+    - [ ] Chapter 18: Kill or Be Killed
 
 ## Thu 08/Dec/2022
 
