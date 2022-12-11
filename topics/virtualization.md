@@ -320,6 +320,12 @@ vboxmanage internalcommands createrawvmdk -filename $image.vdi -rawdisk /dev/$de
 usermod -a -G disk $(whoami)
 ```
 
+Allow the host user accessing an external DVD reader:
+
+```sh
+usermod -a -G vboxusers $(whoami)
+```
+
 ### QEMU
 
 Run a machine in the background, and shut it down:
