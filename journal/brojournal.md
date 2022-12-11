@@ -1,3 +1,14 @@
+## Sun 11/Dec/2022
+
+- Admin: System
+  - [x] Brutal fight with configuring system/ZFS
+- Tools: Installer script
+  - [x] Some updates
+- Open Source: Yoga repository
+  - [x] Discuss details of S3 sleep on 14ARB7
+- Studies
+  - [ ] Review next book
+
 ## Sat 10/Dec/2022
 
 - Admin: System
