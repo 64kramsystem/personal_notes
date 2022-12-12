@@ -770,6 +770,8 @@ If it isn't, and readers must be killed before receiving EOF, and a complex (and
 
 Note that arrays in zsh work in slightly different ways, so scripts involving them should be shell-specific.
 
+WATCH OUT!! Arrays [can't be exported](https://stackoverflow.com/a/21941473/210029)!!
+
 Creation:
 
 ```sh
@@ -896,6 +898,8 @@ done <<< "$binlogs"
 
 See https://www.artificialworlds.net/blog/2012/10/17/bash-associative-array-examples.
 
+WATCH OUT!! Arrays [can't be exported](https://stackoverflow.com/a/21941473/210029)!!
+
 ```sh
 declare -A MYHASH                    # explicit creation
 declare -A MYHASH=([foo]=1 [bar]=2)  # explicit creation with multiple values (it's possible to quote both keys and values)
@@ -920,7 +924,8 @@ declare -p MYHASH                    # print the AA (in declaration form)
 # Iterate.
 # in order to iterate the sorted keys, use `mapfile` as in the Arrays section
 #
-5
+for key in "${!MYHASH[@]}"; do val=${MYHASH[$key]}; echo "$key=$val"; done
+
 # Test if a variable is an associate array (!!)
 # `declare -p` prints the declaration; writes to stderr if the variable doesn't exist
 # watch out! if a variable was defined via `declare -p`, it will be printed.
@@ -934,7 +939,7 @@ In order to pass an AA to a function:
 declare -A MYHASH=([foo]=bar)
 
 function myfx {
-  local -n hash_ref=$1
+  local -n hash_ref=$1        # here: copy it from the position param
   hash_ref[baz]=qux
 }
 

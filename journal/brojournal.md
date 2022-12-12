@@ -1,13 +1,25 @@
+## Mon 12/Dec/2022
+
+- Tools: System installer script
+  - [x] A lot of improvements/new features
+  - [x] Several fixes
+  - [x] Full VM test
+    - [ ] Fight hypervisor buggy networking
+- System: S3 Sleep
+  - [x] Preliminary investigation of S3 sleep on desktop
+- Studies: Linux Kernel
+  - [x] Investigate how the config is generated for Ubuntu
+- Open Source: VMWare Host Modules fork
+  - [x] Create fork, with patch
+
 ## Sun 11/Dec/2022
 
 - Admin: System
   - [x] Brutal fight with configuring system/ZFS
-- Tools: Installer script
+- Tools: System installer script
   - [x] Some updates
 - Open Source: Yoga repository
   - [x] Discuss details of S3 sleep on 14ARB7
-- Studies
-  - [ ] Review next book
 
 ## Sat 10/Dec/2022
 
