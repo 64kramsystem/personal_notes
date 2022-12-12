@@ -539,9 +539,13 @@ Execute commands in a detached session:
 ```sh
 # `stuff` is the command; the terminating newline is necessary.
 #
-screen -dmS $session_name
+screen -dmS $session_name                  # start a named session (-S $name) in detached mode (-dm)
 screen -r $session_name -X logfile flush 0
-screen -r $session_name -X stuff 'ls^M' # ^M is enter
+screen -r $session_name -X stuff 'ls^M'    # ^M is enter
+
+# run a command (then wait) in a new session; supports detached session.
+#
+screen bash -c 'mycommand -foo; read -rsn1'
 ```
 
 In some workflows, it's convenient to set `IGNOREEOF`, in order to prevent accidental exits from the screen session.

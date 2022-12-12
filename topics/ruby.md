@@ -770,7 +770,7 @@ This way, stdout/stderr content is printed straight away; interaction (input) is
 The exit status can be obtained directly via return value, or via `$CHILD_STATUS`.
 
 ```ruby
-success = system(">&2 echo abc; sleep 2; false", exception: false)
+success = system(">&2 echo abc; sleep 2; false", exception: true) # default: false
 
 # Use `expection: true` in order to raise an exception instead.
 #

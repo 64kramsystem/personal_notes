@@ -44,6 +44,7 @@ fuser -n tcp -v $port
 
 Options:
 
+- `--user-agent=Mozilla`      : use this is a website refuses download
 - `-P|--directory-prefix $dir`: download to a specific directory (`P`refix)
 
 ### curl

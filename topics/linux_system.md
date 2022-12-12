@@ -202,13 +202,15 @@ echo "@user            -       maxlogins       1" >> /etc/security/limits.conf
 ### Sudo
 
 ```sh
-$SUDO_USER              # User who invoked sudo
-[[ $EUID -eq 0 ]]       # Shell (all) check for user being root
+$SUDO_USER                     # User who invoked sudo
+[[ $EUID -eq 0 ]]              # Shell (all) check for user being root
+sudo -n true && echo 'no pwd!' # Check if password is required to sudo (WATCH OUT SEMANTICS!)
 
 # Passwordless sudo (run as regular user)
 #
 echo "$(whoami) ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee "/etc/sudoers.d/$(whoami)_no_sudo_pwd"
 sudo chmod 440 !$
+
 
 # Run a specific command (also scripts) without asking sudo password.
 # WATCH OUT! The command must be invoked *exactly* as "sudo <full_command>", e.g. in this case
