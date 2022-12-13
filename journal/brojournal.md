@@ -1,3 +1,22 @@
+## Tue 13/Dec/2022
+
+- Studies: Bash
+  - [x] Investigate exporting of shellopts to subshell, and side-effects/context
+    - [x] Fight `env SHELLOPTS=` sub-subshell insanity
+- Tools: System installer script
+  - [x] Usability improvements
+    - [x] Improve presentation of each stage
+    - [x] Add debug mode
+- Studies: Gamedev
+  - [ ] Black Art of 3D Game Programming
+- Open Source: Bash Language Server
+  - [x] Investigate and report bug with shellcheck external sources
+    - [x] Investigate and propose solution for the bug
+- System/Writings: S3 Sleep
+  - [x] Test GRUB approach
+  - [x] Test initramfs hook approach
+  - [x] Verify S3 on system
+
 ## Mon 12/Dec/2022
 
 - Tools: System installer script

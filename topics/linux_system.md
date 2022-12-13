@@ -55,7 +55,6 @@
     - [Setup hibernation on Ubuntu-setup LUKS volume](#setup-hibernation-on-ubuntu-setup-luks-volume)
   - [Ubuntu hell](#ubuntu-hell)
     - [Ubuntu vs. ZFS vs. Recent Linux](#ubuntu-vs-zfs-vs-recent-linux)
-    - [Ubuntu with encrypted Btrfs](#ubuntu-with-encrypted-btrfs)
 
 ## Processes
 
@@ -1206,7 +1205,3 @@ apt install -y aptitude
 aptitude purge linux.*5.15
 apt install -y zfs-dkms linux-generic-5.19
 ```
-
-### Ubuntu with encrypted Btrfs
-
-Probably the most stable (dependency-wise) solution. See [here](https://mutschler.dev/linux/pop-os-btrfs-22-04); it seems it should work with minimal and evident changes on Ubuntu.
