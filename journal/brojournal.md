@@ -1,3 +1,14 @@
+## Wed 14/Dec/2022
+
+- Tools: Browser opening script
+  - [x] Workaround buggy browser behavior when opening a private window with multiple addresses
+- Writings: S3 Sleep
+  - [x] Update references
+  - [x] Update conclusion
+  - [x] Remove "Help!" section
+  - [x] Expand and confirm the initrd hook method, and update status of the GRUB method
+  - [x] Help blog user
+
 ## Tue 13/Dec/2022
 
 - Studies: Bash
