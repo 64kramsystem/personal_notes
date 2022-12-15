@@ -1,3 +1,9 @@
+## Thu 15/Dec/2022
+
+- Studies: Gamedev
+  - [x] Black Art of 3D Game Programming
+    - [x] Chapter 18: Kill or Be Killed
+
 ## Wed 14/Dec/2022
 
 - Tools: Browser opening script
