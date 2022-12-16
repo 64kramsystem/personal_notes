@@ -1,3 +1,10 @@
+## Fri 16/Dec/2022
+
+- [ ]  Math for programmers
+  - [x] Crop book
+  - [x] 1. Learning math with code
+  - [ ] 2. Drawing with 2D vectors
+
 ## Thu 15/Dec/2022
 
 - Studies: Gamedev
