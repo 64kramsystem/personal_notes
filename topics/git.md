@@ -611,7 +611,7 @@ The rev-parse strategy works only for cloned repositories (see https://stackover
 
 ```sh
 if ! git branch --remotes | grep -qP "^\s+$c_remote/HEAD "; then
-  git remote set-head "$c_remote" -a
+  git remote set-head "$c_remote" -a > /dev/null # ignore noise
 fi
 
 git rev-parse --abbrev-ref "$c_remote/HEAD" | perl -ne "print /$c_remote\/(\w+)/" | tee >(xsel -ib)

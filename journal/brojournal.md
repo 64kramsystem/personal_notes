@@ -1,3 +1,13 @@
+## Sat 17/Dec/2022
+
+- Open Source
+  - [x] Publish content of Amazing 3-D Games Adventure Set/Flights of Fantasy
+- Projects: Openscripts
+  - [x] `git_find_default_branch`: Workaround odd interaction between git and grep
+    - [x] Fight odd git/grep behavior
+- Projects: Geet
+  - [x] Gist creation: Add support for content via stdin
+
 ## Fri 16/Dec/2022
 
 - [ ]  Math for programmers
