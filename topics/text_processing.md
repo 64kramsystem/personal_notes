@@ -57,6 +57,8 @@
 
 ## Grep
 
+WATCH OUT!!! `grep -q` is troublesome when used for multiline input; it stops after the first match, [causing a SIGPIPE](https://stackoverflow.com/a/19120674/210029); if really need to use it, can workaround via `echo "$(operation)" | grep -q`.
+
 ```sh
 # -P: [P]erl regexes
 # -z: process the entire file as a single file
@@ -754,8 +756,14 @@ tr -cd '\0' | wc -c	# count zero chars (example with `\0`)
 
 ```sh
 sort -r           # `--reverse`
-sort -V           # `--version-sort`! WATCH OUT! '5.8' is sorted before '5.8.0'
 sort -R           # `--sort-random`: shuffle/randomize! WATCH OUT, slow! Better use the `shuf` program
+
+# Version sort!! (`--version-sort`)
+# Leading `v` is supported.
+# RCs can't be compared with release versions, however, they can be compared with each other (e.g. 6.1rc10 <> 6.1rc2).
+# WATCH OUT! '5.8' is sorted before '5.8.0'
+#
+sort -V
 
 # `-t/--field-separator`: separator
 # `-r/--reverse`

@@ -4,6 +4,7 @@
   - [Metadata](#metadata)
   - [Tooling](#tooling)
   - [Controllers](#controllers)
+    - [Filters](#filters)
   - [ActiveRecord](#activerecord)
     - [Querying](#querying)
     - [Batching](#batching)
@@ -33,7 +34,13 @@ rails runner $code_or_filename   # also filename is valid
 
 Predefined variables:
 
-- `action_name`: current action name
+- `action_name()`: current action name
+
+### Filters
+
+```rb
+before_action :method
+```
 
 ## ActiveRecord
 
