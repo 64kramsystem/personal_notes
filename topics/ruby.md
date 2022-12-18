@@ -13,7 +13,8 @@
     - [Collections destructuring in blocks](#collections-destructuring-in-blocks)
     - [Modules](#modules)
     - [Refinements](#refinements)
-  - [Metadata (constants etc.) modifiers](#metadata-constants-etc-modifiers)
+    - [Call stack metadata](#call-stack-metadata)
+    - [Access modifiers](#access-modifiers)
     - [Regular expression APIs/notes](#regular-expression-apisnotes)
     - [Weak references](#weak-references)
   - [Special variables/Built-in constants/Other metadata](#special-variablesbuilt-in-constantsother-metadata)
@@ -22,7 +23,6 @@
   - [Classes/Metaprogramming](#classesmetaprogramming)
     - [Dynamic class instantiation](#dynamic-class-instantiation)
     - [Reflection](#reflection)
-      - [Pass a method as map block parameter](#pass-a-method-as-map-block-parameter)
     - [Simulate Java annotations!!!](#simulate-java-annotations)
   - [Collections](#collections)
     - [Array](#array)
@@ -133,6 +133,8 @@ def mymethod(i); 2 * i; end
 [1, 2, 3].map(&myblock)
 [1, 2, 3].map { |i| 2 * i }
 
+# Pass a method as map() block parameter
+#
 # &method(:<method>) => { |arg| <method>(arg) }
 #
 # method(:<method>) doesn't take any arguments, so it can't be turned into a `<method>(arg1, arg2...)` invocation.
@@ -140,12 +142,12 @@ def mymethod(i); 2 * i; end
 [1, 2, 3].map(&method(:mymethod))
 [1, 2, 3].map { |i| mymethod(i) }
 
-# &:<method> => { |obj, *args| obj.send(<method>, *args) }
+# :<method> => { |arg, *args| arg.<method>(*args) }
 #
 # Fits with :inject, but it's not clear what else could it apply to.
 #
 [1, 2, 3].inject(:+)
-[1, 2, 3].inject { |i, j| i.send(:+), j }
+[1, 2, 3].inject { |i, j| i.+(j) }
 ```
 
 ### Heredoc
@@ -332,7 +334,14 @@ describe NilEmptyHelper do
 end
 ```
 
-## Metadata (constants etc.) modifiers
+### Call stack metadata
+
+```rb
+__method__ # enclosing method (static; just looks at the definition)
+__caller__ # enclosing method (dynamic; considers aliasing)
+```
+
+### Access modifiers
 
 ```ruby
 class Klazz
@@ -508,14 +517,6 @@ instance.method(:meth).source_location
 # Use Object as parent of root objects
 mod.const_source_location(:Klass)      # String accepted
 Klass.const_source_location(:CONST)    # String accepted
-```
-
-#### Pass a method as map block parameter
-
-```ruby
-# Invokes :mymethod on each of the `enumerable` items.
-#
-enumerable.map(&method(:mymethod))
 ```
 
 ### Simulate Java annotations!!!

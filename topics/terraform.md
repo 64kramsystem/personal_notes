@@ -13,6 +13,7 @@
   - [State operations](#state-operations)
     - [Move resources from one statefile to another](#move-resources-from-one-statefile-to-another)
   - [Providers](#providers)
+    - [Definition and modules tree](#definition-and-modules-tree)
   - [Resources](#resources)
     - [Key pair](#key-pair)
     - [IAM](#iam)
@@ -274,6 +275,68 @@ terraform state push remote.tfstate
 ## Providers
 
 Use `terraform providers` do display the dependency graph.
+
+### Definition and modules tree
+
+Providers are defined, including requirements, in the root module, e.g.:
+
+```tf
+provider "aws" {
+  access_key = var.production_aws_access_key
+  secret_key = var.production_aws_secret_key
+  region     = "eu-west-1"
+}
+
+provider "aws" {
+  alias      = "eu-central-1"
+  access_key = var.production_aws_access_key
+  secret_key = var.production_aws_secret_key
+  region     = "eu-central-1"
+}
+
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "x.y.z"
+    }
+  }
+}
+```
+
+They are implicitly used by children modules. In order for a child module to receive custom providers, it needs to define it in `required_providers`:
+
+```tf
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "3.74.1"
+      # Use aliases support multiple instances of a given provider (type).
+      #
+      configuration_aliases = [
+        # If aliases are specfied but `aws` is not included, it's not made available.
+        aws.myregion1
+        aws.myregion2
+      ]
+    }
+  }
+}
+```
+
+The parent can then set it/them:
+
+```tf
+module "mymodule" {
+  source = "/path/to/mymodule"
+  providers = {
+    # If aliases are not specified, the default is `aws`.
+    #
+    aws.myregion1 = aws
+    aws.myregion2 = aws.eu-central-1
+  }
+}
+```
 
 ## Resources
 

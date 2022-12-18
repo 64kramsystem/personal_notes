@@ -219,6 +219,7 @@ General APIs/operations:
 @date.next_month(@months=1), @date.prev_month(@months=1)  # More readable; also supports `day`, `year`
 
 @date_time.to_time.to_i                                   # DateTime to Unix time (epoch)
+@time.subset                                              # Fractional part of a time (rational)
 Time.at(time_i)                                           # Unix time to Time
 
 @date.wday                                                # Sun=0 .. Sat=6

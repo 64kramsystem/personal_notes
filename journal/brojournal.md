@@ -1,3 +1,17 @@
+## Sun 18/Dec/2022
+
+- Tools: Kernel building
+  - [x] Write automatic kernel detection/configuration/build
+- Project: Schedule manager
+  - [x] Verify separators when finding a date section
+- Studies: C
+  - [x] Investigate int/float constant compile-time casting
+- Studies: CS/Maths
+  - [ ] Math for programmers
+    - [ ] 2. Drawing with 2D vectors
+- Studies: Terraform
+  - [x] Review and copy TF provider notes
+
 ## Sat 17/Dec/2022
 
 - Open Source
@@ -10,10 +24,11 @@
 
 ## Fri 16/Dec/2022
 
-- [ ]  Math for programmers
-  - [x] Crop book
-  - [x] 1. Learning math with code
-  - [ ] 2. Drawing with 2D vectors
+- Studies: CS/Maths
+  - [ ] Math for programmers
+    - [x] Crop book
+    - [x] 1. Learning math with code
+    - [ ] 2. Drawing with 2D vectors
 
 ## Thu 15/Dec/2022
 

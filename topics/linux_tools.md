@@ -48,6 +48,7 @@
   - [Wine](#wine)
   - [Build the Linux kernel](#build-the-linux-kernel)
     - [Building the Ubuntu mainline kernel](#building-the-ubuntu-mainline-kernel)
+      - [Mainline configuration](#mainline-configuration)
     - [Other config notes](#other-config-notes)
 
 ## ls
@@ -249,6 +250,10 @@ tar xv -O -f "$tarfile" metadata.gz | gunzip > "$outfile" # Extract a single fil
 # - Use --show-transform to display transformed names
 #
 tar xvz --transform="s/^parsec-3.0/parsec-benchmark/"
+
+# Create an empty archive
+#
+echo -n | tar c --files-from -
 ```
 
 ## cp
@@ -1259,7 +1264,12 @@ dpkg-buildpackage --build=binary -d
 # The metapackage requires extra configuration; see `do_metapackage()`.
 ```
 
-The Canonical configurations are under `debian.master/config/amd64`; they're not included in the `defconfig` target, and can be merged, but they won't build with the standard method.
+#### Mainline configuration
+
+The mainline configuration is long and complex; it seems that it's built from a script outside the repo. A log is [here](https://kernel.ubuntu.com/~kernel-ppa/mainline/v6.1/amd64/log).
+
+The Canonical configurations are under `debian.master/config/amd64` (only `cod/` branches have `debian.master`); they're not included in the `defconfig` target, and can be merged, but they won't build with the standard method. Running `make olddefconfig` alone from a `cod/` branch generates the vanilla config.
+
 Versions from 6.1 onwards include additional packages; one of them is `linux-buildinfo`, which includes the configuration, but it seems that it's not possible to build that alone.
 
 ### Other config notes

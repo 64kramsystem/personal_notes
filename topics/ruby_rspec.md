@@ -166,7 +166,7 @@ See [reference](https://relishapp.com/rspec/rspec-expectations/v/3-10/docs/built
  |              | `be_within(span).of(reference)`                      | Time/Floats                                       |
  |              | `be === expected`                                    |                                                   |
  |              | `eq(expected)`                                       |                                                   |
- |              | `change { instance.attribute }.from(start).to(end)`  |                                                   |
+ |              | `change { instance.attribute }.from(start).to(end)`  | from/to are optional                              |
  |              | `change { instance.attribute }.by(amount)`           |                                                   |
  |              | `match(pattern)`                                     | String also accepted                              |
  |              | `match_array(array)`                                 | Order is ignored!                                 |

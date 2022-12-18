@@ -7,6 +7,7 @@
       - [Find current GRUB supported features](#find-current-grub-supported-features)
     - [Import/export](#importexport)
     - [Admin](#admin)
+    - [Encryption](#encryption)
   - [Mirror/devices](#mirrordevices)
   - [Datasets](#datasets)
   - [Mountpoints](#mountpoints)
@@ -89,12 +90,6 @@ zpool import -d $path $pool
 #
 zpool import -R $alt_root $pool
 
-# Import an encrypted pool. IMPORTANT!:
-# - if `-l` is not specified, and the pool is encrypted, it will be imported, with successful exit status (!), and with empty content (!!)
-# - if `-l` is specified, and the pool is not encrypted, it will be imported, without prompt
-#
-zpool import -l $pool
-
 # Rename a pool (permanently).
 #
 zpool import $pool $new_name
@@ -115,6 +110,26 @@ zpool online -e $pool $part_device
 # Scrub a pool. Results are displayed both in :list and :status.
 #
 zpool scrub $pool
+```
+
+### Encryption
+
+Import an encrypted pool. IMPORTANT!:
+
+- if `-l` is not specified, and the pool is encrypted, it will be imported, with successful exit status (!), and with empty content (!!)
+- if `-l` is specified, and the pool is not encrypted, it will be imported, without prompt
+
+```sh
+zpool import -l $pool
+```
+
+Importing an Ubuntu-configured pool is more complex; attempting a vanilla import will result in the `Failed to open key material file` error. Procedure from [Stack Overflow](https://askubuntu.com/a/1351546):
+
+```sh
+cryptsetup open /dev/zvol/rpool/keystore zfskey
+# The mountpoint is typically /dev/dm-0
+cat /dev/dm-0/system.key | zfs load-key -L prompt rpool
+zfs mount -R /mnt -a
 ```
 
 ## Mirror/devices

@@ -610,7 +610,9 @@ git show $(git fsck --unreachable | git cat-file --batch-check | awk '/commit/ {
 The rev-parse strategy works only for cloned repositories (see https://stackoverflow.com/q/17639383/210029), so if it's not present, we add it.
 
 ```sh
-if ! git branch --remotes | grep -qP "^\s+$c_remote/HEAD "; then
+# Don't use `grep -q`, since it causes SIGPIPE.
+#
+if ! git branch --remotes | grep "^  $c_remote/HEAD " > /dev/null; then
   git remote set-head "$c_remote" -a > /dev/null # ignore noise
 fi
 
