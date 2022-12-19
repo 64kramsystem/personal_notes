@@ -53,8 +53,6 @@
   - [Encryption](#encryption)
     - [Mount encrypted (.ecryptfs) home](#mount-encrypted-ecryptfs-home)
     - [Setup hibernation on Ubuntu-setup LUKS volume](#setup-hibernation-on-ubuntu-setup-luks-volume)
-  - [Ubuntu hell](#ubuntu-hell)
-    - [Ubuntu vs. ZFS vs. Recent Linux](#ubuntu-vs-zfs-vs-recent-linux)
 
 ## Processes
 
@@ -955,14 +953,13 @@ if modinfo zfs > /dev/null 2>&1; then echo installed; fi
 ```sh
 sudo su
 mount -o subvol=@ /dev/sda1 /mnt  # use '-o subvol=@' for btrfs
-mount --bind /dev /mnt/dev        # mirror dev etc. (see https://unix.stackexchange.com/questions/198590/what-is-a-bind-mount)
-mount --bind /sys /mnt/sys
-mount --bind /proc /mnt/proc
+# mirror dev etc. (see https://unix.stackexchange.com/questions/198590/what-is-a-bind-mount)
+for vdev in dev sys proc; do mount --bind /$vdev /mnt/$vdev; done
 mount /dev/sda1 /mnt/boot          # only if there is a separate boot partition
 chroot /mnt
 grub-install /dev/sda
 exit
-umount -R /mnt                    # `R`ecursively
+for vdev in proc sys dev; do umount --recursive --force --lazy /mnt/$vdev; done
 ```
 
 ### Add a Windows entry
@@ -1177,7 +1174,7 @@ Ubuntu creates a too small swap partition, and doesn't set the swap volume kerne
 Run from live CD, after the installation is completed:
 
 ```sh
-apt install partitionmanager
+apt install -y partitionmanager
 partitionmanager
 
 # ... resize the partitions ...
@@ -1185,23 +1182,4 @@ partitionmanager
 mkswap "$(ls -1 /dev/mapper/*swap*)"
 
 # now reboot
-```
-
-## Ubuntu hell
-
-### Ubuntu vs. ZFS vs. Recent Linux
-
-Jammy caused lots of problems; the provided ZFS version doesn't support the 5.19 kernel. The mainline PPA packages caused problems when trying to update the ZFS modules, so the Tuxinvader PPA is required, which is built only for Focal (but compatible with Jammy), and requires the now obsolete Libssl 1.1.
-
-Cubic setup:
-
-```sh
-add-apt-repository -n -y ppa:tuxinvader/lts-mainline
-perl -i -pe 's/jammy/focal/' /etc/apt/sources.list.d/*tux*
-add-apt-repository -n -y ppa:nrbrtx/libssl1
-add-apt-repository -n -y ppa:jonathonf/zfs
-apt update
-apt install -y aptitude
-aptitude purge linux.*5.15
-apt install -y zfs-dkms linux-generic-5.19
 ```

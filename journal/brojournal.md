@@ -1,3 +1,12 @@
+## Mon 19/Dec/2022
+
+- Tools: Kernel building
+  - [x] Update script for automatic kernel detection/configuration/build
+- Studies: CS/Maths
+  - [ ] Math for programmers
+    - [x] 2. Drawing with 2D vectors (theory)
+    - [ ] 3. Ascending to the 3D world
+
 ## Sun 18/Dec/2022
 
 - Tools: Kernel building

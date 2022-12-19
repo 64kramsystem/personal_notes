@@ -9,11 +9,12 @@
       - [Contexts](#contexts)
     - [Branch filtering](#branch-filtering)
     - [Caching](#caching)
+    - [Labels/conditional jobs run](#labelsconditional-jobs-run)
   - [Examples](#examples)
     - [Cancel existing actions for the same PR (branch)](#cancel-existing-actions-for-the-same-pr-branch)
     - [Block autosquash commits](#block-autosquash-commits)
     - [tmate debugging!](#tmate-debugging)
-    - [Minimal conditional execution](#minimal-conditional-execution)
+    - [Conditional jobs run](#conditional-jobs-run)
     - [Run command (e.g. install package)](#run-command-eg-install-package)
     - [Dynamically generate a matrix](#dynamically-generate-a-matrix)
       - [Perform jobs on for directories that have been changed](#perform-jobs-on-for-directories-that-have-been-changed)
@@ -142,6 +143,19 @@ Examples: https://github.com/actions/cache/blob/main/examples.md.
 
 See also [Preset CIs](#preset-cis) in this document.
 
+### Labels/conditional jobs run
+
+WATCH OUT!!! In principle, one could conditionally run jobs like this: `if: "contains(github.event.pull_request.labels.*.name, 'MyTestLabel')"`.
+
+However, this is a problem for devs who create PRs via API; the PR creation API doesn't support labels, so they need to be assigned separately, and even if done immediately, it will cause a race condition, and labels may not be found by the action.
+
+An alternative is use make the workflow trigger on PR labeling (`types: [labeled]`), however, this will trigger one workflow run for each label, and worse, `styfle/cancel-workflow-action` did not cancel previous workflows with such setup.
+
+There are a couple of solutions:
+
+1. use a script to test labels; while this is still subject, in theory, to race conditions, it's slow enough that the labels are found (if assigned immediately); see [example](#conditional-jobs-run).
+2. make the workflow run only on non-draft PRs, and have devs create PR as draft, add labels, then unmark as draft.
+
 ## Examples
 
 ### Cancel existing actions for the same PR (branch)
@@ -182,24 +196,77 @@ block-autosquash-commits:
   uses: mxschmitt/action-tmate@v3
 ```
 
-### Minimal conditional execution
+### Conditional jobs run
+
+Add something like this to the related jobs:
 
 ```yml
-name: CI
+    - name: Test if current suite is run
+      run:  script/ci/set_suite_run_flag.sh ${{ github.job }}
 
-on: pull_request
+# Test via:
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Test label
-      if: "contains(github.event.pull_request.labels.*.name, 'Tests: SomeCategory')"
-      run: echo "RUN_CURRENT_SUITE=1" >> $GITHUB_ENV
-    - name: Run TestSuite
       if: env.RUN_CURRENT_SUITE == 1
-      run: /path/to/test_suite.sh
+```
+
+Script, without boilerplate:
+
+```sh
+# Format:
+#
+#   [Label] => "suites"
+#
+# The suite matching strings (hash values) are regexes; suites are separated by `|`.
+#
+declare -Ax c_conditional_suites=(
+  [Tests: Foo]='pattern1|pattern2'
+  [Tests: Bar]='pattern3.+'
+)
+
+c_github_api_token=$OWNER:$GITHUB_READ_PR_LABELS_TOKEN                                   # the latter is a secret
+c_labels_api_url=https://api.github.com/repos/$ORG/$REPO/issues/$GITHUB_PR_NUMBER/labels # the latter is a built-in
+
+# Find the PR labels, and print one per line. For simplicity, we assume that labels don't have
+# newlines (which anyway is not a realistic case) or regex metachars.
+#
+function find_pr_labels {
+  local data
+
+  # For an example response, see https://docs.github.com/en/rest/issues/labels.
+  #
+  data=$(curl -u "$c_github_api_token" "$c_labels_api_url")
+
+  # .[]    : iterate the array
+  # {name} : extract the corresponding values of the "name" keys
+  # []     : map to an array
+  # -r     : print raw (unquoted) strings
+  #
+  echo "$data" | jq -r '.[] | {name}[]'
+}
+
+function main {
+  local current_suite=$1
+
+  while IFS= read -r label; do
+    if [[ -v c_conditional_suites[$label] ]]; then
+      echo "- Checking label: $label"
+
+      local label_suites=${c_conditional_suites[$label]}
+
+      if echo "$current_suite" | grep -qP "^($label_suites)$"; then
+        echo "  - Running suite"
+        echo "RUN_CURRENT_SUITE=1" >> "$GITHUB_ENV"
+        exit
+      else
+        echo "  - Skipping suite"
+      fi
+    else
+      echo "- Ignoring label: $label"
+    fi
+  done <<< "$(find_pr_labels)"
+}
+
+main "$1"
 ```
 
 ### Run command (e.g. install package)
