@@ -1,5 +1,6 @@
 ## Table of contents
 
+- [Table of contents](#table-of-contents)
 - [Basic usage](#basic-usage)
 - [Corruption](#corruption)
 - [Other stuff](#other-stuff)
@@ -18,6 +19,13 @@ Show FS info; can be executed globally on any specific device.
 
 ```sh
 btrfs filesystem show [<device>|<mount>]
+
+# Mirror can be observed from `RAID1` descriptions:
+#
+#   Data,RAID1: Size:8.00GiB, Used:7.16GiB (89.56%)
+#   Metadata,RAID1: Size:1.00GiB, Used:230.91MiB (22.55%)
+#   System,RAID1: Size:32.00MiB, Used:16.00KiB (0.05%)
+#
 btrfs filesystem usage <mount>
 ```
 
@@ -37,20 +45,20 @@ Add device (mirror); WATCH OUT! The balancing default is striping (for data).
 Also converts a single device to mirror.
 
 - `-f`                               : overwrite the destination FS, if there is any
-- `--full-balance`                   : skip pause and warning
-- `-v`                               : verbose
 - `--bg`|`--background`
 - `-dconvert=raid1 -mconvert=raid1`  : convert data and metadata to RAID1
+- `--full-balance`                   : skip pause and warning; not meaningful with `--balance` set
+- `-v`                               : verbose; not meaningful with `--balance` set
 
 ```sh
 btrfs device add [-f] /dev/sde <mount>
-btrfs balance start --full-balance -dconvert=raid1 -mconvert=raid1 -v --background <mount>
+btrfs balance start -dconvert=raid1 -mconvert=raid1 -v --background <mount>
 ```
 
-Show (not monitor) rebalance status.
+Monitor rebalance status (no built-in monitoring).
 
 ```sh
-btrfs balance status <mount>
+watch -n 1 btrfs balance status <mount>
 ```
 
 Convert RAID1 to single devices; doesn't show the status.

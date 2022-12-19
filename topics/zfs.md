@@ -126,10 +126,13 @@ zpool import -l $pool
 Importing an Ubuntu-configured pool is more complex; attempting a vanilla import will result in the `Failed to open key material file` error. Procedure from [Stack Overflow](https://askubuntu.com/a/1351546):
 
 ```sh
-cryptsetup open /dev/zvol/rpool/keystore zfskey
+zpool import -R /mnt $pool
+cryptsetup open /dev/zvol/$pool/keystore zfskey
 # The mountpoint is typically /dev/dm-0
-cat /dev/dm-0/system.key | zfs load-key -L prompt rpool
-zfs mount -R /mnt -a
+mount /dev/dm-0 /mnt
+cat /mnt/system.key | zfs load-key -L prompt $pool
+umount /mnt
+zfs mount -a
 ```
 
 ## Mirror/devices

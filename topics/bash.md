@@ -96,7 +96,8 @@ See http://linuxcommand.org/lc3_man_pages/seth.html.
 ```sh
 set +o shellopt                           # disables a shellopt
 [[ $SHELLOPTS =~ $(echo '\bnounset\b') ]] # clean/easy way to test shellopts
-export SHELLOPTS                          # pass the shell options to subshells!
+export SHELLOPTS                          # pass the shell options to subshells! WATCH OUT: recursive
+env SHELLOPTS=$SHELLOPTS mycmd            # ^^ (same)
 ```
 
 ### Madness references
