@@ -1,3 +1,12 @@
+## Tue 20/Dec/2022
+
+- Open Source: More Tricks of the Game Programming Gurus
+  - [x] Create repo with source
+- [ ] Tools/System: Move to BTRFS encrypted/mirrored
+  - [x] Brutal fight with the existing guide
+  - [x] Attempt workaround using standard Ubiquity setup
+    - [x] Test suspend on VMs
+
 ## Mon 19/Dec/2022
 
 - Tools: Kernel building
