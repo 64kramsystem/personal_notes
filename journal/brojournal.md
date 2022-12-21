@@ -1,3 +1,9 @@
+## Wed 21/Dec/2022
+
+- Studies: CS/Maths
+  - [x] Copy maths notes and review topics
+    - [x] Fight latex newlines in Anki
+
 ## Tue 20/Dec/2022
 
 - Open Source: More Tricks of the Game Programming Gurus
