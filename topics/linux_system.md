@@ -35,6 +35,7 @@
     - [At](#at)
   - [Apparmor](#apparmor)
   - [fstab](#fstab)
+  - [crypttab](#crypttab)
   - [sysctl](#sysctl)
   - [Modules](#modules)
   - [Grub](#grub)
@@ -285,7 +286,8 @@ parted -s $disk_device rm $part_number_1_based
 In order to unmount encrypted partitions, see [ejectdisk](https://github.com/64kramsystem/openscripts/blob/416f4a456412210df86a574a4d19a649481133b2/ejectdisk#L76); this involves:
 
 ```sh
-lsblk -n -o NAME,TYPE,MOUNTPOINT,UUID $device  # find the given device tree properties
+lsblk -n -o NAME,TYPE,MOUNTPOINT,UUID $device  # find the given device tree properties; WATCH OUT! If the dev is encrypted, it may return two entries
+blkid -s UUID -o value $device                 # when requiring the UUID of one device, this is a better choice (always returns only one entry)
 udisksctl unmount -b /dev/mapper/$luks_device  # unmount the encrypted partition(s)
 udisksctl lock -b /dev/$luks_device            # lock the LUKS device
 ```
@@ -915,10 +917,21 @@ Test the content of fstab (not reliable for actual mounting; for example, doesn'
 mount -fav
 ```
 
-Example NTFS mount (mountpoint must exist):
+Default mount options (mountpoint must exist):
 
 ```fstab
-/path/to/dev /path/to/mount ntfs rw,auto,user,fmask=133,dmask=022,uid=1000,gid=1000 0 0
+UUID=foo     /path   ntfs rw,auto,user,fmask=133,dmask=022,uid=1000,gid=1000 0 0
+
+UUID=foo     /       btrfs defaults,subvol=@                                 0 1
+UUID=bar     /home   btrfs defaults,subvol=@home                             0 2
+```
+
+## crypttab
+
+Default:
+
+```
+nvme0n1p3_crypt UUID=foo none luks,discard
 ```
 
 ## sysctl
