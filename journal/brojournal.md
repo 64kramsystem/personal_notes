@@ -1,3 +1,10 @@
+## Thu 22/Dec/2022
+
+- System/Writings: Ubuntu on encrypted/mirrored BTRFS
+  - [x] Test middle-Ubiquity strategy (single disk)
+  - [x] Test middle-Ubiquity strategy
+    - [x] Prepare BTRFS+LUKS script
+
 ## Wed 21/Dec/2022
 
 - Studies: CS/Maths
