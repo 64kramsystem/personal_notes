@@ -1,9 +1,27 @@
+## Fri 23/Dec/2022
+
+- Tools/Writings: BTRFS encrypted/mirrored
+  - [x] Complete middle-Ubiquity strategy
+    - [x] Implement caching
+    - [x] Test `/boot` mirroring
+- Writings
+  - [x] BTRFS article
+- Studies: Linux
+  - [x] Study how to duplicate the partitions layout across devices
+    - [x] Investigate how not to overwrite the destination
+- Studies: CS/Maths
+  - [ ] Math for programmers
+    - [x] 2. Drawing with 2D vectors (remaining exercises)
+    - [ ] 3. Ascending to the 3D world
+
 ## Thu 22/Dec/2022
 
 - System/Writings: Ubuntu on encrypted/mirrored BTRFS
   - [x] Test middle-Ubiquity strategy (single disk)
   - [x] Test middle-Ubiquity strategy
     - [x] Prepare BTRFS+LUKS script
+- Admin/System
+  - [x] Check motherboards EXPO vs. S3: https://www.reddit.com/r/Amd/comments/z8mcbh/any_news_on_sleep_mode_with_ryzen_7000_and_expo
 
 ## Wed 21/Dec/2022
 
