@@ -27,6 +27,8 @@ If an underlying service is *not* started via Systemd, from the perspective of t
 ## Systemctl
 
 ```sh
+# Status-related commands support more services
+
 systemctl enable|disable [--now] $service # enable/disable start on boot; --now will also start/stop
 systemctl start|stop $service         # start/stop immediately
 systemctl reload $service             # reload; not always functional

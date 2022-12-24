@@ -601,6 +601,7 @@ File.dirname(path)                              # Parent dir
 File.extname(fname)                             # Extract the extension (including leading dot); if there are multiple dots, only the last
                                                 # one is extracted
 File.size(fname)
+File.mtime(fname)
 
 Dir.pwd                                         # working path
 Dir.chdir(path) { }                             # Change current dir; WATCH OUT! not thread safe! see https://bugs.ruby-lang.org/issues/9785

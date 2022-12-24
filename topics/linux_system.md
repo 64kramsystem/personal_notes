@@ -51,7 +51,9 @@
   - [MIME (extensions) (file associations) handling](#mime-extensions-file-associations-handling)
     - [Adding and associating a new application](#adding-and-associating-a-new-application)
     - [Split MAFF association](#split-maff-association)
+  - [LVM](#lvm)
   - [Encryption](#encryption)
+    - [Unmount LUKS encrypted partitions](#unmount-luks-encrypted-partitions)
     - [Mount encrypted (.ecryptfs) home](#mount-encrypted-ecryptfs-home)
     - [Setup hibernation on Ubuntu-setup LUKS volume](#setup-hibernation-on-ubuntu-setup-luks-volume)
 
@@ -283,16 +285,34 @@ parted -s $disk_device resizepart $part_number_1_based 100%
 parted -s $disk_device rm $part_number_1_based
 ```
 
-In order to unmount encrypted partitions, see [ejectdisk](https://github.com/64kramsystem/openscripts/blob/416f4a456412210df86a574a4d19a649481133b2/ejectdisk#L76); this involves:
+Copy partitions layout across devices:
 
 ```sh
-lsblk -n -o NAME,TYPE,MOUNTPOINT,UUID $device  # find the given device tree properties; WATCH OUT! If the dev is encrypted, it may return two entries
-blkid -s UUID -o value $device                 # when requiring the UUID of one device, this is a better choice (always returns only one entry)
-udisksctl unmount -b /dev/mapper/$luks_device  # unmount the encrypted partition(s)
-udisksctl lock -b /dev/$luks_device            # lock the LUKS device
-```
+# Destination layout is overwritten. WATCH OUT! Must randomize dest GUIDs.
+#
+# -R|--replicate; -G|--randomize-guids.
+#
+sgdisk /dev/source -R /dev/dest
+sgdisk -G /dev/dest
 
-To check the lock status of a LUKS device, see https://unix.stackexchange.com/a/695898/12814.
+# COOL!!! Duplicates the layout, without fully overwriting the destination.
+#
+# - requires an existing destination partition table
+# - duplicates the names
+# - assumes that names exist and don't include spaces
+# - UUIDS are generated
+#
+# Sample input:
+#
+#   Number  Start      End        Size       File system  Name   Flags
+#    1      2048s      20973567s  20971520s  ext2         PIZZA
+#    2      20973568s  29566975s  8593408s   ext3         PIZZA  msftdata
+#
+echo 'unit s print' |
+  parted /dev/source |
+  perl -lne 'print "mkpart $4 $3 $1 $2" if /^ *\d+ +(\d+s) +(\d+s) +\d+s +(\S+) +(\S+)/' |
+  parted /dev/dest
+```
 
 ### In-memory filesystems
 
@@ -1168,7 +1188,85 @@ XML
 update-mime-database /usr/share/mime
 ```
 
+## LVM
+
+Create a whole LVM container:
+
+```sh
+# Create a physical container.
+#
+pvcreate /dev/mapper/"$CONTAINER2_NAME"
+
+# List physical containers; sample output:
+#
+#    PV                     VG            Fmt  Attr PSize  PFree
+#    /dev/mapper/sda3_crypt vgubuntu-mate lvm2 a--  61.81g     0
+#    /dev/mapper/sdb1_crypt               lvm2 ---  63.98g 63.98g
+pvs
+
+# Create a volume group.
+#
+vgcreate vgubuntu-mate-mirror /dev/mapper/"$CONTAINER2_NAME"
+
+# Display the volume groups; sample output:
+#
+#  VG                   #PV #LV #SN Attr   VSize  VFree
+#  vgubuntu-mate          1   2   0 wz--n- 61.81g     0
+#  vgubuntu-mate-mirror   1   0   0 wz--n- 63.98g 63.98g
+#
+vgs
+
+# Create a logical volume (in the volume group).
+# [n]ame; [l] size in extents
+#
+lvcreate -l 100%FREE -n root vgubuntu-mate-mirror
+
+# List the logical volumes; sample output:
+#
+#    LV     VG                   Attr       LSize  Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+#    root   vgubuntu-mate        -wi-a----- 58.16g
+#    swap_1 vgubuntu-mate        -wi-ao---- <3.65g
+#    root   vgubuntu-mate-mirror -wi-a----- 63.98g
+#
+lvs
+```
+
+Now, one can create an FS in `/dev/mapper/vgubuntu--mate-root`; setup crypttab/fstab:
+
+```sh
+echo "/dev/mapper/vgubuntu--mate-root /     btrfs defaults,subvol=@,$BTRFS_OPTS     0 1" >> /target/etc/fstab
+
+# `keyscript` caches passwords across VGs, so that they're not asked twice.
+#
+LUKS_DISK2_PART_UUID=$(blkid -s UUID -o value ${DISK2_DEV}1)
+echo "$CONTAINER2_NAME UUID=$LUKS_DISK2_PART_UUID none luks,discard,keyscript=decrypt_keyctl" >> /target/etc/crypttab
+```
+
 ## Encryption
+
+LUKS general stuff:
+
+```sh
+# When `-` is accepted, the password can be piped (MUST USE `echo -n`)
+
+cryptsetup luksDump /dev/sda3                    # print LUKS info; use the physical dev partition
+cryptsetup luksFormat --batch-mode /dev/sda3 [-] # interactive; batch-mode=no warning
+cryptsetup luksOpen /dev/sda3 mapper-name [-]    # interactive
+cryptsetup luksClose mapper-name                 # mapper device
+```
+
+To check the lock status of a LUKS device, see https://unix.stackexchange.com/a/695898/12814.
+
+### Unmount LUKS encrypted partitions
+
+See [ejectdisk](https://github.com/64kramsystem/openscripts/blob/416f4a456412210df86a574a4d19a649481133b2/ejectdisk#L76); this involves:
+
+```sh
+lsblk -n -o NAME,TYPE,MOUNTPOINT,UUID $device  # find the given device tree properties; WATCH OUT! If the dev is encrypted, it may return two entries
+blkid -s UUID -o value $device                 # when requiring the UUID of one device, this is a better choice (always returns only one entry)
+udisksctl unmount -b /dev/mapper/$luks_device  # unmount the encrypted partition(s)
+udisksctl lock -b /dev/$luks_device            # lock the LUKS device
+```
 
 ### Mount encrypted (.ecryptfs) home
 
