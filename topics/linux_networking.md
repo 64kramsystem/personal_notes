@@ -37,7 +37,8 @@ Find process listening on port:
 
 ```sh
 sudo lsof -i :$port
-fuser -n tcp -v $port
+fuser -n tcp -v $port               # [n]amespace; necessary; can only specify one
+sudo netstat -lnp | grep :8000      # [l]istening only (convenient); n: no resolution, p: program names
 ```
 
 ### wget

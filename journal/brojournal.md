@@ -1,11 +1,26 @@
+## Sat 24/Dec/2022
+
+- Studies: Misc
+  - [x] Copy notes
+- Studies: CS/Maths
+  - [ ] Math for programmers
+    - [ ] 3. Ascending to the 3D world
+- Tools/Writings: Btrfs encrypted/mirrored
+  - [x] Implement `/boot` mirroring
+    - [x] Implement copy of first disk structure
+  - [x] Minor tweaks/cosmetic improvements
+- Tools
+  - [x] Music playback script: Add sorting by timestamp options
+  - [x] Remote desktop manager: Automate start/stop based on status
+
 ## Fri 23/Dec/2022
 
-- Tools/Writings: BTRFS encrypted/mirrored
+- Tools/Writings: Btrfs encrypted/mirrored
   - [x] Complete middle-Ubiquity strategy
     - [x] Implement caching
     - [x] Test `/boot` mirroring
 - Writings
-  - [x] BTRFS article
+  - [x] Btrfs article
 - Studies: Linux
   - [x] Study how to duplicate the partitions layout across devices
     - [x] Investigate how not to overwrite the destination
@@ -16,10 +31,10 @@
 
 ## Thu 22/Dec/2022
 
-- System/Writings: Ubuntu on encrypted/mirrored BTRFS
+- System/Writings: Ubuntu on encrypted/mirrored btrfs
   - [x] Test middle-Ubiquity strategy (single disk)
   - [x] Test middle-Ubiquity strategy
-    - [x] Prepare BTRFS+LUKS script
+    - [x] Prepare btrfs+LUKS script
 - Admin/System
   - [x] Check motherboards EXPO vs. S3: https://www.reddit.com/r/Amd/comments/z8mcbh/any_news_on_sleep_mode_with_ryzen_7000_and_expo
 
@@ -33,7 +48,7 @@
 
 - Open Source: More Tricks of the Game Programming Gurus
   - [x] Create repo with source
-- [ ] Tools/System: Move to BTRFS encrypted/mirrored
+- [ ] Tools/System: Move to btrfs encrypted/mirrored
   - [x] Brutal fight with the existing guide
   - [x] Attempt workaround using standard Ubiquity setup
     - [x] Test suspend on VMs
@@ -5681,7 +5696,7 @@ Skipped a day, but overall, completed the cycle.
 
 - Admin
   - Systems
-    - [x] Workaround Btrfs bug on background scrubbing
+    - [x] Workaround btrfs bug on background scrubbing
 - Tools
   - [x] Create script for archival previous year files, including brojournal
 - Projects

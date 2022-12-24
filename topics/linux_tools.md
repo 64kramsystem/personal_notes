@@ -7,7 +7,7 @@
       - [Search text inside multiple PDFs](#search-text-inside-multiple-pdfs)
   - [xargs](#xargs)
   - [tar](#tar)
-  - [cp](#cp)
+  - [cp/mv](#cpmv)
   - [mkfifo](#mkfifo)
   - [Files](#files)
     - [lsof](#lsof)
@@ -256,9 +256,9 @@ tar xvz --transform="s/^parsec-3.0/parsec-benchmark/"
 echo -n | tar c --files-from -
 ```
 
-## cp
+## cp/mv
 
-In order to copy the content of a directory including hidden files, use:
+In order to copy/move the content of a directory including hidden files, use:
 
 ```sh
 # `-T`(--no-target-directory): will create the dest dir if it not exists; if it exists, it will copy
@@ -267,6 +267,11 @@ In order to copy the content of a directory including hidden files, use:
 # source can include a trailing slash
 #
 cp -rT /source /dest
+
+# Also includes files starting with double dot (!); WATCH OUT! it errors if there are no files corresponding to each pattern.
+# Alternative: use the `dotglob` shopt.
+#
+mv source/{,.[!.],..?}* dest
 ```
 
 ## mkfifo
