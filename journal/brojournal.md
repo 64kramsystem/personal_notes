@@ -1,3 +1,11 @@
+## Sun 25/Dec/2022
+
+- Studies: CS/Programming languages
+  - [x] Review SICP/new edition
+- Projects: QEMU-pinning
+  - [x] Update patch for v7.2.0
+- [ ] Admin: Flush/Planning
+
 ## Sat 24/Dec/2022
 
 - Studies: Misc
