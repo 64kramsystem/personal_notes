@@ -1,3 +1,16 @@
+## Mon 26/Dec/2022
+
+- Tools/Writings: Btrfs encrypted/mirrored
+  - [x] Generalize/de-hardcode LV-related names
+- Studies: CS/Maths
+  - [ ] Math for programmers
+    - [x] 3. Ascending to the 3D world
+  - [x] Review distance point-plane and perspective correction formulas
+- Tools/Writings: Btrfs encrypted/mirrored
+  - [x] Implement EFI mirroring
+- Hardware
+  - [x] Review S0ix
+
 ## Sun 25/Dec/2022
 
 - Studies: CS/Programming languages
