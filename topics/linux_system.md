@@ -986,13 +986,18 @@ if modinfo zfs > /dev/null 2>&1; then echo installed; fi
 ```sh
 sudo su
 mount -o subvol=@ /dev/sda1 /mnt  # use '-o subvol=@' for btrfs
-# mirror dev etc. (see https://unix.stackexchange.com/questions/198590/what-is-a-bind-mount)
-for vdev in dev sys proc; do mount --bind /$vdev /mnt/$vdev; done
 mount /dev/sda1 /mnt/boot          # only if there is a separate boot partition
+# If /run is not mounted, must manually add the nameserver to /etc/resolv.conf, since it's
+# linked to /run/systemd/resolve/stub-resolv.conf.
+for vdev in dev sys proc run; do mount --bind /$vdev /mnt/$vdev; done
 chroot /mnt
 grub-install /dev/sda
 exit
-for vdev in proc sys dev; do umount --recursive --force --lazy /mnt/$vdev; done
+# This may not work; if that's the case, use (but makes the system unstable):
+#
+#   for vdev in run proc sys dev; do umount --recursive --force --lazy /mnt/$vdev; done
+#
+umount --recursive /target
 ```
 
 ### Add a Windows entry
