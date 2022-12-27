@@ -981,6 +981,8 @@ if modinfo zfs > /dev/null 2>&1; then echo installed; fi
 
 ## Grub
 
+It seems that pseudo-grub hooks are possible; see [here](https://samwhelp.github.io/book-ubuntu-qna/read/case/linux-package/hook-update-grub).
+
 ### Install from live cd (or perform chrooted operations)
 
 ```sh
