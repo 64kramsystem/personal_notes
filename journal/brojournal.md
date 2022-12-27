@@ -1,3 +1,12 @@
+## Tue 27/Dec/2022
+
+- Studies: Linux
+  - [x] Search if it's possible to hook grub updates
+- Studies: CS/Maths
+  - [ ] Review distance point-plane and perspective correction formulas
+  - [x] Review correction of spherical distortion
+  - [ ] Math for programmers
+
 ## Mon 26/Dec/2022
 
 - Tools/Writings: Btrfs encrypted/mirrored
@@ -5,7 +14,7 @@
 - Studies: CS/Maths
   - [ ] Math for programmers
     - [x] 3. Ascending to the 3D world
-  - [x] Review distance point-plane and perspective correction formulas
+  - [ ] Review distance point-plane and perspective correction formulas
 - Tools/Writings: Btrfs encrypted/mirrored
   - [x] Implement EFI mirroring
 - Hardware
