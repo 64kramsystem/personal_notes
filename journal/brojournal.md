@@ -1,3 +1,10 @@
+## Wed 28/Dec/2022
+
+- Project: Rust Roguelike
+  - [x] Fix [Some systems with events reading are invoked twice](https://github.com/64kramsystem/learn_bevy_ecs_by_ripping_off-code/issues/6)
+    - [x] Investigate, and design fix
+    - [x] Add note to book
+
 ## Tue 27/Dec/2022
 
 - Studies: Linux
