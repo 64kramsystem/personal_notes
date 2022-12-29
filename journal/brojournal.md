@@ -1,3 +1,10 @@
+## Thu 29/Dec/2022
+
+- Open source
+  - [x] Reply question on Rust WG
+- Blog/Tools
+  - [x] Replace Disqus with utteranc.es
+
 ## Wed 28/Dec/2022
 
 - Project: Rust Roguelike
