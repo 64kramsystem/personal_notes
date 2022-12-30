@@ -1,3 +1,12 @@
+## Fri 30/Dec/2022
+
+- System
+  - [x] Fight HiDPI
+- Studies: CS/Maths
+  - [ ] Math for programmers
+    - [x] 4. Transforming vectors and graphics
+    - [ ] 5. Computing transformations with matrices
+
 ## Thu 29/Dec/2022
 
 - Open source
