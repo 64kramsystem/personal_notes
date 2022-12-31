@@ -80,6 +80,7 @@ These are Perl; PCRE may have slightly different details:
 
 - `/m`: on 0777, match `^`/`$` on every line
 - `/s`: match newlines with `.`
+- `/x`: ignore whitespace/comments (in the search expression, not replace!)
 
 WATCH OUT! There are exceptions on some languages; see the specific language.
 
