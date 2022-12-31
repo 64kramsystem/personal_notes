@@ -8,7 +8,8 @@
   - [Disable SMT (hyperthreading)](#disable-smt-hyperthreading)
   - [Disable mouse/keyboard](#disable-mousekeyboard)
   - [Screen stuff](#screen-stuff)
-    - [Add new resolution (HiDPI problem)](#add-new-resolution-hidpi-problem)
+    - [HiDPI possible solution (fractional scaling)](#hidpi-possible-solution-fractional-scaling)
+    - [HiDPI legacy solution (add new resolution)](#hidpi-legacy-solution-add-new-resolution)
   - [Audio](#audio)
   - [Disconnect and power off a device](#disconnect-and-power-off-a-device)
   - [Reset a USB device](#reset-a-usb-device)
@@ -140,7 +141,14 @@ setterm -blank 0 -powersave off -powerdown 0 => xset s off
 xset dpms force off
 ```
 
-### Add new resolution (HiDPI problem)
+### HiDPI possible solution (fractional scaling)
+
+See:
+
+- https://wilfredwee.github.io/entry/how-to-xrandr
+- https://askubuntu.com/questions/1231818/fractional-scaling-via-xrandr-setting-at-boot-time
+
+### HiDPI legacy solution (add new resolution)
 
 Create resolution mode:
 

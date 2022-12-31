@@ -1,3 +1,10 @@
+## Sat 31/Dec/2022
+
+- Tools
+  - [x] Review Linux 6.2 commits
+  - [x] Setup Unity
+  - [x] Some script updates
+
 ## Fri 30/Dec/2022
 
 - System
