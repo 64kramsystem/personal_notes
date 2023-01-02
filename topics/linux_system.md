@@ -43,7 +43,7 @@
     - [Add a Windows entry](#add-a-windows-entry)
   - [Logging/syslog/tools](#loggingsyslogtools)
     - [Logrotate](#logrotate)
-  - [Terminal emulator](#terminal-emulator)
+  - [Terminal (emulator)](#terminal-emulator)
   - [Desktop Environment: windows](#desktop-environment-windows)
   - [Gnome stuff](#gnome-stuff)
     - [Distro info](#distro-info)
@@ -1052,12 +1052,17 @@ Logrotate automatically sends the `HUP` signal to the processes, so that the fil
   endscript
   ```
 
-## Terminal emulator
+## Terminal (emulator)
 
-Open a new tab, execute a command, and leave the tab open:
 
 ```sh
+# Open a new tab, execute a command, and leave the tab open:
+#
 mate-terminal --tab --command 'sh -c "echo abc; zsh"'
+
+# Terminal size:
+#
+stty size
 ```
 
 ## Desktop Environment: windows

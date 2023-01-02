@@ -254,6 +254,10 @@ tar xvz --transform="s/^parsec-3.0/parsec-benchmark/"
 # Create an empty archive
 #
 echo -n | tar c --files-from -
+
+# Use -C and wildcards at the same time. See other alternatives at https://superuser.com/q/266422.
+#
+$ (cd /path && tar cf *.xml)
 ```
 
 ## cp/mv
