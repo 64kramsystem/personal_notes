@@ -15,7 +15,7 @@
     - [Downscale/downmix audio file](#downscaledownmix-audio-file)
     - [Video scaling](#video-scaling)
   - [Other operations](#other-operations)
-    - [Check file encoding formats](#check-file-encoding-formats)
+    - [Check file encoding formats (metadata)](#check-file-encoding-formats-metadata)
     - [Record desktop](#record-desktop)
     - [Build FFmpeg with libfdk-aac support](#build-ffmpeg-with-libfdk-aac-support)
 
@@ -26,6 +26,10 @@
 ```sh
 ffmpeg -i <input> <output.wav>
 ffmpeg -i <input> -ab 320k output.mp3
+
+# Convert to mono (space required after `-ac`)
+#
+ffmpei -i <input> -ac 1 output.wav
 ```
 
 ### Video+audio
@@ -161,7 +165,7 @@ ffmpeg -i input.mp4 -vf scale=800:600 -aspect 4:3 output.avi
 
 ## Other operations
 
-### Check file encoding formats
+### Check file encoding formats (metadata)
 
 ```sh
 ffmpeg -i $filename

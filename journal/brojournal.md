@@ -1,3 +1,12 @@
+## Mon 02/Jan/2023
+
+- Tools: Internal scripts
+  - kernel building
+    - [x] Add build new version functionality
+    - [x] Add install functionality
+    - [x] Parameterize packages destination
+    - [x] Parameterize repo path
+
 ## Sun 01/Jan/2023
 
 - Tools
