@@ -1,3 +1,13 @@
+## Wed 04/Jan/2023
+
+- Open Source: Rust Game Ports
+  - [x] boing-ggez: Upgrade to ggez v0.8
+    - [x] Write and verify new fullscreen logic
+      - [x] Report on discord; update related GH issue
+- Studies: Gamedev
+  - [ ] Build Your Own First-Person Shooter in Unity
+    - [ ] 08. Taking your first steps in Unity
+
 ## Tue 03/Jan/2023
 
 - Admin
