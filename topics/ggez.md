@@ -11,7 +11,6 @@
   - [Screen](#screen)
     - [Graphics configuration](#graphics-configuration)
     - [Viewport (/add borders)](#viewport-add-borders)
-    - [Canvas](#canvas)
   - [Audio/Sound](#audiosound)
   - [Timing](#timing)
   - [Events Handling](#events-handling)
@@ -43,7 +42,7 @@ impl MainState {
 
         // Linear filter is applied if not specified.
         //
-        let mut image = graphics::Image::new(ctx, "/shot.png")?;
+        let mut image = graphics::Image::from_path(ctx, "/shot.png")?;
         image.set_filter(graphics::FilterMode::Nearest);
 
         Ok(MainState { objects_x: 0.0, image })
@@ -58,32 +57,33 @@ impl event::EventHandler for MainState {
     }
 
     fn draw(&mut self, ctx: &mut Context) -> GameResult {
-        // Clear the screen with the given (background) color.
-        graphics::clear(ctx, [0.1, 0.2, 0.3, 1.0].into());
+        // Get the canvas, and clear the screen with the given (background) color.
+        // WATCH OUT! Not batched; for that, must use ggez::graphics::InstanceArray.
+        //
+        let mut canvas = graphics::Canvas::from_frame(ctx, graphics::Color::BLACK);
 
         // (0, 0) is the top left.
 
         // Simple drawing, without transformations.
         //
-        graphics::draw(ctx, &self.image, (Vec2::new(self.objects_x, 0.),))?;
+        canvas.draw(&self.image, (Vec2::new(self.objects_x, 0.),));
 
         // Drawing with transformations.
         // Linear scaling is applied by default.
         // If there are no transformations, and the meshes have a position, one can pass `DrawParam::new()`
         // bare.
         //
-        graphics::draw(
-            ctx,
+        canvas.draw(
             &self.image,
             DrawParam::new()
                 .dest(Vec2::new(self.objects_x, 0.))
                 .rotation(0.5)
                 .scale(Vec2::new(10., 10.)),
-        )?;
+        );
 
         // Tell the graphics system to actually put everything on the screen. Must be called at the
         // end of draw().
-        graphics::present(ctx)?;
+        canvas.finish(context)?;
 
         timer::yield_now();
 
@@ -242,7 +242,7 @@ let triangle_verts = vec![
 
 let triangle_indices = vec![0, 1, 2];
 
-let image = graphics::Image::new(ctx, "/rock.png")?;
+let image = graphics::Image::from_path(ctx, "/rock.png")?;
 mb.raw(&triangle_verts, &triangle_indices, Some(image))?;
 mb.build(ctx)
 ```
@@ -282,13 +282,13 @@ It's possible to draw to an arbitrary destination; see `render_to_image.rs`.
 Fullscreen/windowed, and resizability:
 
 ```rust
+// From ContextBuilder
+
 enum conf::FullscreenType {
     Windowed,
     True,     // also it allows us to set different resolutions (may not work well)
     Desktop,  // modern preference; plays nicer with multiple monitors.
 }
-
-ggez::graphics::set_fullscreen(ctx, fullscreen_type)?;
 
 context_builder
     // watch out, this is not .window_setup()!
@@ -298,6 +298,16 @@ context_builder
             .vsync(true) // default: true
             .resizable(true)
     )
+
+// From Window
+
+enum ggez::winit::window::Fullscreen {
+    Exclusive(VideoMode),
+    /// Providing `None` to `Borderless` will fullscreen on the current monitor.
+    Borderless(Option<MonitorHandle>),
+}
+
+context.gfx.window().set_fullscreen(Some(Fullscreen::Borderless(None)))
 ```
 
 Antialiasing:
@@ -332,49 +342,60 @@ context_builder
 
 ### Viewport (/add borders)
 
-The `set_screen_coordinates()` function sets the viewport; this implies that if the window size is the same, and the viewport size increases, the image drawn gets smaller!
-
-```rust
-println!("Viewport size: {:?}", graphics::screen_coordinates(ctx));
-```
-
-Add borders:
-
 ```rs
-// (It's not confirmed whether this is the simplest procedure)
+// Assume that `fullscreen_type` is set to `conf::FullscreenType::Desktop`.
 
-// From the current size, we get the ratio of the screen. Assumes that on initalization,
-// `conf::FullscreenType::Desktop` was set, but no size (so that the current display size is set).
+// Returns the viewport and scissor coordinates.
 //
-let (drawable_width, drawable_height) = ggez::graphics::drawable_size(context);
+fn compute_viewport(context: &Context) -> (Rect, Rect) {
+    // Assume that the pixels are square.
+    //
+    let PhysicalSize {
+        width: screen_width,
+        height: screen_height,
+    } = context.gfx.window().inner_size();
 
-let (new_drawable_width, new_drawable_height) =
-    if drawable_width / drawable_height > WINDOW_WIDTH / WINDOW_HEIGHT {
+    let game_ratio = WINDOW_WIDTH / WINDOW_HEIGHT;
+    let screen_ratio = screen_width as f32 / screen_height as f32;
+
+    let (viewport_width, viewport_height, scaling_ratio) = if screen_ratio >= game_ratio {
         (
-            WINDOW_HEIGHT * (drawable_width / drawable_height),
+            WINDOW_HEIGHT * screen_ratio,
             WINDOW_HEIGHT,
+            screen_height as f32 / WINDOW_HEIGHT,
         )
     } else {
         (
             WINDOW_WIDTH,
-            WINDOW_WIDTH * (drawable_height / drawable_width),
+            WINDOW_WIDTH / screen_ratio,
+            screen_width as f32 / WINDOW_WIDTH,
         )
     };
 
-ggez::graphics::set_drawable_size(context, new_drawable_width, new_drawable_height)?;
+    let tot_border_width = viewport_width - WINDOW_WIDTH;
+    let tot_border_height = viewport_height - WINDOW_HEIGHT;
 
-let tot_border_width = new_drawable_width - WINDOW_WIDTH;
-let tot_border_height = new_drawable_height - WINDOW_HEIGHT;
-
-ggez::graphics::set_screen_coordinates(
-    context,
-    Rect::new(
+    let viewport_rect = Rect::new(
         -tot_border_width / 2.,
         -tot_border_height / 2.,
-        new_drawable_width,
-        new_drawable_height,
-    ),
-)
+        viewport_width,
+        viewport_height,
+    );
+
+    let scissors_rect = Rect::new(
+        (screen_width as f32 - WINDOW_WIDTH * scaling_ratio) / 2.,
+        (screen_height as f32 - WINDOW_HEIGHT * scaling_ratio) / 2.,
+        viewport_rect.w * scaling_ratio,
+        viewport_rect.h * scaling_ratio,
+    );
+
+    (viewport_rect, scissors_rect)
+}
+
+// Then before drawing, set the canvas viewport and the scissor:
+
+canvas.set_screen_coordinates(self.viewport_rect);
+canvas.set_scissor_rect(self.scissors_rect)?;
 ```
 
 It's also possible to draw upside down:
@@ -394,14 +415,6 @@ let size = graphics::window(ctx).inner_size(); // seems the same as graphics::dr
 logical_x = (x / (size.width  as f32)) * screen_rect.w + screen_rect.x;
 logical_y = (y / (size.height as f32)) * screen_rect.h + screen_rect.y;
 ```
-
-### Canvas
-
-It's possible to draw to a canvas, and then to screen.
-
-The example (`hello_canvas.rs`) is confusing - it seems that the screen canvas needs to be set to `None` in order for the canvas to be written to the screen, but it's written even after.
-
-It is also [buggy](https://docs.rs/ggez/0.4.4/ggez/graphics/type.Canvas.html).
 
 ## Audio/Sound
 
@@ -466,22 +479,22 @@ Example for a game where keeping a key pressed is meaningful; in a game where th
 
 ```rust
 impl EventHandler for MainState {
-    fn key_down_event(&mut self, _ctx: &mut Context, keycode: KeyCode, _keymod: KeyMods, _repeat: bool) {
+    fn key_down_event(&mut self, _ctx: &mut Context, keycode: VirtualKeyCode, _keymod: KeyMods, _repeat: bool) {
         match keycode {
-            KeyCode::Up => { self.input.yaxis = 1.0; }
-            KeyCode::Left => { self.input.xaxis = -1.0; }
-            KeyCode::Right => { self.input.xaxis = 1.0; }
-            KeyCode::Space => { self.input.fire = true; }
-            KeyCode::Escape => event::quit(ctx),            // Exit API
+            VirtualKeyCode::Up => { self.input.yaxis = 1.0; }
+            VirtualKeyCode::Left => { self.input.xaxis = -1.0; }
+            VirtualKeyCode::Right => { self.input.xaxis = 1.0; }
+            VirtualKeyCode::Space => { self.input.fire = true; }
+            VirtualKeyCode::Escape => ctx.request_quit(),            // Exit API
             _ => {}
         }
     }
 
-    fn key_up_event(&mut self, _ctx: &mut Context, keycode: KeyCode, _keymod: KeyMods) {
+    fn key_up_event(&mut self, _ctx: &mut Context, keycode: VirtualKeyCode, _keymod: KeyMods) {
         match keycode {
-            KeyCode::Up => { self.input.yaxis = 0.0; }
-            KeyCode::Left | KeyCode::Right => { self.input.xaxis = 0.0; }
-            KeyCode::Space => { self.input.fire = false; }
+            VirtualKeyCode::Up => { self.input.yaxis = 0.0; }
+            VirtualKeyCode::Left | VirtualKeyCode::Right => { self.input.xaxis = 0.0; }
+            VirtualKeyCode::Space => { self.input.fire = false; }
             _ => {}
         }
     }
@@ -493,17 +506,14 @@ impl EventHandler for MainState {
 
 // Key status can be checked from the context:
 
-let a_key_pressed: bool = keyboard::is_key_pressed(ctx, KeyCode::A);
-let shift_key_pressed: bool =  keyboard::is_mod_active(ctx, keyboard::KeyMods::SHIFT)
-println!("Pressed keys: {:?}", keyboard::pressed_keys(ctx));
-
- let keys_pressed: &HashSet<KeyCode> = keyboard::pressed_keys(ctx);
+let a_key_pressed: bool = context.keyboard.is_key_pressed(VirtualKeyCode::A);
+let shift_key_pressed: bool =  context.keyboard.is_mod_active(keyboard::KeyMods::SHIFT)
+let keys_pressed: &HashSet<VirtualKeyCode> = context.keyboard.pressed_keys();
 
 // Repetition test; returns true as long as the key is pressed.
 // Seems not to work correctly; on a test loop with is_key_pressed + is_key_repeated, it took around
 // 20 loops for the latter to start returning true.
-let key_kept_pressed: bool = keyboard::is_key_repeated(ctx);
-
+let key_kept_pressed: bool = context.keyboard.is_key_repeated();
 ```
 
 Mouse:
@@ -521,6 +531,20 @@ fn mouse_wheel_event(&mut self, _ctx: &mut Context, x: f32, y: f32) { /* ... */ 
 Pad:
 
 ```rust
+pub fn pad_input(context: &Context, pad_number: PadNum, test: fn(&Gamepad) -> bool) -> bool {
+    let mut pad_iter = context.gamepad.gamepads();
+
+    let pad = match pad_number {
+        PadNum::Zero => pad_iter.next(),
+        PadNum::One => pad_iter.nth(1),
+    };
+
+    match pad {
+        None => false,
+        Some((_id, pad)) => test(&pad),
+    }
+}
+
 // Pad layout: https://docs.rs/ggez/latest/ggez/event/enum.Button.html
 
 fn gamepad_button_down_event(&mut self, _ctx: &mut Context, btn: Button, id: GamepadId) { /* .. */ }
