@@ -355,15 +355,21 @@ parallel echo vmsav{1} ::: A B        # in parallel: (echo vmsavA) (echo vmsavB)
 Examples:
 
 ```sh
-# multiple commands for each job
+# Multiple commands for each job
+# Redirections are supported.
+#
 ls -1 | parallel "avconv -i {} {}.wav && neroAacEnc -q 0.5 -if {}.wav -of {}.m4a"
 
-# same command, 4 times
-parallel 'ruby -e "while true; end"' ::: $(seq 4)
+# Receive multiple arguments per process.
+# `--plus` activates many features, including positional parameters.
+# The `:::` is a syntax to pass parameters; `:::+` specified extra parameters.
+#
+parallel --plus "echo {1}/{2}" ::: l1p1 l2p1 :::+ l1p2 l2p2
 ```
 
 Other options:
 
+- `-u|--ungroup`          : don't group output (print lines immediately)
 - `--delimiter $delim`    : input delimiter; WARNING! Newline is still considered a delimiter
 - `-P|--max-procs <N>[%]` : max procs; `%` (optional) accepts decimal; watch out! uses the ceiling (e.g.13% of 32 yields 5)
 

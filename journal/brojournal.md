@@ -1,3 +1,13 @@
+## Thu 05/Jan/2023
+
+- Writings: AWS unexpected facts article
+  - [x] Add service upgrades section
+- Studies: Gamedev
+  - [x] Review and update full screen logic
+- Studies: CS/Maths
+  - [ ] Math for programmers
+    - [ ] Review chapter 4
+
 ## Wed 04/Jan/2023
 
 - Open Source: Rust Game Ports
