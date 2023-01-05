@@ -8,8 +8,9 @@
     - [`DATETIME`/`TIMESTAMP`](#datetimetimestamp)
   - [ORDER BY](#order-by)
   - [Control flow](#control-flow)
-  - [ALTER TABLE](#alter-table)
-    - [Observe progress](#observe-progress)
+  - [Tables](#tables)
+    - [ALTER TABLE](#alter-table)
+      - [Observe progress](#observe-progress)
   - [Views](#views)
   - [Indexes](#indexes)
   - [Virtual columns](#virtual-columns)
@@ -127,11 +128,64 @@ WHEN when_value THEN statement_list
 END
 ```
 
-## ALTER TABLE
+## Tables
+
+Compressed tables:
+
+```sql
+CREATE TABLE xxx ROW_FORMAT=COMPRESSED; # uses the default key block size
+CREATE TABLE xxx KEY_BLOCK_SIZE=4;      # custom key block size; compression is implied
+```
+
+Partitioning:
+
+```sql
+# Partitioning is not supported on temporary tables.
+# See [metadata](#metadata) for partitions metadata.
+
+CREATE TABLE employees (
+    id        INT NOT NULL AUTO_INCREMENT,
+    hired     DATE NOT NULL,
+    name      VARCHAR(64),
+    # The PK must include all the columns in the partition function; it can be omitted, but in this case
+    # an internal one is created.
+    #
+    PRIMARY KEY (id, hired)
+)
+# The hash function is actually a modulo of the partitions number.
+#
+PARTITION BY HASH(YEAR(hired))
+PARTITIONS 20;
+
+# Syntax to change the PK and add partitioning; oddly, `PARTITION BY` requires not to be preceded
+# by the comma.
+#
+ALTER TABLE mytable
+  DROP PRIMARY KEY,
+  ADD PRIMARY KEY (id, created_at)
+  PARTITION BY HASH(YEAR(created_at))
+  PARTITIONS 16
+;
+
+# Operations; see:
+#
+# - https://dev.mysql.com/doc/refman/8.0/en/alter-table-partition-operations.html
+# - https://dev.mysql.com/doc/refman/8.0/en/partitioning-maintenance.html
+# - https://dev.mysql.com/doc/refman/8.0/en/partitioning-management-range-list.html
+# - https://dev.mysql.com/doc/refman/8.0/en/partitioning-management-hash-key.html
+#
+ALTER TABLE t COALESCE 2;                 # drop 2 HASH/KEY partitions
+ALTER TABLE t ADD PARTITION PARTITIONS 2; # add 2 HASH/KEY partitions
+# Faster than an unpartitioned table, but not immediate like TRUNCATE TABLE.
+# This command is mapped to a DELETE.
+ALTER TABLE t TRUNCATE PARTITION p1, p3;  # truncate named (not HASH/KEY) partitions
+```
+
+### ALTER TABLE
 
 As of 8.0.25, the `INSTANT` algorithm doesn't work if there are MVI indexes on the table.
 
-### Observe progress
+#### Observe progress
 
 Reference: https://dev.mysql.com/doc/refman/8.0/en/monitor-alter-table-performance-schema.html
 
@@ -1006,6 +1060,14 @@ WHERE
   # on $table, referencing any table (including self!)
   OR
   ( (TABLE_SCHEMA, TABLE_NAME) = ('$schema', '$table') AND REFERENCED_TABLE_SCHEMA IS NOT NULL );
+```
+
+Partitions:
+
+```sql
+SELECT PARTITION_NAME, TABLE_ROWS
+FROM information_schema.PARTITIONS
+WHERE TABLE_NAME = '$table';
 ```
 
 ### Base structure
