@@ -1184,7 +1184,7 @@ xdg-mime default "browser.desktop" "x-scheme-handler/https"
 
 ### Split MAFF association
 
-Associate an extension based on the filename rather than the MIME type:
+Associate an extension based on the file extension rather than the MIME type:
 
 ```sh
 cat > /usr/share/mime/packages/maff.xml << 'XML'

@@ -248,11 +248,15 @@ dynamic "notification" {
 state list
 
 # Import a resource
-import -state-out=terraform.tfstate aws_iam_user.saverio saverio
+import aws_iam_user.saverio saverio
 
 # Remove a resource from the statefile.
 # If the resource includes other resources, the whole tree is removed.
 state rm aws_iam_user.saverio saverio
+
+# Refresh an individual resource (after manual update/drift)
+#
+refresh -target=resource_addr -target=resource2_addr...
 ```
 
 ### Move resources from one statefile to another
