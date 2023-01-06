@@ -1,3 +1,10 @@
+## Fri 06/Jan/2023
+
+- Tools
+  - [x] Repositories syncing: Move configuration to dot conf file
+- Writings
+  - [ ] ggez full screen/letterboxing setup
+
 ## Thu 05/Jan/2023
 
 - Writings: AWS unexpected facts article

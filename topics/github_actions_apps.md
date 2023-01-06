@@ -227,21 +227,19 @@ c_github_api_token=$OWNER:$GITHUB_READ_PR_LABELS_TOKEN                          
 c_labels_api_url=https://api.github.com/repos/$ORG/$REPO/issues/$GITHUB_PR_NUMBER/labels # the latter is a built-in
 
 # Find the PR labels, and print one per line. For simplicity, we assume that labels don't have
-# newlines (which anyway is not a realistic case) or regex metachars.
+# newlines (which anyway is not a realistic case).
 #
 function find_pr_labels {
-  local data
-
   # For an example response, see https://docs.github.com/en/rest/issues/labels.
   #
-  data=$(curl -u "$c_github_api_token" "$c_labels_api_url")
-
+  # jq logic:
+  #
   # .[]    : iterate the array
   # {name} : extract the corresponding values of the "name" keys
   # []     : map to an array
   # -r     : print raw (unquoted) strings
   #
-  echo "$data" | jq -r '.[] | {name}[]'
+  curl -u "$c_github_api_token" "$c_labels_api_url" | jq -r '.[] | {name}[]'
 }
 
 function main {

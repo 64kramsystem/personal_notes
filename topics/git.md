@@ -266,6 +266,8 @@ name-rev --name-only $commit                           # shows which tag the com
 log --before="%F %R" $branch                           # show commits before/at given datetime
 log --merges v0.1.8...v0.1.9                           # search merges between two tags
 
+git rev-parse @{-1}                                    # find previously checkout out branch
+git name-rev $(git rev-parse @{-1}) --name-only        # name of previously checkout out branch
 [[ $(git cat-file -t $object 2> /dev/null) ]] && echo exists # check if a branch/commit/etc exists
 ```
 
