@@ -1234,8 +1234,10 @@ db.execute_batch(queries)  # accepts multiple statements (normal #execute doesn'
 db.results_as_hash  = true
 db.type_translation = true  # translate the data to the declared data type
 
-database.transaction { |db| db.execute(...) }
-db.transaction; db.execute(...); db.commit
+# In order to rollback from the block form transaction, one needs to raise/rescue a custom excpetion,
+# since the #rollback method is not accepted there.
+database.transaction { |db| db.execute(...); raise MyRollback}
+db.transaction; db.execute(...); db.commit # or db.rollback
 
 db.execute "SELECT name FROM mysql_master WHERE type = 'table'"  # get table names
 
