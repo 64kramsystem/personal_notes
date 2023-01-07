@@ -1,3 +1,13 @@
+## Sat 07/Jan/2023
+
+- Project: Schedule manager
+  - [x] Allow customizing event symbols
+- Tools: Calendar manager
+  - [x] Add rollback support to db API
+    - [x] Use new rollback functionality
+- Open Source
+  - [x] Help user on Rust Gamedev
+
 ## Fri 06/Jan/2023
 
 - Tools
