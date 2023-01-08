@@ -1,3 +1,12 @@
+## Sun 08/Jan/2023
+
+- Open Source
+  - [x] Help user on Rust Gamedev
+- Admin
+  - [x] Plan week
+- Tools: Linux kernel building
+  - [ ] build buildinfo for (latest) Ubuntu kernel
+
 ## Sat 07/Jan/2023
 
 - Project: Schedule manager
