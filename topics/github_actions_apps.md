@@ -24,6 +24,7 @@
     - [Ruby](#ruby)
     - [Rust](#rust)
   - [Apps](#apps)
+    - [Kodiak](#kodiak)
     - [Bors](#bors)
 
 ## Actions (CI)
@@ -31,6 +32,11 @@
 In order to receive notifications on workflow completion, see the `Actions` in the [account settings](https://github.com/settings/notifications).
 
 Usage limits are described [here](https://docs.github.com/en/actions/learn-github-actions/usage-limits-billing-and-administration#usage-limits).
+
+WATCH OUT!!
+
+- Jobs need a `:name` field, otherwise, Github won't list them in the status checks.
+- The "Branch protection rules" settings don't save automatically!!
 
 ## Concepts
 
@@ -579,6 +585,25 @@ jobs:
 ```
 
 ## Apps
+
+### Kodiak
+
+- Merge by labelling with `automerge`
+- In order to update branches (e.g. semi-linear history), must enable `Require branches to be up to date before merging`
+- At least one status check must be enabled
+
+```sh
+cat > .github/.kodiak.toml << 'TOML'
+
+version = 1
+merge.method = "rebase_fast_forward" # semi-linear history
+TOML
+```
+
+See:
+
+- https://kodiakhq.com/docs/config-reference
+- https://kodiakhq.com/docs/features
 
 ### Bors
 

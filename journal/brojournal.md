@@ -1,3 +1,17 @@
+## Mon 09/Jan/2023
+
+- Tools: Scripts
+  - End of year folder archival
+    - [x] Fix bug with previous month computation
+    - [x] Simplify/refactor: Assume simpler name of previous month folder
+  - Daily script
+    - [x] Minor updates
+- Blog: Tools
+  - [x] add_new_article.sh: Block trailing minus in article name
+- Tools: Github
+  - [ ] Brutal fight with Kodiak rebase ffwd
+    - [x] Open issue
+
 ## Sun 08/Jan/2023
 
 - Open Source
