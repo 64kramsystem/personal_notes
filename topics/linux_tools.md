@@ -752,7 +752,7 @@ date --date='@1'                    # epoch time
 
 The option `--debug` shows the logic applied.
 
-WATCH OUT!! The `month` calculations are not intuitive (see https://stackoverflow.com/a/13168625):
+WATCH OUT!! The `month` calculations (e.g. previous/next month) are not intuitive (see https://stackoverflow.com/a/13168625):
 
 ```sh
 # Today: Di 31. Aug 12:06:26 CEST 2021
@@ -763,9 +763,9 @@ Do 1. Jul 12:06:37 CEST 2021 # not 30/Jun!
 $ date --date='next month'
 Fr 1. Okt 12:06:51 CEST 2021
 
-# Workaround, if the month only is meaningful:
+# Workaround, if the month only is meaningful (1-based):
 
-$ date --date="$(date +%Y-%m-15) -2 month"
+$ date --date="$(date +%Y-%m-15) -1 month"
 Di 15. Jun 00:00:00 CEST 2021
 $ date --date="$(date +%Y-%m-15) next month"
 Mi 15. Sep 00:00:00 CEST 2021
