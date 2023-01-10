@@ -10,6 +10,7 @@
   - [Control flow](#control-flow)
   - [Tables](#tables)
     - [ALTER TABLE](#alter-table)
+      - [Performance](#performance)
       - [Observe progress](#observe-progress)
   - [Views](#views)
   - [Indexes](#indexes)
@@ -184,6 +185,10 @@ ALTER TABLE t TRUNCATE PARTITION p1, p3;  # truncate named (not HASH/KEY) partit
 ### ALTER TABLE
 
 As of 8.0.25, the `INSTANT` algorithm doesn't work if there are MVI indexes on the table.
+
+#### Performance
+
+Adding/dropping an index to a table, even if very large, didn't have any impact when the table was not actively used.
 
 #### Observe progress
 
