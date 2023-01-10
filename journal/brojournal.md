@@ -1,3 +1,19 @@
+## Tue 10/Jan/2023
+
+- Tools: Github
+  - [ ] Kodiak
+    - [x] Re-test and follow up discussion with semilinear history
+- Tools: Linux
+  - [x] Test Ubuntu mainline 6.2
+- Open Source: ActiveTrigger
+  - [x] Start project
+    - [x] Setup repository, collabs etc.
+    - [x] Open discussions
+    - [x] Open issues
+- Studies: CS/Maths
+  - [ ] Math for programmers
+    - [ ] Review chapter 4
+
 ## Mon 09/Jan/2023
 
 - Tools: Scripts
