@@ -10,7 +10,7 @@
     - [Maps](#maps)
     - [Functions/Other syntax](#functionsother-syntax)
     - [Control flow/dynamic blocks](#control-flowdynamic-blocks)
-  - [State operations](#state-operations)
+  - [State/general operations](#stategeneral-operations)
     - [Move resources from one statefile to another](#move-resources-from-one-statefile-to-another)
   - [Providers](#providers)
     - [Definition and modules tree](#definition-and-modules-tree)
@@ -241,7 +241,7 @@ dynamic "notification" {
   }
 ```
 
-## State operations
+## State/general operations
 
 ```sh
 # List resources
@@ -261,6 +261,10 @@ refresh -target=resource_addr -target=resource2_addr...
 # Sync the whole state (after manual updcate/drift)
 #
 apply -refresh-only
+
+# Display all the warnings
+#
+terraform validate -json | jq '.diagnostics[] | {detail: .detail, filename: .range.filename, start_line: .range.start.line}'
 ```
 
 ### Move resources from one statefile to another
@@ -931,30 +935,37 @@ resource "aws_s3_bucket" "sav-test" {
   acl           = "private"
   force_destroy = true # default: false
 
-  versioning {
-    enabled = false # default: true
-  }
-
   # Endpoint: http://sav986.s3-website.eu-central-1.amazonaws.com.
   # See note in the index object!
   #
   website {
     index_document = "index.html"
   }
+}
 
-  logging {
-    bucket = "${aws_s3_bucket.sav-test.bucket}-logging"
-    target_prefix = "log/"
+resource "aws_s3_bucket_versioning" "sav-test_versioning" {
+  bucket = aws_s3_bucket.sav-test
+  versioning {
+    status = "Disabled" # default: true
   }
+}
 
+resource "aws_s3_bucket_logging" "sav-test_logging" {
+  bucket = aws_s3_bucket.sav-test
+
+  target_bucket = "${aws_s3_bucket.sav-test.bucket}-logging"
+  target_prefix = "log/"
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "sav-test_lifecycle" {
   # In order to make lifecycle rules optional, one can use a dynamic block, cycling (foreach) on a conditionally
   # set list.
 
   # A rule like this ensures that any uploaded object is stored as IT.
   #
-  lifecycle_rule {
-    id      = "transition_to_IT"
-    enabled = true # mandatory
+  rule {
+    id     = "transition_to_IT"
+    status = "Enabled" # mandatory
 
     transition {
       # Classes: STANDARD, STANDARD_IA, ONEZONE_IA, INTELLIGENT_TIERING, GLACIER, DEEP_ARCHIVE
@@ -966,9 +977,9 @@ resource "aws_s3_bucket" "sav-test" {
     }
   }
 
-  lifecycle_rule {
-    id      = "expire"
-    enabled = true
+  rule {
+    id     = "expire"
+    status = "Enabled"
 
     expiration {
       days                         = 365

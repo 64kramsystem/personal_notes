@@ -60,18 +60,18 @@
       - [Elision rules](#elision-rules)
     - [Slices](#slices)
   - [Smart pointers](#smart-pointers)
-    - [Box<T>](#boxt)
-    - [RC<T>](#rct)
-    - [Cell<T>/RefCell<T>/Mutex<T> and interior mutability](#celltrefcelltmutext-and-interior-mutability)
-    - [Modifying Rc/Arc without inner mutable types (and conversion Box -> RC type)](#modifying-rcarc-without-inner-mutable-types-and-conversion-box---rc-type)
-    - [Weak<T> and reference cycles](#weakt-and-reference-cycles)
+    - [Box](#box)
+    - [RC](#rc)
+    - [Cell/RefCell/Mutex and interior mutability](#cellrefcellmutex-and-interior-mutability)
+    - [Modifying Rc/Arc without inner mutable types (and conversion Box -\> RC type)](#modifying-rcarc-without-inner-mutable-types-and-conversion-box---rc-type)
+    - [Weak and reference cycles](#weak-and-reference-cycles)
       - [`Rc<RefCell>` or `RefCell<Rc>`](#rcrefcell-or-refcellrc)
       - [Real case of modeling a thread-safe tree with trait objects, with children addition](#real-case-of-modeling-a-thread-safe-tree-with-trait-objects-with-children-addition)
       - [Real complex case of iterating a recursive structure with Rc/RefCell](#real-complex-case-of-iterating-a-recursive-structure-with-rcrefcell)
   - [Multithreading](#multithreading)
     - [Channels: Multiple Producers Single Consumer](#channels-multiple-producers-single-consumer)
     - [Simple Multiple Producers Multiple Consumes](#simple-multiple-producers-multiple-consumes)
-    - [Mutex<T>/Arc<T>](#mutextarct)
+    - [Mutex/Arc](#mutexarc)
     - [Atomic primitive type wrappers](#atomic-primitive-type-wrappers)
     - [Barrier](#barrier)
     - [Condvar](#condvar)
@@ -1251,7 +1251,7 @@ let val = loop {
 };
 ```
 
-If (let)/then/else:
+If (let)/then/else/let-else:
 
 ```rust
 if x > 5 {
@@ -1283,6 +1283,14 @@ if let Coin::Quarter(state) = coin {
 } else {
   count += 1;
 }
+
+// The let-else construct allows a refutable pattern to match and bind variables in the surrounding
+// scope
+//
+let (Some(count_str), Some(item)) = (it.next(), it.next()) else {
+    panic!("Can't segment count item pair: '{s}'");
+};
+println!("{count_str}/{item}");
 
 // In order to compose a complex expression with pattern matching, use `matches!`
 //

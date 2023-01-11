@@ -1,3 +1,14 @@
+## Wed 11/Jan/2023
+
+- Project: pm-spotlight
+  - [x] FileSearcher: Skip errors during search (log only)
+  - [x] EmojiSearcher: Add Enter symbol
+- Studies: Maths
+  - [x] Poisson/normal distribution
+- Studies: CS/Maths
+  - [ ] Math for programmers
+    - [ ] Review chapter 4
+
 ## Tue 10/Jan/2023
 
 - Tools: Github

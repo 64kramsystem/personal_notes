@@ -203,6 +203,8 @@ echo -n 'fedora_rocks!' > /tmp/pwdfile
 sshfs -p 10000 riscv@localhost: /media/saverio/temp -o ssh_command="sshpass -f /tmp/pwdfile ssh"
 ```
 
+Exit hung ssh session: tap `↵~.`.
+
 ### SSL/Certificates
 
 For an automatic (and locally trusted) solution, see [mkcert](https://github.com/FiloSottile/mkcert).
