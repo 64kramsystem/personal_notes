@@ -1,3 +1,9 @@
+## Thu 12/Jan/2023
+
+- Studies: CS/Maths
+  - [ ] Math for programmers
+    - [ ] Review chapter 4
+
 ## Wed 11/Jan/2023
 
 - Project: pm-spotlight
