@@ -224,12 +224,18 @@ In order to disable a method, just `allow` it:
 allow_any_instance_of(MyModule::MyClass).to receive(:my_method)
 ```
 
-Return different values for each invocation:
+Return different values for multiple invocations:
 
 ```ruby
-# Returns 1, then 2, then 3.
+# Different return values: 1, then 2, then 3.
 #
 expect_any_instance_of(AWSInfo).to receive(:burst_balance).and_return(1, 2, 3)
+
+# Different params (see :ordered).
+# allow_any_instance_of does not support/need this.
+#
+expect(collaborator_1).to receive(:step_1).ordered
+expect(collaborator_2).to receive(:step_2).ordered
 ```
 
 Arbitrary handling (references: [README](https://github.com/rspec/rspec-mocks#arbitrary-handling) and [Rubydoc](https://rubydoc.info/gems/rspec-mocks#arbitrary-handling)):
