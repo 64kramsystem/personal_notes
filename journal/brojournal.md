@@ -1,8 +1,19 @@
+## Fri 13/Jan/2023
+
+- SWE: Practice
+  - [ ] CodeCrafters: Git/Ruby
+    - [x] Stage 1
+    - [x] Stage 2
+
 ## Thu 12/Jan/2023
 
 - Studies: CS/Maths
   - [ ] Math for programmers
     - [ ] Review chapter 4
+- Project: Schedule manager
+  - [x] Clean a UT in relister_spec
+  - [x] Reworker: When checking invalid work lines, check `\w` surrounding `work`, not any non-whitespace
+  - [x] Reworker: Add `workshops` to whitelist
 
 ## Wed 11/Jan/2023
 
