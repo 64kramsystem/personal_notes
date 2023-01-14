@@ -1,3 +1,12 @@
+## Sat 14/Jan/2023
+
+- Open source
+  - [x] Kodiak: Discuss semi-linear history
+  - [x] Rust Gamedev: Reply to request
+- Studies: CS/Maths
+  - [ ] Math for programmers
+    - [ ] 5. Computing transformations with matrices
+
 ## Fri 13/Jan/2023
 
 - SWE: Practice
