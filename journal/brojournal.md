@@ -1,3 +1,9 @@
+## Sun 15/Jan/2023
+
+- Studies: CS/Maths
+  - [ ] Math for programmers
+    - [ ] 5. Computing transformations with matrices
+
 ## Sat 14/Jan/2023
 
 - Open source
