@@ -155,6 +155,16 @@ end
 
 ## Mocks
 
+It's possible to specify multiple ("compound") expectations, but negatives are not allowed:
+
+```rb
+not_to raise_error.and output(test_content).to_stdout
+
+# For negatives, define and use the opposite:
+#
+RSpec::Matchers.define_negated_matcher :succeed, :raise_error
+```
+
 ### Matchers
 
 See [reference](https://relishapp.com/rspec/rspec-expectations/v/3-10/docs/built-in-matchers).
