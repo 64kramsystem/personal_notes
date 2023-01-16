@@ -34,7 +34,7 @@
   - [PDF/Images handling](#pdfimages-handling)
     - [Imagemagick (convert)](#imagemagick-convert)
     - [Raw to JPEG conversion](#raw-to-jpeg-conversion)
-  - [Audio operations](#audio-operations)
+  - [Audio/video operations](#audiovideo-operations)
   - [Formatting/diff operations](#formattingdiff-operations)
   - [Encoding](#encoding)
   - [Benchmarking](#benchmarking)
@@ -902,7 +902,7 @@ for f in *.ORF; do darktable-cli "$f" "$f".jpg; done
 
 [Reference](https://askubuntu.com/a/1256073/46091).
 
-## Audio operations
+## Audio/video operations
 
 Bind mp3 files:
 
@@ -918,6 +918,13 @@ Rip audio cD:
 
 ```sh
 cdparanoia -vB
+```
+
+Rip Youtube video:
+
+```sh
+yt-dlp -F     $link # display formats
+yt-dlp -f $id $link # donwload the given video id (see -F)
 ```
 
 ## Formatting/diff operations
