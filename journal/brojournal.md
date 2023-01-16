@@ -1,3 +1,13 @@
+## Mon 16/Jan/2023
+
+- Studies: CS/Maths
+  - [ ] Math for programmers
+    - [ ] 5. Computing transformations with matrices
+- Tools
+  - [x] Report PDF editor bug
+  - [x] Remote desktop script: allow manual override
+  - [x] Review/ask DE tiling
+
 ## Sun 15/Jan/2023
 
 - Studies: CS/Maths
