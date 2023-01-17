@@ -1,12 +1,26 @@
+## Tue 17/Jan/2023
+
+- Open source
+  - [x] Follow up mentoring discussion
+- Tools
+  - [x] End of year archival script: Adjust to new structure
+  - [x] Report PDF editor bug
+- Project: Schedule manager
+  - [x] On full update, prompt regardless of skipping
+- Project: Geet
+  - [ ] Investigate REST APIs for templates
+- Studies: Databases
+  - [x] Read: https://aaronfrancis.com/2022/mysql-count-star-slow
+
 ## Mon 16/Jan/2023
 
-- Studies: CS/Maths
-  - [ ] Math for programmers
-    - [ ] 5. Computing transformations with matrices
 - Tools
   - [x] Report PDF editor bug
   - [x] Remote desktop script: allow manual override
   - [x] Review/ask DE tiling
+- Studies: CS/Maths
+  - [ ] Math for programmers
+    - [ ] 5. Computing transformations with matrices
 
 ## Sun 15/Jan/2023
 
