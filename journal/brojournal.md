@@ -1,3 +1,11 @@
+## Wed 18/Jan/2023
+
+- Studies: Linux
+  - [ ] Review snap permissions system
+- Studies: CS/Maths
+  - [ ] Math for programmers
+    - [ ] 5. Computing transformations with matrices
+
 ## Tue 17/Jan/2023
 
 - Open source
