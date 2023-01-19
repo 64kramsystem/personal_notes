@@ -1,3 +1,10 @@
+## Thu 19/Jan/2023
+
+- SWE: Practice
+  - [ ] CodeCrafters: Git/Ruby
+    - [x] Create a blob object
+    - [x] Read a tree object
+
 ## Wed 18/Jan/2023
 
 - Studies: Linux
