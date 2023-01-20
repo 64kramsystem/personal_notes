@@ -1,3 +1,11 @@
+## Fri 20/Jan/2023
+
+- SWE: Practice
+  - [ ] CodeCrafters: Git/Ruby
+    - [ ] Stage 4
+- Project: Linux Kernel PPA
+  - [ ] Study tuxinvader builder
+
 ## Thu 19/Jan/2023
 
 - SWE: Practice
