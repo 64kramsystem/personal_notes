@@ -1,3 +1,12 @@
+## Sun 22/Jan/2023
+
+- Open Source
+  - [x] Anki: Report UX bug
+- Admin: Tools
+  - [x] Update some system scripts
+- Studies: SWE: Architecture
+  - [~] Monolith to Microservices: Evolutionary Patterns to Transform Your Monolith
+
 ## Sat 21/Jan/2023
 
 - Studies: SWE: Architecture
