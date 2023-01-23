@@ -1178,13 +1178,21 @@ if [[ $EUID -eq 0 ]]; then
 fi
 ```
 
-Switch to root user inside a script; this is not possible, but there is a workaround:
+Switch to root user inside a script; this is not possible, but there is a workaround. This is convenient especially when the file is in the sudoers:
 
 ```sh
-if [[ $(id -u) -ne 0 ]]; then
-  sudo "$0" "$@"
-  exit $?
-fi
+function prepare_sudo {
+  if [[ $(id -u) -ne 0 ]]; then
+    # Avoids having to call `sudo`.
+    sudo "$0" "$@"
+    exit $?
+  else
+    # If other scripts in the invoking user are required, must manually add the $PATH.
+    export PATH=$c_scripts_path:$PATH
+  fi
+}
+
+prepare_sudo "$@"
 ```
 
 Graphical sudo:

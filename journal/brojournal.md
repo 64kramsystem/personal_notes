@@ -1,3 +1,10 @@
+## Mon 23/Jan/2023
+
+- Studies: Linux Kernel build
+  - [x] Investigate packages configuration in standard/mainline kernel
+- Studies: Open Source
+  - [ ] Uncurled
+
 ## Sun 22/Jan/2023
 
 - Open Source

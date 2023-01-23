@@ -1299,6 +1299,8 @@ Versions from 6.1 onwards include additional packages; one of them is `linux-bui
 It's not straightforward/possible to extract the kernel config from non-running kernels, for example, the script `extract-ikconfig` requires a certain compile-time setting.
 If it's not found how to generate the Ubuntu mainline config from the mainline-crack repo, in theory one could set `CONFIG_IKCONFIG=m`, build the kernel, extract the image, and run `extract-ikconfig`.
 
+When performing a standard build of the deb packages, the package `linux-image` contains a copy of the configuration; the Ubuntu package doesn't, though.
+
 Configurations can be merged via script: `scripts/kconfig/merge_config.sh .config debian.master/config/amd64/config.*`.
 
 The frame size errors can be ignored by setting `CONFIG_FRAME_WARN=0` (but this should not be necessary in first place).
