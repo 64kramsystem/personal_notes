@@ -1,3 +1,13 @@
+## Tue 24/Jan/2023
+
+- Project: Schedule manager
+  - [x] Minor cleanups
+  - [x] Add support for last (week)day of month as interval
+- Open Source: Uncurled
+  - [x] Send PR for mistake fix
+- Studies: Open Source
+  - [ ] Uncurled
+
 ## Mon 23/Jan/2023
 
 - Studies: Linux Kernel build
