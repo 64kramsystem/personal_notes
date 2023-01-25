@@ -1,3 +1,12 @@
+## Wed 25/Jan/2023
+
+- Studies: Open Source
+  - [x] Uncurled
+- Projects: OpenScripts
+  - [x] build_kernel: On update, delete old version files from destination
+- Studies: SWE: Architecture
+  - [ ] Monolith to Microservices: Evolutionary Patterns to Transform Your Monolith
+
 ## Tue 24/Jan/2023
 
 - Project: Schedule manager

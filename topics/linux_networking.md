@@ -189,6 +189,10 @@ openssl pkey -in $private_key -pubout -outform DER | openssl md5 -c             
 openssl s_client -connect $url:$port < /dev/null | openssl x509  -noout -enddate # Get the expiry of an ssl certificate
 
 # Run a program in the primary display, from an SSH section
+# The `xhost` command may be necessary (e.g. for xrandr), as the display is restricted only to the logged in user;
+# without it, the error `Authorization required, but no authorization protocol specified` is raised.
+#
+sudo -u "$SUDO_USER" xhost + > /dev/null
 DISPLAY=:0 teamviewer
 ```
 

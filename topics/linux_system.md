@@ -173,6 +173,7 @@ who am i | awk '{print $1}'
 # Find the user home.
 #
 getent passwd $username | cut -f6 -d:
+```
 
 Passwordless ssh:
 
@@ -561,6 +562,10 @@ apt-file search $filename
 Useful generic snippets:
 
 ```sh
+# Refresh keys (updates expired)
+#
+apt-key adv --refresh-keys --keyserver keyserver.ubuntu.com
+
 # Remove linux kernels other than the current one
 # Note that if there is a version newer than the current (uname -r), it will be deleted.
 #
