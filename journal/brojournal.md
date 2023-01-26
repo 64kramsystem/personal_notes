@@ -1,3 +1,10 @@
+## Thu 26/Jan/2023
+
+- Studies: SWE: Architecture
+  - [ ] Monolith to Microservices: Evolutionary Patterns to Transform Your Monolith
+    - [x] 1. Just Enough Microservices
+    - [ ] 2. Planning a Migration
+
 ## Wed 25/Jan/2023
 
 - Studies: Open Source
