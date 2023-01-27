@@ -1,3 +1,21 @@
+## Fri 27/Jan/2023
+
+- Open Source: TuxInvader Mainline kernel builder
+  - [x] Report metapackage building bug
+- Project: Schedule Manager
+  - [x] Relister: Fix notes removal
+- Project: OpenScripts
+  - [x] `desnapped`
+    - [x] Generalize to any snap, and rename
+    - [x] Cosmetic improvements
+    - [x] Allow specifying the snap binary
+- Project: Geet
+  - [x] `repo add_upstream` raise error when there is no upstream
+- Studies: SWE: Architecture
+  - [ ] Monolith to Microservices: Evolutionary Patterns to Transform Your Monolith
+    - [x] 2. Planning a Migration
+    - [~] 3. Splitting the Monolith
+
 ## Thu 26/Jan/2023
 
 - Studies: SWE: Architecture
