@@ -101,8 +101,9 @@ require 'zip/version'; Zip::VERSION
 
 # Compare (gem) versions!!!
 #
-Gem::Version.new('3.0') > Gem::Version.new('10.0') # string-comparison returns true (wrong)!
-Gem.ruby_version > Gem::Version.new('10.0')        # ready API to retrieve the ruby version
+Gem::Version.new('3.0') > Gem::Version.new('10.0')         # string-comparison returns true (wrong)!
+Gem::Version.new('6.0-rc10') > Gem::Version.new('6.0-rc2') # RCs are also supported!
+Gem.ruby_version > Gem::Version.new('10.0')                # ready API to retrieve the ruby version
 ```
 
 ### Gemspec

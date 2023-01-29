@@ -1,3 +1,13 @@
+## Sun 29/Jan/2023
+
+- Projects: Geet
+  - [x] Fix: No open browser option still opens the browser
+- Projects: OpenScripts
+  - [x] clean_kernel_packages: Find and latest kernel version along with the current
+- Studies: SWE: Architecture
+  - [ ] Monolith to Microservices: Evolutionary Patterns to Transform Your Monolith
+    - [ ] 4. Decomposing the Database
+
 ## Sat 28/Jan/2023
 
 - Studies: SWE: Architecture

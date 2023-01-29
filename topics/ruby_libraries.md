@@ -539,6 +539,7 @@ Original source: https://stackoverflow.com/a/42520668.
 
 ```ruby
 # Set default options
+#
 options = { garbage: false, logfile: nil, volume: 1.0, is_moron: nil, crappy: true }
 
 optparse = OptionParser.new do |op|
@@ -572,7 +573,7 @@ optparse = OptionParser.new do |op|
 
   # Negation; passes false when negated, true otherwise.
   # When specified in long form, it's automatically activated for the short one (in this example,
-  # '-no-c').
+  # '-no-n').
   #
   op.on('-n', '--[no-]negated') do |param|
     options[:negated] = param
