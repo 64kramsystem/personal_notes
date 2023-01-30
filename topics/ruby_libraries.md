@@ -485,10 +485,10 @@ object.to_yaml            # ... convenience
 
 ### OpenStruct (ostruct)/Struct
 
-Struct is in the stdlib; it doesn't accept new arguments.
+Struct is in the stdlib; it doesn't accept new arguments. OpenStruct doesn't allow methods definition.
 
 ```ruby
-os = OpenStruct.new           # can also pass a hash!
+os = OpenStruct.new(field: 'val')  # the hash is optional
 os.name = "John"
 os['surname'] = "Smith"       # alternate assignment form
 puts os.name, os.surname

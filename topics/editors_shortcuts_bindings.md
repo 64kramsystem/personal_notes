@@ -67,6 +67,7 @@ The VIM section requires some cleanup.
 
 - `Ctrl+Shift+C`              Copy file relative path (changed: binding, also work in editor)
 - `Ctrl+Shift+Alt+C`          Copy file full path (changed: binding, also work in editor)
+- `Ctrl+Alt+R`                Open folder of explorer's current file
 
 - `Ctrl+K, S`                 Save without formatting
 

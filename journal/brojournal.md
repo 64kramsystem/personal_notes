@@ -1,3 +1,11 @@
+## Mon 30/Jan/2023
+
+- Project: OpenScripts
+  - [x] Fix `desnapped`
+- Studies: SWE: Architecture
+  - [ ] Monolith to Microservices: Evolutionary Patterns to Transform Your Monolith
+    - [ ] 4. Decomposing the Database
+
 ## Sun 29/Jan/2023
 
 - Projects: Geet
