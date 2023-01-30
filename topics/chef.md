@@ -340,3 +340,9 @@ knife exec -E <<~RUBY
   end
 RUBY
 ```
+
+Other commands:
+
+```sh
+knife node edit --all $node_name
+```
