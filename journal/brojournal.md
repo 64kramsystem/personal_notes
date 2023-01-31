@@ -1,3 +1,9 @@
+## Tue 31/Jan/2023
+
+- Project: Schedule Manager
+  - [x] Replanner: Add support for last numbered day of the month
+  - [x] Replanner: Add support for first weekday of the month (optionally with number specifier)
+
 ## Mon 30/Jan/2023
 
 - Project: OpenScripts
