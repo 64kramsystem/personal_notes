@@ -399,6 +399,7 @@ str_to_date(date_format('20080428', '%x%v 1'), '%x%v %w'); -- 04-28
 CONV(@str, @from_base, @to_base)     # useful e.g. for hex conversion
 TRUNCATE(@val, @places)              # truncate to decimal places (places can be negative), !!! always towards zero !!!
 RAND()                               # random number; has low entropy
+FLOOR(max * RAND())                  # random int number with `max`
 GET_BYTES(@number)                   # random number; has higher entropy. can use as `HEX(GET_BYTES)` in order to get a random hex string.
 ```
 
