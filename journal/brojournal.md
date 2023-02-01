@@ -1,3 +1,19 @@
+## Wed 01/Feb/2023
+
+- Project: Schedule Manager
+  - [x] Replanner: Fix negative/positive day references
+- Project: OpenScripts
+  - [x] build_kernel: Fix packages deletion
+- Studies: SWE: Architecture
+  - [ ] Monolith to Microservices: Evolutionary Patterns to Transform Your Monolith
+    - [ ] 4. Decomposing the Database
+- Admin: Studies
+  - [x] Choose next book
+    - [x] Review Abrash books
+- Studies: Low-level/Gamedev
+  - Graphics Programming Black Book
+    - [ ] Chapter 1 - The Best Optimizer Is between Your Ears
+
 ## Tue 31/Jan/2023
 
 - Project: Schedule Manager
