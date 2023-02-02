@@ -1,3 +1,12 @@
+## Thu 02/Feb/2023
+
+- Open Source
+  - [x] Explain z ordering to user on Gamedev WG
+- Studies: Low-level/Gamedev
+  - [ ] Graphics Programming Black Book
+    - [x] Chapter 1 - The Best Optimizer Is between Your Ears
+    - [ ] Chapter 2 - A World Apart
+
 ## Wed 01/Feb/2023
 
 - Project: Schedule Manager
