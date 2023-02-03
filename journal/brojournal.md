@@ -1,3 +1,12 @@
+## Fri 03/Feb/2023
+
+- Open Source
+  - [x] Explain polygon sorting to user on Gamedev WG
+- Studies: Low-level/Gamedev
+  - [ ] Graphics Programming Black Book
+    - [x] Chapter 3 - Assume Nothing
+    - [ ] Chapter 4 - In the Lair of the Cycle-Eaters
+
 ## Thu 02/Feb/2023
 
 - Open Source
