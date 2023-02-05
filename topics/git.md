@@ -384,7 +384,7 @@ WATCH OUT!! "Ours" = local, "theirs" = remote, but it's very confusing (see http
 
 ```sh
 checkout (--ours|--theirs) $files   # resolve conflict using ours/theirs version
-merge -X ours|theirs                # solve merge conflicts using ours/theirs version
+merge -X 'ours|theirs'              # solve merge conflicts using ours/theirs version
 revert -m 1 $commit                 # revert a merge
 merge --allow-unrelated-histories   # allow merging histories without a common ancestor!
 ```

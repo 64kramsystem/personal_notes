@@ -1,3 +1,11 @@
+## Sun 05/Feb/2023
+
+- Open Source
+  - [x] Introduce user to Rust Gamedev
+- Studies: Low-level/Gamedev
+  - [ ] Graphics Programming Black Book
+    - [ ] Chapter 4 - In the Lair of the Cycle-Eaters
+
 ## Sat 04/Feb/2023
 
 - Studies: Low-level/Gamedev
