@@ -1,3 +1,11 @@
+## Mon 06/Feb/2023
+
+- Project: OpenScripts
+  - [x] build_kernel: Allow previous version packages to be not present
+- Studies: Low-level/Gamedev
+  - [ ] Graphics Programming Black Book
+    - [ ] Chapter 4 - In the Lair of the Cycle-Eaters
+
 ## Sun 05/Feb/2023
 
 - Open Source
