@@ -33,7 +33,7 @@
     - [Not present: Linked list, Heap](#not-present-linked-list-heap)
     - [SortedSet](#sortedset)
   - [Basic I/O](#basic-io)
-  - [Handling processes](#handling-processes)
+  - [Handling (execute) processes](#handling-execute-processes)
     - [Basic handling, via `IO.popen`](#basic-handling-via-iopopen)
     - [Using `Open3`](#using-open3)
     - [Live execution, via `Kernel#system`](#live-execution-via-kernelsystem)
@@ -699,7 +699,7 @@ io_obj.readline                         # includes the newline!
 io_obj.readchar                         # reads one char; raises EOFError at the EOF
 ```
 
-## Handling processes
+## Handling (execute) processes
 
 The sections assume `require 'English'`, which aliases `$?` (`Process::Status`) to `$CHILD_STATUS`.
 
