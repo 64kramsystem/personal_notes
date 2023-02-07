@@ -1,3 +1,9 @@
+## Tue 07/Feb/2023
+
+- Studies: Low-level/Gamedev
+  - [ ] Graphics Programming Black Book
+    - [ ] Chapter 4 - In the Lair of the Cycle-Eaters
+
 ## Mon 06/Feb/2023
 
 - Project: OpenScripts
