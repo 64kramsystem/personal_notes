@@ -89,7 +89,7 @@ IMPORTANT! "Lingering" must be enabled (`loginctl enable-linger`), otherwise, on
 journalctl -b -xp 3 [-k]            # view log for current [b]oot; with e[x]tra information, only errors (`-p 3` = level);
                                     # only [k]ernel messages
 journalctl -b -1 ...                # `-1` = previous boot (!)
-journalctl -f --u $service          # [-f|--follow]; [-u|--unit] log; use `page-end` to go to end
+journalctl -f -u $service           # [-f|--follow]; [-u|--unit] log; use `page-end` to go to end
 journalctl --vacuum-time=1d         # clean systemd journal (/var/log/journal)
 ```
 
