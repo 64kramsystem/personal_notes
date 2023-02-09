@@ -1,3 +1,10 @@
+## Thu 09/Feb/2023
+
+- Studies: Low-level/Gamedev
+  - [ ] Graphics Programming Black Book
+    - [x] Chapter 4 - In the Lair of the Cycle-Eaters
+    - [ ] Chapter 5 - Crossing the Border
+
 ## Wed 08/Feb/2023
 
 - Studies: Low-level/Gamedev
