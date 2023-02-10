@@ -1,3 +1,12 @@
+## Fri 10/Feb/2023
+
+- Projects: Geet
+  - [x] Update tty-prompt dependency
+  - [x] Release gem
+- Studies: Low-level/Gamedev
+  - [ ] Graphics Programming Black Book
+    - [x] Chapter 5 - Crossing the Border
+
 ## Thu 09/Feb/2023
 
 - Studies: Low-level/Gamedev
