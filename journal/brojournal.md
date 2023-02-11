@@ -1,3 +1,8 @@
+## Sat 11/Feb/2023
+
+- Tools: Scripts
+  - [x] Journal copy: Fix TOC/comments removal
+
 ## Fri 10/Feb/2023
 
 - Projects: Geet
