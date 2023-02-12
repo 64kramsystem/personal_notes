@@ -1,3 +1,10 @@
+## Sun 12/Feb/2023
+
+- Project: Schedule Manager
+  - [x] Raise an error when a section is accidentally split in two
+  - [x] Make console error message clearer (prefix with `ERROR: `)
+  - [x] Introduce concept of "end-of-schedule separator"
+
 ## Sat 11/Feb/2023
 
 - Tools: Scripts
