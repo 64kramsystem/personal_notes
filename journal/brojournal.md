@@ -1,3 +1,12 @@
+## Mon 13/Feb/2023
+
+- Open Source: Fullstaq Ruby
+  - [x] Report missing, but explicitly support, Ruby 3.0
+- Studies: Low-level/Gamedev
+  - [ ] Graphics Programming Black Book
+    - [x] Chapter 6 - Looking Past Face Value
+    - [ ] Chapter 7 - Local Optimization
+
 ## Sun 12/Feb/2023
 
 - Project: Schedule Manager
