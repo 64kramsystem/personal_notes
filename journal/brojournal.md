@@ -1,3 +1,10 @@
+## Tue 14/Feb/2023
+
+- Studies: Low-level/Gamedev
+  - [ ] Graphics Programming Black Book
+    - [x] Chapter 7 - Local Optimization
+    - [ ] Chapter 8 - Speeding Up C with Assembly Language
+
 ## Mon 13/Feb/2023
 
 - Open Source: Fullstaq Ruby
