@@ -1,3 +1,9 @@
+## Fri 17/Feb/2023
+
+- Studies: Low-level/Gamedev
+  - [ ] Graphics Programming Black Book
+    - [ ] Chapter 8 - Speeding Up C with Assembly Language
+
 ## Thu 16/Feb/2023
 
 - Studies: Low-level/Gamedev
