@@ -1,3 +1,8 @@
+## Sun 26/Feb/2023
+
+- Open Source: S3 Sleep article
+  - [x] Brief investigation after user question
+
 ## Fri 17/Feb/2023
 
 - Studies: Low-level/Gamedev
