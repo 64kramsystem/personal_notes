@@ -1,3 +1,8 @@
+## Thu 02/Mar/2023
+
+- Project: Ruby PPA Packaging (Ticketsolve)
+  - [x] Fix Ruby versions scanning
+
 ## Sun 26/Feb/2023
 
 - Open Source: S3 Sleep article
