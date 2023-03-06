@@ -271,6 +271,24 @@ Snippets:
 # Encode a group of files; gpg can also input from stdin.
 #
 find . -name *.log.gz | xargs -I {} gpg -r phony@recipient.com [--output {}.xxx] --encrypt {}
+
+# In order to generate a key in a headless environment, one must use the unattended form (otherwise, gpg tries to ask the password via GUI, causing confusing errors like "gpg: agent_genkey failed: Permission denied"):
+
+gpg --batch --gen-key << 'CFG'
+%no-protection
+Key-Type: default
+Subkey-Type: default
+Name-Real: My Name
+Name-Email: my@address.com
+Expire-Date: 0
+CFG
+
+# Delete expired/revoked secret keys (adapted from https://superuser.com/a/1631427).
+# Key codes: `sec`ret, `pub`lic, `e`xpired, `r`evoked.
+#
+gpg --list-secret-keys --with-colons |
+  awk -F: '$1 == "sec" && ($2 == "e" || $2 == "r") { print $5 }' |
+  xargs gpg --batch --yes --delete-keys
 ```
 
 #### Key servers
