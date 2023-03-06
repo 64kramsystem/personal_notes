@@ -562,9 +562,14 @@ apt-file search $filename
 Useful generic snippets:
 
 ```sh
-# Refresh keys (updates expired)
+# Refresh keys (updates expired).
 #
 apt-key adv --refresh-keys --keyserver keyserver.ubuntu.com
+
+# If a PPA label has been updated, it causes the error "Repository 'http:...' changed its 'Label' value from 'Foo' to 'Bar"; run one of the two
+#
+apt update                                # interactive
+apt-get update --allow-releaseinfo-change # non-interactive
 
 # Remove linux kernels other than the current one
 # Note that if there is a version newer than the current (uname -r), it will be deleted.

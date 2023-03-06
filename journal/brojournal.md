@@ -1,3 +1,11 @@
+## Mon 06/Mar/2023
+
+- Tools: Internal scripts
+  - System installation
+    - [x] Update repositories
+    - [x] Fix backup location
+    - [x] Update obsolete application installer links
+
 ## Thu 02/Mar/2023
 
 - Project: Ruby PPA Packaging (Ticketsolve)

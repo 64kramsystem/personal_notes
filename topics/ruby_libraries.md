@@ -25,6 +25,7 @@
     - [File/Dir/FileUtils/Pathname](#filedirfileutilspathname)
     - [Tempfile, Tmpdir](#tempfile-tmpdir)
     - [Concurrency](#concurrency)
+      - [Variables vs threads](#variables-vs-threads)
       - [Mutex](#mutex)
       - [Thread-safe data structures (Queue)](#thread-safe-data-structures-queue)
       - [IO.pipe for IPC](#iopipe-for-ipc)
@@ -711,6 +712,27 @@ Dir.tmpdir
 ```
 
 ### Concurrency
+
+#### Variables vs threads
+
+!! WATCH OUT !! Don't let thread blocks access variables in the outer scope; if they start with a delay, hilarity will ensue:
+
+```rb
+# When threads start late, they will use the `socket` variable of the following cycle.
+# `loop` works, because the`socket` variable is not shared, as it's in an inner scope (!!!).
+
+while true
+  socket = @server.accept
+  Thread.new { puts socket }
+end
+
+# Instead, pass them to the Thread:
+
+while true
+  socket = @server.accept
+  Thread.new(socket) { |socket| puts socket }
+end
+```
 
 Thread-local variables:
 
