@@ -723,14 +723,14 @@ Dir.tmpdir
 
 while true
   socket = @server.accept
-  Thread.new { puts socket }
+  Thread.new { puts socket.gets }
 end
 
 # Instead, pass them to the Thread:
 
 while true
   socket = @server.accept
-  Thread.new(socket) { |socket| puts socket }
+  Thread.new(socket) { |socket| puts socket.gets }
 end
 ```
 

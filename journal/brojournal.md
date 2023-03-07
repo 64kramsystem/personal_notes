@@ -1,10 +1,18 @@
-## Mon 06/Mar/2023
+## Tue 07/Mar/2023
 
 - Tools: Internal scripts
   - System installation
     - [x] Update repositories
     - [x] Fix backup location
     - [x] Update obsolete application installer links
+    - [x] Handle `monitors.xml` not present
+    - [x] Fix repository issues
+    - [x] Always install last gcc/g++ version
+    - [x] Fix touchpad problem
+- Open Source: Yoga-Linux project
+  - [x] Test proposed utility for S3 enabling
+    - [x] Restore + use old method
+    - [x] Discuss on issue
 
 ## Thu 02/Mar/2023
 

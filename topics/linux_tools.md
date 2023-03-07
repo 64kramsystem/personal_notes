@@ -240,7 +240,7 @@ WATCH OUT!! When compressing as sudo files owned by other users, use `--no-recur
 
 ```sh
 tar -C /tmp xvz                                        # Extract to a different directory
-tar --exclude='parsec-benchmark/.git' parsec-benchmark # Exclude (glob pattern); if `/` is not prefixed, matches at any level
+tar --exclude='parsec-benchmark/.git' parsec-benchmark # Exclude (glob pattern) (also on decompression); if `/` is not prefixed, matches at any level
 tar xv -O -f "$tarfile" metadata.gz | gunzip > "$outfile" # Extract a single file to stdout (and redirect to a file)
 
 # Rename destination files while extracting!!
