@@ -426,14 +426,14 @@ GREATEST|LEAST(@values...)           # min/max on multiple values
 Metacharacters/functionalities supported:
 
 - `^ $ . * + ? | {} [] \b \w \d \s \S`
-- `()` but not with groups capturing
+- `()`
 - `[:digit:]` and so on
 - `\w \d` matches inside character classes
 
 Not supported:
 
 - backreferences
-- lookahead
+- lookaround
 - groups capturing
 
 !! The backslash needs to be escaped, e.g. `\\.`/`\\b` !!

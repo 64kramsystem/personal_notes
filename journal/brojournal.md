@@ -1,3 +1,11 @@
+## Fri 10/Mar/2023
+
+- Tools: Remote Desktop
+  - [x] Try major alternative solutions
+  - [x] Fix extension not associated on latest version
+- Project: Openscripts
+  - [x] build_kernel: Always patch the configuration, for simplicity
+
 ## Tue 07/Mar/2023
 
 - Tools: Internal scripts
