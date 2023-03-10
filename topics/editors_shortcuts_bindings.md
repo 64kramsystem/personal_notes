@@ -284,3 +284,7 @@ VMWare:
 - `Ctrl+B`                 Start
 - `Ctrl+J`                 Suspend
 - `Cltr+E`                 Shutdown
+
+Thunderbird:
+
+`Ctrl+Shift+C`             Add CC when composing an email

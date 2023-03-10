@@ -1144,6 +1144,8 @@ watch -n 1 -x bash -c 'diff /tmp/before.gsettings <(gsettings list-recursively)'
 
 ## MIME (extensions) (file associations) handling
 
+The global directory for applications is `/usr/share/applications`.
+
 ```sh
 # Find the MIME type.
 # More accurate than `file --mime-type`;  on Markdown docs for example, the type found was `text/plain`.
