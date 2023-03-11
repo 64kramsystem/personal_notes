@@ -1,3 +1,8 @@
+## Sat 11/Mar/2023
+
+- Project: Openscripts
+  - [x] Improve Maestral stop/start/upgrade scripts
+
 ## Fri 10/Mar/2023
 
 - Tools: Remote Desktop
