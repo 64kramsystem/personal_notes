@@ -1,3 +1,19 @@
+## Sun 12/Mar/2023
+
+- Tools: Internal scripts
+  - System installation
+    - [x] Make machine type a cmdline parameter of the executable script
+- Project: Schedule Manager
+  - [x] Replanner: Update current (replan) line on updates
+    - A ***** to fix!!
+- Project: Openscripts
+  - build_kernel
+    - [x] Minor refactorings
+      - [x] Remove support for RC versions
+    - [x] Many improvements
+    - [x] Merge functionality for with/out kernel version option
+    - [x] build_kernel: Make config diff display optional
+
 ## Sat 11/Mar/2023
 
 - Project: Openscripts
