@@ -1,3 +1,10 @@
+## Mon 13/Mar/2023
+
+- Project: Openscripts
+  - build_kernel
+    - [x] Use `--force` checkout on branch change
+    - [x] Fix old files deletion (and split config/packages)
+
 ## Sun 12/Mar/2023
 
 - Tools: Internal scripts
