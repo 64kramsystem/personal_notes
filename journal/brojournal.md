@@ -1,3 +1,11 @@
+## Tue 14/Mar/2023
+
+- Project: Openscripts
+  - build_kernel
+    - [x] Shellcheck cleanups
+  - download_ubuntu_packages
+    - [x] Add support for Ubuntu development version
+
 ## Mon 13/Mar/2023
 
 - Project: Openscripts
