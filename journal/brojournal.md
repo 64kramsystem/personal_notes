@@ -1,3 +1,8 @@
+## Wed 15/Mar/2023
+
+- Studies: Low-level/Rust
+  - [x] Rust meeting Cardiff (Injecting Rust hooks into a 1999 game binary)
+
 ## Tue 14/Mar/2023
 
 - Project: Openscripts
