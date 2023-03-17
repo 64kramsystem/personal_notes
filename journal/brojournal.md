@@ -1,3 +1,9 @@
+## Fri 17/Mar/2023
+
+- Project: Openscripts
+  - build_kernel
+    - [x] Use running kernel version as default
+
 ## Wed 15/Mar/2023
 
 - Studies: Low-level/Rust

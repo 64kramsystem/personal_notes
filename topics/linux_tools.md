@@ -849,6 +849,10 @@ pdfimages -l $input
 # The output dir must exist.
 #
 pdfimages -j $input /path/to/$prefix
+
+# Losslessly create a PDF from image files. WATCH OUT! Don't use Imagemagick (convert), as it's not lossless.
+#
+img2pdf -o output.pdf *.jpg
 ```
 
 Other operations:
@@ -869,8 +873,7 @@ gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dNOPAUSE -dBATCH -sOutputFile="$2
 # The extension is replaced with PDF, independently of it.
 # Output dir defaults to current, not the doc's!
 #
-# lowriter --convert-to pdf $file [--outdir $dir]
-
+lowriter --convert-to pdf $file [--outdir $dir]
 ```
 
 For cropping (via GUI), best to use an online tool (e.g. [Xodo](https://pdf.online/crop-pdf)); (maintained) GUI tools don't copy bookmarks (krop, pdfarranger), or don't work as intended, or they have unintended side effects (pdfcrop increases the file size).
@@ -886,16 +889,6 @@ convert -crop 3x3@ $input $prefix_%d.ext          # Simplest splitting of an ima
 ```
 
 In order to resize an animated gif, use `coalesce`, then, separately, `resize`.
-
-Create a PDF out of image files; even if there is a resize stage at the end, the images seem to be identical to the souce:
-
-```sh
-# WATCH OUT! For unclear reasons, v6.9.10-23, when the source files are not in the current directory, sometimes hangs.
-#
-# -monitor: display progress
-#
-convert -monitor *.jpg output.pdf
-```
 
 Preset for resizing, contrasting and compressing a scanned document:
 
