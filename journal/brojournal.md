@@ -1,3 +1,8 @@
+## Sat 18/Mar/2023
+
+- Project: Schedule manager
+  - [x] Extend filling of missing days to 6 months
+
 ## Fri 17/Mar/2023
 
 - Project: Openscripts
