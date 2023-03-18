@@ -1144,6 +1144,16 @@ watch -n 1 -x bash -c 'diff /tmp/before.gsettings <(gsettings list-recursively)'
 
 ## MIME (extensions) (file associations) handling
 
+Associations can be done at system level or user level; commands can be run for the user or via sudo (depending on the files they operate on).
+
+The involved parts are:
+
+- optionally, a `.xml` file, to associate a glob pattern with a MIME type
+- a `.desktop` file, which declares a binary
+- `xdg-mime default` associates the `.desktop` file withe the MIME
+- `update-mime-database` updates the MIME
+  - the result is immediatley available for local users, but unclear for system
+
 The global directory for applications is `/usr/share/applications`.
 
 ```sh
