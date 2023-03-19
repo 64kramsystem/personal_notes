@@ -1,3 +1,9 @@
+## Sun 19/Mar/2023
+
+- Admin: Tools
+  - [x] Fight install Windows XP VM
+  - [x] Fight install Windows Vista VM
+
 ## Sat 18/Mar/2023
 
 - Project: Schedule manager
