@@ -1,3 +1,11 @@
+## Fri 24/Mar/2023
+
+- Projects: Recipeek
+  - [x] Shallow upgrade to Rails 5
+    - [x] Fight images placement
+- Open Source: Shellcheck
+  - [x] Discuss source file warning UX problem
+
 ## Sun 19/Mar/2023
 
 - Admin: Tools

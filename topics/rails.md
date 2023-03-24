@@ -92,7 +92,7 @@ In order to use scope in joins, use `merge()`:
 Show.joins(:events).merge(Event.tagged('fun'))
 ```
 
-Group by/having:
+Group by/having (aggregates):
 
 ```rb
 customers.join(:orders).group('customers.id').having('count(*) > 10')
