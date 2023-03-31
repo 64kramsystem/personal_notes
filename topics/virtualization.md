@@ -259,10 +259,13 @@ sudo vmware-modconfig --console --install-all
 
 General configuration file is `~/.vmware/preferences`; where general is not specified, it doesn't apply.
 
-- AMD GPU virtualization may not be supported; if so, add `mks.gl.allowUnsupportedDrivers = "TRUE"` to general/VM cfg
+- AMD GPU virtualization requires [AMDVLK](https://github.com/GPUOpen-Drivers/AMDVLK/releases) to be installed and configured (set `AMD_VULKAN_ICD=AMDVLK` if RADV drivers are installed)
+  - don't use `mks.gl.allowUnsupportedDrivers = "TRUE"`!
 - In order to autoattach USB devices, add `usb.autoConnect.device0 = "0xcafe:0xbabe"` to VM cfg
 - Symlinks are not followed by default in shared folders; add one `sharedFolder0.followSymlinks = "TRUE"` to the VM cfg for each shared folder
-- Select the GPU for acceleration via `mks.dx11.driverType = "unknown"` and `mks.dx11.vendorID = 0x10de` in the VM cfg (see https://tinyurl.com/2qmzgr5s)
+- In order to force a GPU:
+  - set `mks.forceDiscreteGPU = "TRUE"`
+  - by vendor: set `mks.dx11.driverType = "unknown"` and `mks.dx11.vendorID = 0x10de` in the VM cfg (see https://tinyurl.com/2qmzgr5s)
 
 #### Network fix
 

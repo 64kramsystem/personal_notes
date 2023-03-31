@@ -21,7 +21,6 @@
     - [Sleep times](#sleep-times)
   - [GNU Screen](#gnu-screen)
   - [Partclone/Clonezilla](#partcloneclonezilla)
-  - [Partclone](#partclone)
   - [Dump CDs (safely)](#dump-cds-safely)
   - [Sleep](#sleep)
   - [Watch](#watch)
@@ -571,8 +570,6 @@ screen bash -c 'mycommand -foo; read -rsn1'
 In some workflows, it's convenient to set `IGNOREEOF`, in order to prevent accidental exits from the screen session.
 
 ## Partclone/Clonezilla
-
-## Partclone
 
 Partclone:
 

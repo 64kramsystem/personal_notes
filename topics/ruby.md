@@ -557,6 +557,7 @@ end
 
 ```ruby
 collection.none?(pattern)               # supports String, Regex and Proc. DON'T USE FOR HASHES, it's confusing
+collection.sort_by { |v| }              # Hash returns a [K, V] array
 ```
 
 ### Array
@@ -633,7 +634,8 @@ Hash.new { |h, k| h[k] = Hash.new(&h.default_proc) } # same as previous, but sup
 Hash[:a, 1, :b, 2]                        # => {a: 1, b: 2} # !!! convert an array to hash !!!
 Hash[*flat_array]                         # => same as previous
 
-hash.symbolize_keys                       # non-destructive
+hash.symbolize_keys
+hash.transform_keys(&block)
 {a: 1, b: 2, c: 3}.slice(:a, :b)          # => {a: 1, b: 2} # doesn't modify the source hash
 hash.values_at(:key1, :key2)
 hash.key?(:key)                           # check inclusion

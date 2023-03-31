@@ -9,11 +9,12 @@
     - [Querying](#querying)
     - [Batching](#batching)
     - [Updating](#updating)
+    - [Manual AREL query build](#manual-arel-query-build)
     - [Migrations](#migrations)
     - [Models](#models)
       - [Associations](#associations)
       - [Callbacks](#callbacks)
-      - [Metadata](#metadata-1)
+      - [Metadata/connection](#metadataconnection)
     - [SQL queries streaming](#sql-queries-streaming)
   - [Cache](#cache)
 
@@ -110,6 +111,24 @@ instance.update_columns(a: 'b')     # skips all the logic, except serialization
 # Use SQL as set value of a column
 #
 Model.update_all(attribute: Arel.sql('other_attribute - interval 1 day'))
+```
+
+### Manual AREL query build
+
+Example of generating an UPDATE:
+
+```rb
+table = Arel::Table.new("#{schema}.#{model.table_name}")
+
+updater = Arel::UpdateManager.new.table(table)
+
+set_values.each { |column, value| updater = updater.set(table[column] => value) }
+
+set_expressions.each do |column, sql| { updater = updater.set(table[column] => Arel.sql(sql)) }
+
+updater = updater.where(table[filter_column].eq(filter_value))
+
+ApplicationRecord.connection.update(updater.to_sql)
 ```
 
 ### Migrations
@@ -216,13 +235,19 @@ In order to find the difference on save, use:
 
 The format is `{"field" => [before, after]}`; unchanged fields are not included.
 
-#### Metadata
+#### Metadata/connection
 
 ```ruby
 # Columns metadata. Watch out: they (obviously) depend on the DB existence; if, for example, Rake tasks
 # indirectly cause this code to load while the db doesn't exist (yet), they will fail.
 #
 MyModel.columns_hash['my_attribute'].limit
+
+connection.current_database
+
+# Connection configuration for the current Rails env
+#
+MyNamespace::Application.instance.config.database_configuration[Rails.env]
 ```
 
 ### SQL queries streaming

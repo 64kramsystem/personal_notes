@@ -44,18 +44,20 @@
   - [Logging/syslog/tools](#loggingsyslogtools)
     - [Logrotate](#logrotate)
   - [Terminal (emulator)](#terminal-emulator)
-  - [Desktop Environment: windows](#desktop-environment-windows)
-  - [Gnome stuff](#gnome-stuff)
-    - [Distro info](#distro-info)
-    - [Dconf/Gsettings](#dconfgsettings)
-  - [MIME (extensions) (file associations) handling](#mime-extensions-file-associations-handling)
-    - [Adding and associating a new application](#adding-and-associating-a-new-application)
-    - [Split MAFF association](#split-maff-association)
+  - [Desktop Environment](#desktop-environment)
+    - [Windows](#windows)
+    - [MIME (extensions) (file associations) handling](#mime-extensions-file-associations-handling)
+      - [Adding and associating a new application](#adding-and-associating-a-new-application)
+      - [Split MAFF association](#split-maff-association)
+    - [Applications autostart](#applications-autostart)
+  - [Distro info](#distro-info)
+  - [Dconf/Gsettings](#dconfgsettings)
   - [LVM](#lvm)
   - [Encryption](#encryption)
     - [Unmount LUKS encrypted partitions](#unmount-luks-encrypted-partitions)
     - [Mount encrypted (.ecryptfs) home](#mount-encrypted-ecryptfs-home)
     - [Setup hibernation on Ubuntu-setup LUKS volume](#setup-hibernation-on-ubuntu-setup-luks-volume)
+  - [Benchmarking system](#benchmarking-system)
 
 ## Processes
 
@@ -467,6 +469,10 @@ Informations:
 #
 apt show $package
 dpkg --list $package
+
+# Produce a package's dependency tree.
+#
+debtree –max-depth=2 mypackage | dot -Tpng > mypackage.png
 
 # Check if a package is installed, in the most standard way possible.
 # States found: `install`, `hold`, `deinstall`; the last seems only cfg installed.
@@ -1075,7 +1081,9 @@ mate-terminal --tab --command 'sh -c "echo abc; zsh"'
 stty size
 ```
 
-## Desktop Environment: windows
+## Desktop Environment
+
+### Windows
 
 Bringing a window to the front:
 
@@ -1107,42 +1115,7 @@ window_id=$(xdotool search --all --desktop "$desktop_id" --name 'Mozilla Firefox
 xdotool windowactivate "$window_id"
 ```
 
-## Gnome stuff
-
-```sh
-mate-session-properties                        configure mate (gnome) autostart applications
-```
-
-### Distro info
-
-Get distro infos (multiple options):
-
-- `lsb_release -a`
-- `cat /etc/*release`
-- `cat /etc/debian_version`: Complete version; specific for debian
-
-### Dconf/Gsettings
-
-```sh
-# Dump the whole tree.
-
-dconf dump /
-gsettings list-recursively
-
-# Watch the whole tree.
-#
-# gsettings can't watch the whole tree; only one schema.
-# but the second works fine 🙂
-
-dconf watch /
-
-gsettings monitor org.mate.caja
-
-gsettings list-recursively > /tmp/before.gsettings
-watch -n 1 -x bash -c 'diff /tmp/before.gsettings <(gsettings list-recursively)'
-```
-
-## MIME (extensions) (file associations) handling
+### MIME (extensions) (file associations) handling
 
 Associations can be done at system level or user level; commands can be run for the user or via sudo (depending on the files they operate on).
 
@@ -1179,7 +1152,7 @@ rm "~/.local/share/applications/wine*.desktop"
 rm "~/.local/share/applications/mimeinfo.cache"
 ```
 
-### Adding and associating a new application
+#### Adding and associating a new application
 
 ```sh
 # If there is ambiguity with another mime type (or if it's not registered), associate the extension (see following section).
@@ -1204,7 +1177,7 @@ xdg-mime default "browser.desktop" "x-scheme-handler/http"
 xdg-mime default "browser.desktop" "x-scheme-handler/https"
 ```
 
-### Split MAFF association
+#### Split MAFF association
 
 Associate an extension based on the file extension rather than the MIME type:
 
@@ -1220,6 +1193,54 @@ cat > /usr/share/mime/packages/maff.xml << 'XML'
 XML
 
 update-mime-database /usr/share/mime
+```
+
+### Applications autostart
+
+`mate-session-properties`: Configure MATE (gnome) autostart applications.
+
+Store `.desktop` files under `~/.local/share/applications` in order to make them autostart; the legacy path is `~/.config/autostart`. Minimalist example:
+
+```conf
+# The file exec permission is not required.
+
+[Desktop Entry]
+Type=Application
+Name=Maestral
+Exec=/usr/bin/python3 -m maestral_qt -c maestral
+X-GNOME-Autostart-enabled=true
+# X-GNOME-Autostart-Delay=2
+```
+
+Applications can be launched (for testing) via `gtk-launch app_name.desktop`; WATCH OUT! The termina environment may be different from the DE's.
+
+## Distro info
+
+Get distro infos (multiple options):
+
+- `lsb_release -a`
+- `cat /etc/*release`
+- `cat /etc/debian_version`: Complete version; specific for debian
+
+## Dconf/Gsettings
+
+```sh
+# Dump the whole tree.
+
+dconf dump /
+gsettings list-recursively
+
+# Watch the whole tree.
+#
+# gsettings can't watch the whole tree; only one schema.
+# but the second works fine 🙂
+
+dconf watch /
+
+gsettings monitor org.mate.caja
+
+gsettings list-recursively > /tmp/before.gsettings
+watch -n 1 -x bash -c 'diff /tmp/before.gsettings <(gsettings list-recursively)'
 ```
 
 ## LVM
@@ -1328,3 +1349,11 @@ mkswap "$(ls -1 /dev/mapper/*swap*)"
 
 # now reboot
 ```
+
+## Benchmarking system
+
+For real world apps and comparisons, use the Phoronix test suite:
+
+- download from https://www.phoronix-test-suite.com/?k=downloads
+- run `phoronix-test-suite benchmark build-linux-kernel-1.15.0` (version is optional)
+- compare on https://openbenchmarking.org/test/pts/build-linux-kernel-1.15.0

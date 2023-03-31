@@ -192,6 +192,8 @@ clean [-d] [-f]                 	# remove untracked files; [d]irectories as well
 checkout HEAD -- $path
 
 checkout -b $name $commit         # create branch from commit
+
+checkout --force                  # overwrite changed files during a checkout (branch switch)
 ```
 
 ## Log/Blame/Tree comparison
@@ -262,6 +264,7 @@ cherry [-v] $upstream [$head]     # changes against tree (useful for rebasing: c
 merge-base $A $B                                       # find common ancestor
 show :/$regex                                          # show the last commit matching a regex in the message
 branch --contains $commit                              # shows which branches contains the given commit
+rev-parse --verify $branch 2> /dev/null                # test if a branch exists
 name-rev --name-only $commit                           # shows which tag the commit was in. '~N' indicates how many commits (N) before the tag
 log --before="%F %R" $branch                           # show commits before/at given datetime
 log --merges v0.1.8...v0.1.9                           # search merges between two tags
