@@ -8,7 +8,7 @@
     - [Per-user](#per-user)
   - [journalctl](#journalctl)
   - [Configuring a service unit](#configuring-a-service-unit)
-      - [Notify unit type](#notify-unit-type)
+    - [Notify unit type](#notify-unit-type)
     - [Overrides](#overrides)
     - [Hooks](#hooks)
   - [Timers (scheduled events)](#timers-scheduled-events)
@@ -158,6 +158,7 @@ ConditionPathExists=!/path/to/file
 # Use `forking` when the process forks (e.g. nmon). See the `Notify` section below for automatic forking.
 #
 # Generally prefer `oneshot` to `simple` (see https://stackoverflow.com/a/39050387 and https://trstringer.com/simple-vs-oneshot-systemd-service/#summary).
+# WATCH OUT!! These types are identical; for example, Mailcatcher worked only in `simple` mode, with the `-f` executable parameter.
 #
 Type=oneshot
 
@@ -215,7 +216,7 @@ UNIT
 # now enable and start
 ```
 
-#### Notify unit type
+### Notify unit type
 
 If one wants Systemd to fork the process, then the best is `notify` (see https://askubuntu.com/q/1120023); this requires the program to report success via `systemd-notify --ready`, otherwise, Systemd will kill
 the program after timeout.

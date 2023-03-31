@@ -1,3 +1,13 @@
+## Fri 31/Mar/2023
+
+- Tools
+  - [x] System installer: Automatic setup of latest Vulkan GPU drivers
+
+## Sun 26/Mar/2023
+
+- Admin
+  - [x] Copy all pending notes
+
 ## Fri 24/Mar/2023
 
 - Projects: Recipeek

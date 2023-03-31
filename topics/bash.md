@@ -23,6 +23,7 @@
   - [Paths](#paths)
   - [printf (escaping/formatting)](#printf-escapingformatting)
   - [Arithmetic operations](#arithmetic-operations)
+    - [Random values](#random-values)
   - [Redirections](#redirections)
   - [Substitutions](#substitutions)
   - [Pipes error handling](#pipes-error-handling)
@@ -692,6 +693,19 @@ a+=1                              # WRONG!!! this is a string operation (if not 
 (( ++val ))                       # doesn't exit!
 ```
 
+### Random values
+
+```sh
+# [0, 32767]
+#
+echo $RANDOM
+
+# From `coreutils` package; Bash doesn't provide any easy way
+# Limits are inclusive; `-n $n`: select $n numbers; each value ends with a newline.
+#
+shuf -i 2000-65000 -n 1
+```
+
 ## Redirections
 
 ```sh
@@ -797,6 +811,7 @@ mapfile -t coordinates < <(printf "a a\nb b")
 mapfile -t coordinates < <(perl -pe 'chomp if eof' /path/to/file) # strip (file-)end newline
 mapfile -t coordinates <<< "$myvar"                  # WATCH OUT!! Appends newline, so can be used only with newline separator
 mapfile -td, coordinates < /path/to/file             # Redirection don't append newlines, so it can be safely used
+mapfile -d ''                                        # Use null byte separator; WATCH OUT!! There MUST be a space between the empty string and `-d`!!
 
 IFS=, read -ra coordinates <<< $1    # create via `read`; note how `echo -n` is not required
 
@@ -1029,7 +1044,7 @@ read -rsn1 [<variable_name>]
 
 #### Simulating error bubbling (unexpected `set -o errexit` behavior)
 
-WATCH OUT! This doesn't work as expected (using `set -o errexit`):
+WATCH OUT! This doesn't work as expected with `set -o errexit` (for functions as well):
 
 ```sh
 {
@@ -1096,12 +1111,12 @@ function register_exit_hook {
 ### Log a script output/Enable debugging (log)
 
 ```sh
-# General log
+# stdout/stderr log (can share the file with the debugging log below).
 #
 exec > >(tee -i "$logfile")
 exec 2>&1
 
-# Debugging log
+# Debugging log (doesn't include stdout/stderr!)
 #
 exec 5> "$logfile"
 BASH_XTRACEFD="5"

@@ -6,6 +6,7 @@
   - [Target groups](#target-groups)
   - [Waiters](#waiters)
   - [DynamoDB](#dynamodb)
+  - [S3](#s3)
   - [Samples](#samples)
     - [Informations EC2/Load balancing](#informations-ec2load-balancing)
 
@@ -202,6 +203,23 @@ response = client.update_item(
   return_values: "ALL_NEW",  # Optional
   update_expression: "SET #Y = :y, #AT = :t",
 )
+```
+
+## S3
+
+Upload a file:
+
+```rb
+# Higher level (e.g. large files handling); use this.
+#
+# :source:  String, IO and others
+# :options: other options, including progress callback and threading
+#
+Aws::S3::Object.new.upload_file(source, options={})
+
+# Use this only if lower-level control is required.
+#
+Aws::S3::Object.new.put(tons_of_options={})
 ```
 
 ## Samples

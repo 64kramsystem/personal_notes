@@ -37,6 +37,7 @@ WATCH OUT!!
 
 - Jobs need a `:name` field, otherwise, Github won't list them in the status checks.
 - The "Branch protection rules" settings don't save automatically!!
+- The `uses` field can also use a reference (e.g. commit), not only the version
 
 ## Concepts
 

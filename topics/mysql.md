@@ -38,6 +38,7 @@
     - [Maintenance](#maintenance)
   - [XPath](#xpath)
   - [CSV Import/Export](#csv-importexport)
+  - [Dump/restore (mysqlimport)](#dumprestore-mysqlimport)
   - [Window functions](#window-functions)
     - [Define each window extent (`PARTITION BY`), and picking a row per window](#define-each-window-extent-partition-by-and-picking-a-row-per-window)
     - [Window function aggregates](#window-function-aggregates)
@@ -623,6 +624,14 @@ SELECT JSON_SEARCH(client_tags, 'all', 'ba_') FROM clients;
 ```sql
 SELECT JSON_EXTRACT('{"extra": {"name": "Foo"}}', '$.extra');
 -- {"name": "Foo"}
+
+-- Extract a random value from an array (!)
+--
+SELECT JSON_EXTRACT(mycolumn, CONCAT(
+  '$[',
+  FLOOR(JSON_LENGTH(mycolumn) * RAND()),
+  ']')
+) `val` FROM mytable;
 ```
 
 ### Modification
@@ -898,7 +907,7 @@ SELECT ExtractValue(@input, "/bookstore/book[price>35.00]/title") `match`;
 
 Field options are not defaults, so they must be set when needed.
 
-If an import fails due to mysterious invalid characters, investigate the line terminators and characters via `hexdump` and `file -i`.
+If an import fails due to mysterious invalid characters, investigate the line terminators and characters via `hexdump` and `file -i`; loading has also issues with JSON fields, which causes a "Cannot create a JSON value from a string with CHARACTER SET 'binary'" error (see [bug report](https://bugs.mysql.com/bug.php?id=79066)).
 
 `LOAD DATA` syntax:
 
@@ -930,6 +939,23 @@ INTO TABLE events
 FIELDS TERMINATED BY ','
 ( id, layout_id, @customer_id )
 SET tenant_id = 89, customer_id = NULLIF(@customer_id, '');
+```
+
+## Dump/restore (mysqlimport)
+
+`mysqlimport` is essentially useless; due to the JSON import issue (see [CSV Import/Export](#csv-importexport)), tables with such fields can't be imported.
+
+Useful info, for reference:
+
+```sh
+# sql2csv would be very convenient, if mysqlimport worked.
+#
+mysqldump --tab /path/to/directory --fields-terminated-by=, # creates a dump that can be imported by mysqlimport
+mysqlimport --fields-terminated-by=',' dest_db [/path/to/rows.txt]
+
+# Trick to import a csv with the headers
+#
+mysqlimport --columns="$(head -n 1 mydata.csv)" --ignore-lines=1 myschema mydata.csv
 ```
 
 ## Window functions
