@@ -1,7 +1,21 @@
+## Sun 02/Apr/2023
+
+- Project: Openscripts
+  - [x] build_kernel: Add support for cherry picking commits
+    - [x] Include support for env var
+  - [x] Add `patch_acpi_s3_support`
+- Tools
+  - [x] Write customer hibernation script for laptop
+
 ## Fri 31/Mar/2023
 
 - Tools
   - [x] System installer: Automatic setup of latest Vulkan GPU drivers
+- Project: Schedule manager
+  - [x] Reworker: Simplify lpim insertion logic
+- System
+  - [x] Brutal fight with hibernation not working
+  - [x] Investigate hibernations speedup
 
 ## Sun 26/Mar/2023
 
