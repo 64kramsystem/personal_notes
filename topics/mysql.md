@@ -397,11 +397,13 @@ str_to_date(date_format('20080428', '%x%v 1'), '%x%v %w'); -- 04-28
 ### Numeric functions
 
 ```sql
-CONV(@str, @from_base, @to_base)     # useful e.g. for hex conversion
-TRUNCATE(@val, @places)              # truncate to decimal places (places can be negative), !!! always towards zero !!!
-RAND()                               # random number; has low entropy
-FLOOR(max * RAND())                  # random int number with `max`
-GET_BYTES(@number)                   # random number; has higher entropy. can use as `HEX(GET_BYTES)` in order to get a random hex string.
+CONV(@str, @from_base, @to_base)           # useful e.g. for hex conversion
+TRUNCATE(@val, @places)                    # truncate to decimal places (places can be negative), !!! always towards zero !!!
+RAND()                                     # random number; has low entropy
+FLOOR(max * RAND())                        # random int number with `max`
+RANDOM_BYTES(@number)                      # random number with higher entropy (in BLOB format). can use as `HEX(RANDOM_BYTES())` in order to get a random hex string.
+                                           # - use `HEX(RANDOM_BYTES(@n))` to get a random hex value
+                                           # - use `CONV(HEX(RANDOM_BYTES(@n)), 16, 10)` to get a random decimal value; WATCH OUT! CONV() returns a string
 ```
 
 ### Aggregates
@@ -625,7 +627,8 @@ SELECT JSON_SEARCH(client_tags, 'all', 'ba_') FROM clients;
 SELECT JSON_EXTRACT('{"extra": {"name": "Foo"}}', '$.extra');
 -- {"name": "Foo"}
 
--- Extract a random value from an array (!)
+-- Extract a random value from an array (!). WATCH OUT! Slow, can't be used on thousands of executions,
+-- even caching the array length.
 --
 SELECT JSON_EXTRACT(mycolumn, CONCAT(
   '$[',
