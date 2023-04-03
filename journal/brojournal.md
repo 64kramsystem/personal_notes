@@ -1,3 +1,8 @@
+## Mon 03/Apr/2023
+
+- Tools
+  - [x] ZFS: Build from source
+
 ## Sun 02/Apr/2023
 
 - Project: Openscripts
@@ -6,6 +11,9 @@
   - [x] Add `patch_acpi_s3_support`
 - Tools
   - [x] Write customer hibernation script for laptop
+  - MySQL
+    - [x] Investigate different pure-SQL data scrambling strategies
+    - [x] Brutal fight with JOINs and non-integer data types
 
 ## Fri 31/Mar/2023
 
