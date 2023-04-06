@@ -58,6 +58,7 @@
     - [Query hints](#query-hints)
     - [Profiling](#profiling)
     - [Dynamic SQL](#dynamic-sql)
+  - [Randomization problem: Scrambling records](#randomization-problem-scrambling-records)
 
 ## General database SQL concepts
 
@@ -1411,3 +1412,116 @@ EXECUTE pst_count;
 DEALLOCATE PREPARE pst_count;
 ```
 
+## Randomization problem: Scrambling records
+
+There are different approaches.
+
+All have been tried with 2 dimensions, but for simplicity, they're described with one; optimizations like MEMORY tables have been ignored, as they're marginal.
+It's assumed that the ids on `source` are not sequential; if they are, some strategies can be simplified (no serial table required; self-join may be even possible).
+
+Randomization on the JOINs:
+
+```sql
+# This has two problems:
+#
+# 1. it misses some records (!!), returning less records than intended.
+# 1. it's very slow (even on small dimensions); MySQL doesn't optimize the query properly; using a single
+#    dimension built with a cartesian join of the two dimensions, didn't improve performance significantly.
+#
+# The above are possibly caused by intermediate representation as DOUBLE; it hasn't been possible to
+# get proper results with any form of type casting. Oddly, with a single dimension, the results were
+# correct.
+#
+# Adding a phony integer field to the JOIN like:
+#
+#   ON sv.id = FLOOR(100 * RAND()) + 1 + 0 * s.id
+#
+# improves the performance, possibly because it forces INT type casting; it's not clear if it also fixes
+# the problem.
+#
+# See random assocations table for the fixed version of this.
+
+CREATE TEMPORARY TABLE scrambled_values (id INT PRIMARY KEY AUTO_INCREMENT)
+SELECT DISTINCT NULL `id`, val
+FROM source
+# ORDER BY RAND()     -- optional, depends on the data
+LIMIT 100;
+
+SELECT s.id, sv.val
+FROM source s
+     JOIN scrambled_values sv ON sv.id = FLOOR(100 * RAND()) + 1
+;
+```
+
+Random associations table:
+
+```sql
+CREATE TEMPORARY TABLE serial_values (id INT PRIMARY KEY AUTO_INCREMENT)
+SELECT NULL `id`, val
+FROM source;
+
+SET @values_count = (SELECT ROW_COUNT());
+
+CREATE TEMPORARY TABLE random_associations (
+  id     INT PRIMARY KEY,
+  val_id INT NOT NULL,
+)
+SELECT
+  id,
+  FLOOR(@values_count * RAND()) + 1 `val_id`
+FROM source;
+
+# Now join `source` to `random_associations`->`serial_values`.
+```
+
+Reordered tables:
+
+```sql
+CREATE TEMPORARY TABLE serial_associations (id INT PRIMARY KEY AUTO_INCREMENT)
+SELECT NULL `id`, s.id `source_id`
+FROM sources;
+
+CREATE TEMPORARY TABLE random_values (
+  id INT PRIMARY KEY AUTO_INCREMENT
+)
+SELECT NULL `id`, val
+FROM source
+ORDER BY RAND();
+
+# Now join `source` to `serial_associations`->`random_values`.
+```
+
+JSON arrays:
+
+```sql
+# Very slow; works only if the randomized tables are small, even caching the array lenght(s).
+
+SET @values_pool = (
+  SELECT CONCAT(
+    '[',
+    GROUP_CONCAT(
+      CONCAT('"', value, '"')
+    ),
+    ']'
+  )
+  FROM (
+    SELECT DISTINCT value
+    FROM source
+    # ORDER BY RAND()     -- optional, depends on the data
+    LIMIT 100
+  ) sub
+);
+
+CREATE FUNCTION rnd_json(array JSON)
+RETURNS VARCHAR(96)
+NOT DETERMINISTIC
+RETURN
+  JSON_EXTRACT(
+    array,
+    CONCAT( '$[', FLOOR(JSON_LENGTH(array) * RAND()), ']' )
+  )
+;
+
+SELECT id, rnd_json(@values_pool) `value`
+FROM source;
+```
