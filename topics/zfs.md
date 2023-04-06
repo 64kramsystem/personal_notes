@@ -16,6 +16,7 @@
   - [Snapshotting](#snapshotting)
     - [Lightweight per-file rollback workflow](#lightweight-per-file-rollback-workflow)
     - [Cool diffing functions](#cool-diffing-functions)
+  - [Project-related](#project-related)
 
 ## Pools
 
@@ -348,4 +349,14 @@ function zversions {
 
   cp "$1/$3" "$4/$(basename "$3").after"
 }
+```
+
+## Project-related
+
+Package debs:
+
+```sh
+./autogen.sh
+./configure
+make -j $(nproc) deb
 ```

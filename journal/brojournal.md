@@ -1,3 +1,9 @@
+## Thu 06/Apr/2023
+
+- Studies: Sysadmin
+  - [ ] Terraform: Up and Running
+    - [x] 2. Getting Started with Terraform
+
 ## Mon 03/Apr/2023
 
 - Tools
