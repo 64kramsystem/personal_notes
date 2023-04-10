@@ -1,3 +1,8 @@
+## Mon 10/Apr/2023
+
+- Admin
+  - [x] Fight install latest ZFS
+
 ## Thu 06/Apr/2023
 
 - Studies: Sysadmin

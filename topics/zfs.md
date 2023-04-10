@@ -16,7 +16,7 @@
   - [Snapshotting](#snapshotting)
     - [Lightweight per-file rollback workflow](#lightweight-per-file-rollback-workflow)
     - [Cool diffing functions](#cool-diffing-functions)
-  - [Project-related](#project-related)
+  - [Packaging/installation](#packaginginstallation)
 
 ## Pools
 
@@ -307,7 +307,7 @@ zfs destroy rpool/busy
 
 The function don't work with ecryptfs, due to the files at a higher level than the storage layer.
 
-`zdifff` and `zversions` could be improved (simplified) by searching `.zfs` from the bottom up.
+`zdiff` and `zversions` could be improved (simplified) by searching `.zfs` from the bottom up.
 
 ```sh
 # Recreate a snapshot.
@@ -351,12 +351,15 @@ function zversions {
 }
 ```
 
-## Project-related
+## Packaging/installation
 
-Package debs:
+In order to setup the project for packaging or other tasks:
 
 ```sh
 ./autogen.sh
 ./configure
-make -j $(nproc) deb
 ```
+
+Packaging the debs can be done via `make deb`, however, it causes dependency issues on installation.
+
+The easiest way is probably to install and hold `zfs-dkms` package, replace the `/usr/src/zfs-x.y` directory content with the configured project, and copy the old `dkms.conf` to the project root (optionally editing it); initramfs updates will now compile the new version.
