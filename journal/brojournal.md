@@ -1,3 +1,10 @@
+## Tue 11/Apr/2023
+
+- Admin
+  - [x] Reinstall desktop system
+    - [x] Adapt guide to reuse partition in second disk
+    - [x] Fixes/updates to system install script
+
 ## Mon 10/Apr/2023
 
 - Admin

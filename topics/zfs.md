@@ -173,7 +173,7 @@ zpool detach $pool $device
 zpool offline $pool $device
 zpool online $pool $device
 
-# Delete a device
+# Delete a filesystem
 #
 zfs destroy $pool/$device
 

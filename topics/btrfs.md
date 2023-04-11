@@ -3,6 +3,7 @@
 - [Table of contents](#table-of-contents)
 - [Basic usage](#basic-usage)
 - [Corruption](#corruption)
+- [Mount options](#mount-options)
 - [Other stuff](#other-stuff)
 
 ## Basic usage
@@ -26,7 +27,7 @@ btrfs filesystem show [<device>|<mount>]
 #   Metadata,RAID1: Size:1.00GiB, Used:230.91MiB (22.55%)
 #   System,RAID1: Size:32.00MiB, Used:16.00KiB (0.05%)
 #
-btrfs filesystem usage <mount>
+btrfs filesystem usage $mount | grep -P '^\w+,'
 ```
 
 Mount the FS.
@@ -116,6 +117,14 @@ Print error stats.
 ```sh
 btrfs device stats <mount>
 ```
+
+## Mount options
+
+- `defaults` is good enough (it includes `rw` and `relatime`)
+  - set `0 0` as `dump`/`pass`
+- `space_cache=v2` is commonly agreed to be useful
+- `degraded` is useful, otherwise a broken device will prevent boot
+- `discard=async`: don't use; daily (or even less frequent) trim is sufficient, so there's no need for optimization
 
 ## Other stuff
 
