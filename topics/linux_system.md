@@ -946,6 +946,11 @@ Columns:
 - `dump` (-2): `1` if the partition is included when using dump tool
 - `pass` (-1): order when checking with fsck
 
+Tweaks:
+
+- `noatime`: big discussion; nobody ever mentiones experience of failing programs besides mutt 🙄
+  - `lazytime`: additional (doesn't replace others); possibly, still causes cascading writes on COW filesystems
+
 Test the content of fstab (not reliable for actual mounting; for example, doesn't detect if the nfs tools are installed, and reports success):
 
 ```sh
