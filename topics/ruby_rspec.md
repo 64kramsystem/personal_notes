@@ -136,7 +136,7 @@ Share `let`s:
 
 ```rb
 # Put this in a file, and require it in `rspec_helper.rb`.
-# Shared context hase more complex functionality; this is a basic one.
+# Shared context has more complex functionality; this is a basic one.
 #
 RSpec.shared_context "my context" do
   let(:my_double) { double("my_double") }
@@ -214,8 +214,8 @@ See [reference](https://relishapp.com/rspec/rspec-mocks/v/3-10/docs/configuring-
 - `and_raise`
 - `and_throw`
 - `and_yield`
-- `and_call_original` : call the original method after the expectation
-- `and_wrap_original`
+- `and_call_original` : call the original method after the expectation (proxy)
+- `and_wrap_original { |meth, *args, &block| }`
 
 #### Conditional stubbing
 
