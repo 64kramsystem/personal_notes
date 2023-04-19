@@ -7,13 +7,12 @@
     - [Subscribe/notify](#subscribenotify)
     - [Available variables](#available-variables)
   - [Resources](#resources)
-    - [`bash`](#bash)
     - [`execute`](#execute)
+    - [`bash`](#bash)
     - [`cron`](#cron)
     - [`cookbook_file`](#cookbook_file)
     - [`directory`](#directory)
     - [`link` (symlink)](#link-symlink)
-    - [`execute`](#execute-1)
     - [`line` (manual file editing)](#line-manual-file-editing)
     - [`mount`](#mount)
     - [`package`/`dpkg_package`](#packagedpkg_package)
@@ -107,24 +106,35 @@ Chef::Config[:cookbook_path]      # Cookbook path, usable in recipes
 
 ## Resources
 
-The attributes, are the ones specified in the example resource, unless specified.
-
-### `bash`
-
-```ruby
-bash 'extract_module' do
-  cwd    ::File.dirname(src_filepath)
-  code   "code"
-  action :run
-end
-```
+The default attribute values (e.g. `action`) are the ones specified in the example resource, unless specified.
 
 ### `execute`
+
+Execute a single command; don't set multiple `command` properties, otherwise they will be all executed even if one of them fails.
 
 ```ruby
 execute 'apache_configtest' do
   command '/usr/sbin/apachectl configtest'
   action  :run
+end
+```
+
+### `bash`
+
+Similar to `execute` resource; the difference is that the `code` content is written to a temporary file; use this when executing multiple commands.
+
+Either concatenate the commands with `&&` or add `set -o errexit`.
+
+```ruby
+bash 'extract_module' do
+  cwd    ::File.dirname(src_filepath)
+  code   <<~SH
+    set -o errexit
+
+    command1
+    command2
+  SH
+  action :run
 end
 ```
 
@@ -196,17 +206,6 @@ end
 ```rb
 link '/tmp/file' do
   to '/etc/file'
-end
-```
-
-### `execute`
-
-Execute a command.
-Each command must be in an execute block, otherwise they will be all executed even if one of them fails
-
-```ruby
-execute "Description" do
-  command "command"
 end
 ```
 

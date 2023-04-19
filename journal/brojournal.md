@@ -1,3 +1,15 @@
+## Wed 19/Apr/2023
+
+- Open Source
+  - Recaptcha gem
+    - [x] Describe issues with explicit `json` gem dependency
+    - [x] Open PR with removal
+
+## Sat 15/Apr/2023
+
+- Open Source
+  - [x] Report Firefox bug
+
 ## Tue 11/Apr/2023
 
 - Admin

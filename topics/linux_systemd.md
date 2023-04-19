@@ -3,6 +3,7 @@
 - [Linux Systemd](#linux-systemd)
   - [Generic commands and notes](#generic-commands-and-notes)
   - [Systemctl](#systemctl)
+    - [Uninstall (remove) a unit](#uninstall-remove-a-unit)
     - [Disabling and dependencies](#disabling-and-dependencies)
     - [System commands](#system-commands)
     - [Per-user](#per-user)
@@ -58,6 +59,16 @@ systemctl list-unit-files --user pipewire.service | grep -q '1 unit files listed
 If a unit is stored with ill-formed content, it won't be found by commands, which print instead a confusing `No files found` message.
 
 The `--user` is for units belonging to the user (eg. transient timers).
+
+### Uninstall (remove) a unit
+
+Systemd doesn't provide any mean to uninstall units; it must be done manually:
+
+```sh
+systemctl disable --now $service
+rm /etc/systemd/system/$service.service
+systemctl daemon-reload
+```
 
 ### Disabling and dependencies
 
