@@ -1,3 +1,16 @@
+## Thu 20/Apr/2023
+
+- Project
+  - QEMU-pinning
+    - [x] Rebase for v8.0.0-rc1
+  - Simple scripting
+    - [x] Update support: Remove <2.7, add 3.1+
+    - [x] Code update, for 3.2 compatibility
+  - Geet
+    - [x] Update support: Remove <2.6
+    - [x] Code update, for 3.2 compatibility
+    - [ ] Add CI
+
 ## Wed 19/Apr/2023
 
 - Open Source
