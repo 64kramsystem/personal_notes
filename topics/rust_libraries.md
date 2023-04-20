@@ -506,7 +506,7 @@ Path::new(os_str.unwrap());  // Convert OsStr to Path
 There are some other APIs, e.g. for traversing directories.
 
 ```rust
-path.exists()                   // test if file/dir exists (Ruby File.exists?)
+path.exists()                   // test if file/dir exists (Ruby File.exist?)
 Path::exists(path)              // ^^ (same)
 path.is_dir()                   // test if is directory; also: is_file(), is_symlink()
 
