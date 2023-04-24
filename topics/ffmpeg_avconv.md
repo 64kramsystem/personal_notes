@@ -34,7 +34,10 @@ ffmpei -i <input> -ac 1 output.wav
 
 ### Video+audio
 
-See https://trac.ffmpeg.org/wiki/Encode/MPEG-4.
+See:
+
+- https://trac.ffmpeg.org/wiki/Encode/H.265
+- https://trac.ffmpeg.org/wiki/Encode/MPEG-4
 
 ```sh
 # - Default video encoder: libxvid
@@ -46,6 +49,17 @@ ffmpeg -i input.mp4 -c:v mpeg4 -vtag xvid -qscale:v 3 -c:a libmp3lame -qscale:a 
 # CBR Video/Audio (1000k/93' = 838 MiB), and mix both audio channels into two channels (https://trac.ffmpeg.org/wiki/AudioChannelManipulation)
 #
 ffmpeg -i input.mp4 -c:v mpeg4 -vtag xvid -b:v 1000k -c:a libmp3lame -b:a 96k -af 'pan=stereo|c0<c0+c1|c1<c0+c1' output.avi
+
+# x265: downscale, copy audio
+# crf (constant rate factor): best:0, default:28, worst:51
+# - 28: like x264's 23, at around half size
+# preset: veryslow, slower, slow, medium, ...
+#
+ffmpeg -i input.mp4 \
+  -filter:v scale=-1:540 \
+  -c:v libx265 -crf 26 -preset veryslow \
+  -c:a copy \
+  output.mkv
 ```
 
 ### Video to animated GIF/PNG

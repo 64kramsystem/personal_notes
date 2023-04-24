@@ -1,3 +1,10 @@
+## Mon 24/Apr/2023
+
+- Project: Openscripts
+  - build_kernel
+    - [x] Fail fast when a config file is not found
+    - [x] Fix RCs not excluded when searching the latest kernel version
+
 ## Thu 20/Apr/2023
 
 - Project

@@ -35,6 +35,7 @@
     - [Stopwords](#stopwords)
     - [Symbols handling](#symbols-handling)
     - [Manipulate search relevance for multiple columns (boosting)](#manipulate-search-relevance-for-multiple-columns-boosting)
+    - [Performance](#performance-1)
     - [Maintenance](#maintenance)
   - [XPath](#xpath)
   - [CSV Import/Export](#csv-importexport)
@@ -862,7 +863,13 @@ GROUP BY id
 ORDER BY MAX(ranking) DESC
 ```
 
+### Performance
+
+In a test on a table with 3 FT indes, restoring data + indexes was faster (66% tot. time) when FT indexes were added separately, compared to when inlined in the table definition.
+
 ### Maintenance
+
+WATCH OUT! Separate addition of FT indexes has a [serious bug](https://bugs.mysql.com/bug.php?id=110565).
 
 ```sql
 SET GLOBAL innodb_ft_aux_table = 'db/table';
