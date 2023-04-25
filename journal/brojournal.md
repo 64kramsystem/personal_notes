@@ -1,9 +1,17 @@
+## Tue 25/Apr/2023
+
+- Studies: Tools
+  - [x] Refactor ffmpeg audio/video compression notes
+  - [x] Test libfdk-aac2 compression
+
 ## Mon 24/Apr/2023
 
 - Project: Openscripts
   - build_kernel
     - [x] Fail fast when a config file is not found
     - [x] Fix RCs not excluded when searching the latest kernel version
+- Studies: Tools
+  - [x] Test libx265 compression
 
 ## Thu 20/Apr/2023
 

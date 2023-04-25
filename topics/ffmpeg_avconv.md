@@ -1,9 +1,10 @@
 # FFmpeg/Avconv
 
 - [FFmpeg/Avconv](#ffmpegavconv)
+  - [Generic options/snippets](#generic-optionssnippets)
   - [Conversion](#conversion)
-    - [Audio file](#audio-file)
-    - [Video+audio](#videoaudio)
+    - [libfdk-aac test](#libfdk-aac-test)
+    - [libx265 test](#libx265-test)
     - [Video to animated GIF/PNG](#video-to-animated-gifpng)
   - [Stream/file operations](#streamfile-operations)
     - [Demux](#demux)
@@ -19,48 +20,111 @@
     - [Record desktop](#record-desktop)
     - [Build FFmpeg with libfdk-aac support](#build-ffmpeg-with-libfdk-aac-support)
 
-## Conversion
+## Generic options/snippets
 
-### Audio file
+- `-y`: overwrite destination
 
 ```sh
-ffmpeg -i <input> <output.wav>
-ffmpeg -i <input> -ab 320k output.mp3
+# Quick audio tests
 
-# Convert to mono (space required after `-ac`)
-#
-ffmpei -i <input> -ac 1 output.wav
+rm -rf /tmp/z
+mkdir /tmp/z
+
+find *.flac | parallel 'ffmpeg -i {} -c:a libfdk_aac -vbr 2 /tmp/z/"$(basename {})".m4a'
+
+find /tmp/z/*.m4a | parallel 'ffmpeg -i {} {}.wav && sox {}.wav -n spectrogram -o {}.wav.png'; eom /tmp/z/*.png
+
+(
+  echo 'puts ('
+  for f in /tmp/z/*.m4a; do ffprobe "$f" 2>&1 | perl -lne 'print "$1+" if /bitrate: (\d+)/'; done
+  echo "0) / $(ls -1 /tmp/z/*.m4a | wc -l)"
+) | ruby
 ```
 
-### Video+audio
+## Conversion
 
-See:
+General audio options:
+
+- `-c:a $codec`, `-acodec $codec`     : Audio codec
+  - `-an`                             : Ignore audio
+- `-ac 1`                             : Convert to mono (space required after `-ac`)
+- `-af 'pan=stereo|c0<c0+c1|c1<c0+c1'`: Mix both audio channels into two channels (https://trac.ffmpeg.org/wiki/AudioChannelManipulation)
+
+General video options:
+
+- `-c:v $codec`           : Video codec
+  - `-vn`                 : Ignore video
+- `-filter:v scale=-1:540`: Resize, keeping width proportional (works also for height)
+
+MP3 (LAME: `-c:a libmp3lame`):
+
+- `-qscale:a 4`: VBR
+  - 4: ≈165 kbps, 5: ≈130 kbps
+- `-b:a 320k`  : CBR
+
+M4A (FDK-AAC `-c:a libfdk_aac`):
+
+- `-vbr 5`: VBR
+  - Ignore the warning `Note, the VBR setting is unsupported and only works with some parameter combinations` (see https://www.mail-archive.com/ffmpeg-user@ffmpeg.org/msg23605.html)
+  - WATCH OUT! Not all the bitrate/channels/quality combinations work (see https://hydrogenaud.io/index.php/topic,95989.msg817833.html#msg817833)
+
+WAV:
+- `-f wav`; specify format; optional if the output has the extension.
+
+h265 (libx265: `-c:v libx265`):
+
+- `-crf 25 -preset slower`: VBR (CRF); use x265
+  - CRF: best:0, default:28, worst:51
+  - Preset: ..., slower, slow, medium, ...
+- `-x265-params lossless=1`: Lossless (no need for `crf` param)
+
+MP4 (libxvid (default): `-c:v mpeg4 -vtag xvid`):
+
+- `-qscale:v 3`: VBR (CRF), 1-31
+  - 3: cartoon/93'/720p ≈2.1GiB; 4: cartoon/93'/720p ≈1.6GiB
+- `-b:v 1000k` : CBR
+
+For h264/h265 options, see:
 
 - https://trac.ffmpeg.org/wiki/Encode/H.265
 - https://trac.ffmpeg.org/wiki/Encode/MPEG-4
 
-```sh
-# - Default video encoder: libxvid
-# - qscale:v = constant quantization, 1-31 (3 -> cartoon/93'/720p ≈ 2.1GiB; 4 -> cartoon/93'/720p ≈ 1.6GiB)
-# - qscale:a = VBR, 0-9, (4 ≈ 165 kbps, 5 ≈ 130 kbps)
-#
-ffmpeg -i input.mp4 -c:v mpeg4 -vtag xvid -qscale:v 3 -c:a libmp3lame -qscale:a 4 output.avi
+### libfdk-aac test
 
-# CBR Video/Audio (1000k/93' = 838 MiB), and mix both audio channels into two channels (https://trac.ffmpeg.org/wiki/AudioChannelManipulation)
-#
-ffmpeg -i input.mp4 -c:v mpeg4 -vtag xvid -b:v 1000k -c:a libmp3lame -b:a 96k -af 'pan=stereo|c0<c0+c1|c1<c0+c1' output.avi
+Tested on 4 albums of different genre; kbps/khz ~cutoff:
 
-# x265: downscale, copy audio
-# crf (constant rate factor): best:0, default:28, worst:51
-# - 28: like x264's 23, at around half size
-# preset: veryslow, slower, slow, medium, ...
-#
-ffmpeg -i input.mp4 \
-  -filter:v scale=-1:540 \
-  -c:v libx265 -crf 26 -preset veryslow \
-  -c:a copy \
-  output.mkv
-```
+- 5: 225/19
+- 4: 149/16.5
+- 3: 115/16
+- 2:  99/13
+- 1: 102/13 (!!)
+
+### libx265 test
+
+General infos:
+
+- It's not clear what "intra encoding" from the guide is, but it makes `slower` output size balloon!
+- CRF:
+  - 28: like x264's 23, at around half size
+  - every 6 values, size approximately doubles (based on x264 guide)
+  - visually lossless should be at around 22 (based on x264 guide)
+- presets:
+  - `slow` is considered very slow already; few people suggest `slower`
+- Compressing a video (+audio) employed around 1000/1200% CPU time, so if there are many, best to compress 2 or 3 in parallel
+
+Test data:
+
+- Source (Swing 5.3 recap), h264 (Lavf58.20.100): 1080p=24M (reference), 540p=6.8M
+- Based on this test, the most balanced is around 25+slower
+
+| height |   preset    |  crf  |  fps  | size (M) | notes                                                                                             |
+| :----: | :---------: | :---: | :---: | :------: | ------------------------------------------------------------------------------------------------- |
+|  540p  |   medium    |  28   | 226.5 |   2.0    | size inconsistent with `slower`; didn't visually inspect                                          |
+|  540p  |   slower    |  28   |  19   |   2.1    | can hardly distinguish from LL!                                                                   |
+|  540p  |   slower    |  26   | 17.5  |   2.6    |                                                                                                   |
+|  540p  |   slower    |  25   | 16.8  |   3.0    | very small improvements vs CRF 28 (required frame inspection); can't distinguish from source 540p |
+|  540p  |   medium    |  LL   | 63.9  |   119    |                                                                                                   |
+|  540p  | x264/slower |  23   |       |   3.9    | very hard to distinguish from x265/25/slower; slightly blockier on moving areas                   |
 
 ### Video to animated GIF/PNG
 
@@ -97,10 +161,9 @@ ffmpeg -i "$input" -plays 10 -r 1/2 "${input%.*}.apng"
 
 ```sh
 # `c:a copy`:    codec:audio copy
-# `-acodec copy: same as above`
 # `vn`:          no video; required!
 #
-ffmpeg -i $input -vn -acodec copy $output
+ffmpeg -i $input -vn -c:a copy $output
 
 # Demux a single stream.
 # See `Stream` from ffprobe (`Stream #0:1: Audio` -> `0:a:1`)
