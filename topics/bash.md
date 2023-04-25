@@ -902,12 +902,20 @@ Iterate a multiple lines output, assigning it to an array:
 #
 binlogs=$(mysql -u"$my_user" -p"$my_pwd" -h"$my_host" -BNe 'SHOW BINARY LOGS')
 
-# WATCH OUT! If $binlogs has a trailing newline, a cycle with a blank value will be executed; for this
-# case, use `< <(echo -n ...)` or similar.
+# WATCH OUT!
+#
+# - If $binlogs has a trailing newline, a cycle with a blank value will be executed; for this
+#   case, use `< <(echo -n ...)` or similar
+# - If the output program reads from stdin (e.g. ffmpeg), append '< /dev/null' (or use specific
+#   program options); see https://www.shellcheck.net/wiki/SC2095
 #
 while IFS= read -r -a binlog; do
   echo Filename: "${binlog[0]}", Position: "${binlog[1]}"
 done <<< "$binlogs"
+
+# Version with process substitution (and without array splitting)
+#
+while IFS= read -r myvar; do myprocess "$myvar"; done < <(mycommand)
 ```
 
 ## Associative arrays
