@@ -1,3 +1,8 @@
+## Wed 26/Apr/2023
+
+- Projects: Openscripts
+  - [x] kernel_version.rb: Fix `find_latest()`
+
 ## Tue 25/Apr/2023
 
 - Studies: Tools
