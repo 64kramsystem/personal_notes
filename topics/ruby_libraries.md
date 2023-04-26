@@ -477,6 +477,8 @@ end
 The `yaml` library is actually an alias for `psych`. Comments are always ignored when parsing!
 
 ```ruby
+# WATCH OUT! This doesn't interpret ERB templates. See #erb-templates for that.
+
 YAML.load_file(filename)  # Parse from file
 YAML.load(string)         # ... from string
 
