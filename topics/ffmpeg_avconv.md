@@ -3,6 +3,7 @@
 - [FFmpeg/Avconv](#ffmpegavconv)
   - [Generic options/snippets](#generic-optionssnippets)
   - [Conversion](#conversion)
+    - [Convenient snippets](#convenient-snippets)
     - [libfdk-aac test](#libfdk-aac-test)
     - [libx265 test](#libx265-test)
     - [Video to animated GIF/PNG](#video-to-animated-gifpng)
@@ -24,30 +25,14 @@
 
 - `-y`: overwrite destination
 
-```sh
-# Quick audio tests
-
-rm -rf /tmp/z
-mkdir /tmp/z
-
-find *.flac | parallel 'ffmpeg -i {} -c:a libfdk_aac -vbr 2 /tmp/z/"$(basename {})".m4a'
-
-find /tmp/z/*.m4a | parallel 'ffmpeg -i {} {}.wav && sox {}.wav -n spectrogram -o {}.wav.png'; eom /tmp/z/*.png
-
-(
-  echo 'puts ('
-  for f in /tmp/z/*.m4a; do ffprobe "$f" 2>&1 | perl -lne 'print "$1+" if /bitrate: (\d+)/'; done
-  echo "0) / $(ls -1 /tmp/z/*.m4a | wc -l)"
-) | ruby
-```
-
 ## Conversion
 
 General audio options:
 
 - `-c:a $codec`, `-acodec $codec`     : Audio codec
   - `-an`                             : Ignore audio
-- `-ac 1`                             : Convert to mono (space required after `-ac`)
+- `-ac (1|2)`                         : Convert to mono/stereo (space required after `-ac`); if source and filter have the same # of channels, the filter is noop.
+- `-ar 44100`                         : Downsample
 - `-af 'pan=stereo|c0<c0+c1|c1<c0+c1'`: Mix both audio channels into two channels (https://trac.ffmpeg.org/wiki/AudioChannelManipulation)
 
 General video options:
@@ -89,6 +74,39 @@ For h264/h265 options, see:
 - https://trac.ffmpeg.org/wiki/Encode/H.265
 - https://trac.ffmpeg.org/wiki/Encode/MPEG-4
 
+### Convenient snippets
+
+Quick audio spectrum/bitrate check:
+
+```sh
+rm -rf /tmp/z
+mkdir /tmp/z
+
+find *.flac | parallel 'ffmpeg -i {} -c:a libfdk_aac -vbr 2 /tmp/z/"$(basename {})".m4a'
+
+find /tmp/z/*.m4a | parallel 'ffmpeg -i {} {}.wav && sox {}.wav -n spectrogram -o {}.wav.png'; eom /tmp/z/*.png
+
+(
+  echo 'puts ('
+  for f in /tmp/z/*.m4a; do ffprobe "$f" 2>&1 | perl -lne 'print "$1+" if /bitrate: (\d+)/'; done
+  echo "0) / $(ls -1 /tmp/z/*.m4a | wc -l)"
+) | ruby
+```
+
+Convert unencrypted VOBs to h265:
+
+```sh
+# Inspect the audio and if it's 192kb, decide if copy or compress it (see comment).
+#
+ffprob VTS_01_1.VOB
+
+ffmpeg \
+  -i "concat:$(ls -1 *.VOB | tr $'\n' '|')" \
+  -c:a copy `# -ac 2 -ar 44100 -c:a libfdk_aac -vbr 3` \
+  -c:v libx265 -crf 25 -preset slower \
+  /tmp/output.mkv
+```
+
 ### libfdk-aac test
 
 Tested on 4 albums of different genre; kbps/khz ~cutoff:
@@ -98,6 +116,8 @@ Tested on 4 albums of different genre; kbps/khz ~cutoff:
 - 3: 115/16
 - 2:  99/13
 - 1: 102/13 (!!)
+
+Downsampling from 48Khz to 44Khz saved around 3% on a test DVD.
 
 ### libx265 test
 
@@ -216,6 +236,8 @@ LIST
 #
 (for f in *.webm; do echo "file '$PWD/$f'"; done) | ffmpeg -f concat -safe 0 -i /dev/stdin output.apng
 ```
+
+For formats supporting it (ie. MPEG-2), can use the `concat` filter: `-i "concat:input1|input2...`.
 
 ## Scaling
 
