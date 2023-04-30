@@ -1,3 +1,10 @@
+## Sun 30/Apr/2023
+
+- Projects: Openscripts
+  - [x] Add `compress_dvd_iso`
+- Tools: A/V encoding
+  - [x] Brutal fight with Linux CLI subtitles processing
+
 ## Wed 26/Apr/2023
 
 - Projects: Openscripts

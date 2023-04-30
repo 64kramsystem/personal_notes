@@ -1,7 +1,7 @@
 # FFmpeg/Avconv
 
 - [FFmpeg/Avconv](#ffmpegavconv)
-  - [Generic options/snippets](#generic-optionssnippets)
+  - [Generic options](#generic-options)
   - [Conversion](#conversion)
     - [Convenient snippets](#convenient-snippets)
     - [libfdk-aac test](#libfdk-aac-test)
@@ -14,32 +14,19 @@
     - [Split by duration, starting on a keyframe](#split-by-duration-starting-on-a-keyframe)
     - [Concatenate videos](#concatenate-videos)
   - [Scaling](#scaling)
-    - [Downscale/downmix audio file](#downscaledownmix-audio-file)
-    - [Video scaling](#video-scaling)
   - [Other operations](#other-operations)
-    - [Check file encoding formats (metadata)](#check-file-encoding-formats-metadata)
-    - [Record desktop](#record-desktop)
+    - [Snippets](#snippets)
     - [Build FFmpeg with libfdk-aac support](#build-ffmpeg-with-libfdk-aac-support)
 
-## Generic options/snippets
+## Generic options
 
-- `-y`: overwrite destination
+- `-y`                            : overwrite destination
+- `-c:a $codec`, `-acodec $codec` : Audio codec
+  - `-an`                         : Ignore audio
+- `-c:v $codec`                   : Video codec
+  - `-vn`                         : Ignore video
 
 ## Conversion
-
-General audio options:
-
-- `-c:a $codec`, `-acodec $codec`     : Audio codec
-  - `-an`                             : Ignore audio
-- `-ac (1|2)`                         : Convert to mono/stereo (space required after `-ac`); if source and filter have the same # of channels, the filter is noop.
-- `-ar 44100`                         : Downsample
-- `-af 'pan=stereo|c0<c0+c1|c1<c0+c1'`: Mix both audio channels into two channels (https://trac.ffmpeg.org/wiki/AudioChannelManipulation)
-
-General video options:
-
-- `-c:v $codec`           : Video codec
-  - `-vn`                 : Ignore video
-- `-filter:v scale=-1:540`: Resize, keeping width proportional (works also for height)
 
 MP3 (LAME: `-c:a libmp3lame`):
 
@@ -60,7 +47,7 @@ h265 (libx265: `-c:v libx265`):
 
 - `-crf 25 -preset slower`: VBR (CRF); use x265
   - CRF: best:0, default:28, worst:51
-  - Preset: ..., slower, slow, medium, ...
+  - Preset: ultrafast, ..., slower, slow, medium, ...
 - `-x265-params lossless=1`: Lossless (no need for `crf` param)
 
 MP4 (libxvid (default): `-c:v mpeg4 -vtag xvid`):
@@ -97,12 +84,13 @@ Convert unencrypted VOBs to h265:
 
 ```sh
 # Inspect the audio and if it's 192kb, decide if copy or compress it (see comment).
+# On a test movie, 192kb ac3 was 148 MB, aac (q3, 44 kHz) 70 MB
 #
-ffprob VTS_01_1.VOB
+ffprobe VTS_01_1.VOB
 
 ffmpeg \
   -i "concat:$(ls -1 *.VOB | tr $'\n' '|')" \
-  -c:a copy `# -ac 2 -ar 44100 -c:a libfdk_aac -vbr 3` \
+  -ac 2 -ar 44100 -c:a libfdk_aac -vbr 3 `# -c:a copy` \
   -c:v libx265 -crf 25 -preset slower \
   /tmp/output.mkv
 ```
@@ -145,6 +133,16 @@ Test data:
 |  540p  |   slower    |  25   | 16.8  |   3.0    | very small improvements vs CRF 28 (required frame inspection); can't distinguish from source 540p |
 |  540p  |   medium    |  LL   | 63.9  |   119    |                                                                                                   |
 |  540p  | x264/slower |  23   |       |   3.9    | very hard to distinguish from x265/25/slower; slightly blockier on moving areas                   |
+
+Fast presets:
+
+- Source: 30 minutes of a documentary DVD, video only
+
+|  preset   | speed |
+| :-------: | :---: |
+| ultrafast | 30.8  |
+| superfast | 26.8  |
+| veryfast  | 15.8  |
 
 ### Video to animated GIF/PNG
 
@@ -241,39 +239,36 @@ For formats supporting it (ie. MPEG-2), can use the `concat` filter: `-i "concat
 
 ## Scaling
 
-### Downscale/downmix audio file
+Audio:
 
-```sh
-ffmpeg -i $input -sample_fmt s16 -ar 44100 $output    # downscale to 16 bit/44 KHz
-ffmpeg -i $input -ac 2 $output                        # downmix to stereo
-```
+- `-sample_fmt s16`                   : Downscale to 16 bit
+- `-ac (1|2)`                         : Convert to mono/stereo (space required after `-ac`); if source and filter have the same # of channels, the filter is noop.
+- `-ar 44100`                         : Downsample
+- `-af 'pan=stereo|c0<c0+c1|c1<c0+c1'`: Mix both audio channels into two channels (https://trac.ffmpeg.org/wiki/AudioChannelManipulation)
 
-### Video scaling
+Video:
 
-```sh
-# Scale to fit within the specified dimensions with the same aspect ratio, eg. 1280x720 -> 800*450
-# (https://trac.ffmpeg.org/wiki/Scaling).
-# .
-#
-ffmpeg -i input.mp4 -vf scale=w=800:h=600:force_original_aspect_ratio=decrease output.avi
-
-# Scale and enforce an aspect ratio
-#
-ffmpeg -i input.mp4 -vf scale=800:600 -aspect 4:3 output.avi
-```
+- `-vf scale=w=800:h=600:force_original_aspect_ratio=decrease` : Scale to fit within the specified dimensions with the same aspect ratio, eg. 1280x720 -> 800*450
+                                                                 (https://trac.ffmpeg.org/wiki/Scaling).
+- `-vf scale=800:600 -aspect 4:3`                              : Scale and enforce an aspect ratio
+- `-filter:v scale=-1:540`                                     : Scale, keeping width proportional (works also for height)
 
 ## Other operations
 
-### Check file encoding formats (metadata)
+### Snippets
 
 ```sh
+# Check if a video file is truncated (`-sseof -60`: last 60 seconds)
+#
+ffmpeg -v error -sseof -60 -i video.mkv -f null -
+
+# Check file encoding formats (metadata)
+#
 ffmpeg -i $filename
 ffprobe $filename
-```
 
-### Record desktop
-
-```sh
+# Record desktop:
+#
 # "-f x11grab -s 1920x1200 -r 10 -i :0.0" = input part; r=FPS
 # "-vf scale=1280x800" = scaling
 # "-c:v libx264 -preset slower -crf 32" = encoding; crf=constant rate factor
@@ -283,6 +278,10 @@ ffprobe $filename
 # source: https://askubuntu.com/questions/227464/record-my-desktop-in-mp4-format
 #
 ffmpeg -f x11grab -s 1920x1080 -r 10 -i :0.0 -vf scale=1280x800 -c:v libx264 -preset slower -crf 32 $HOME/Desktop/desktop_recording.mp4
+
+# Check FFmpeg linked binaries
+#
+ldd $(which ffmpeg)
 ```
 
 ### Build FFmpeg with libfdk-aac support
@@ -319,10 +318,4 @@ git checkout release/"$latest_release"
   --enable-libvorbis --enable-libvpx --enable-libwebp --enable-libx265 --enable-libdrm --enable-libx264 --enable-shared
 
 make -j $(nproc)
-```
-
-Check ffmpeg binary linked libraries:
-
-```sh
-ldd $(which ffmpeg)
 ```
