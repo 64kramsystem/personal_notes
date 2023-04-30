@@ -1108,7 +1108,7 @@ function remove_lockfile {
 
 trap remove_lockfile EXIT
 
-# It's possible to nest functions (!)
+# It's possible to nest functions (!). But WATCH OUT!! The hooked function can't access local variables when it's invoked!
 #
 function register_exit_hook {
   function _exit_hook { rm -f "$LOCKFILE"; }
