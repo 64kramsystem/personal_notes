@@ -1,3 +1,11 @@
+## Mon 01/May/2023
+
+- Projects: Openscripts
+  - `compress_dvd_iso`
+    - [x] Refactorings
+    - [x] Add support for input directly from a `video_ts` directory
+    - [x] Add support for subtitles
+
 ## Sun 30/Apr/2023
 
 - Projects: Openscripts

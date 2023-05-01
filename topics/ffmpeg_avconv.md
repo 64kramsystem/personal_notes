@@ -114,6 +114,7 @@ General infos:
 - It's not clear what "intra encoding" from the guide is, but it makes `slower` output size balloon!
 - CRF:
   - 28: like x264's 23, at around half size
+    - RF may not be comparable across different presets (https://www.reddit.com/r/handbrake/comments/teibty/comment/i0pxlq1/)
   - every 6 values, size approximately doubles (based on x264 guide)
   - visually lossless should be at around 22 (based on x264 guide)
 - presets:
