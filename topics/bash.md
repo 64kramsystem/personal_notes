@@ -364,24 +364,25 @@ myTest "foo" && echo "bar"      # prints `bar`!
 !! WATCH OUT !!
 
 1. They're not PCRE;
-2. Don't quote the regex (use backslahes to escape spaces)!!
+2. Don't quote the regex (use backslahes to escape spaces, or `$(echo -n "...")`)!!
 3. Use a temporary variable (or cmd subsitution) when using metacharacters with backslash (but not `.`);
 4. `^` and `$` refer to the *whole string*, not the line;
 5. DON'T WRAP with ruby regex slashes!!!
 
 Metacharacters:
 
-- `?` : supported
-- `\w`: not supported; use `[:alnum:]`, but *doesn't match underscore*
-- `\d`: not supported; use `[0-9]` or `[:digit:]`
-- `\S`: not supported
-- `\b`: supported
-- `\s`: `[:space:]`
-- `[:xdigit:]`: hexadecimal!
-- `[^…]`: supported
-- `{}`: supported, also for intervals (also with empty limits)
-- `()`, `|`: supported
-- `(?:…)`: not supported
+- `* + ?`      : supported
+- `\w`         : not supported; use `[:alnum:]`, but *doesn't match underscore*
+- `\d`         : not supported; use `[0-9]` or `[:digit:]`
+- `[:alpha:]`  : supported
+- `\S`         : not supported
+- `\b`         : supported
+- `\s`         : `[:space:]`
+- `[:xdigit:]` : hexadecimal!
+- `[^…]`       : supported
+- `{}`         : supported, also for intervals (also with empty limits)
+- `()`, `|`    : supported
+- `(?:…)`      : not supported
 
 References:
 
