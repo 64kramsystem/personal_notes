@@ -1,3 +1,8 @@
+## Tue 02/May/2023
+
+- Open Source
+  - [x] Release `ruby-shadow` fork+gem with Ruby 3.2 compatibility
+
 ## Mon 01/May/2023
 
 - Projects: Openscripts
