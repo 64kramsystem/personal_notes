@@ -116,6 +116,7 @@ Note: file traversal ordering is not guaranteed.
 
 Printf params:
 
+- `%f`: basename
 - `%h`: parent directory (!!!)
 
 Regexp types:
