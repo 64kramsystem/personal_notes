@@ -1,3 +1,8 @@
+## Wed 03/May/2023
+
+- Open Source: TruffleHog
+  - [x] Report issue with GitHub Action
+
 ## Tue 02/May/2023
 
 - Open Source
