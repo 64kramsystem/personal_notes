@@ -245,9 +245,18 @@ MyModel.columns_hash['my_attribute'].limit
 
 connection.current_database
 
-# Connection configuration for the current Rails env
+# Connection configuration for the current Rails env.
+# database_configuration() returns a new hash for each call.
 #
 MyNamespace::Application.instance.config.database_configuration[Rails.env]
+
+# Other way to get the current db connection; duplication is needed when changing the data, because the hash is frozen.
+#
+conn_cfg = ActiveRecord::Base.connection_db_config.configuration_hash.deep_dup
+#
+# Update and reconnect.
+#
+ActiveRecord::Base.establish_connection(conn_cfg.tap {|cfg| cfg[:database] = new_database})
 ```
 
 ### SQL queries streaming

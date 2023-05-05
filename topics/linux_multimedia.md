@@ -1,24 +1,30 @@
-# FFmpeg/Avconv
+# Linux Multimedia
 
-- [FFmpeg/Avconv](#ffmpegavconv)
-  - [Generic options](#generic-options)
-  - [Conversion](#conversion)
-    - [Convenient snippets](#convenient-snippets)
-    - [libfdk-aac test](#libfdk-aac-test)
-    - [libx265 test](#libx265-test)
-    - [Video to animated GIF/PNG](#video-to-animated-gifpng)
-  - [Stream/file operations](#streamfile-operations)
-    - [Demux](#demux)
-    - [Lossless split (trim) m4a](#lossless-split-trim-m4a)
-    - [Extract segment](#extract-segment)
-    - [Split by duration, starting on a keyframe](#split-by-duration-starting-on-a-keyframe)
-    - [Concatenate videos](#concatenate-videos)
-  - [Scaling](#scaling)
-  - [Other operations](#other-operations)
-    - [Snippets](#snippets)
-    - [Build FFmpeg with libfdk-aac support](#build-ffmpeg-with-libfdk-aac-support)
+- [Linux Multimedia](#linux-multimedia)
+  - [FFmpeg/Avconv](#ffmpegavconv)
+    - [Generic options](#generic-options)
+    - [Conversion](#conversion)
+      - [Convenient snippets](#convenient-snippets)
+      - [libfdk-aac test](#libfdk-aac-test)
+      - [libx265 test](#libx265-test)
+      - [Video to animated GIF/PNG](#video-to-animated-gifpng)
+    - [Stream/file operations](#streamfile-operations)
+      - [Demux](#demux)
+      - [Lossless split (trim) m4a](#lossless-split-trim-m4a)
+      - [Extract segment](#extract-segment)
+      - [Split by duration, starting on a keyframe](#split-by-duration-starting-on-a-keyframe)
+      - [Concatenate videos](#concatenate-videos)
+      - [Interlacing](#interlacing)
+    - [Scaling](#scaling)
+    - [Other operations](#other-operations)
+      - [Snippets](#snippets)
+      - [Build FFmpeg with libfdk-aac support](#build-ffmpeg-with-libfdk-aac-support)
+  - [DVD-related (incl. subtitles)](#dvd-related-incl-subtitles)
+  - [Other A/V operations](#other-av-operations)
 
-## Generic options
+## FFmpeg/Avconv
+
+### Generic options
 
 - `-y`                            : overwrite destination
 - `-c:a $codec`, `-acodec $codec` : Audio codec
@@ -26,7 +32,7 @@
 - `-c:v $codec`                   : Video codec
   - `-vn`                         : Ignore video
 
-## Conversion
+### Conversion
 
 MP3 (LAME: `-c:a libmp3lame`):
 
@@ -61,7 +67,7 @@ For h264/h265 options, see:
 - https://trac.ffmpeg.org/wiki/Encode/H.265
 - https://trac.ffmpeg.org/wiki/Encode/MPEG-4
 
-### Convenient snippets
+#### Convenient snippets
 
 Quick audio spectrum/bitrate check:
 
@@ -83,9 +89,9 @@ find /tmp/z/*.m4a | parallel 'ffmpeg -i {} {}.wav && sox {}.wav -n spectrogram -
 Convert unencrypted VOBs to h265:
 
 ```sh
-# Inspect the audio and if it's 192kb, decide if copy or compress it (see comment).
-# On a test movie, 192kb ac3 was 148 MB, aac (q3, 44 kHz) 70 MB
-#
+## Inspect the audio and if it's 192kb, decide if copy or compress it (see comment).
+## On a test movie, 192kb ac3 was 148 MB, aac (q3, 44 kHz) 70 MB
+##
 ffprobe VTS_01_1.VOB
 
 ffmpeg \
@@ -95,7 +101,7 @@ ffmpeg \
   /tmp/output.mkv
 ```
 
-### libfdk-aac test
+#### libfdk-aac test
 
 Tested on 4 albums of different genre; kbps/khz ~cutoff:
 
@@ -107,7 +113,7 @@ Tested on 4 albums of different genre; kbps/khz ~cutoff:
 
 Downsampling from 48Khz to 44Khz saved around 3% on a test DVD.
 
-### libx265 test
+#### libx265 test
 
 General infos:
 
@@ -145,7 +151,7 @@ Fast presets:
 | superfast | 26.8  |
 | veryfast  | 15.8  |
 
-### Video to animated GIF/PNG
+#### Video to animated GIF/PNG
 
 See concatenation section to use multiple input videos as source.
 
@@ -156,69 +162,69 @@ Note that asciinema is nice, however, more complex usages are not supported (eg.
 GIF:
 
 ```sh
-# Source: https://superuser.com/a/556031
-#
-# - `fps=10`: 10 FPS
-# - keep the same resolution
-# - `-loop -1`: don't loop
-#
+## Source: https://superuser.com/a/556031
+##
+## - `fps=10`: 10 FPS
+## - keep the same resolution
+## - `-loop -1`: don't loop
+##
 ffmpeg -i "$input" -vf "fps=10,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop -1 "${input%.*}.gif"
 ```
 
 (A)PNG; considerably larger than GIF; may not make a noticeable difference.
 
 ```sh
-# `-plays 10`: 10 loops (use `0` for infinite)
-# `-r 1/2`: capture 2 frames every second (keeps the video time the same!)
-#
+## `-plays 10`: 10 loops (use `0` for infinite)
+## `-r 1/2`: capture 2 frames every second (keeps the video time the same!)
+##
 ffmpeg -i "$input" -plays 10 -r 1/2 "${input%.*}.apng"
 ```
 
-## Stream/file operations
+### Stream/file operations
 
-### Demux
+#### Demux
 
 ```sh
-# `c:a copy`:    codec:audio copy
-# `vn`:          no video; required!
-#
+## `c:a copy`:    codec:audio copy
+## `vn`:          no video; required!
+##
 ffmpeg -i $input -vn -c:a copy $output
 
-# Demux a single stream.
-# See `Stream` from ffprobe (`Stream #0:1: Audio` -> `0:a:1`)
-#
+## Demux a single stream.
+## See `Stream` from ffprobe (`Stream #0:1: Audio` -> `0:a:1`)
+##
 ffmpeg -i $input -vn -map 0:a:1 -c copy $audio_output
 ```
 
-### Lossless split (trim) m4a
+#### Lossless split (trim) m4a
 
 See http://uber-rob.co.uk/2014/02/splittingcutting-an-m4a-file.
 
 ```sh
-# Add `-vn` if there is video
-# `-t` is the length
-#
+## Add `-vn` if there is video
+## `-t` is the length
+##
 ffmpeg -ss 0:00:42 -i in.m4a -c copy -t 1:00:00 out.m4a
 ```
 
-### Extract segment
+#### Extract segment
 
 ```sh
-# `ss`: start
-# `t` : duration
+## `ss`: start
+## `t` : duration
 
 ffmpeg -ss hh:mm:ss -i $source -t hh:mm:ss -vcodec copy -acodec copy
 ```
 
-### Split by duration, starting on a keyframe
+#### Split by duration, starting on a keyframe
 
 ```sh
-# Cute but underwhelming results (see https://unix.stackexchange.com/q/1670).
-#
+## Cute but underwhelming results (see https://unix.stackexchange.com/q/1670).
+##
 ffmpeg -i input.mp4 -segment_time 00:10:00 -reset_timestamps 1 -f segment output%02d.avi
 ```
 
-### Concatenate videos
+#### Concatenate videos
 
 Source: https://stackoverflow.com/a/11175851
 
@@ -231,14 +237,26 @@ file '$PWD/02.webm'
 file '$PWD/03.webm'
 LIST
 
-# Alternative approach, with wildcard (simplified; doesn't support filenames with single quotes).
-#
+## Alternative approach, with wildcard (simplified; doesn't support filenames with single quotes).
+##
 (for f in *.webm; do echo "file '$PWD/$f'"; done) | ffmpeg -f concat -safe 0 -i /dev/stdin output.apng
 ```
 
 For formats supporting it (ie. MPEG-2), can use the `concat` filter: `-i "concat:input1|input2...`.
 
-## Scaling
+#### Interlacing
+
+```sh
+## check if source is interlaced (`field_order=tt` or `field_order=bb`)
+##
+ffprobe -v error -show_entries stream=codec_name,width,height,field_order -of default=noprint_wrappers=1 -select_streams v input.vob
+
+## Deinterlace filter (potential impact on progressive sources, so best to use only when necessary)
+##
+-vf ("yadif" | "yadif=mode=0")  # enforced|automatic
+```
+
+### Scaling
 
 Audio:
 
@@ -254,38 +272,38 @@ Video:
 - `-vf scale=800:600 -aspect 4:3`                              : Scale and enforce an aspect ratio
 - `-filter:v scale=-1:540`                                     : Scale, keeping width proportional (works also for height)
 
-## Other operations
+### Other operations
 
-### Snippets
+#### Snippets
 
 ```sh
-# Check if a video file is truncated (`-sseof -60`: last 60 seconds)
-#
+## Check if a video file is truncated (`-sseof -60`: last 60 seconds)
+##
 ffmpeg -v error -sseof -60 -i video.mkv -f null -
 
-# Check file encoding formats (metadata)
-#
+## Check file encoding formats (metadata)
+##
 ffmpeg -i $filename
 ffprobe $filename
 
-# Record desktop:
-#
-# "-f x11grab -s 1920x1200 -r 10 -i :0.0" = input part; r=FPS
-# "-vf scale=1280x800" = scaling
-# "-c:v libx264 -preset slower -crf 32" = encoding; crf=constant rate factor
-#
-# ~2 MB/min
-#
-# source: https://askubuntu.com/questions/227464/record-my-desktop-in-mp4-format
-#
+## Record desktop:
+##
+## "-f x11grab -s 1920x1200 -r 10 -i :0.0" = input part; r=FPS
+## "-vf scale=1280x800" = scaling
+## "-c:v libx264 -preset slower -crf 32" = encoding; crf=constant rate factor
+##
+## ~2 MB/min
+##
+## source: https://askubuntu.com/questions/227464/record-my-desktop-in-mp4-format
+##
 ffmpeg -f x11grab -s 1920x1080 -r 10 -i :0.0 -vf scale=1280x800 -c:v libx264 -preset slower -crf 32 $HOME/Desktop/desktop_recording.mp4
 
-# Check FFmpeg linked binaries
-#
+## Check FFmpeg linked binaries
+##
 ldd $(which ffmpeg)
 ```
 
-### Build FFmpeg with libfdk-aac support
+#### Build FFmpeg with libfdk-aac support
 
 ```sh
 sudo apt install \
@@ -299,19 +317,19 @@ cd FFmpeg
 latest_release=$(git branch -r | perl -lne 'print $1 if /origin\/release\/([\d.]+)/' | sort -V | tail -n 1)
 git checkout release/"$latest_release"
 
-# Compile minimal version, with some options taken from Ubuntu:
-#
-# `-lpthread`: include pthread library
-# `-lm`: include standard C math library `libm` (see https://stackoverflow.com/q/1033898)
-# --enable-gpl --enable-nonfree: required in order to include also GPL-licensed stuff
-#
-# In order to check how an ffmpeg binary was compiled, run `ffmpeg -version`; switches can be listed via `./configure --help`.
-#
-# Notes:
-#
-# - Not availabile anymore on 5.0: `--disable-filter=resample`.
-# - Not sure if needed: `--extra-libs="-lpthread -lm"`
-#
+## Compile minimal version, with some options taken from Ubuntu:
+##
+## `-lpthread`: include pthread library
+## `-lm`: include standard C math library `libm` (see https://stackoverflow.com/q/1033898)
+## --enable-gpl --enable-nonfree: required in order to include also GPL-licensed stuff
+##
+## In order to check how an ffmpeg binary was compiled, run `ffmpeg -version`; switches can be listed via `./configure --help`.
+##
+## Notes:
+##
+## - Not availabile anymore on 5.0: `--disable-filter=resample`.
+## - Not sure if needed: `--extra-libs="-lpthread -lm"`
+##
 ./configure \
   --enable-gpl --enable-nonfree --enable-libfdk-aac --enable-libx264 \
   --prefix=/usr --toolchain=hardened --libdir=/usr/lib/x86_64-linux-gnu --incdir=/usr/include/x86_64-linux-gnu --arch=amd64 \
@@ -319,4 +337,65 @@ git checkout release/"$latest_release"
   --enable-libvorbis --enable-libvpx --enable-libwebp --enable-libx265 --enable-libdrm --enable-libx264 --enable-shared
 
 make -j $(nproc)
+```
+
+## DVD-related (incl. subtitles)
+
+Subs:
+
+```sh
+## In order to find delayed subs, must probe more time/data (both options required).
+## lsdvd is a better solution.
+##
+ffprobe -probesize 1G -analyzeduration 1G -i 'concat:video_ts/vts_01_1.vob|...'
+
+## In order to extract subs, use mencoder; FFmpeg doesn't work well (also, doesn't support VobSub output).
+##
+## http://www.mplayerhq.hu/DOCS/HTML/en/menc-feat-extractsub.html
+##
+## It's necessary to process the video; `-o /dev/null` implicitly discards a/v streams.
+## `-nosound` avoids noisy output.
+## The param `-vobsuboutindex` is redundant when using `-sid`.
+## It's possible to use `-slang` to specify the sub language, but the instructions are confusing.
+## It's not possible to logically concatenate multiple VOB input files.
+## In order to store multiple subs into a pair of VobSub files, need to use `mkvmerge`.
+## It's not clear how to set the language of the VobSub (IDX) file; `-slang` doesn't do it.
+##
+lsdvd -s video_ts # most reliable
+mencoder $vob_file -nosound -oac copy -ovc copy -o /dev/null -vobsubout $subfile -sid 0x20
+SUB_LANG=$lang_short perl -0777 -i -pe 's/^id: \K\w+/$ENV{SUB_LANG}/m' "$sub_file".idx
+```
+
+## Other A/V operations
+
+Bind mp3 files:
+
+```sh
+# Updated version of https://lyncd.com/2011/03/lossless-combine-mp3s; no id3 copy (mp3binder has support)
+# vbrfixc is probably not useful when the input bitrate is the same
+#
+mp3binder 1.mp3 2.mp3 --output tmp.mp3
+vbrfixc --XingFrameCrcProtectIfCan tmp.mp3 all.mp3 && rm tmp.mp3
+```
+
+Rip audio cD:
+
+```sh
+cdparanoia -vB
+```
+
+Rip Youtube video:
+
+```sh
+yt-dlp -F     $link # display formats
+yt-dlp -f $id $link # donwload the given video id (see -F)
+```
+
+Display spectrogram:
+
+```sh
+# It seems that it's not possible to read from a pipe.
+# `-o` is optional; defaults to `Spectrogram.png`
+#
+sox /tmp/pizza.wav -n spectrogram -o /tmp/test.png
 ```

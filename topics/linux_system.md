@@ -239,6 +239,10 @@ sudo -E env "PATH=$PATH" $command`
 Useful operations:
 
 ```sh
+# Mount ISO without sudo; filenames are lower case.
+#
+fuseiso
+
 # Get the device to whom a partition belongs (parent)
 #
 # WATCH OUT!! Exit with error if nothing is found!!
@@ -253,7 +257,8 @@ lsblk [/dev[partition]]
 df $file
 
 # Find if a path is a mountpoint (if it's mounted)
-if mountpoint -q $path; then echo is mountpoint; fi
+if findmnt $path > /dev/null; then echo is mountpoint; fi
+if mountpoint -q $path      ; then echo is mountpoint; fi
 ```
 
 ### Partitions
@@ -470,10 +475,6 @@ Informations:
 apt show $package
 dpkg --list $package
 
-# Produce a package's dependency tree.
-#
-debtree –max-depth=2 mypackage | dot -Tpng > mypackage.png
-
 # Check if a package is installed, in the most standard way possible.
 # States found: `install`, `hold`, `deinstall`; the last seems only cfg installed.
 #
@@ -504,11 +505,6 @@ aptitude search -F %p '~nxserver-xorg-video-nvidia-[[:digit:]]+$~ramd64'
 #
 apt-cache search '^linux-image-unsigned-5.4.[[:digit:]-]+-generic'
 
-# Show dependencies of a package
-#
-aptitude why -v $package
-dpkg -I $package.deb
-
 # Display the repositories with a given package
 #
 apt-cache policy $package
@@ -516,10 +512,24 @@ apt-cache policy $package
 # Find the repository of a package
 #
 apt-cache showpkg $package
+```
+
+Depedency-related:
+
+```sh
+# Basic package dependencies are included in the package info (see commands above)
+
+# Show why a package was installed
+#
+aptitude why -v $package
 
 # (Extra tool) Check dependencies of installed package.
 #
 apt-rdepends $package
+
+# Produce a package's dependency tree.
+#
+debtree –max-depth=2 mypackage | dot -Tpng > mypackage.png
 ```
 
 Package/file operations:
@@ -558,6 +568,12 @@ ar -vx $package.deb                           # this extract the deb files (debi
 # Find which package a file in the filesystem belongs to
 #
 dpkg -S $file
+
+# Display package info, including dependencies.
+#
+dpkg -I $file
+apt show $package
+aptitude show $package
 
 # Find which packages include a file with the given name (no need for path). This is not a preinstalled tool.
 # Require its case to be refreshed `apt-file cache`.

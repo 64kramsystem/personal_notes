@@ -152,6 +152,11 @@ declare -x                          # export; can add to `-g`
 #
 echo $'l\'s\n'          # prints `l's` and newline
 
+# Best way to escape the exclamation mark inside double quotes.
+# WATCH OUT! Backslash doesn't work.
+#
+"foo"'!'"bar"
+
 # If the variable is a string, can slice using a negative value for the end index (!!)
 #
 slice=${str[*]:1:-1}
@@ -1235,6 +1240,10 @@ for ((SECONDS=0; SECONDS < 10; )); do sleep 1; done
 
 # Wait until next beginning of second
 sleep 0.$(printf '%04d' $((10000 - 10#$(date +%4N))))
+
+
+# Countdown timer
+for i in $(seq $((3600 * 4)) -1 1); do echo -ne "\r$i "; sleep 1; done
 ```
 
 When using `time`, must be careful to what is used (built-in vs. `/usr/bin/time`). The builtin has milliseconds accuracy, but setting it is d*cking confusing.  

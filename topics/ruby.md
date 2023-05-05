@@ -241,14 +241,16 @@ Another gem, `bitset`, is very functional, but it's old, and needs to be checked
 
 ### Collections destructuring in blocks
 
-Destructure an array in blocks ("unpacking" refers to arrays):
-
 ```ruby
-# "key:a, b:1, c:2" !!!
+# WATCH OUT!! Destructure a hash in blocks, doesn't work anymore in Ruby 3.
+# See https://bugs.ruby-lang.org/issues/14183#note-114.
 #
-{a: {b: 1, c: 2}}.each do |key, b:, c: nil, **| # default provided for :c; ignore other keywords, if any
-  puts "key:#{key}, b:#{b}, c:#{c}"
-end
+[{a: 1}].each { |a:, **| }
+#
+# It does work in functions, but the hash needs to be destructured by the caller.
+#
+def myfn(a:); end
+myfn(**{a: 1})
 ```
 
 ### Modules
@@ -639,6 +641,7 @@ hash.transform_keys(&block)
 {a: 1, b: 2, c: 3}.slice(:a, :b)          # => {a: 1, b: 2} # doesn't modify the source hash
 hash.values_at(:key1, :key2)
 hash.key?(:key)                           # check inclusion
+hash&.store(:key, val)                    # Hash#[]= alias, convenient for safe navigation
 hash.clone                                # !!! shallow copy !!!
 hash.delete_if { |k, v| fx() }            # destructive; returns hash (not the deleted values)
 hash.merge!(hash) {|_, v| fx(v)}          # !!! transform the values of a hash !!! non-destructive (without `!`) version also works

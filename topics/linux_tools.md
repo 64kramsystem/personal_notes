@@ -34,7 +34,6 @@
   - [PDF/Images handling](#pdfimages-handling)
     - [Imagemagick (convert)](#imagemagick-convert)
     - [Raw to JPEG conversion](#raw-to-jpeg-conversion)
-  - [Audio/video operations](#audiovideo-operations)
   - [Formatting/diff operations](#formattingdiff-operations)
   - [Encoding](#encoding)
   - [Benchmarking](#benchmarking)
@@ -67,7 +66,10 @@ ls --block-size=K   # human-readable; use K,M,G...
 
 ## find
 
-Note: file traversal ordering is not guaranteed.
+Note:
+
+- file traversal ordering is not guaranteed
+- the order is crucial!, e.g. `-print` must go after `-name` etc.
 
 ```sh
 ! (condition)                     # negates a condition
@@ -299,6 +301,14 @@ echo "<$(cat /tmp/fifo)>"
 mktemp --suffix="${filename##*.}"     # Create a temporary filename (using the extension of $filename)
 stat $filename --format='%s'          # Get file size
 ```
+
+Making a virtual file from the concatenation of multiple files:
+
+- Solutions using standard tools have limits, e.g. loop+mdadm may require n*512 byte files', nbd didn't work.
+- References:
+  - https://unix.stackexchange.com/questions/94041/a-virtual-file-containing-the-concatenation-of-other-files
+  - https://serverfault.com/questions/487670/concatenating-files-to-a-virtual-file-on-linux
+- Working solution: https://github.com/schlaile/concatfs
 
 ### lsof
 
@@ -917,31 +927,6 @@ for f in *.ORF; do darktable-cli "$f" "$f".jpg; done
 ```
 
 [Reference](https://askubuntu.com/a/1256073/46091).
-
-## Audio/video operations
-
-Bind mp3 files:
-
-```sh
-# Updated version of https://lyncd.com/2011/03/lossless-combine-mp3s; no id3 copy (mp3binder has support)
-# vbrfixc is probably not useful when the input bitrate is the same
-#
-mp3binder 1.mp3 2.mp3 --output tmp.mp3
-vbrfixc --XingFrameCrcProtectIfCan tmp.mp3 all.mp3 && rm tmp.mp3
-```
-
-Rip audio cD:
-
-```sh
-cdparanoia -vB
-```
-
-Rip Youtube video:
-
-```sh
-yt-dlp -F     $link # display formats
-yt-dlp -f $id $link # donwload the given video id (see -F)
-```
 
 ## Formatting/diff operations
 

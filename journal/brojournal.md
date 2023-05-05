@@ -1,3 +1,8 @@
+## Fri 05/May/2023
+
+- Open Source: VobSub2SRT
+  - [x] PR: Fix compilation on Ubuntu 22.04
+
 ## Wed 03/May/2023
 
 - Open Source: TruffleHog

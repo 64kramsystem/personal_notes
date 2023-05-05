@@ -57,7 +57,7 @@
 
 ## Grep
 
-WATCH OUT!!! `grep -q` is troublesome when used for multiline input; it stops after the first match, [causing a SIGPIPE](https://stackoverflow.com/a/19120674/210029); if really need to use it, can workaround via `echo "$(operation)" | grep -q`.
+WATCH OUT!!! `grep -q` is troublesome when piping data (not for conditionals); it stops after the first match, [causing a SIGPIPE](https://stackoverflow.com/a/19120674/210029); if really need to use it, can workaround via `echo "$(operation)" | grep -q`.
 
 ```sh
 # -P: [P]erl regexes
