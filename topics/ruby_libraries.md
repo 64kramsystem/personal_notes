@@ -602,8 +602,7 @@ open('http://cippa-lippa').read
 
 ```ruby
 File.dirname(path)                              # Parent dir
-File.extname(fname)                             # Extract the extension (including leading dot); if there are multiple dots, only the last
-                                                # one is extracted
+File.extname(fname)                             # Extract the (last) extension, including leading dot
 File.size(fname)
 File.mtime(fname)
 

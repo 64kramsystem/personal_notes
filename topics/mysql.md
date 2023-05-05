@@ -6,6 +6,7 @@
     - [`CHAR`](#char)
   - [SELECT multiple rows from literals (convert scalars to rows)](#select-multiple-rows-from-literals-convert-scalars-to-rows)
     - [`DATETIME`/`TIMESTAMP`](#datetimetimestamp)
+    - [Floating point](#floating-point)
   - [ORDER BY](#order-by)
   - [Control flow](#control-flow)
   - [Tables](#tables)
@@ -108,6 +109,13 @@ FROM (
 - From 8.0.19, `DATETIME`/`TIMESTAMP` allow specifying the TZ on value initialization (e.g. `2020-01-01 10:10:10+05:30`)
 - `TIMESTAMP` converts to UTC when storing, then back; if the time zone setting changes between storage/retrieval, the value will be different
 - `DATETIME` converts the TZ *only* if explicit; it never converts on retrieval
+
+### Floating point
+
+WATCH OUT!!:
+
+- `FLOOR()` returns a `DOUBLE`, so it may not be possible to exactly compare it to an INT!!
+- In joins, it may be impossible to control the data types (for unclear reasons), so float values should not be used at all, even with type casts
 
 ## ORDER BY
 

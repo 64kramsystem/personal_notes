@@ -433,6 +433,7 @@ push [-u] [$remote [$branch[:$rem_branch]]]              # push changes; optiona
                                                          # set [u]pstream; set [rem_branch] if name differs from local
 push --force-with-lease                                  # blocks overwriting if there are more commits on the remote branch
 push --tags [--force]                                    # push [tags] information; this will *not* push the branch, unless also the branch data is specified ($remote $branch...)
+push $remote $tag                                        # push a single tag
 
 push $remote :$branch                                    # delete a remote branch
 push $remote :heads/$branch                              # delete a remote branch

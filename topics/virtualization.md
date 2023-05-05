@@ -9,6 +9,8 @@
       - [Mount an image](#mount-an-image)
   - [Software-specific](#software-specific)
     - [VMWare](#vmware)
+      - [Performance](#performance)
+      - [Compatibility](#compatibility)
       - [Modules compilation/install](#modules-compilationinstall)
       - [General issues/tweaks](#general-issuestweaks)
       - [Network fix](#network-fix)
@@ -242,7 +244,15 @@ rmmod nbd
 
 ### VMWare
 
-The VMWare Player/Workstation 16.2.3 suffered periodic slowdowns on the previous O/S installation.
+#### Performance
+
+WATCH OUT!! Set only one virtual CPU when emulating 3d; on v16/17, multiple CPUs caused slowdowns.
+
+#### Compatibility
+
+It seems that VMWare exposes an iGPU. Rarely, games may not be compatible with it; for example, Fallout 3 requires a [patch](https://www.mediafire.com/file/idum0obp1zkfwu9/Win_7_and_8_patch-20371-1-0.iso/file).
+
+(check content: https://docs.vmware.com/en/VMware-Workstation-Pro/17/com.vmware.ws.using.doc/GUID-EA588485-718A-4FD8-81F5-B6E1F04C5788.html)
 
 #### Modules compilation/install
 
