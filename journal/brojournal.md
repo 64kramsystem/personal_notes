@@ -1,3 +1,14 @@
+## Tue 16/May/2023
+
+- Open Source: `sorted_set` gem
+  - [x] Create fork without explicit `set` dependency
+
+## Tue 09/May/2023
+
+- Open Source: Buzz
+  - [x] Investigate bug and open issue
+    - [x] Suggest fix
+
 ## Fri 05/May/2023
 
 - Open Source: VobSub2SRT

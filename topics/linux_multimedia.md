@@ -381,6 +381,8 @@ vbrfixc --XingFrameCrcProtectIfCan tmp.mp3 all.mp3 && rm tmp.mp3
 Rip audio cD:
 
 ```sh
+# There are no options to add a prefix.
+#
 cdparanoia -vB
 ```
 
