@@ -19,6 +19,7 @@
     - [`remote_file`](#remote_file)
     - [`remote_dir` (copy directory trees)](#remote_dir-copy-directory-trees)
     - [`systemd_unit`](#systemd_unit)
+      - [User units](#user-units)
   - [Tools](#tools)
     - [Knife](#knife)
 
@@ -296,6 +297,11 @@ end
 
 ```ruby
 systemd_unit 'nmon.service' do
+  # WATCH OUT!! This does *not* create a user unit; as of May/2023, it seems that user units must be
+  # manually created.
+  #
+  user 'myuser'
+
   content <<~UNIT
     [Unit]
     Description=Nmon system stats recording
@@ -322,6 +328,31 @@ systemd_unit 'nmon.service' do
 
   action [:create, :enable, :reload_or_restart]
 end
+```
+
+#### User units
+
+User units are a bloody nightmare. The `execute` resource makes systemd complain about not connecting to the bus, even with `login` set, and command `systemctl ... --machine=app@.host`; using a script is the easiest solution.
+
+```rb
+file myservice_unit_file do
+  # No need to set User/Group for user units in the unit definition.
+  content mycontent
+  owner   'myuser'
+  group   'myuser'
+  mode    '0644'
+end
+
+# Can't use `enable --now`, because it doesn't restart the service if it's running already.
+#
+execute 'enable myservice.service' do
+  # Must run as sudo!
+  command    'systemctl enable --user --machine=myuser@ myservice.service'
+  action     :nothing
+  subscribes :run, "file[#{resque_web_unit_file}]", :immediately
+end
+
+execute 'restart...' # same, with `restart` instead of `enable`.
 ```
 
 ## Tools

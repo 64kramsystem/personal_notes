@@ -258,7 +258,7 @@ state rm aws_iam_user.saverio saverio
 #
 refresh -target=resource_addr -target=resource2_addr...
 
-# Sync the whole state (after manual updcate/drift)
+# Sync the whole state (after manual update/drift)
 #
 apply -refresh-only
 

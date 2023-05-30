@@ -759,7 +759,7 @@ Formatting symbols (apply via `+` param):
 - `%Y-%m-%d` : `%m` has leading 0
 - `%F %T`    : same as `%Y-%m-%d %H:%M:S` (time without seconds: `%R`)
 - `%T.%3N`   : time with milliseconds (`%N` is nanoseconds; `.%3` prints 3 digits)
-- `%s`       : date in seconds
+- `%s`       : unix epoch
 - `%-m`      : don't pad (in this case, month without leading 0)
 
 The output language is the system one; in order to change, set `LC_ALL`:
