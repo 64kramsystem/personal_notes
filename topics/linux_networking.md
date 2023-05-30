@@ -96,7 +96,7 @@ curl -H 'Accept: application/halo+json' "$URL"
 `-a`      				: works as cp -a; implies `rl` and `ptgoD`, but not `HAX`
 
 - `-P|--progress` : applies per-file; not good as global indication
-- `--info=progress2 --no-inc-recursive` : best way of showing global progress
+- `--info=progress2 --no-inc-recursive` : best way of showing global progress (!! but still inaccurate !!)
 - `-h|--human-readable` : good to use with progress indicators
 
 - `--exclude $glob` : examples:

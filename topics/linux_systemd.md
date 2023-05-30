@@ -6,7 +6,7 @@
     - [Uninstall (remove) a unit](#uninstall-remove-a-unit)
     - [Disabling and dependencies](#disabling-and-dependencies)
     - [System commands](#system-commands)
-    - [Per-user](#per-user)
+    - [Per-user ("user units")](#per-user-user-units)
   - [journalctl](#journalctl)
   - [Configuring a service unit](#configuring-a-service-unit)
     - [Notify unit type](#notify-unit-type)
@@ -30,8 +30,8 @@ If an underlying service is *not* started via Systemd, from the perspective of t
 ```sh
 # Status-related commands support more services
 
-systemctl enable|disable [--now] $service # enable/disable start on boot; --now will also start/stop
-systemctl start|stop $service         # start/stop immediately
+systemctl enable|disable [--now] $service # enable/disable start on boot; --now will also start/stop (but not restart!)
+systemctl restart|start|stop $service # (re)start/stop immediately; asynchronous
 systemctl reload $service             # reload; not always functional
 systemctl reload-or-restart $service  # if reload is not defined (or has no effect), restart; WATCH OUT! don't define `ExecReload`
 systemctl status $service
@@ -88,11 +88,14 @@ systemctl poweroff                # shutdown the system
 systemctl suspend                 # suspend the system
 ```
 
-### Per-user
+### Per-user ("user units")
 
 Systemd can be configured on a per-user basis, using the `--user` option (see for example, the above `--list-timers`). User units are stored under `$HOME/.config/systemd/user`
 
-IMPORTANT! "Lingering" must be enabled (`loginctl enable-linger`), otherwise, on user logoff, the services are terminated.
+IMPORTANT!
+
+- "lingering" must be enabled (`loginctl enable-linger`, or manually create `/var/lib/systemd/linger/$USER`), otherwise, on user logoff, the services are terminated
+- user units require lingering enabled in order to start at boot
 
 ## journalctl
 
@@ -107,6 +110,10 @@ journalctl --vacuum-time=1d         # clean systemd journal (/var/log/journal)
 Display the log of the last run only:
 
 ```sh
+# WATCH OUT! In scripts, it's better to check first if the result of internal `show` is blank (e.g.
+# when a unit didn't detect a program restart, etc.), because it won't cause the external command
+# to fail.
+#
 journalctl _SYSTEMD_INVOCATION_ID="$(systemctl show --value -p InvocationID $unit)"
 ```
 

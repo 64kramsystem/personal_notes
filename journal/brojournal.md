@@ -1,3 +1,10 @@
+## Mon 29/May/2023
+
+- Projects: QEMU-pinning
+  - [x] Update patch for v7.2.2
+  - [x] Update patch for v8.0.0
+    - Handle refactoring
+
 ## Tue 16/May/2023
 
 - Open Source: `sorted_set` gem

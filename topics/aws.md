@@ -84,13 +84,15 @@ In order to list the content of a table, perform a "scan".
 
 Writes are performed via `put` and `update`, however WATCH OUT!!:
 
-- update doesn't add new columns where it performs an insert
-- put does!
+- `update` doesn't add new columns where it performs an insert
+- `put` does!
 
 Supported data types:
 
 - `S`: strings
-- `N`: all numbers
+- `N`: numeric -> use for timestamps (unix time)
+- `B`: binary
+- `BOOL`: boolean
 - (...)
 
 References:
@@ -112,7 +114,7 @@ They're granular, so `Scan` doesn't allow getting an item.
 
 ### TTL
 
-Item expiry needs to be activated; the column must be Number data type, and the value in epoch format.
+Item expiry needs to be activated in order to work; the column must be Number data type, and the value in epoch format.
 
 WATCH OUT!:
 
