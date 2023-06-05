@@ -125,21 +125,26 @@ General infos:
   - visually lossless should be at around 22 (based on x264 guide)
 - presets:
   - `slow` is considered very slow already; few people suggest `slower`
+- `-pix_fmt yuv420p10le` uses 10 bits per channel, which can increase quality (ref.: https://chipsandcheese.com/2023/04/16/codecs-for-the-4k-era-hevc-av1-vvc-and-beyond)
+  - not supported on all devices; check before encoding!
 - Compressing a video (+audio) employed around 1000/1200% CPU time, so if there are many, best to compress 2 or 3 in parallel
 
 Test data:
 
-- Source (Swing 5.3 recap), h264 (Lavf58.20.100): 1080p=24M (reference), 540p=6.8M
+- Source (`video_compression_tests_source`): h264 (Lavf58.20.100): 1080p=24.6M (reference), 540p=6.8M
 - Based on this test, the most balanced is around 25+slower
 
-| height |   preset    |  crf  |  fps  | size (M) | notes                                                                                             |
-| :----: | :---------: | :---: | :---: | :------: | ------------------------------------------------------------------------------------------------- |
-|  540p  |   medium    |  28   | 226.5 |   2.0    | size inconsistent with `slower`; didn't visually inspect                                          |
-|  540p  |   slower    |  28   |  19   |   2.1    | can hardly distinguish from LL!                                                                   |
-|  540p  |   slower    |  26   | 17.5  |   2.6    |                                                                                                   |
-|  540p  |   slower    |  25   | 16.8  |   3.0    | very small improvements vs CRF 28 (required frame inspection); can't distinguish from source 540p |
-|  540p  |   medium    |  LL   | 63.9  |   119    |                                                                                                   |
-|  540p  | x264/slower |  23   |       |   3.9    | very hard to distinguish from x265/25/slower; slightly blockier on moving areas                   |
+| height |   preset    |  tweaks   |  crf  |  fps  | size (M) | notes                                                                                             |
+| :----: | :---------: | :-------: | :---: | :---: | :------: | ------------------------------------------------------------------------------------------------- |
+|  540p  |   medium    |           |  28   | 226.5 |   2.0    | size inconsistent with `slower`; didn't visually inspect                                          |
+|  540p  |   slower    |           |  28   |  19   |   2.1    | can hardly distinguish from LL!                                                                   |
+|  540p  |   slower    |           |  26   | 17.5  |   2.6    |                                                                                                   |
+|  540p  |   slower    |           |  25   | 16.8  |   3.0    | very small improvements vs CRF 28 (required frame inspection); can't distinguish from source 540p |
+|  540p  |   slower    |   10le    |  25   | 14.1  |   3.0    |                                                                                                   |
+|  540p  |   slower    | 10le, AVX |  25   | 14.8  |   3.0    |                                                                                                   |
+|  540p  |  veryslow   | 10le, AVX |  25   |  8.8  |   3.0    |                                                                                                   |
+|  540p  |   medium    |           |  LL   | 63.9  |   119    |                                                                                                   |
+|  540p  | x264/slower |           |  23   |       |   3.9    | very hard to distinguish from x265/25/slower; slightly blockier on moving areas                   |
 
 Fast presets:
 
@@ -150,6 +155,16 @@ Fast presets:
 | ultrafast | 30.8  |
 | superfast | 26.8  |
 | veryfast  | 15.8  |
+
+Convenient template:
+
+```sh
+ffmpeg -i source.mp4 \
+  -filter:v scale=-1:540 -c:v libx265 -crf 25 -preset veryslow \
+  -pix_fmt yuv420p10le -x265-params asm=avx512 \
+  -an `# -ar 44100 -c:a libfdk_aac -vbr 3` \
+  dest.mkv
+```
 
 #### Video to animated GIF/PNG
 
