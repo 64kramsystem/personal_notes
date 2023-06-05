@@ -1,3 +1,8 @@
+## Mon 05/Jun/2023
+
+- Open Source
+  - [x] Investigate and report RSpec bug
+
 ## Mon 29/May/2023
 
 - Projects: QEMU-pinning
