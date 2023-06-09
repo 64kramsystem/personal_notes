@@ -45,16 +45,26 @@ systemctl mask $service               # "mask": disable a service, by symlinking
 systemctl daemon-reload               # invoke this after updating a unit
 systemctl daemon-reexec               # required to reload Sytemd's own configuration (e.g. changes to `/etc/systemd/system.conf`)
 
-systemctl is-(active|enabled|failed) $service  # query status
 systemctl list-units                  # active loaded units
 systemctl list-unit-files [$pattern]  # all units, with their states; glob pattern
 systemctl [--user] list-timers        # list timers
 systemctl --failed                    # show units that failed to start
 
+# Query the status of a unit; prints the status.
+# The exit status is not usable (use the output).
+# WATCH OUT!! Wrong service name will just return a false state.
+#
+systemctl is-(active|enabled|failed) $service
+
 # Check if a unit exists (.service is required):
 #
 systemctl list-unit-files --user pipewire.service | grep -q '1 unit files listed'
+# Alternative:
+systemctl status myunit > /dev/null 2>&1
+[[ $? -eq 4 ]] && echo "unit doesn't exist"  # must run this in a separate command (due to $?)
 ```
+
+In order to check if a program is running from a Systemd context, check if `INVOCATION_ID` is set.
 
 If a unit is stored with ill-formed content, it won't be found by commands, which print instead a confusing `No files found` message.
 
@@ -203,6 +213,8 @@ Environment="DISPLAY=:0" "XAUTHORITY=/home/myuser/.Xauthority"
 # In other to extend $PATH, use something like:
 #
 #     ExecStart=/bin/bash -c 'PATH=/new/path:$PATH exec /bin/mycmd'
+#
+# WATCH OUT! The PATH needs to be absolute; `WorkingDirectory` does not make relative paths work.
 #
 ExecStart=/usr/bin/bundle exec my_command
 ExecReload=/bin/kill -HUP $MAINPID

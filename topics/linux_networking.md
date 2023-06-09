@@ -121,6 +121,7 @@ rsync -av --remove-source-files $from $to
 # When syncing with a server, it must have rsync installed.
 # If the file is very large, verification can take a long time; one can use `--append`, at the cost
 # of not verifying the data.
+# WATCH OUT! In one case, `--append-verify` the copy was not correct.
 #
 rsync --append-verify myserver:clonezilla.iso clonezilla.iso
 
