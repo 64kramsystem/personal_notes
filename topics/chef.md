@@ -186,8 +186,8 @@ directory '/etc/apache2' do
 end
 
 # Progressively create a directory.
-# Using each_with_object() + concat() works, but must use dup(), otherwise, the same instance is modified
-# and shared!
+# Using each_with_object() + concat() is an option, but requires dup() in each function that uses the
+# current path, which is very error-prone.
 #
 "/foo/bar/baz".split("/")[1..].inject("") do |current_path, entry|
   current_path += "/#{entry}"

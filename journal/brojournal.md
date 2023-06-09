@@ -1,3 +1,8 @@
+## Fri 09/Jun/2023
+
+- Projects: Schedule manager
+  - [ ] Review and update "weekday next" logic
+
 ## Mon 05/Jun/2023
 
 - Open Source
