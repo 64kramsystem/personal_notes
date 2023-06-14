@@ -420,6 +420,7 @@ RANDOM_BYTES(@number)                      # random number with higher entropy (
 
 ```sql
 GROUP_CONCAT(@field[, @separator])   # ignores NULL fields, but returns NULL if there are no non-null values; @separator defaults to `,`
+ANY_VALUE()                          # select a non-grouping field
 ```
 
 ### Other/generic functions

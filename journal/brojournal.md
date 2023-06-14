@@ -1,3 +1,9 @@
+## Wed 14/Jun/2023
+
+- Open Source: Firefox
+  - [x] Re-investigate and closed Firefox issue
+  - [x] Open issue on addon repository
+
 ## Fri 09/Jun/2023
 
 - Projects: Schedule manager

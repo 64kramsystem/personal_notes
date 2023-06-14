@@ -184,6 +184,7 @@ gem unpack $gemfile           # Unpack gem
 gem build $gemname.gemspec    # Build gem
 gem push $gemname-*.gem       # Publish a built gem
 gem fetch $gemname            # Download a gem
+gem install $gemname:$version # Install the specific version of a gem
 gem install $gemname -- --build-flags... # Install a gem, with build flags
 
 # Format for operations (`fetch`, `list -r`...) on remote authenticated repositories.

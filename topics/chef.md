@@ -8,6 +8,7 @@
     - [Available variables](#available-variables)
   - [Resources](#resources)
     - [`execute`](#execute)
+      - [Execute as alternate user](#execute-as-alternate-user)
     - [`bash`](#bash)
     - [`cron`](#cron)
     - [`cookbook_file`](#cookbook_file)
@@ -22,6 +23,7 @@
       - [User units](#user-units)
   - [Tools](#tools)
     - [Knife](#knife)
+      - [Installation on machines with Omnitruck-installed Chef](#installation-on-machines-with-omnitruck-installed-chef)
 
 ## Resource concepts
 
@@ -117,8 +119,16 @@ Execute a single command; don't set multiple `command` properties, otherwise the
 execute 'apache_configtest' do
   command '/usr/sbin/apachectl configtest'
   action  :run
+  login   true # Run as login shell; see subsection below.
 end
 ```
+
+#### Execute as alternate user
+
+The `execute` resource runs a non-login shell by default; this may have unintended side effects. In order to run a login shell:
+
+- either use `login: true`
+- or set the related env variables, e.g. `HOME`; see [this article](https://saveriomiroddi.github.io/Chef-properly-run-a-resource-as-alternate-user) for a full list.
 
 ### `bash`
 
@@ -376,3 +386,31 @@ Other commands:
 ```sh
 knife node edit --all $node_name
 ```
+
+#### Installation on machines with Omnitruck-installed Chef
+
+From v17, the knife tool is separate, since the Chef ecosystem has changed design.
+
+For systems configured with the old design, the knife gem is a PITA, because it's not available for installation via omnitruck tool, and when installed via gem, it pulls all the Chef gems, which conflict with the Chef debian package (installed via Omnitruck).
+
+Fortunately, the solution is simple - install it as `chef_gem`, then symlink it (it will use the bundled Ruby):
+
+```sh
+ln -s /opt/chef/embedded/bin/knife /usr/bin/knife
+```
+
+As of Jun/2023, the Chef gems are not compatible with Ruby 3.2, and must be manually patched:
+
+```sh
+find "$(ruby -e 'print Gem::Specification.find_by_name("knife").gem_dir')" -name '*.rb' -type f | xargs perl -i -pe 's/\buntaint\b/itself/'
+find "$(ruby -e 'print Gem::Specification.find_by_name("chef").gem_dir')"  -name '*.rb' -type f | xargs perl -i -pe 's/File\.exist\Ks//'
+```
+
+An alternative solution that has been explored, is to install the chef gem binaries to a separate dir - something like:
+
+```sh
+gem install chef-vault chef-config:=17.0.242 chef-utils:=17.0.242 chef:=17.0.242 --bindir=/opt/chef-gem
+gem install knife --version '=17.0.246' # keep reference: 17.0.242
+```
+
+Besides being a hack, it depends on the system Ruby, which is a source of problems.

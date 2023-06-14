@@ -5,6 +5,7 @@
     - [Use other binaries as Ruby (eg. lldb)](#use-other-binaries-as-ruby-eg-lldb)
     - [Minitest](#minitest)
   - [Capistrano](#capistrano)
+    - [Functions](#functions)
     - [Tasks/Actions](#tasksactions)
     - [Target hosts](#target-hosts)
 
@@ -55,6 +56,14 @@ end
 ```
 
 ## Capistrano
+
+### Functions
+
+```rb
+# Conditional
+#
+if test("[[ -f /path/to/file ]]"); ...; end
+```
 
 ### Tasks/Actions
 

@@ -299,6 +299,7 @@ echo "<$(cat /tmp/fifo)>"
 
 ```sh
 mktemp --suffix="${filename##*.}"     # Create a temporary filename (using the extension of $filename)
+mktemp 'myprefix-XXXXX'               # Mac-compatible, rather than using `--suffix`
 stat $filename --format='%s'          # Get file size
 ```
 

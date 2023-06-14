@@ -6,7 +6,7 @@
     - [Uninstall (remove) a unit](#uninstall-remove-a-unit)
     - [Disabling and dependencies](#disabling-and-dependencies)
     - [System commands](#system-commands)
-    - [Per-user ("user units")](#per-user-user-units)
+    - [User units](#user-units)
   - [journalctl](#journalctl)
   - [Configuring a service unit](#configuring-a-service-unit)
     - [Notify unit type](#notify-unit-type)
@@ -51,7 +51,8 @@ systemctl [--user] list-timers        # list timers
 systemctl --failed                    # show units that failed to start
 
 # Query the status of a unit; prints the status.
-# The exit status is not usable (use the output).
+# The exit status is not usable; force it to true and use the output.
+# `is-active` returns: `active`, `failed`, ...
 # WATCH OUT!! Wrong service name will just return a false state.
 #
 systemctl is-(active|enabled|failed) $service
@@ -98,7 +99,7 @@ systemctl poweroff                # shutdown the system
 systemctl suspend                 # suspend the system
 ```
 
-### Per-user ("user units")
+### User units
 
 Systemd can be configured on a per-user basis, using the `--user` option (see for example, the above `--list-timers`). User units are stored under `$HOME/.config/systemd/user`
 
@@ -106,6 +107,9 @@ IMPORTANT!
 
 - "lingering" must be enabled (`loginctl enable-linger`, or manually create `/var/lib/systemd/linger/$USER`), otherwise, on user logoff, the services are terminated
 - user units require lingering enabled in order to start at boot
+- it's best to configure a unit as user unit, rather than setting `User`/`Group`, since this caused odd behaviors in some cases
+
+In order to manage a user unit via root user, add the option `--machine=$user@`, e.g. `sudo systemctl restart --user --machine=myuser@ myservice`, otherwise, it won't work on non-login shells.
 
 ## journalctl
 
@@ -199,6 +203,8 @@ SyslogIdentifier=my-service  # defaults to the name of the executed process
 SyslogFacility=daemon        # default; use `syslog` to send there (and then filter via log service)
 
 # Owner defaults to root, but if user-specific vars like $HOME needs to be set, then set `User=root`.
+# See [User Units](#user-units) section for guidelines on this.
+#
 User=app
 Group=app
 
