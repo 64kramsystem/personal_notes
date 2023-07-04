@@ -331,6 +331,7 @@ Prefix Operators:
 - `-f $filename`        file exists
 - `-x $filename`        file exists and it's executable
 - `-d $dirname`         directory exists
+- `-b $dev`             block device exists
 - `-L $filename`        file/directory is a symlink
 - `-b $filename`        file is a block device
 
