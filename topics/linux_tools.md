@@ -876,7 +876,7 @@ pdftk $input.pdf cat 1-29 31-end output $output.pdf
 # Some sources use `-dPDFSETTINGS=/prepress` for the best quality, but the [manual](https://www.ghostscript.com/doc/VectorDevices.htm#PSPDF_IN)
 # specifies that for the best quality, the default should be used.
 #
-gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dNOPAUSE -dBATCH -sOutputFile="$2" "$1"
+gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dNOPAUSE -dBATCH -sOutputFile=$out $in
 
 # Convert an Open XML (docs) file to PDF (requires Libreoffice)
 # The extension is replaced with PDF, independently of it.

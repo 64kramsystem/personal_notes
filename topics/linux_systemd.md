@@ -53,7 +53,7 @@ systemctl --failed                    # show units that failed to start
 # Query the status of a unit; prints the status.
 # The exit status is not usable; force it to true and use the output.
 # `is-active` returns: `active`, `failed`, ...
-# WATCH OUT!! Wrong service name will just return a false state.
+# WATCH OUT!! (Wrong service name) or (not active status) will return a false state.
 #
 systemctl is-(active|enabled|failed) $service
 
@@ -109,7 +109,12 @@ IMPORTANT!
 - user units require lingering enabled in order to start at boot
 - it's best to configure a unit as user unit, rather than setting `User`/`Group`, since this caused odd behaviors in some cases
 
-In order to manage a user unit via root user, add the option `--machine=$user@`, e.g. `sudo systemctl restart --user --machine=myuser@ myservice`, otherwise, it won't work on non-login shells.
+In order to manage a user unit via root user, add the option `--machine=$user@`, e.g. `sudo systemctl restart --user --machine=myuser@ myservice`, otherwise, it won't work on non-login shells; alternatively, set the env vars:
+
+```sh
+export XDG_RUNTIME_DIR=/run/user/$UID
+export DBUS_SESSION_BUS_ADDRESS=$XDG_RUNTIME_DIR/bus
+```
 
 ## journalctl
 
@@ -188,6 +193,8 @@ ConditionPathExists=!/path/to/file
 # If ExecStart is specified (and `BusName` not specified), `simple` is implicit.
 #
 # Use `forking` when the process forks (e.g. nmon). See the `Notify` section below for automatic forking.
+# WATCH OUT! If a `forking` unit invokes a script that invokes another program, don't forget to background
+# the program!
 #
 # Generally prefer `oneshot` to `simple` (see https://stackoverflow.com/a/39050387 and https://trstringer.com/simple-vs-oneshot-systemd-service/#summary).
 # WATCH OUT!! These types are identical; for example, Mailcatcher worked only in `simple` mode, with the `-f` executable parameter.

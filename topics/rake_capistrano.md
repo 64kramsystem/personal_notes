@@ -63,6 +63,17 @@ end
 # Conditional
 #
 if test("[[ -f /path/to/file ]]"); ...; end
+
+# Execute.
+# WATCH OUT! Raises an error, if program fails. Use `test` in order to ignore the exit status.
+#
+execute :program, 'param1 param2'
+
+# Execute and capture the output
+# WATCH OUT! Raises an error, if program fails; see workaround below
+#
+output = capture :program, 'param1 param2'
+output = capture :program, 'param1 param2 || true' # ignore exit with error
 ```
 
 ### Tasks/Actions

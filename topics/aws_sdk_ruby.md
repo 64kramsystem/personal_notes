@@ -222,6 +222,24 @@ Aws::S3::Object.new.upload_file(source, options={})
 Aws::S3::Object.new.put(tons_of_options={})
 ```
 
+Collect the keys matching a pattern:
+
+```rb
+loop.inject([nil, []]) do |(continuation_token, log_keys)|
+  response = @client.list_objects_v2(bucket: BUCKET, prefix: keys_prefix, continuation_token:)
+
+  response.contents.each do |object|
+    log_keys << object.key if File.fnmatch(keys_pattern, object.key)
+  end
+
+  if response.is_truncated
+    [response.next_continuation_token, log_keys]
+  else
+    break log_keys
+  end
+end
+```
+
 ## Samples
 
 ### Informations EC2/Load balancing
