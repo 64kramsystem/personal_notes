@@ -1,3 +1,10 @@
+## Wed 05/Jul/2023
+
+- Projects: Openscripts
+  - [x] `build_kernel`: Add support for "stay on branch" functionality
+- Open Source: Linux Kernel
+  - [x] Bisect kernel and report DRM driver bug
+
 ## Wed 14/Jun/2023
 
 - Open Source: Firefox
