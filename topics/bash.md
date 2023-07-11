@@ -621,7 +621,7 @@ ${filename%%.*}                   # strip any extension (anything after the firs
 ${filename##*.}                   # extract (last) extension, without the dot [replace prefix]
 ${filename##*/}                   # extract basename, eg. `"${PWD##*/}"`
 
-${filename%/*}                    # parent dir of a file; DON'T USE WITH DIRS! it does't distinguish trailing slashes.
+${filename%/*}                    # parent dir of a file; DON'T USE WITH DIRS! it doesn't distinguish trailing slashes.
 
 str=aaa_foo_bbb_foo_ccc
 ${str%foo*}bar${str##*foo}        # replace last occurrence; WATCH OUT! The search string must be present
