@@ -30,7 +30,7 @@
     - [Search](#search)
     - [Extraction](#extraction)
     - [Modification](#modification)
-    - [Column conversion](#column-conversion)
+    - [Normalization of an array into a table](#normalization-of-an-array-into-a-table)
     - [Aggregation performance](#aggregation-performance)
   - [Fulltext indexes](#fulltext-indexes)
     - [Stopwords](#stopwords)
@@ -684,9 +684,9 @@ SELECT JSON_REPLACE(client_tags, '$[5]', 'qux') FROM clients;
 -- ["foo", "bar", "baz"]
 ```
 
-### Column conversion
+### Normalization of an array into a table
 
-Convert an array to a table, from single string:
+Normalize an array into a table, from single string:
 
 ```sql
 SELECT *
@@ -712,25 +712,20 @@ FROM
 -- +-------+
 ```
 
-Convert an array to a table, from the column of a table, with transformation:
+Same, but from the column of a table:
 
 ```sql
 SELECT DISTINCT
   kwd
 FROM
   src
-  -- The reference guide uses `,` for the (cartesian) join.
+  -- The (cartesian) join is necessary (the reference guide uses `,`).
   --
-  JOIN JSON_TABLE(
-    -- Transform a string of space-delimited keywords into a JSON array.
-    --
-    CONCAT(
-      '["',
-      REPLACE(src.keywords, " ", '", "'), -- ")
-      '"]'
-    ),
-    '$[*]' COLUMNS(kwd VARCHAR(64) PATH "$" ERROR ON ERROR)
-  ) sub
+  -- Example to transform a string of space-delimited keywords into a JSON array (substitute `src.keywords`):
+  --
+  --     CONCAT('["', REPLACE(src.keywords, " ", '", "'), -- "), '"]')
+  --
+  JOIN JSON_TABLE(src.keywords, '$[*]' COLUMNS(kwd VARCHAR(64) PATH "$" ERROR ON ERROR)) sub
 ;
 ```
 

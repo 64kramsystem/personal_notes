@@ -298,9 +298,9 @@ echo "<$(cat /tmp/fifo)>"
 ## Files
 
 ```sh
-mktemp --suffix="${filename##*.}"     # Create a temporary filename (using the extension of $filename)
-mktemp 'myprefix-XXXXX'               # Mac-compatible, rather than using `--suffix`
-stat $filename --format='%s'          # Get file size
+mktemp --suffix="${filename##*.}"       # Create a temporary filename (using the extension of $filename)
+mktemp "${TMPDIR:-/tmp}/myprefix-XXXXX" # Mac-compatible, rather than using `--suffix`
+stat $filename --format='%s'            # Get file size
 ```
 
 Making a virtual file from the concatenation of multiple files:

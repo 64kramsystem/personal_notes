@@ -71,7 +71,7 @@ WHERE routine_type = 'PROCEDURE'
 -- | rds_set_fk_checks_off             |
 -- | rds_set_fk_checks_on              |
 -- | rds_show_configuration            |
--- | rds_skip_repl_error               | # Skip slave replication errors
+-- | rds_skip_repl_error               | # Skip slave replication error and restart the replication (see `sql_slave_skip_counter`)
 -- | rds_start_replication             |
 -- | rds_stop_replication              |
 -- | ...                               |

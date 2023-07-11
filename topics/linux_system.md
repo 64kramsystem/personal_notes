@@ -137,6 +137,7 @@ Measuring memory is a complex topic. A simple and accurate enough tool that can 
 chown $name $file...                        # change owner
 chgrp $name $file...                        # change group
 chmod [ugoa][-+][rwx] $file...              # change permissions; [u]ser [g]group [o]thers [a]ll
+chsh -s $shell $file                        # change shell; use `/usr/sbin/nologin` as shell disable it for a user
 
 chage [-m $min] [-M $max] [-W $warn] [-I $inactive_days] [-E $expire_date] $login # change password properties
 chage -l $login                             # show info

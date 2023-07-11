@@ -177,14 +177,14 @@ ssh-keygen [-E md5] -lf $pub_key_file   # Display the hash (SHA256/MD5) of publi
 ssh-add -D                             # Delete cached keys. Useful if there are problems in authenticating!
 ssh-add                                # adds the ssh key password to the authentication agent (e.g. gnome-keyring)
 
-<RETURN><RETURN>~.                     # terminate an ssh session
+<RETURN>~.                             # terminate an ssh session
 
 openssl rsa -in $private_key -out $private_key_dec # decrypt a key
 ssh-keygen -p -f $private_key                      # encrypt a key (or change passphrase)
 ssh-keygen [-t $type] [-O bits=$bits]              # generate ssh key pair (defaults: RSA/3072 bits)
 
 ssh-keyscan -H $address > ~/.ssh/known_hosts                                     # Programmatically add fingerprints to known_hosts
-ssh-keygen -E md5 -lf $public_key                                                # Print public keys fingerprint
+ssh-keygen [-E md5] -lf $public_key                                              # Print public keys fingerprint (use md5 for legacy)
 openssl pkey -in $private_key -pubout -outform DER | openssl md5 -c              # !!! Print fingerprint, for EC2 !!!
 
 openssl s_client -connect $url:$port < /dev/null | openssl x509  -noout -enddate # Get the expiry of an ssl certificate
