@@ -1,3 +1,15 @@
+## Sat 29/Jul/2023
+
+- Open Source: Linux Kernel
+  - [x] Bisect bug on laptop
+    - [x] Report it
+
+## Wed 19/Jul/2023
+
+- Projects: Schedule manager
+  - [x] List export: Start on previous day
+  - [x] Remove Ruby 2.7 support (from CI)
+
 ## Wed 05/Jul/2023
 
 - Projects: Openscripts
