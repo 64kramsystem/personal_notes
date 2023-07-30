@@ -1,3 +1,9 @@
+## Sun 30/Jul/2023
+
+- Open Source: Purple Facebook
+  - [x] [Discuss plugin build](https://github.com/dequis/purple-facebook/issues/537)
+    - [x] Build test (see guide [here](https://github.com/dequis/purple-facebook/wiki/Building-on-*NIX))
+
 ## Sat 29/Jul/2023
 
 - Open Source: Linux Kernel
