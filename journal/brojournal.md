@@ -1,3 +1,11 @@
+## Mon 31/Jul/2023
+
+- Open Source: Rust Game Ports
+  - [x] [Update boing-ggez to latest ggez (0.9.3)](https://github.com/rust-gamedev/rust-game-ports/pull/149)
+- Projects: Private scripts
+  - [x] Songs management script: Make destination dir customizable (changes sync behavior)
+  - [x] Diet script: Add "phony holiday" functionality
+
 ## Sun 30/Jul/2023
 
 - Open Source: Purple Facebook

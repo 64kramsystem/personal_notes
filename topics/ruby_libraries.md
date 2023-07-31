@@ -689,12 +689,12 @@ filename = file.path
 file.close
 File.unlink(file)  # optional
 
-# <naming> can be either "prefix" or ["prefix", ".extension"]
-file = Tempfile.new(<naming>)
+# @naming can be either "prefix" or ["prefix", ".extension"]
+file = Tempfile.new(@naming)
 
-Tempfile.open(<naming>) { |f| operation(f) }    # Creates, operates, but doesn't immediately delete
-Tempfile.create(<naming>)                       # Creates and closes, but doesn't immediately delete
-Tempfile.create(<naming>) { |f| operation(f) }  # Creates, operates, and deletes
+Tempfile.open(@naming) { |f| operation(f) }    # Creates, operates, but doesn't immediately delete
+Tempfile.create(@naming)                       # Creates and closes, but doesn't immediately delete
+Tempfile.create(@naming) { |f| operation(f) }  # Creates, operates, and deletes
 
 # Generates a temporary filename with `a`/`.png` prefix/extension, in the system temporary directory.
 # !!This is the best API for tempfiles that need to stick around!! Note that no file is created.
@@ -706,7 +706,7 @@ Dir::Tmpname.create(['a', '.png']) { }
 # Creates a temporary dir, for the duration of the block.
 # @prefix_suffix is the same format as Tmpname.create.
 # If the block is not provided, the directory is not deleted.
-Dir.mktmpdir(@prefix_suffix) { |dir| ... }
+Dir.mktmpdir(@naming) { |dir| ... }
 
 # Find system temporary directory
 require 'tmpdir'
