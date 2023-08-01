@@ -1,3 +1,9 @@
+## Wed 02/Aug/2023
+
+- Open Source: Purple Facebook fixed fork
+  - [x] Create fork with patches
+  - [x] Fight insane makefile issue that corrupted `/lib`
+
 ## Mon 31/Jul/2023
 
 - Open Source: Rust Game Ports
