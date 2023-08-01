@@ -130,6 +130,12 @@ The `execute` resource runs a non-login shell by default; this may have unintend
 - either use `login: true`
 - or set the related env variables, e.g. `HOME`; see [this article](https://saveriomiroddi.github.io/Chef-properly-run-a-resource-as-alternate-user) for a full list.
 
+```rb
+execute 'apache_configtest' do
+  command '/usr/sbin/apachectl configtest'
+end
+```
+
 ### `bash`
 
 Similar to `execute` resource; the difference is that the `code` content is written to a temporary file; use this when executing multiple commands.
