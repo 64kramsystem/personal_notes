@@ -6,6 +6,7 @@
     - [Basic concepts](#basic-concepts)
     - [Subscribe/notify](#subscribenotify)
     - [Available variables](#available-variables)
+    - [Lazy loading](#lazy-loading)
   - [Resources](#resources)
     - [`execute`](#execute)
       - [Execute as alternate user](#execute-as-alternate-user)
@@ -105,6 +106,16 @@ end
 
 ```ruby
 Chef::Config[:cookbook_path]      # Cookbook path, usable in recipes
+```
+
+### Lazy loading
+
+Force a block to be evaluated during the execution stage; very useful to gather values of resources created by chef.
+
+```rb
+file '/etc/audit/rules.d/audit.rules' do
+  content lazy { "-a always,exit -F arch=b64 -S execve -F auid=#{`id -u myuser`.chomp}" }
+end
 ```
 
 ## Resources
