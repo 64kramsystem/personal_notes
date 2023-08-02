@@ -46,6 +46,8 @@ s3_object.presigned_url(:get, expires_in: URL_EXPIRY, secure: true).to_s
 
 ## RDS
 
+It's not possible to explain queries run by other users, even with the root user, since the `SUPER` privilege is required.
+
 ### Support stored procedures
 
 RDS provides some SPs to perform jobs not allowed to non-root users:

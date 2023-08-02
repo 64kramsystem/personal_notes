@@ -8,6 +8,7 @@
   - [Memory (measurement)](#memory-measurement)
   - [Security (Permissions)](#security-permissions)
     - [Sudo](#sudo)
+    - [Commands logging (auditd)](#commands-logging-auditd)
   - [Filesystems/partitions/mounts](#filesystemspartitionsmounts)
     - [Partitions](#partitions)
     - [In-memory filesystems](#in-memory-filesystems)
@@ -233,6 +234,80 @@ sudo -E $command
 # it's not reliable. An alternative solution is to add temporary symlinks to /usr/bin, or similar.
 #
 sudo -E env "PATH=$PATH" $command`
+```
+
+### Commands logging (auditd)
+
+```sh
+# The package `audispd-plugins` is not needed to monitor bash commands.
+
+# Append; there are already some values.
+#
+# `-F euid=`/`-F auid=` filter by user id (username not supported); otherwise, all users are logged.
+# `euid` is the effective user id; `auid` is the original. e.g.
+#
+#     ssh foo -> cmd1 -> sudo -u bar cmd2
+#
+# yields:
+#
+# - `-F euid $foo`: cmd1
+# - `-F auid $foo`: cmd1, cmd2
+# - `-F euid $bar`: cmd2
+# - `-F auid $bar`: (nothing)
+#
+# Without uid filter, the log is very verbose, as many processes are logged.
+#
+# In order to filter multiple users, specify one rule per line.
+#
+# Generally, a `-F arch=b32` rule is added, but it has no purpose if the system doesn't support
+# 32-bit binaries (can verify via `dpkg --print-foreign-architectures`; returns blank if i386 is
+# not supported).
+#
+# Add `-k searchkey` to add a key that can be used to search.
+#
+# The log is verbose, and can't be reduced.
+#
+cat >> /etc/audit/rules.d/audit.rules << CONF
+-a exit,always -F arch=b64 -S execve -F euid=$myuid
+CONF
+
+# Disable the built-in logging, and setup logratote, for consistency with other services.
+#
+perl -i -pe 's/^max_log_file_action = \K/IGNORE/'
+
+# `systemctl reload auditd` is not supported (as of Ubuntu 22.04).
+#
+cat >> /etc/logrotate.d/auditd << 'CONF'
+/var/log/audit/audit.log
+{
+  daily
+  missingok
+  rotate 7
+  compress
+  create 0640 root root
+  postrotate
+    service auditd reload > /dev/null
+  endscript
+}
+CONF
+
+service auditd restart
+
+# Verify existing rules.
+#
+auditctl -l
+
+# Delete old logs.
+#
+service auditd rotate; rm /var/log/audit/audit.log.*
+
+# Search for a given user
+#
+ausearch -ua $myuser
+
+# Tail the log (ausearch doesn't support tailing).
+#
+tail -f /var/log/audit/audit.log | ausearch -i
 ```
 
 ## Filesystems/partitions/mounts
