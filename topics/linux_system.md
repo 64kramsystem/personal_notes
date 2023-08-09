@@ -1207,9 +1207,11 @@ desktop_id=$(xdotool get_desktop)
 #
 window_id=$(xdotool search --all --desktop "$desktop_id" --name 'Mozilla Firefox \(Private Browsing\)$' | tail -n 1 || true)
 
-# Bring to front.
+# Actions
 #
-xdotool windowactivate "$window_id"
+xdotool windowactivate $window_id        # bring to front
+xdotool windowminimize $window_id        # minimize
+xdotool windowactivate --sync $window_id # restore (e.g. after minimization)
 ```
 
 ### MIME (extensions) (file associations) handling
