@@ -92,7 +92,7 @@ Addressable::URI.form_encode(p1: "&&&", "p2" => "!!!") # "p1=%26%26%26&p2=%21%21
 Useful methods:
 
 - `casecmp(str)`                      : case insensitive comparison
-- `center`, `ljust(int)`, `rjust(int)`: WATCH OUT! Padding == justifying to the opposite direction!!
+- `center`, `ljust(int[, str])`, `rjust(int[, str])`: WATCH OUT! Padding == justifying to the opposite direction!!
 - `strip`, `lstrip`, `rstrip`
 - `index(substr)`, `rindex(substr)`
 - `slice(start[, end])`, `slice!`
