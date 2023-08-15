@@ -1,3 +1,9 @@
+## Mon 14/Aug/2023
+
+- Project: Schedule Manager
+  - [x] Remove support for `replan <weekday> IN <next>`
+    - [x] Also: remove now obsolete odd conditional in ReplanCodec
+
 ## Tue 01/Aug/2023
 
 - Open Source: Purple Facebook fixed fork
