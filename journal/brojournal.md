@@ -1,3 +1,8 @@
+## Fri 18/Aug/2023
+
+- Project: Openscripts
+  - [x] Make CB converter more flexible (related to internal filenames)
+
 ## Mon 14/Aug/2023
 
 - Project: Schedule Manager

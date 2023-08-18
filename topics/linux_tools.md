@@ -123,7 +123,9 @@ Printf params:
 
 Regexp types:
 
-- `egrep`: supports: `\w`, `[:digit:]`, not: `\d`
+- `egrep`
+  - doesn't support: `\d`
+  - supports:        `\w`, `\b`, `[:digit:]`
 
 ### Examples
 
