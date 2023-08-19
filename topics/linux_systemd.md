@@ -5,7 +5,7 @@
   - [Systemctl](#systemctl)
     - [Uninstall (remove) a unit](#uninstall-remove-a-unit)
     - [Disabling and dependencies](#disabling-and-dependencies)
-    - [System commands](#system-commands)
+    - [System commands and misc options](#system-commands-and-misc-options)
     - [User units](#user-units)
   - [journalctl](#journalctl)
   - [Configuring a service unit](#configuring-a-service-unit)
@@ -92,11 +92,13 @@ systemctl list-dependencies --reverse snapd.socket
 # ... now disable the dependencies ...
 ```
 
-### System commands
+### System commands and misc options
 
 ```sh
 systemctl poweroff                # shutdown the system
 systemctl suspend                 # suspend the system
+
+systemctl --nopager               # disable pager (keypress)
 ```
 
 ### User units
