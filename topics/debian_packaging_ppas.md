@@ -18,6 +18,7 @@
     - [Extra steps not mentioned in the Ruby packaging article](#extra-steps-not-mentioned-in-the-ruby-packaging-article)
     - [Issues](#issues)
   - [References](#references)
+  - [Simplest way to build a package from source code](#simplest-way-to-build-a-package-from-source-code)
 
 ## Versioning
 
@@ -226,3 +227,7 @@ Useful links:
 - https://people.debian.org/~srivasta/MaintainerScripts.html
 - http://packaging.ubuntu.com/html/packaging-new-software.html
 - https://wiki.debian.org/cowbuilder#Building_your_package_for_many_distributions_at_once
+
+## Simplest way to build a package from source code
+
+If the requirement is just to create a package, use `checkinstall`.

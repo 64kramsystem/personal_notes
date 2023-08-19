@@ -69,6 +69,10 @@ grep -Pzo 'void\srb_backtrace.*\b' -r . --include="*.h"
 # `(?s)`: match newlines with `.` ("PCRE_DOTALL")
 #
 grep -Pzo '(?s)void\srb_backtrace\(.*?\n\}' --include="*.c" -r .
+
+# Use this where grep doesn't support `-P`
+#
+perl -ne 'exit !/pattern/'
 ```
 
 ## Perl

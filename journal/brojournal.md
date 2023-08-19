@@ -1,3 +1,13 @@
+## Sat 19/Aug/2023
+
+- Project: Schedule Manager
+  - [x] Implement "once" functionality
+    - [x] Implement in replanner/codec
+- Scripts: Email client sync
+  - [x] Implement syncing with synced profiles
+- Admin
+  - [x] Copy all pending notes
+
 ## Fri 18/Aug/2023
 
 - Project: Openscripts
@@ -8,6 +18,8 @@
 - Project: Schedule Manager
   - [x] Remove support for `replan <weekday> IN <next>`
     - [x] Also: remove now obsolete odd conditional in ReplanCodec
+  - [ ] Implement "once" functionality
+    - [x] Implement in parser
 
 ## Tue 01/Aug/2023
 

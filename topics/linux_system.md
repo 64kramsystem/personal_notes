@@ -86,6 +86,10 @@ sudo pkill -f '[p]rocessname'
 #
 pkill --parent --pidfile $(< parent_pidfile)
 
+# Invoke a command, and kill the process after a timeout, if it doesn't exit!
+#
+timeout --signal=KILL --verbose 5 mycommand
+
 # Set a process priority (two ways); 19 is the lowest.
 # Without sudo permissions, the priority can only be lowered.
 #

@@ -270,6 +270,8 @@ COLUMN `my_column_str` VARCHAR(10) AS (my_column)
 TRIM(<expr>)                                       # Strips only spaces by default! Defaults to `BOTH` sides
 TRIM([BOTH|LEADING|TRAILING] str FROM <expr>)      # Strip characters; defaults to BOTH
 
+LPAD(...)                                          # WATCH OUT!! Truncates the string when it has less characters than specified (DAFUQ!!!)
+
 SUBSTR(`field` (FROM|,) @start (FOR|,) @len)       # @start = 1-based; if start < 0, start from the end; end position is not supported
 
 INSTR(@str, @pattern)                              # 1-based; 0 if not found
@@ -1363,7 +1365,7 @@ WHERE t2_id IN (SELECT /*+ SUBQUERY(MATERIALIZATION) */ id FROM t2)
 ```
 
 ```sql
-# Enforce a timeout!
+# Enforce a timeout! (in ms)
 #
 SELECT /*+ MAX_EXECUTION_TIME(5000) */ COUNT(*) FROM ...;
 ```

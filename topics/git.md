@@ -318,6 +318,11 @@ git -C ~/code/riscv_images format-patch --stdout $parent_start_commit[..$end_com
   perl -pe 's| [ab]/ruby||g' |
   git am
 
+# In order to apply a commit from an email:
+#
+`# save the commit in mailbox format (in the kernel mailing list, save as is)`
+git am $mailbox_file
+
 # Patch with metadata loss (and no commit)
 #
 # WATCH OUT! One can configure `diff.noprefix true`, however, `format-patch` needs the prefixes to be

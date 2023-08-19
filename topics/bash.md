@@ -77,7 +77,7 @@ Notes:
 
 - `nounset`         : WATCH OUT! Unset arrays don't cause errors
 - `errtrace`        : (`-E`) trap errors also inside functions
-- `inherit_errexit` : subshells inherit errexit (Bash 4.4+)
+- `inherit_errexit` : subshells inherit errexit (Bash 4.4+). WATCH OUT!! Doesn't always work (see [madness](#madness-references))
 
 Extra:
 
@@ -104,6 +104,19 @@ env SHELLOPTS=$SHELLOPTS mycmd            # ^^ (same)
 ### Madness references
 
 - https://mywiki.wooledge.org/BashFAQ/105
+
+The `inherit_errexit` shopt doesn't work with process substitution:
+
+```sh
+set -o errexit; shopt -s inherit_errexit
+
+mapfile -td. latest_version < <(false) # !!! SUCCEEDS !!!
+
+# Use this instead:
+#
+command_output=$(...)
+mafile -td. latest_version <<< "$command_output"
+```
 
 ## Special variables
 

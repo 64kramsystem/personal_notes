@@ -22,6 +22,7 @@
     - [`remote_dir` (copy directory trees)](#remote_dir-copy-directory-trees)
     - [`systemd_unit`](#systemd_unit)
       - [User units](#user-units)
+    - [User passwords metadata](#user-passwords-metadata)
   - [Tools](#tools)
     - [Knife](#knife)
       - [Installation on machines with Omnitruck-installed Chef](#installation-on-machines-with-omnitruck-installed-chef)
@@ -380,6 +381,19 @@ execute 'enable myservice.service' do
 end
 
 execute 'restart...' # same, with `restart` instead of `enable`.
+```
+
+### User passwords metadata
+
+In order to get password metadata from the users, the `ruby-shadow-ruby32` gem is required:
+
+```rb
+gem_package "ruby-shadow-ruby32" { action :install }
+require 'shadow'
+
+pass_meta = Shadow::Passwd.getspnam(login)
+pass_meta.sp_max                             # password age
+Date.new(1970, 1, 1) + pass_meta.sp_lstchg   # expiry date
 ```
 
 ## Tools
