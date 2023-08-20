@@ -1,3 +1,13 @@
+## Sun 20/Aug/2023
+
+- Admin
+  - [x] Review Outreachy current projects
+- Project: PM-Spotlight
+  - [x] Research how to convert characters to PNGs
+  - [x] Add "Pinched fingers" and "Call me" emojis
+- Studies: Low-level programming
+  - [x] Watch [Ruby JIT Hacking Guide](https://youtu.be/mlcQ8DErvVs)
+
 ## Sat 19/Aug/2023
 
 - Project: Schedule Manager
