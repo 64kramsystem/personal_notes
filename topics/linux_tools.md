@@ -915,6 +915,16 @@ convert -resample 300 -units PixelsPerInch -level 0%,100%,0.5 -quality 85% "$inp
 convert -density 300 -level 0%,100%,0.5 -quality 85% "$input.ext1" "$output.ext2"
 ```
 
+Convert a character (e.g. emoji) to a PNG file (and resize it):
+
+```sh
+# It seems it's not possible to make `pango-view` output to stdout, even via GraphicsMagick.
+#
+echo -e "🤙" |
+  pango-view --dpi=300 --no-display --font='Droid Sans Mono' --output=call_me.png /dev/stdin &&
+  convert call_me.png -resize 30x30 ../emoji_icons/call_me.png
+```
+
 ### Raw to JPEG conversion
 
 Use dcraw, Darktable or RawTherapee:
