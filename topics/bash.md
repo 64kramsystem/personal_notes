@@ -50,6 +50,7 @@
     - [Variables printing function](#variables-printing-function)
     - [Current shell/OS](#current-shellos)
     - [Convert associative array to JSON](#convert-associative-array-to-json)
+  - [Pitfalls](#pitfalls)
   - [Shell colors](#shell-colors)
 
 ## Shell key bindings
@@ -1415,6 +1416,11 @@ done |
 ```
 
 WATCH OUT!!: There is no way to directly support null.
+
+## Pitfalls
+
+- `git log --oneline | head -n 1`: will fail due to `git` raising an error when the pipe is closed
+  - can use `awk 'NR <= N { print }'` or `perl -ne 'print if $. <= N'`
 
 ## Shell colors
 
