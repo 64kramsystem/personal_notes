@@ -1,3 +1,11 @@
+## Mon 21/Aug/2023
+
+- Project: Schedule Manager
+  - [x] Improve error message for multiple instances update error
+  - [x] Add UT for multiple update instances error
+- Project: Openscripts
+  - [x] Add new `merge_git_file_commits` script
+
 ## Sun 20/Aug/2023
 
 - Admin

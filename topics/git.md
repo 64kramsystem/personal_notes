@@ -416,10 +416,12 @@ rebase --onto $dest_branch $feat_branch_parent_commit
 git commit --allow-empty -m "Initial (empty) commit"
 git rebase -i --root
 
-# Programmatically run an interactive rebase. Example: edit all the commits of a branch:
-# WATCH OUT! The command runs on a file, so `-i` (in-place editing) is mandatory!
+# Programmatically run an interactive rebase.
 #
-GIT_SEQUENCE_EDITOR="sed -i -re 's/^pick /e /'" git rebase -i "$(git merge-base HEAD master)"
+# WATCH OUT! The rebase works on its temporary file, not on an stdout input! Since the filename is passed
+# as last parameter of $GIT_SEQUENCE_EDITOR, a trick is to build the commands file, and use `cp`:
+#
+GIT_SEQUENCE_EDITOR="cp $COMMANDS_FILE" git rebase -i $BASE_COMMIT~
 ```
 
 It's possible to preserve merges using `--rebase-merges`, although it's not entirely clear how to do funky manipulations of history.

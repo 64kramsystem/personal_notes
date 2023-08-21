@@ -216,9 +216,7 @@ mysqldump $db | perl -pe 's/^  (UNIQUE |FULLTEXT )?KEY.+?(,)?$/  CHECK(TRUE)$2'
 
 ## RDS-specific procedures
 
-```sql
-CALL mysql.rds_kill(pid)             # kill a query/thread
-```
+See [AWS](aws.md#rds).
 
 ## Mydumper/myloader
 
