@@ -1,3 +1,15 @@
+## Tue 22/Aug/2023
+
+- Project: Geet
+  - `GitClient#cherry`
+    - [x] Improve terminology
+    - [x] Remove :upstream default, and convert to positional parameter
+    - [x] Add support for passing the head commit
+    - [x] Add special :main_branch parameter value
+  - [x] Merge PR: Check that the PR branch has no missing upstream commits
+- Open Source: Oh my Zsh
+  - [x] Open issue: Rsync trailing slash is automatically removed when a path is autocompleted
+
 ## Mon 21/Aug/2023
 
 - Project: Schedule Manager
