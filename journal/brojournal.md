@@ -1,3 +1,15 @@
+## Wed 23/Aug/2023
+
+- Project: Geet
+  - [x] Fix base branch default
+- Project: Openscripts
+  - [x] Ruby 3.2 compatiblity fixes
+- Open Source: QEMU-pinning
+  - [x] Update patch for v8.1.0
+- Tools
+  - [x] Test Difftastic
+    - [x] Fight Git integration
+
 ## Tue 22/Aug/2023
 
 - Project: Geet
