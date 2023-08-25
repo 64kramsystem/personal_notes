@@ -1,3 +1,12 @@
+## Fri 25/Aug/2023
+
+- Project: Openscripts
+  - [x] Add `git_full_delete_branch`
+- Studies: C64 programming
+  - [ ] Iridis Alpha Theory
+- Admin
+  - [x] Rearrange pools
+
 ## Wed 23/Aug/2023
 
 - Project: Geet
