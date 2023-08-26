@@ -1,3 +1,9 @@
+## Sat 26/Aug/2023
+
+- Admin
+  - [x] Preliminary planning
+    - [x] Futher pools cleanup
+
 ## Fri 25/Aug/2023
 
 - Project: Openscripts
