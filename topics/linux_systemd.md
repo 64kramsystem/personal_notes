@@ -126,6 +126,11 @@ journalctl -b -xp 3 [-k]            # view log for current [b]oot; with e[x]tra 
 journalctl -b -1 ...                # `-1` = previous boot (!)
 journalctl -f -u $service           # [-f|--follow]; [-u|--unit] log; use `page-end` to go to end
 journalctl --vacuum-time=1d         # clean systemd journal (/var/log/journal)
+
+# Purge the logs:
+#
+sudo journalctl --rotate
+sudo journalctl --vacuum-time=1s
 ```
 
 Display the log of the last run only:
