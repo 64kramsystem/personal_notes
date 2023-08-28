@@ -1288,7 +1288,7 @@ Versions from 6.1 onwards include additional packages; one of them is `linux-bui
 
 It's not straightforward/possible to extract the kernel config from non-running kernels, for example, the script `extract-ikconfig` requires a certain compile-time setting.
 
-A workaround is to install the Ubuntu module package, which will install the config under `/boot` (after copy, the package can be uninstalled).
+A workaround is to install the Ubuntu modules package, which will install the config under `/boot` (after copy, the package can be uninstalled).
 
 If it's not found how to generate the Ubuntu mainline config from the mainline-crack repo, in theory one could set `CONFIG_IKCONFIG=m`, build the kernel, extract the image, and run `extract-ikconfig`.
 

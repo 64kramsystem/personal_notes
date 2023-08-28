@@ -1,3 +1,12 @@
+## Mon 28/Aug/2023
+
+- Project: Personal Scripts
+  - Email client/Calendar sync
+    - [x] Simplify calendar config sharing design
+    - [x] Disable/Enable desktop configuration on respective operations
+    - [x] Minor cleanups
+    - [x] Extend desktop state checking
+
 ## Sat 26/Aug/2023
 
 - Admin
