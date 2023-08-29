@@ -1,3 +1,14 @@
+## Tue 29/Aug/2023
+
+- Project: Openscripts
+  - git_merge_file_commits
+    - [x] UX improvements
+    - [x] Refactorings
+    - [x] Fix rebase commands order
+    - [x] Add subject suffix functionality
+- Open Source: Linux Kernel
+  - [x] Report Lenovo Yoga bug
+
 ## Mon 28/Aug/2023
 
 - Project: Personal Scripts
