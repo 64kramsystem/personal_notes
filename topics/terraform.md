@@ -254,7 +254,7 @@ import aws_iam_user.saverio saverio
 # If the resource includes other resources, the whole tree is removed.
 state rm aws_iam_user.saverio saverio
 
-# Sync an individual resource (after manual update/drift); also supported by `apply`.
+# Sync (scope) an individual resource (after manual update/drift); also supported by `apply`.
 #
 refresh -target=resource_addr -target=resource2_addr...
 
