@@ -340,6 +340,7 @@ Prefix Operators:
 - `-n $string`          string is not empty
 
 - `-v var_no_dollar`    for scalars: test if variable has been declared; WATCH OUT: don't prefix with the dollar!
+                        interpolation is allowed (`-v $indirect_var`), to test a var whose name is stored in another
 
 - `-e $filename`        file/directory/symlink exists; symlink is followed before checking!
 - `-f $filename`        file exists
