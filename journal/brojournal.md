@@ -1,3 +1,8 @@
+## Sun 03/Sep/2023
+
+- Tools: System installation script
+  - [ ] Refactoring of the shared variables
+
 ## Tue 29/Aug/2023
 
 - Project: Openscripts
