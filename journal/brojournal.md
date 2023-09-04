@@ -1,7 +1,15 @@
+## Mon 04/Sep/2023
+
+- Tools: System installation script
+  - [x] Handle other O/S mount directory
+  - [x] Replace all kernel installation methods with custom builds
+  - [x] Improve workaround for Shellcheck warning about machine type variable
+  - [x] Simplify hypervisor module installation (assume that the module repo master is up to date)
+
 ## Sun 03/Sep/2023
 
 - Tools: System installation script
-  - [ ] Refactoring of the shared variables
+  - [x] Refactoring of the shared variables
 
 ## Tue 29/Aug/2023
 
