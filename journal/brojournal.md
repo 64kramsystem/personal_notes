@@ -1,3 +1,8 @@
+## Tue 05/Sep/2023
+
+- Project: Openscripts
+  - [x] maestral_upgrade: Fix GUI kill pattern
+
 ## Mon 04/Sep/2023
 
 - Tools: System installation script
