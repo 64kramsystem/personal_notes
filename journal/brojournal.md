@@ -1,3 +1,8 @@
+## Thu 14/Sep/2023
+
+- [x] Follow up [Libreoffice bug](https://bugs.documentfoundation.org/show_bug.cgi?id=144033)
+- [x] Follow up [Yoga kernel bug](https://bugzilla.kernel.org/show_bug.cgi?id=217844)
+
 ## Tue 05/Sep/2023
 
 - Project: Openscripts

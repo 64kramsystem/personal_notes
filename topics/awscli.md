@@ -118,12 +118,19 @@ aws rds reset-db-parameter-group \
 Find RDS instance informations:
 
 ```sh
-aws rds describe-db-instances --db-instance-identifier $id                   # can specify only one; no wildcards
-aws rds describe-db-instances --filters Name=db-instance-id,Values=$id1,$id2 # wildcards are not supported
+aws rds describe-db-instances --db-instance-identifier $id                   # all info; can specify only one; no wildcards
+aws rds describe-db-instances --filters Name=db-instance-id,Values=$id1,$id2 # select info; wildcards are not supported
 
-# Change the storage type; gp3 is currently not supported
+# select info; wildcards supported
 #
-aws rds modify-db-instance --storage-type gp2 --db-instance-identifier $id
+# json output
+aws rds describe-db-instances --query 'DBInstances[*].DBInstanceStatus'
+# tab-delimited output -> convert to line-delimited
+aws rds describe-db-instances --query 'DBInstances[*].DBInstanceStatus' --output text | tr '\t' '\n'
+
+# Change the storage type
+#
+aws rds modify-db-instance --storage-type gp3 --db-instance-identifier $id
 ```
 
 ### EBS
