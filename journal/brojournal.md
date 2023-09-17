@@ -1,7 +1,17 @@
+## Sun 17/Sep/2023
+
+- [x] Follow up [Yoga lid kernel bug](https://bugzilla.kernel.org/show_bug.cgi?id=217844)
+- [x] Create [Yoga display kernel bug](https://bugzilla.kernel.org/show_bug.cgi?id=217921)
+  - [x] Brutal fight with bisect
+- [x] Reinstall laptop
+- Tools: System installation script
+  - [x] Fixes/refactorings/improvements
+  - [x] Fight mrml gem compilation issue
+
 ## Thu 14/Sep/2023
 
 - [x] Follow up [Libreoffice bug](https://bugs.documentfoundation.org/show_bug.cgi?id=144033)
-- [x] Follow up [Yoga kernel bug](https://bugzilla.kernel.org/show_bug.cgi?id=217844)
+- [x] Follow up [Yoga lid kernel bug](https://bugzilla.kernel.org/show_bug.cgi?id=217844)
 
 ## Tue 05/Sep/2023
 
