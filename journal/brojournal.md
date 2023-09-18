@@ -1,3 +1,8 @@
+## Mon 18/Sep/2023
+
+- Tools: System installation script
+  - [x] Other updates
+
 ## Sun 17/Sep/2023
 
 - [x] Follow up [Yoga lid kernel bug](https://bugzilla.kernel.org/show_bug.cgi?id=217844)
