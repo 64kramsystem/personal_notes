@@ -1,3 +1,8 @@
+## Sun 24/Sep/2023
+
+- Project: Openscripts
+  - [x] git_merge_file_commits: Cosmetic improvements, and remove count check
+
 ## Fri 22/Sep/2023
 
 - Gamedev: Godot 4 Game Development Projects: Build five cross-platform…
