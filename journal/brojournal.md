@@ -1,3 +1,8 @@
+## Fri 22/Sep/2023
+
+- Gamedev: Godot 4 Game Development Projects: Build five cross-platform…
+  - [x] 1. Introduction to Godot 4.0
+
 ## Mon 18/Sep/2023
 
 - Tools: System installation script
