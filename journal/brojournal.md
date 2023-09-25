@@ -1,3 +1,8 @@
+## Mon 25/Sep/2023
+
+- Gamedev
+  - [ ] Godot 4 Game Development Projects: Build five cross-platform…
+
 ## Sun 24/Sep/2023
 
 - Project: Openscripts
