@@ -10,6 +10,7 @@
   - [journalctl](#journalctl)
   - [Configuring a service unit](#configuring-a-service-unit)
     - [Notify unit type](#notify-unit-type)
+    - [Timeouts/killing](#timeoutskilling)
     - [Overrides](#overrides)
     - [Hooks](#hooks)
   - [Timers (scheduled events)](#timers-scheduled-events)
@@ -271,11 +272,24 @@ UNIT
 If one wants Systemd to fork the process, then the best is `notify` (see https://askubuntu.com/q/1120023); this requires the program to report success via `systemd-notify --ready`, otherwise, Systemd will kill
 the program after timeout.
 
-Use `TimeoutStartSec=` and `TimeoutStopSec=` in order to set the timeouts (default: 90"); can also use `TimeoutSec=` as shorthand for setting both.
-
 `NotifyAccess=` can be left to the default, if the program process itself sends the notification.
 
 References: [Type=](https://www.freedesktop.org/software/systemd/man/systemd.service.html#Type=) and [NotifyAccess=](https://www.freedesktop.org/software/systemd/man/systemd.service.html#NotifyAccess=).
+
+### Timeouts/killing
+
+By default, `TERM` is sent, then `KILL` on timeout.
+
+Use `TimeoutStartSec=` and `TimeoutStopSec=` in order to set the timeouts (default: 90"); can also use `TimeoutSec=` as shorthand for setting both.
+
+`KillSignal=SIGQUIT`: specify what to send on the (first) stop
+
+In order to specify what to send after the timeout:
+
+```
+SendSIGKILL=no
+ExecStopPost=/bin/kill -HUP $MAINPID
+```
 
 ### Overrides
 
