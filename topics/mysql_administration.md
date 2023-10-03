@@ -22,17 +22,16 @@
 The user format is `name[@'host']`
 
 ```sql
--- `PASSOWRD EXPIRE` makes the user choose the password on first connection.
+-- `PASSOWRD EXPIRE` makes the user choose the password on first connection; it still allows to connect
+-- interactively, but only to change the pwd.
+-- In order to allow a user to change the pwd non-interactively, they must use the option `--connect-expired-password`.
 --
 CREATE USER @user IDENTIFIED BY @pwd PASSWORD EXPIRE;
 
 -- Change user properties, including pwd.
+-- Can use `USER()` instead of the name literal, to make an unprivileged user change their own pwd.
 --
-ALTER USER @user IDENTIFIED BY @pwd PASSWORD EXPIRE;
-
--- Use this to make an unprivileged user change their own pwd; can also use literal instead of USER().
---
-ALTER USER USER() IDENTIFIED BY @pwd;
+ALTER USER @user IDENTIFIED BY @pwd;
 
 RENAME USER @old TO @new;
 

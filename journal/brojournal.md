@@ -1,3 +1,8 @@
+## Tue 03/Oct/2023
+
+- Open Source: AMD driver
+  - [x] Test video bug: https://gitlab.freedesktop.org/drm/amd/-/issues/2825#note_2106592
+
 ## Mon 25/Sep/2023
 
 - Gamedev

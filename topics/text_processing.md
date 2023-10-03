@@ -193,7 +193,8 @@ Special variables can be modified, depending on the type, on each cycle, or in t
 
 - `$_`: current line; if modified, and `-p` is specified, the new value is printed.
 - `$.`: current line number (1-based)
-- `$/`: separator; see examples.
+- `$/`: separator; see examples
+- `$&`: last regex (full) match
 - `$ENV`: env variables; don't forget that they need to be exported!!
 - `@ARGV`: arguments (not including command)
 - `$ARGV`: filename being processed
@@ -661,6 +662,20 @@ echo $'FOO1\nFOO2\nFOO3' | sed -Ez 's/FOO.\n//2'         # match EOL terminator;
 echo $'FOO1\nFOO2\nFOO3' | sed -Ez 's/(^|\n)FOO./\1/2'   # match BOL terminator; INEXACT: replaces #2 with an empty line
 echo $'FOO1\nFOO2\nFOO3' | sed -Ez 's/(^|\n)FOO.\n/\1/2' # match both terminators; UNEXPECTED: replaces #3 instead of #2
 echo $'FOO1\nFOO2\nFOO3' | sed -n '2 p'                  # print Nth line (`-n` disables printing; `p` prints)
+
+# WATCH OUT! In slurp mode, `if` will only print one occurrence - use `while` instead.
+#
+# When using `if`, the code inside the if block will execute at most once for every input record, which in slurp mode is the entire file.
+# Instead, `while` will iterate over each non-overlapping match in the input record.
+#
+perl -0777 -ne 'print $& while /^CREATE TABLE.+\n( .+\n)+.+REFERENCES.+`mytable`.+\n/mg'
+
+# Conditional regex replacement (it's actually inline code); note the slurp mode details.
+# WATCH OUT! If the group is non-capturing, `$1` will always be blank, so this strategy can't be used! The full match should be used, but it's uglier.
+#
+# Reads: "If the constraint is followed by a DROP in the next line, insert a comma, otherwise, a semicolon"
+#
+perl -0777 -pe 's/CONSTRAINT `.+?`\K(\n  DROP)?/$1 ? ",$1" : ";"/ge'
 ```
 
 ## Ruby

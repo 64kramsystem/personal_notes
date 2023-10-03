@@ -51,6 +51,7 @@
       - [Convert curl request to Ruby](#convert-curl-request-to-ruby)
       - [TCP Server](#tcp-server)
   - [Solargraph](#solargraph)
+  - [DnsMadeEasy (`dnsmadeeasy-rest-api`)](#dnsmadeeasy-dnsmadeeasy-rest-api)
   - [Databases](#databases)
     - [SQLite 3](#sqlite-3)
     - [Mysql2](#mysql2)
@@ -1234,6 +1235,76 @@ include:
 exclude:
 - lib/tenderjit/ruby/**/*
 - test/**/*
+```
+
+## DnsMadeEasy (`dnsmadeeasy-rest-api`)
+
+The underlying DME API is horrific, both in the implementation and documentation, and the gem seems not to be better either.
+
+```rb
+def update_records(record_names_ids, limit: nil)
+  record_names_ids = record_names_ids.to_a[0, limit || -1]
+
+  # Both the gem and the APIs are badly documented.
+  # The API is badly designed; in principle, only the id and the fields to update should be required;
+  # additionally, the ideal structure should be a map with the ids as keys, and the fields to update
+  # as value.
+  # The example in the gem "documentation" misses the `ttl` field, which causes the example to fail
+  # (with "400 Bad Request").
+  #
+  # Reference: https://api-docs.dnsmadeeasy.com/#c9a001b1-b550-4d28-a7ff-605d4ad89c69.
+  #
+  conditions = record_names_ids.map do |name, record_id|
+    { "id" => record_id, "name" => name, "type" => RECORD_TYPE, "ttl" => TTL }
+  end
+
+  @api.update_records(@domain, conditions, { "value" => LB_ADDRESS })
+
+  # The following is kept for the records.
+  #
+=begin
+  record_names_ids.each do |name, record_id|
+    # This is completely insane.
+    #
+    # The input values are a confusing mess:
+    #
+    # - the last argument (value) is ignored.
+    # - the subdomain and record type are partially ignored (!); some values cause errors, some others
+    #   are ignored.
+    # - non-nil values are still required.
+    # - at least, the domain (and the record id) required 🙄.
+    # - if the combination (domain, record_id) is not found, a "404 Not Found" is raised.
+    #
+    # However, without the whole and correct data (except value, it seems), the record is DELETED (!!!!!!).
+    #
+    @api.update_record(@domain, record_id, name, RECORD_TYPE, nil, {"value" => LB_ADDRESS})
+  end
+=end
+end
+
+def find_record_ids(subdomains)
+  # The gem doesn't consider paging (!!!).
+
+  # If the domain is not valid, an error is raised.
+  # If there is not record, or the record type is invalid, an empty array is returned.
+  #
+  # There's no API for finding multiple record ids; internally, the gem uses :record_for.
+  #
+  # record_id = @api.find_record_id(@domain, subdomain, RECORD_TYPE)
+
+  # CNAMEs are unique, so we can put the entries in a hash without checking.
+  #
+  all_records_data = @api.records_for(@domain)
+
+  raise "The result is paged!" if all_records_data.fetch("totalPages") > 1
+
+  all_record_names_ids = all_records_data
+    .fetch("data")
+    .each_with_object({}) { |record, records_hash| records_hash[record.fetch("name")] = record.fetch("id") }
+
+  subdomains
+    .each_with_object({}) { |name, result| result[name] = all_record_names_ids[name] }
+end
 ```
 
 ## Databases

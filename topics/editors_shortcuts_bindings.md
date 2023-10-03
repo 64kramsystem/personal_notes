@@ -79,6 +79,7 @@ The VIM section requires some cleanup.
 - `F9`                        Toggle breakpoint
 
 - `Ctrl+K, Ctrl+P`            Du(p)licate (copy) selection!! (custom)
+- `Ctrl+Shift+K`              Delete line
 
 #### Extensions
 
