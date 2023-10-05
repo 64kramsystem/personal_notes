@@ -202,13 +202,14 @@ sshpass usages:
 ```sh
 sshpass -p 'fedora_rocks!' ssh -p 10000 riscv@localhost
 
-# With sshpass, it's odd.
-#
+# sshfs
 echo -n 'fedora_rocks!' > /tmp/pwdfile
 sshfs -p 10000 riscv@localhost: /media/saverio/temp -o ssh_command="sshpass -f /tmp/pwdfile ssh"
 ```
 
 Exit hung ssh session: tap `↵~.`.
+
+If some text "sticks" when scrolling history during SSH sessions, look into PS1 - for example, broken escape sequences can cause issues.
 
 ### SSL/Certificates
 
