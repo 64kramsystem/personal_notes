@@ -104,13 +104,17 @@ systemctl --nopager               # disable pager (keypress)
 
 ### User units
 
+It's best to configure a unit as user unit, rather than setting `User`/`Group`, since this caused odd behaviors in some cases.
+
 Systemd can be configured on a per-user basis, using the `--user` option (see for example, the above `--list-timers`). User units are stored under `$HOME/.config/systemd/user`
 
 IMPORTANT!
 
-- "lingering" must be enabled (`loginctl enable-linger`, or manually create `/var/lib/systemd/linger/$USER`), otherwise, on user logoff, the services are terminated
-- user units require lingering enabled in order to start at boot
-- it's best to configure a unit as user unit, rather than setting `User`/`Group`, since this caused odd behaviors in some cases
+- `WantedBy` must be `default.target`, not `multi-user.target`
+- user units require "lingering" enabled in order to start at boot
+  - also, without lingering, the services are terminated on user logoff
+  - enable via `loginctl enable-linger`, or manually create `/var/lib/systemd/linger/$USER`
+  - lingering can be checked (also) via `loginctl showloginctl show-user $user --property=Linger`
 
 In order to manage a user unit via root user, add the option `--machine=$user@`, e.g. `sudo systemctl restart --user --machine=myuser@ myservice`, otherwise, it won't work on non-login shells; alternatively, set the env vars:
 
@@ -123,7 +127,7 @@ export DBUS_SESSION_BUS_ADDRESS=$XDG_RUNTIME_DIR/bus
 
 ```sh
 journalctl -b -xp 3 [-k]            # view log for current [b]oot; with e[x]tra information, only errors (`-p 3` = level);
-                                    # only [k]ernel messages
+                                    # only [k]ernel messages; can also add `-u` for filtering a certain service
 journalctl -b -1 ...                # `-1` = previous boot (!)
 journalctl -f -u $service           # [-f|--follow]; [-u|--unit] log; use `page-end` to go to end
 journalctl --vacuum-time=1d         # clean systemd journal (/var/log/journal)
