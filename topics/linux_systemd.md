@@ -408,26 +408,24 @@ $ systemctl --user stop test-example.timer
 
 ## Event triggers (execute program on resume, etc.)
 
-Run a script on suspend/hibernate/thaw/resume (the change applies immediately):
+Run a script on resume (applicable to other callbacks):
 
 ```sh
-# The standard `bin` paths are in the path during execution, so there's no need to use full paths.
-#
-cat > /lib/systemd/system-sleep/50_myscript << 'SH'
-#!/bin/bash
-set -o errexit
+cat > /etc/systemd/system/fix_wifi_resume.service << 'UNIT'
+[Unit]
+Description=Fix Wifi slowness after resume
+After=suspend.target
 
-case "$1" in
-  pre)
-    # ACTION BEFORE SUSPEND/HIBERNATE
-    ;;
-  post)
-    # ACTION AFTER THAW/RESUME
-    ;;
-esac
-SH
+[Service]
+Type=simple
+ExecStart=/bin/bash /path/to/script.sh
 
-chmod +x /lib/systemd/system-sleep/50_myscript
+[Install]
+WantedBy=suspend.target
+UNIT
+
+systemctl daemon-reload
+systemctl enable fix_wifi_resume
 ```
 
 Run a script on screen lock/unlock:
@@ -435,11 +433,11 @@ Run a script on screen lock/unlock:
 ```sh
 dbus-monitor --session "type='signal',interface='org.gnome.ScreenSaver'" |
   while true; do
-    read X;
-    if echo $X | grep "boolean true" &> /dev/null;
-      then echo locked >> /tmp/pizza.txt;
-    elif echo $X | grep "boolean false" &> /dev/null;
-      then echo unlocked >> /tmp/pizza.txt;
+    read LOCK_UNLOCK;
+    if echo $LOCK_UNLOCK | grep "boolean true" &> /dev/null;
+      then echo locked >> /tmp/locking.log;
+    elif echo $LOCK_UNLOCK | grep "boolean false" &> /dev/null;
+      then echo unlocked >> /tmp/locking.log;
     fi
   done
 ```

@@ -1,3 +1,10 @@
+## Tue 24/Oct/2023
+
+- Scripts
+  - [x] Write script to change music files order
+  - [x] Find way to display rsync progress while grepping out some lines
+  - [x] Write article about progress/grep
+
 ## Tue 03/Oct/2023
 
 - Open Source: AMD driver

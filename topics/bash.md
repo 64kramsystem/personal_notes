@@ -871,7 +871,7 @@ echo "${@[1]}"        # NOT SUPPORTED!
 echo "${@:1:1}"       # Use this to access a single entry
 echo "${@:-1}"        # Use this to access the last entry
 echo "${@}"           # DAFUQ!!! Doesn't include $0
-echo "${@:0}"         # Includes $0
+echo "${@:0}"         # Includes $0 (Ruby [0..])
 echo "${@:1:${#@}-1}" # DAFUQ!!! $#@ doesn't count $0, so must account when accessing by a length expression
 echo ${*:${#@}}       # Last element
 
