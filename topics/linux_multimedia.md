@@ -159,8 +159,10 @@ Fast presets:
 Convenient template:
 
 ```sh
+# x265 requires the width to be a multiple of 2.
+#
 ffmpeg -i source.mp4 \
-  -filter:v scale=-1:540 -c:v libx265 -crf 25 -preset veryslow \
+  -filter:v scale=-2:540 -c:v libx265 -crf 25 -preset veryslow \
   -pix_fmt yuv420p10le -x265-params asm=avx512 \
   -an `# -ar 44100 -c:a libfdk_aac -vbr 3` \
   dest.mkv
@@ -229,6 +231,8 @@ ffmpeg -ss 0:00:42 -i in.m4a -c copy -t 1:00:00 out.m4a
 
 #### Extract segment
 
+WATCH OUT! In at least some cases, video copying will cause the destination to start at the nearest keyframe; when so, one needs to reencode.
+
 ```sh
 # `ss`: start
 # `t` : duration
@@ -287,10 +291,10 @@ Audio:
 
 Video:
 
-- `-vf scale=w=800:h=600:force_original_aspect_ratio=decrease` : Scale to fit within the specified dimensions with the same aspect ratio, eg. 1280x720 -> 800*450
+- `-vf scale=w=800:h=600:force_original_aspect_ratio=decrease` : Fit within the specified dimensions with the same aspect ratio, eg. 1280x720 -> 800*450
                                                                  (https://trac.ffmpeg.org/wiki/Scaling).
-- `-vf scale=800:600 -aspect 4:3`                              : Scale and enforce an aspect ratio
-- `-filter:v scale=-1:540`                                     : Scale, keeping width proportional (works also for height)
+- `-vf scale=800:600 -aspect 4:3`                              : Enforce an aspect ratio
+- `-filter:v scale=-2:540`                                     : Keep width proportional and n* (works also for height)
 
 ### Other operations
 

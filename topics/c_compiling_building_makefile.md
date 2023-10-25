@@ -205,22 +205,24 @@ Background [here](https://immunant.com/blog/2020/01/quake3).
 
 ### `glibconfig.h: No such file or directory`
 
-See https://github.com/dusty-nv/jetson-inference/issues/6:
+Can be solved with different approaches (see https://github.com/dusty-nv/jetson-inference/issues/6):
+
+- symlink the architecture-specific to the architecture-independent include path
 
 ```sh
-sudo ln -s /usr/lib/x86_64-linux-gnu/glib-2.0/include/glibconfig.h /usr/include/glib-2.0/
+sudo ln -s /usr/$(gcc -dumpmachine)/glib-2.0/include/glibconfig.h /usr/include/glib-2.0/
 ```
 
-or try this:
+- compile using the `pkg-config` provided flags
 
 ```sh
-gcc pkg-config --cflags glib-2.0 test.c pkg-config --libs glib-2.0
+gcc $(pkg-config --cflags glib-2.0) test.c $(pkg-config --libs glib-2.0)
 ```
 
-or suggested include path (maybe should be `/usr/lib/x86_64-linux-gnu/glib-2.0/include/glibconfig.h`?):
+- add the architecture-specific include path to the cpptools VSC configuration
 
 ```
-${workspaceFolder}/** /usr/include/glib-2.0/**
+/usr/lib/x86_64-linux-gnu/glib-2.0/include/glibconfig.h/**
 ```
 
 #### `cannot find install-sh, install.sh, or shtool in ...`

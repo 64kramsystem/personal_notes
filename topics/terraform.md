@@ -161,6 +161,8 @@ Resource = "arn:aws:ec2:${region}:${account_id}:instance/$${ec2-instance-id}"
 
 ```tf
 mylist = ["a", "b", "c", "d"]
+
+concat(list1, list2)          # XXX
 ```
 
 ### Maps
@@ -248,11 +250,11 @@ dynamic "notification" {
 state list
 
 # Import a resource
-import aws_iam_user.saverio saverio
+import $resource_tf_address $resource_identifier
 
 # Remove a resource from the statefile.
 # If the resource includes other resources, the whole tree is removed.
-state rm aws_iam_user.saverio saverio
+state rm $resource_tf_address
 
 # Sync (scope) an individual resource (after manual update/drift); also supported by `apply`.
 #

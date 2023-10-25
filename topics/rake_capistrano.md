@@ -8,6 +8,7 @@
     - [Functions](#functions)
     - [Tasks/Actions](#tasksactions)
     - [Target hosts](#target-hosts)
+      - [Hooks](#hooks)
 
 ## Rake
 
@@ -114,3 +115,22 @@ on roles(:myrole) do |host|
   end
 end
 ```
+
+#### Hooks
+
+- `before "deploy:starting"`      : right before the deployment starts
+- `after  "deploy:starting"`      : immediately after the deployment starts
+- `before "deploy:updating"`      : before the deployment updates the code
+- `after  "deploy:updated"`       : after the code has been updated on the server
+- `before "deploy:publishing"`    : before the release is published (i.e., before the current symlink is updated)
+- `after  "deploy:published"`     : after the release has been published
+- `before "deploy:finishing"`     : before the deployment process is complete
+- `after  "deploy:finished"`      : after the deployment process is complete
+
+- `before "deploy" `              : before the whole process
+- `after  "deploy" `              : after the whole process
+
+- `before "deploy:reverting"`     : before the deploy is rolled back to a previous version
+- `after  "deploy:reverted"`      : after the deploy has been rolled back
+
+- `before/after "deploy:migrate"` : If you need to run tasks before or after the database migrations
