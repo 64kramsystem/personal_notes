@@ -25,7 +25,7 @@ gemspec
 
 gem "json", "2.4.1" if RUBY_VERSION == "2.0.0"
 
-# Local repository.
+# Local repository; path can be relative.
 #
 gem 'sshkit-sudo', '~> 0.2.0', path: '/path/to/sshkit-sudo'
 
@@ -73,6 +73,7 @@ It's possible to create a cache directory (`vendor/cache`), but it's all-or-noth
 When one wants to run outside of the bundler context:
 
 ```rb
+# Seems not to have (full) effect inside a Rails context.
 Bundler.with_unbundled_env { `passenger-status` }
 ```
 

@@ -10,7 +10,7 @@
   - [journalctl](#journalctl)
   - [Configuring a service unit](#configuring-a-service-unit)
     - [Notify unit type](#notify-unit-type)
-    - [Timeouts/killing](#timeoutskilling)
+    - [Stop Timeouts/killing](#stop-timeoutskilling)
     - [Overrides](#overrides)
     - [Hooks](#hooks)
   - [Timers (scheduled events)](#timers-scheduled-events)
@@ -77,7 +77,7 @@ The `--user` is for units belonging to the user (eg. transient timers).
 Systemd doesn't provide any mean to uninstall units; it must be done manually:
 
 ```sh
-systemctl disable --now $service
+systemctl disable --now $service {$service...}
 rm /etc/systemd/system/$service.service
 systemctl daemon-reload
 ```
@@ -280,9 +280,9 @@ the program after timeout.
 
 References: [Type=](https://www.freedesktop.org/software/systemd/man/systemd.service.html#Type=) and [NotifyAccess=](https://www.freedesktop.org/software/systemd/man/systemd.service.html#NotifyAccess=).
 
-### Timeouts/killing
+### Stop Timeouts/killing
 
-By default, `TERM` is sent, then `KILL` on timeout.
+Stop is [synchronous](stackoverflow.com/a/42979206/210029); by default, `TERM` is sent, then `KILL` on timeout.
 
 Use `TimeoutStartSec=` and `TimeoutStopSec=` in order to set the timeouts (default: 90"); can also use `TimeoutSec=` as shorthand for setting both.
 

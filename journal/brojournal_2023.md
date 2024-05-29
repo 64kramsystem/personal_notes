@@ -1,3 +1,25 @@
+## Wed 20/Dec/2023
+
+- Open Source: QEMU-pinning
+  - [x] Update patch for v8.2.0
+
+## Fri 03/Nov/2023
+
+- Scripts
+  - [x] Email client transfer: ignore IMAP account
+
+## Fri 27/Oct/2023
+
+- Project: Openscripts
+  - convert_cb_archive_to_pdf: Improvements
+    - Improvements/extensions to filename patterns
+    - Add .sfv to (unnecessary files) list
+    - Fix (unnecessary files) deletion
+    - Add support for rar extension
+    - Improve filename matching
+    - Cosmetic improvement to c_unnecessary_files
+
+
 ## Tue 24/Oct/2023
 
 - Scripts

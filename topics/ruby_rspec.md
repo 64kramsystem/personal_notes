@@ -176,8 +176,8 @@ See [reference](https://relishapp.com/rspec/rspec-expectations/v/3-10/docs/built
  |              | `be_within(span).of(reference)`                      | Time/Floats                                       |
  |              | `be === expected`                                    |                                                   |
  |              | `eq(expected)`                                       |                                                   |
- |              | `change { instance.attribute }.from(start).to(end)`  | from/to are optional                              |
- |              | `change { instance.attribute }.by(amount)`           |                                                   |
+ |              | `change { dynamic_value }.from(start).to(end)`       | from/to are optional                              |
+ |              | `change { dynamic_value }.by(amount)`                |                                                   |
  |              | `match(pattern)`                                     | String also accepted                              |
  |              | `match_array(array)`                                 | Order is ignored!                                 |
  |              | `contain_exactly(*values)`                           | Like `match_array`, but splatted                  |
@@ -187,6 +187,8 @@ See [reference](https://relishapp.com/rspec/rspec-expectations/v/3-10/docs/built
  | Include      | `include`                                            |                                                   |
  | Error        | `raise_error(ErrorClass, "message")`                 | Defaults to Exception                             |
  | Stdout/err   | `output("message").to_stdout`                        | Captures `$stdout`/`$stderr`; `to_*` is necessary |
+
+- `dynamic_value` can be anything, like `instance.attribute` or `Class.count`
 
 ### Matching arguments
 

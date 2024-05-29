@@ -4,6 +4,7 @@
   - [Basic concepts](#basic-concepts)
   - [Record macros](#record-macros)
   - [Simple example](#simple-example)
+    - [Invoke Python](#invoke-python)
 
 ## Basic concepts
 
@@ -65,4 +66,33 @@ formatArgs(2).Value = "Heading 2"
 dispatcher.executeDispatch(document, ".uno:StyleApply", "", 0, formatArgs())
 
 end sub
+```
+
+### Invoke Python
+
+System preparation:
+
+```sh
+sudo aptitude install -y libreoffice-script-provider-python
+
+mkdir -p ~/.config/libreoffice/4/user/Scripts/python
+```
+
+Script (create as `~/.config/libreoffice/4/user/Scripts/python/GetTimeZone.py`):
+
+```py
+import datetime
+
+def get_timezone_name():
+    # Reference: https://stackoverflow.com/a/51296984/210029
+    return datetime.datetime.now().astimezone().tzname()
+```
+
+Invocation:
+
+```
+dim oScriptProvider, oScript, result
+oScriptProvider = ThisComponent.getScriptProvider()
+oScript = oScriptProvider.getScript("vnd.sun.star.script:timezone.py$get_timezone_name?language=Python&location=user")
+timeZoneName = oScript.invoke(Array(), Array(), Array())
 ```

@@ -246,6 +246,10 @@ dynamic "notification" {
 ## State/general operations
 
 ```sh
+Scope to some resources; supported by a few operations.
+#
+-target=resource_addr -target=resource2_addr...
+
 # List resources
 state list
 
@@ -256,7 +260,7 @@ import $resource_tf_address $resource_identifier
 # If the resource includes other resources, the whole tree is removed.
 state rm $resource_tf_address
 
-# Sync (scope) an individual resource (after manual update/drift); also supported by `apply`.
+# Sync (scoped) an individual resource (after manual update/drift).
 #
 refresh -target=resource_addr -target=resource2_addr...
 

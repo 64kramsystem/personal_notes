@@ -5,6 +5,7 @@
     - [Useful operations](#useful-operations)
     - [Signals/exit codes/suspension](#signalsexit-codessuspension)
     - [Process tree display](#process-tree-display)
+    - [Locking (via flock)](#locking-via-flock)
   - [Memory (measurement)](#memory-measurement)
   - [Security (Permissions)](#security-permissions)
     - [Sudo](#sudo)
@@ -62,6 +63,8 @@
 
 ## Processes
 
+WATCH OUT!! When using the [debug log strategy](bash.md#log-a-script-outputenable-debugging-log), process handling becomes an unholy mess (eg. HUP causes ERR in the tree). In such cases, it's possible that alternative strategies are simpler, eg. old instances exit if they find they're old, rather than newer ones killing them.
+
 ### Useful operations
 
 ```sh
@@ -84,7 +87,7 @@ sudo pkill -f '[p]rocessname'
 # Be *very* careful when choosing which pid to kill. If the process has been invoked via sudo, the child
 # process will need to be killed.
 #
-pkill --parent --pidfile $(< parent_pidfile)
+pkill --parent $(< parent_pidfile)
 
 # Invoke a command, and kill the process after a timeout, if it doesn't exit!
 #
@@ -132,6 +135,22 @@ top -Hb -n1 -p $(pgrep -f qemu-sys)
 echo q | htop -p $(pgrep -f qemu-sys) | aha --black --line-fix > /tmp/htop.html
 ```
 
+### Locking (via flock)
+
+Exclusive locking:
+
+```sh
+# "200" (file descriptor) is arbitrary; since it's per-process, but the lock is still on the file, there's no risk of collision.
+# `exec` creates the file (the FD can't be a variable), if it doesn't exist.
+# Script-wise, the simplest thing is not to delete the lockfile on exit/error.
+#
+exec 200>/run/mylockfile.lock
+flock -n 200 || {
+  >&2 echo 'error!'
+  exit 1
+}
+```
+
 ## Memory (measurement)
 
 Measuring memory is a complex topic. A simple and accurate enough tool that can be used is [`ps_mem`](https://github.com/pixelb/ps_mem).
@@ -139,15 +158,19 @@ Measuring memory is a complex topic. A simple and accurate enough tool that can 
 ## Security (Permissions)
 
 ```sh
-chown $name $file...                        # change owner
-chgrp $name $file...                        # change group
-chmod [ugoa][-+][rwx] $file...              # change permissions; [u]ser [g]group [o]thers [a]ll
-chsh -s $shell $file                        # change shell; use `/usr/sbin/nologin` as shell disable it for a user
+chown $name $file...                    # change owner
+chgrp $name $file...                    # change group
+chmod [ugoa][-+][rwx] $file...          # change permissions; [u]ser [g]group [o]thers [a]ll
+chsh -s $shell $file                    # change shell; use `/usr/sbin/nologin` as shell disable it for a user
 
 chage [-m $min] [-M $max] [-W $warn] [-I $inactive_days] [-E $expire_date] $login # change password properties
-chage -l $login                             # show info
+chage -l $login                         # show info
 
-passwd -d                                   # set a blank password
+passwd -d                               # set a blank password
+chmod -R go-rx .ssh                     # setup SSH permissions
+chage -d $(date +%Y-%m-%d) $user        # set the last changed date to today, and the mandatory change date to (today + max days)
+chage -I 0 $user                        # expire password
+chage -E -1 $user                       # disable account expiry
 ```
 
 Rename user/group/home:
@@ -156,17 +179,8 @@ Rename user/group/home:
 usermod -l $new_user $old_user
 groupmod -n $new_user $old_user
 usermod -d $new_home -m $user
-```
 
-Snippets:
-
-```sh
 usermod -a -G $group $user              # add user to group
-
-chmod -R go-rx .ssh                     # setup SSH permissions
-chage -d $(date +%Y-%m-%d) $user        # set the last changed date to today, and the mandatory change date to (today + max days)
-chage -I 0 $user                        # expire password
-chage -E -1 $user                       # disable account expiry
 ```
 
 User name/home/sudo:
@@ -221,9 +235,13 @@ sudo -n true && echo 'no pwd!'                    # Check if password is require
 echo "$(whoami) ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee "/etc/sudoers.d/$(whoami)_no_sudo_pwd"
 sudo chmod 440 !$
 
-# Run a specific command (also scripts) without asking sudo password.
-# WATCH OUT! The command must be invoked *exactly* as "sudo <full_command>", e.g. in this case
-# `sudo /path/to/command param1 paramN`.
+# Run a specific command (also scripts) as sudo, without asking the password.
+#
+# WATCH OUT! The command must be invoked *exactly* as "sudo <full_command>"; this implies:
+#
+# 1. in this case `sudo /path/to/command param1 paramN`.
+# 2. if one wants to run the command without `sudo`, they need to use the `prepare_sudo` strategy, because
+#    commands including sudo in the script will otherwise ask the password.
 #
 # The typical alternative to `root` is `ALL`, which allow running as any target user.
 #
@@ -939,11 +957,10 @@ User operations:
 
 ```sh
 crontab -l   # list
-crontab -e   # edit
-crontab -d   # delete
+crontab -e   # edit; use also to delete entries
 ```
 
-`MAILTO=dest@email.com` (put on top) sends email.
+The variables defined on top are exported. `MAILTO=dest@email.com` sends email.
 
 #### Schedule format
 

@@ -601,12 +601,17 @@ open('http://cippa-lippa').read
 
 ### File/Dir/FileUtils/Pathname
 
+WATCH OUT! File stats, in case of symlinks, apply to the target file; use `File.lstat` instead.
+
 ```ruby
 File.dirname(path)                              # Parent dir
 File.extname(fname)                             # Extract the (last) extension, including leading dot
 File.size(fname)
 File.mtime(fname)
+File.lstat(fname).mtime                         # For symlinks; see note above.
 File.symlink(target, link)
+File.utime(atime, mtime, fname)                 # Update a/mtime
+`system("touch -h -m -t #{atime.strftime('%Y%m%d%H%M.%S')} #{fname.shellescape}")` # For symlinks (!) (mtime)
 
 Dir.pwd                                         # working path
 Dir.chdir(path) { }                             # Change current dir; WATCH OUT! not thread safe! see https://bugs.ruby-lang.org/issues/9785

@@ -6,11 +6,11 @@
     - [Unique array values](#unique-array-values)
     - [Max value](#max-value)
   - [Garbage collection, with profiling helpers](#garbage-collection-with-profiling-helpers)
-    - [memory_profiler](#memory_profiler)
-  - [Profiling/Benchmarking](#profilingbenchmarking)
+    - [Memory profiling](#memory-profiling)
+      - [Using built-in APIs](#using-built-in-apis)
+  - [Performance Profiling/Benchmarking](#performance-profilingbenchmarking)
     - [ruby-prof (tracing)](#ruby-prof-tracing)
     - [benchmark/ips](#benchmarkips)
-  - [Memory](#memory)
 
 ## Collections
 
@@ -53,20 +53,47 @@ GC::Profiler.report   # returns nil if it didn't run
 GC::Profiler.disable
 ```
 
-### memory_profiler
+### Memory profiling
 
-The allocate amount can be higher than expected, because some memory may be collected in the meanwhile.  
-Due to memory fragmentation, the O/S memory used can be actually more!
+Don't use `memory_profiler`; based on one report, `ruby-prof` is more robust, and it includes allocations:
 
 ```rb
-report = MemoryProfiler.report { yield }
-report.pretty_print
-
-# Total allocated: 914156 bytes (8503 objects)
-# Total retained: 46834 bytes (645 objects)
+RubyProf.measure_mode = RubyProf::ALLOCATIONS
 ```
 
-## Profiling/Benchmarking
+#### Using built-in APIs
+
+```rb
+def allocate_count(&block)
+  GC.disable
+  before = ObjectSpace.count_objects
+  yield
+  after = ObjectSpace.count_objects
+  after.each { |k,v| after[k] = v - before[k] }
+  after[:T_HASH] -= 1                           # exclude the just created hash
+  after[:FREE] += 1                             # ^
+  GC.enable
+  after.reject { |k,v| v == 0 }
+end
+```
+
+Other ObjectSpace functions:
+
+```rb
+puts ObjectSpace.each_object.count
+puts ObjectSpace.each_object(Numeric).count
+ObjectSpace.each_object(Complex) { |c| puts c }
+
+# Adds other *very slow* methods
+#
+require "objspace"
+
+ObjectSpace.count_objects_size
+ObjectSpace.memsize_of("Sav")      # Can be inaccurate
+ObjectSpace.memsize_of_all(String)
+```
+
+## Performance Profiling/Benchmarking
 
 (Currently) GC pauses can't be detected by profilers.
 
@@ -85,16 +112,14 @@ For a sampling profiler, see `stackprof`.
 #
 RubyProf.measure_mode = RubyProf::WALL_TIME # default
 
-result = RubyProf.profile do
-  # ...
-end
+require 'ruby-prof'; p_result = RubyProf::Profile.profile do # ...
 
 # Different outputs (with openers)
 #
-RubyProf::GraphHtmlPrinter.new(result).print(File.open('/tmp/prof.htm', 'w'), min_percent: 5); `xdg-open /tmp/prof.htm`
-RubyProf::CallStackPrinter.new(result).print(File.open('/tmp/prof.htm', 'w'));                 `xdg-open /tmp/prof.htm`
-RubyProf::CallTreePrinter.new(result).print(path: '/tmp', profile: 'prof');                    `qcachegrind /tmp/prof.callgrind*`
-RubyProf::FlatPrinter.new(result).print(STDOUT)
+end; RubyProf::CallStackPrinter.new(p_result).print(File.open('/tmp/prof.htm', 'w'));                 `xdg-open /tmp/prof.htm`
+end; RubyProf::GraphHtmlPrinter.new(p_result).print(File.open('/tmp/prof.htm', 'w'), min_percent: 5); `xdg-open /tmp/prof.htm`
+end; RubyProf::CallTreePrinter.new(p_result).print(path: '/tmp', profile: 'prof');                    `qcachegrind /tmp/prof.callgrind*`
+end; RubyProf::FlatPrinter.new(p_result).print(STDOUT)
 ```
 
 With FlatPrinter:
@@ -102,6 +127,28 @@ With FlatPrinter:
 - methods marked with `*` are recursively called.
 - `%self`: time spent in this method (%)
 - `total` = `self` + `child` (secs)
+
+Quick and dirty terminal output:
+
+```rb
+buffer = StringIO.new
+RubyProf::FlatPrinter.new(result).print(buffer)
+puts buffer.
+  string.
+  lines.
+  grep(/DumpAccountService/).        # filter by this class
+  sort_by { |l| -l.split[1].to_f }.  # order by total (time spent in this method and its children)
+  map { |l| l.sub(%r( \S+$), '') }.  # remove source location (which can be "(irb)"
+  join
+```
+
+Convert a call tree output into a flamegraph:
+
+```sh
+g cl https://github.com/brendangregg/FlameGraph.git
+./stackcollapse.pl /tmp/prof.callgrind.out        > /tmp/prof.callgrind.out.folded
+./flamegraph.pl    /tmp/prof.callgrind.out.folded > /tmp/prof.flame.svg
+```
 
 ### benchmark/ips
 
@@ -146,38 +193,4 @@ Benchmark.ips do |x|
   x.config(suite: GCSuite.new)
   # ...
 end; nil
-```
-
-## Memory
-
-Convenient helper to measure allocations, by type, using `ObjectSpace.count_objects`:
-
-```rb
-def allocate_count
-  GC.disable
-  before = ObjectSpace.count_objects
-  yield
-  after = ObjectSpace.count_objects
-  after.each { |k,v| after[k] = v - before[k] }
-  after[:T_HASH] -= 1                           # exclude the just created hash
-  after[:FREE] += 1                             # ^
-  GC.enable
-  after.reject { |k,v| v == 0 }
-end
-```
-
-Other ObjectSpace functions:
-
-```rb
-puts ObjectSpace.each_object.count
-puts ObjectSpace.each_object(Numeric).count
-ObjectSpace.each_object(Complex) { |c| puts c }
-
-# Adds other *very slow* methods
-#
-require "objspace"
-
-ObjectSpace.count_objects_size
-ObjectSpace.memsize_of("Sav")      # Can be inaccurate
-ObjectSpace.memsize_of_all(String)
 ```

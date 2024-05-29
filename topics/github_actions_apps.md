@@ -176,7 +176,7 @@ jobs:
     if: github.ref != 'refs/heads/master'
     steps:
     - name: Cancel Previous Runs
-      uses: styfle/cancel-workflow-action@0.11.0
+      uses: styfle/cancel-workflow-action@0.12.1
       with:
         access_token: ${{ github.token }}
   other-jobs:
@@ -294,7 +294,7 @@ generate_projects_matrix:
   outputs:
     matrix: ${{ steps.generate-matrix.outputs.matrix }}
   steps:
-  - uses: actions/checkout@v3
+  - uses: actions/checkout@v4
   - id: generate-matrix
     # The script must print a JSON document to stdout. It's not specified if it's JSON5, but trailing
     # commas are allowed.
@@ -311,8 +311,8 @@ check_code_formatting:
   # Important!! Otherwise, an error is raised on empty matrices.
   if: ${{ needs.generate_projects_matrix.outputs.matrix != '[]' }}
   steps:
-    - uses: actions/checkout@v3
-    - uses: actions-rs/cargo@v1
+    - uses: actions/checkout@v4
+    - uses: actions-rs/cargo@v2
       with:
         command: fmt
         args: --all --manifest-path=${{ matrix.cfg.port_manifest }} -- --check
@@ -326,7 +326,7 @@ This can be performed via a convenient action.
 # WATCH OUT! Must include fetch-depth, otherwise the commit is not usable for diffing.
 # Possibly, a depth of 2 (smaller size) works for squash merges.
 #
-- uses: actions/checkout@v3
+- uses: actions/checkout@v4
   with:
     fetch-depth: 0
 
@@ -414,7 +414,7 @@ jobs:
     # See caching section.
     #
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
     - name: Setup Ruby ${{ matrix.ruby-version }}
       uses: ruby/setup-ruby@v1
@@ -452,7 +452,7 @@ clippy_correctness_checks:
           - { target: 'x86_64-unknown-linux-gnu', target_dir: 'target' }
           - { target: 'wasm32-unknown-unknown', target_dir: 'web-target' }
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use WASM target for Clippy
         if: matrix.config.target == 'wasm32-unknown-unknown'
         uses: actions-rs/toolchain@v1
@@ -460,7 +460,7 @@ clippy_correctness_checks:
             toolchain: stable
             target: ${{ matrix.config.target }}
             components: clippy
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: |
             ~/.cargo/bin/
@@ -470,7 +470,7 @@ clippy_correctness_checks:
             target/
             web-target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - uses: actions-rs/cargo@v1
+      - uses: actions-rs/cargo@v2
         env:
           CARGO_TARGET_DIR: ${{ matrix.config.target_dir }}
         with:
@@ -493,7 +493,7 @@ jobs:
     name: Build Ruby cache
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: ruby/setup-ruby@v1
       with:
         bundler-cache: true
@@ -532,8 +532,8 @@ jobs:
     steps:
     - name: Install dev packages
       run: sudo apt install libasound2-dev libudev-dev
-    - uses: actions/checkout@v3
-    - uses: actions/cache@v3
+    - uses: actions/checkout@v4
+    - uses: actions/cache@v4
       with:
         path: |
           ~/.cargo/bin/
@@ -542,7 +542,7 @@ jobs:
           ~/.cargo/git/db/
           target/
         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-    - uses: actions-rs/cargo@v1
+    - uses: actions-rs/cargo@v2
       with:
         command: clippy
 
@@ -558,8 +558,8 @@ jobs:
     runs-on: ubuntu-latest
     name: Check code formatting
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/cargo@v1
+      - uses: actions/checkout@v4
+      - uses: actions-rs/cargo@v2
         with:
           command: fmt
           args: --all -- --check
@@ -569,8 +569,8 @@ jobs:
     steps:
       - name: Install dev libraries
         run: sudo apt install libasound2-dev libudev-dev
-      - uses: actions/checkout@v3
-      - uses: actions/cache@v3
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
         with:
           path: |
             ~/.cargo/bin/
@@ -579,7 +579,7 @@ jobs:
             ~/.cargo/git/db/
             target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - uses: actions-rs/cargo@v1
+      - uses: actions-rs/cargo@v2
         with:
           command: clippy
           args: -- -W clippy::correctness -D warnings

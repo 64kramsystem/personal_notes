@@ -23,6 +23,7 @@
   - [Export (`archive`)](#export-archive)
   - [History rewrite](#history-rewrite)
     - [Remove a file](#remove-a-file)
+    - [Sample interactive rebase structure of a tree history](#sample-interactive-rebase-structure-of-a-tree-history)
     - [Remove a merge](#remove-a-merge)
     - [Batch operations (message/tree filtering, files removal)](#batch-operations-messagetree-filtering-files-removal)
   - [Useful operations](#useful-operations)
@@ -524,6 +525,73 @@ archive master Gemfile Gemfile.lock gems_dir | tar x -f - -C /export
 In order to remove a file from the history, it's easier to use the [BFG Repo-Cleaner](https://rtyley.github.io/bfg-repo-cleaner).
 
 WATCH OUT! Don't forget to unprotect branches (e.g. `master`), otherwise, after pushing, the BFGRC will leave the repository in an inconsistent (history-wise) state.
+
+### Sample interactive rebase structure of a tree history
+
+The following history:
+
+```
+*   9cb61acd PR-2
+|\
+| * 0c2041f1
+| * ff0cbdc0
+|/
+* 285dfc54
+* 5ad27ee9
+*   5ad4cd29 PR-1
+|\
+| * a402ba7b
+| * 8395c68a
+|/
+```
+
+Has the corresponding interactive rebase structure:
+
+```
+# We ignore these, and set other labels; the reset is also redundant
+#
+# label onto
+# reset onto
+
+######################################################
+# Merge PR-1
+######################################################
+
+# Associate a label to the current HEAD
+label PR-1-branch-point
+
+pick 8395aaaa
+pick a402aaaa
+
+# Associate a label to the HEAD of the branch
+label PR-1
+# Reset to the previous branch (main) HEAD
+reset PR-1-branch-point
+# Merge the two branches
+merge -C 5ad4aaaa PR-1
+
+######################################################
+# Self-standing commits/squashed PRs
+######################################################
+
+pick 5ad2aaaa
+pick 285daaaa
+
+######################################################
+# Merge PR-2
+######################################################
+
+# Same as PR-1
+
+label PR-2-branch-point
+
+pick ff0caaaa
+pick 0c20aaaa
+
+label PR-2
+reset PR-2-branch-point
+merge -C 9cb6aaaa PR-2
+```
 
 ### Remove a merge
 
