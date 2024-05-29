@@ -12,20 +12,23 @@
       - [Execute as alternate user](#execute-as-alternate-user)
     - [`bash`](#bash)
     - [`cron`](#cron)
-    - [`cookbook_file`](#cookbook_file)
-    - [`directory`](#directory)
+    - [File-related (`file`, `cookbook_file`, `directory`](#file-related-file-cookbook_file-directory)
     - [`link` (symlink)](#link-symlink)
     - [`line` (manual file editing)](#line-manual-file-editing)
     - [`mount`](#mount)
     - [`package`/`dpkg_package`](#packagedpkg_package)
     - [`remote_file`](#remote_file)
     - [`remote_dir` (copy directory trees)](#remote_dir-copy-directory-trees)
+    - [`service`](#service)
     - [`systemd_unit`](#systemd_unit)
       - [User units](#user-units)
     - [User passwords metadata](#user-passwords-metadata)
   - [Tools](#tools)
     - [Knife](#knife)
       - [Installation on machines with Omnitruck-installed Chef](#installation-on-machines-with-omnitruck-installed-chef)
+  - [Useful stuff](#useful-stuff)
+    - [Define resource dynamically](#define-resource-dynamically)
+    - [Setting env vars when not supported](#setting-env-vars-when-not-supported)
 
 ## Resource concepts
 
@@ -53,6 +56,18 @@ Merging:
 
 - An environment default Array attribute will merge the values with a recipe default one
 - An environment overrider Array attribute will replace the values of a recipe default one
+
+Commands:
+
+```rb
+# Idiomatic hash merge
+#
+default[:attribute] = Chef::Mixin::DeepMerge.deep_merge(node[:myattribute], {foo: :bar})
+
+# Array appending
+#
+default[:attribute] += [:foo, :bar]
+```
 
 ### Basic concepts
 
@@ -188,10 +203,12 @@ cron 'job_name' do
   shell            String
   time             Symbol
   time_out         Hash
+
+  action           :create                 # also supports :delete
 end
 ```
 
-### `cookbook_file`
+### File-related (`file`, `cookbook_file`, `directory`
 
 ```ruby
 cookbook_file '/etc/systemd/system.conf' do
@@ -200,7 +217,17 @@ cookbook_file '/etc/systemd/system.conf' do
 end
 ```
 
-### `directory`
+Delete files/dirs found via glob:
+
+```rb
+# Files are found during compilation.
+#
+Dir[glob].each do |path|
+  file path do
+    action :delete
+  end
+end
+```
 
 Watch out! One can't use two resources with the same name, for creation and (cleanup-time) deletion, as they will at least cause problems with notifications.
 
@@ -321,7 +348,15 @@ remote_directory '/path/to/dest' do
 end
 ```
 
+### `service`
+
+If handling a systemd unit, use the [specific resource](#systemd_unit).
+
 ### `systemd_unit`
+
+The resource can be specified without content, useful for example to enable the unit.
+
+WATCH OUT!! Just because a unit is enabled by the vendor, it doesn't mean that it will actually be enabled!!
 
 ```ruby
 systemd_unit 'nmon.service' do
@@ -354,7 +389,7 @@ systemd_unit 'nmon.service' do
   #
   verify false
 
-  action [:create, :enable, :reload_or_restart]
+  action [:create, :enable, :reload_or_restart] # Can also :delete (systemd reload is triggered as usual)
 end
 ```
 
@@ -400,14 +435,28 @@ Date.new(1970, 1, 1) + pass_meta.sp_lstchg   # expiry date
 
 ### Knife
 
-Execute code on nodes from the commandline (including recipes doesn't work):
+Execute code on nodes from the commandline:
 
 ```sh
-knife exec -E <<~RUBY
-  nodes.transform(:all) do | n |
-    if n.hostname == 'vmsav2'
-      puts n.normal_attrs.keys
-    end
+# `exec` can also receive a string, using the `-E` option, but heredoc is clearer.
+# Including recipes doesn't work.
+
+knife exec << 'RUBY'
+  # transform() finds nodes, and saves a node if the block returns a truthy value; it's undocumented,
+  # and located at `chef-X.Y.Z/lib/chef/shell/model_wrapper.rb`.
+  # The method search() doesn't save.
+  # Can pass :all to match all the nodes.
+  #
+  nodes.transform('name:web*') do |node|
+    # Chef::Node [documentation](rubydoc.info/gems/chef/Chef/Node).
+    #
+    puts "- #{node.name}: #{node.run_list}"
+
+    # Chef::RunList [documentation](rubydoc.info/gems/chef/Chef/RunList).
+    #
+    node.run_list.reset!('role[app_server]')
+
+    true
   end
 RUBY
 ```
@@ -445,3 +494,47 @@ gem install knife --version '=17.0.246' # keep reference: 17.0.242
 ```
 
 Besides being a hack, it depends on the system Ruby, which is a source of problems.
+
+## Useful stuff
+
+### Define resource dynamically
+
+Example of defining symlink resources, based on the content of a directory:
+
+```rb
+ruby_block "Ruby link resource definitions" do
+  block do
+    Dir.glob("/usr/lib/myruby/versions/myver/bin/*")).each do |binary_path|
+      symlink_path = File.join("/usr/bin", File.basename(binary_path))
+
+      Chef::Resource::Link.new(symlink_path, run_context).tap do |link_resource|
+        link_resource.to         binary_path
+        link_resource.run_action :create
+      end
+    end
+  end
+end
+```
+
+### Setting env vars when not supported
+
+Use this workaround:
+
+```rb
+  ruby_block "Set MAKE env var to CPU threads count" do
+    block    { ENV["MAKE"] = "make -j #{node[:cpu][:total]}" }
+    action   :run
+    notifies :install, "gem_package[mygem]", :immediately
+    notifies :run, "ruby_block[Unset MAKE env var]", :immediately
+  end
+
+  gem_package "mygem" do
+    version "1.2.3"
+    action  :nothing
+  end
+
+  ruby_block "Unset MAKE env var" do
+    block  { ENV["MAKE"] = nil }
+    action :nothing
+  end
+```

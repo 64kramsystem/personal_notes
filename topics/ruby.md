@@ -214,18 +214,18 @@ Generic conversion examples (consider constraints, where specified, e.g. "codepo
 
 |       input       |          output          | code                                                   | notes                                    |
 | :---------------: | :----------------------: | ------------------------------------------------------ | ---------------------------------------- |
-|       "0Aa"       |         "304161"         | `each_byte.map { [b] "%02X" % b }.join`                |                                          |
-|       "0Aa"       |         "304161"         | `bytes_arr.pack('c*').unpack1("H*")`                   |                                          |
+|       "0Aa"       |      "304161" (hex)      | `each_byte.map { [b] "%02X" % b }.join`                |                                          |
+|       "0Aa"       |      "304161" (hex)      | `bytes_arr.pack('c*').unpack1("H*")`                   |                                          |
 |    [0x77,0x0F]    |    "0111011100001111"    | `pack("C*").unpack1("B*")`                             | padded big endian 8-bits bit string      |
 |   [0,0xF,0,0xF]   | ["0111011100001111"] * 2 | `each_slice(2).map { [a] a.pack("C*").unpack1("B*") }` | (same as previous, but in 16-bit chunks) |
 |       "0Aa"       |        [48,65,97]        | `codepoints`                                           | valid codepoints                         |
+|        "í"        |        "\xC3\xAD"        | `bytes.pack("C*")`                                     |                                          |
 |   [48,65,0xFF]    |         "0A\xFF"         | `map(&:chr).join`                                      | non-ASCII chars are escaped              |
 |  [48,0x80,0x81]   |     "0\u0080\u0081"      | `pack('U*')`                                           | invalid codepoints are escaped           |
 | [1,2,3,4,5,6,7,8] |    "0807060504030201"    | `"%016x" % @input.pack("c*").unpack1("Q")`             | native endian unsigned qword bytes       |
 |        "A"        |            65            | `ord`                                                  | valid codepoint                          |
 |        65         |           chr            | `A`                                                    | non-ASCII chars are escaped              |
-|      "FFFF"       |          65535           | `hex` / `to_i(16)`                                     |                                          |
-|       4095        |          "fff"           | `to_s(16)`                                             | no padding!!                             |
+|       4095        |          "fff"           | `hex` / `to_s(16)`                                     | no padding!!                             |
 |       "123"       |           123            | `Integer(123)`                                         | (1) raise an error if invalid            |
 |       123.2       |           123            | `Integer(123.2)`                                       | (2) truncates                            |
 
@@ -356,9 +356,11 @@ end
 
 Flags:
 
-- `/m` : match newlines with `.`; WATCH OUT! This is like both Perl `sm`
+- `/m` : multiline mode: match newlines with `.` (`^`/`$` still match single lines); WATCH OUT! This is like Perl `s` (dot) + `m` (metachars)
 - `/x` : ignore whitespace and comments
 - `/u`, `/e`, `/s`, `/n` : force encodings; don't mistake `/s` for the Perl one!
+
+WATCH OUT! There is no `s` flag (see `m`).
 
 ```ruby
 Regexp.union(*strings_or_regexes)         # Generates a `/a|b|.../` Regexp instance; String expressions are escaped
@@ -409,7 +411,7 @@ $*   $ARGV                          # [ENG] the command line arguments
 $?   $CHILD_STATUS                  # [ENG] exit status of last executed child process
 $$   $PID, $PROCESS_ID              # [ENG] interpreter's process ID
 
-$~   $LAST_MATCH_INFO               # [ENG] MatchData instance for the last regexp match
+$~   $LAST_MATCH_INFO               # [ENG] MatchData instance for the last regexp match; better use `Regexp.last_match`
 $<n>                                # nth subexpression in the last match (same as $~[n])
 $&   $MATCH                         # [ENG] string last matched by regexp
 $+   $LAST_PAREN_MATCH              # [ENG] last match from the previous successful pattern match
@@ -623,6 +625,7 @@ enu.each_cons(n)                        # each overlapping subarray of `n` items
 enu.each_slice(n)                       # each non overlapping subarray of `n` items; last windows, if smaller, *is* included
 
 enum.each_with_index.drop(1).each {}    # skip the first N values of an iterator; WATCH OUT! not lazy (use lazy() if needed)
+enum.inject { |acc, entry| ... }        # without initial value, on the first cycle, (acc, entry) are the first and second entries
 ```
 
 ### Hash

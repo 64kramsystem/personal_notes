@@ -62,6 +62,7 @@ MyTable.where(cond1).or(MyTable.where(cond2))
 #
 column: 1..     # column >= 1
 column: 1...    # column >= 1 (!)
+column: ..7     # column <= 7
 column: ...7    # column < 7
 column: 1..7    # column BETWEEN 1 AND 7
 
@@ -122,9 +123,14 @@ table = Arel::Table.new("#{schema}.#{model.table_name}")
 
 updater = Arel::UpdateManager.new.table(table)
 
-set_values.each { |column, value| updater = updater.set(table[column] => value) }
-
-set_expressions.each do |column, sql| { updater = updater.set(table[column] => Arel.sql(sql)) }
+# `set_values` is a hash `column_name` => `value`, whose values are going to be quoted (by AREL);
+# `set_fxs` is the same, but values are not quoted.
+# UpdateManager#set() can't be invoked multiple times - each invocation overwrites the previous one.
+#
+all_sets = set_values
+  .merge(set_fxs.transform_values { |sql| Arel.sql(sql) })
+  .transform_keys { |column| table[column] }
+updater = updater.set(all_sets)
 
 updater = updater.where(table[filter_column].eq(filter_value))
 

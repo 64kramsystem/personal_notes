@@ -249,7 +249,7 @@ tar xv -O -f "$tarfile" metadata.gz | gunzip > "$outfile" # Extract a single fil
 
 # Rename destination files while extracting!!
 #
-# - Basic sed regex!!: Not supported (at least): +, \d...
+# - Basic sed regex!!: Not supported (at least): `+`, `\d`, ...
 # - The regex applies to the WHOLE name, so be careful when changing dir names
 # - Use --show-transform to display transformed names
 #
@@ -300,9 +300,9 @@ echo "<$(cat /tmp/fifo)>"
 ## Files
 
 ```sh
-mktemp --suffix="${filename##*.}"       # Create a temporary filename (using the extension of $filename)
-mktemp "${TMPDIR:-/tmp}/myprefix-XXXXX" # Mac-compatible, rather than using `--suffix`
-stat $filename --format='%s'            # Get file size
+mktemp --suffix="${filename##*.}"            # Create a temporary file (using the extension of $filename)
+mktemp [-d] "${TMPDIR:-/tmp}/myprefix-XXXXX" # Mac-compatible (opt. dir), without using `--suffix`
+stat $filename --format='%s'                 # Get file size
 ```
 
 Making a virtual file from the concatenation of multiple files:
@@ -390,7 +390,7 @@ In order to programmatically confirm the citation, must run as `echo "will cite"
 
 ### Using xargs
 
-Differently from GNU Parallel, the command can't be quoted.
+WATCH OUT! Differently from GNU Parallel, the command can't be quoted - use `bash -c` for that.
 
 - `-P <processes>`: use 0 for unlimited; based on the manpage, `-n` or `-L` should be used, but they weren't required with the personal use cases.
 
@@ -622,7 +622,7 @@ Clonezilla:
 ```sh
 # Setup, from 20.04.4 live CD. The package is a complete distaster; dependencies are not installed:
 #
-# - one old Ubuntus, partclone was not installed
+# - on old Ubuntus, partclone was not installed
 # - the compressions programs need to be installed (22.04 has zstd preinstalled)
 # - smartctl is also used, although it's not strictly required
 #
@@ -877,6 +877,7 @@ pdftk $input.pdf cat 1-29 31-end output $output.pdf
 #
 # Some sources use `-dPDFSETTINGS=/prepress` for the best quality, but the [manual](https://www.ghostscript.com/doc/VectorDevices.htm#PSPDF_IN)
 # specifies that for the best quality, the default should be used.
+# `-dPDFSETTINGS=/ebook` gives a strong compression, with still good quality.
 #
 gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dNOPAUSE -dBATCH -sOutputFile=$out $in
 
@@ -947,6 +948,13 @@ for f in *.ORF; do darktable-cli "$f" "$f".jpg; done
 # Table (columns) formatting
 #
 # `-t`: automatically determine columns based on whitespace
+#
+# For tabs, use $'\t'
+#
+# In order to format a diff, normalize the inputs, and reformat the diff output:
+#
+#   diff <(tr $'\t' ' ' <<< "$reference") <(tr $'\t' ' ' <<< "$current") | column -s $'\t' -t
+#
 #
 column -s $separators -t
 

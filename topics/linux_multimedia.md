@@ -14,12 +14,13 @@
       - [Extract segment](#extract-segment)
       - [Split by duration, starting on a keyframe](#split-by-duration-starting-on-a-keyframe)
       - [Concatenate videos](#concatenate-videos)
-      - [Interlacing](#interlacing)
-    - [Scaling](#scaling)
+      - [Deinterlacing](#deinterlacing)
+      - [Deinterlacing via Vapoursynth+QTGMC (+VS install)](#deinterlacing-via-vapoursynthqtgmc-vs-install)
+    - [Scaling (Resizing)](#scaling-resizing)
     - [Other operations](#other-operations)
       - [Snippets](#snippets)
       - [Build FFmpeg with libfdk-aac support](#build-ffmpeg-with-libfdk-aac-support)
-  - [DVD-related (incl. subtitles)](#dvd-related-incl-subtitles)
+  - [DVD-related](#dvd-related)
   - [Other A/V operations](#other-av-operations)
 
 ## FFmpeg/Avconv
@@ -31,6 +32,8 @@
   - `-an`                         : Ignore audio
 - `-c:v $codec`                   : Video codec
   - `-vn`                         : Ignore video
+
+In order to apply multiple filters of a given stream (eg. `-vf`), separate them with a comma; for simplicity, surround them with double quotes.
 
 ### Conversion
 
@@ -49,7 +52,7 @@ M4A (FDK-AAC `-c:a libfdk_aac`):
 WAV:
 - `-f wav`; specify format; optional if the output has the extension.
 
-h265 (libx265: `-c:v libx265`):
+h265 (libx265: `-c:v libx265`; see [test](#libx265-test)):
 
 - `-crf 25 -preset slower`: VBR (CRF); use x265
   - CRF: best:0, default:28, worst:51
@@ -86,27 +89,12 @@ find /tmp/z/*.m4a | parallel 'ffmpeg -i {} {}.wav && sox {}.wav -n spectrogram -
 ) | ruby
 ```
 
-Convert unencrypted VOBs to h265:
-
-```sh
-# Inspect the audio and if it's 192kb, decide if copy or compress it (see comment).
-# On a test movie, 192kb ac3 was 148 MB, aac (q3, 44 kHz) 70 MB
-#
-ffprobe VTS_01_1.VOB
-
-ffmpeg \
-  -i "concat:$(ls -1 *.VOB | tr $'\n' '|')" \
-  -ac 2 -ar 44100 -c:a libfdk_aac -vbr 3 `# -c:a copy` \
-  -c:v libx265 -crf 25 -preset slower \
-  /tmp/output.mkv
-```
-
 #### libfdk-aac test
 
 Tested on 4 albums of different genre; kbps/khz ~cutoff:
 
-- 5: 225/19
-- 4: 149/16.5
+- 5: 225/19          # not necessarily so high on all albums
+- 4: 149/16.5        # probably a good balance
 - 3: 115/16
 - 2:  99/13
 - 1: 102/13 (!!)
@@ -161,10 +149,12 @@ Convenient template:
 ```sh
 # x265 requires the width to be a multiple of 2.
 #
-ffmpeg -i source.mp4 \
-  -filter:v scale=-2:540 -c:v libx265 -crf 25 -preset veryslow \
-  -pix_fmt yuv420p10le -x265-params asm=avx512 \
+ffmpeg \
+  -i source.mp4 \
   -an `# -ar 44100 -c:a libfdk_aac -vbr 3` \
+  -filter:v scale=-2:540 \
+  -c:v libx265 -crf 25 -preset slower \
+  -pix_fmt yuv420p10le -x265-params asm=avx512 \
   dest.mkv
 ```
 
@@ -268,19 +258,92 @@ LIST
 
 For formats supporting it (ie. MPEG-2), can use the `concat` filter: `-i "concat:input1|input2...`.
 
-#### Interlacing
+#### Deinterlacing
+
+Deinterlacing can save significant space. Algorithms are tricky business; the most common options are:
+
+- yadif
+- bwdif (but it doesn't support content-based interlacing detection)
+- nnedi3
+- QTGMC (requires Vapoursynth)
+
+Possibly, there isn't any best, and yadif is still a good enough and simple option; some references:
+
+- https://forum.videohelp.com/threads/404164-Why-is-QTGMC-so-destructive-and-why-do-so-many-people-still-recommend-it#post2642350
+- http://macilatthefront.blogspot.com/2021/05/which-deinterlacing-algorithm-is-best.html
+- https://www.reddit.com/r/ffmpeg/comments/d3cwxp/what_is_the_difference_between_bwdif_and_yadif1
+- https://www.reddit.com/r/ffmpeg/comments/kw0uea/how_to_use_the_nnedi_deinterlace_video_filter_on
+- http://wp.xin.at/archives/5287
 
 ```sh
-# check if source is interlaced (`field_order=tt` or `field_order=bb`)
+# Check if source is interlaced (`field_order=tt` or `field_order=bb`).
+# WATCH OUT! It can be inaccurate, and shouldn't be relied on.
 #
 ffprobe -v error -show_entries stream=codec_name,width,height,field_order -of default=noprint_wrappers=1 -select_streams v input.vob
 
 # Deinterlace filter (potential impact on progressive sources, so best to use only when necessary)
 #
--vf ("yadif" | "yadif=mode=0")  # enforced|automatic
+-vf (yadif | yadif=mode=0)  # (enforced | automatic (per-frame))
 ```
 
-### Scaling
+#### Deinterlacing via Vapoursynth+QTGMC (+VS install)
+
+WATCH OUT!! QTGMC assumes that the whole stream is interlaced.
+
+Install on Ubuntu:
+
+```sh
+# New version required; don't use the system-provided
+#
+pip3 install cython
+
+# New version required
+#
+download_ubuntu_packages --download-to /tmp --release noble libzimg-dev libzimg2; sudo dpkg -i /tmp/*libzimg*.deb
+
+# The install job installs some files in the project(!)
+#
+make
+make install
+
+# Set this in order to run `vspipe` (see github.com/vapoursynth/vapoursynth/issues/826#issuecomment-1913137070)
+#
+export PYTHONPATH="$(python3 -c 'import site; print(site.getusersitepackages())')":$PYTHONPATH
+```
+
+Deinterlace (Edited CGPT answer; **to verify**):
+
+```sh
+# Extract streams chapters (video can be ignored, but it's a bit tedious)
+
+mkvmerge -o source_with_chapters.mkv --chapters ./VTS_01_0.IFO VTS_01_1.VOB
+
+# Create VS script
+
+cat > /tmp/deint.py << 'PYTHON'
+import vapoursynth as vs
+
+clip = vs.core.ffms2.Source(source='source_with_chapters.mkv')
+
+# Use the `Slower` default, which is very good already.
+deinterlaced_clip = vs.core.qtgmc.QTGMC(clip)
+
+deinterlaced_clip.set_output()
+PYTHON
+
+# Encode the video stream (simplified ffmpeg command)
+
+vspipe --y4m deinterlace.vpy - | ffmpeg -i - -c:v libx265 deinterlaced_video.mkv
+
+# Mux the streams
+
+ffmpeg \
+  -i deinterlaced_video.mkv -i source_with_chapters.mkv \
+  -map 0:v -map 1:a -map_chapters 1 -c copy \
+  final_output.mkv
+```
+
+### Scaling (Resizing)
 
 Audio:
 
@@ -289,12 +352,15 @@ Audio:
 - `-ar 44100`                         : Downsample
 - `-af 'pan=stereo|c0<c0+c1|c1<c0+c1'`: Mix both audio channels into two channels (https://trac.ffmpeg.org/wiki/AudioChannelManipulation)
 
-Video:
+Video (`-vf scale=`):
 
-- `-vf scale=w=800:h=600:force_original_aspect_ratio=decrease` : Fit within the specified dimensions with the same aspect ratio, eg. 1280x720 -> 800*450
-                                                                 (https://trac.ffmpeg.org/wiki/Scaling).
-- `-vf scale=800:600 -aspect 4:3`                              : Enforce an aspect ratio
-- `-filter:v scale=-2:540`                                     : Keep width proportional and n* (works also for height)
+- `-2:540`                                           : Keep one dimension proportional and multiple of n (width,2); use -1 for
+                                                       simple scaling
+- `w=800:h=600:force_original_aspect_ratio=decrease` : Fit into the specified dimensions, keeping the AR (1280x720 -> 800*450)
+- `scale='min(iw,ih*4/3)':'min(ih,iw*3/4)'`          : Scale one (automatically chosen) axis, to match the given AR (4/3), with
+                                                       square pixels
+
+WATCH OUT! The end user AR is the "DAR", not the SAR. ffmpeg doesn't make the DAR values available.
 
 ### Other operations
 
@@ -363,7 +429,39 @@ git checkout release/"$latest_release"
 make -j $(nproc)
 ```
 
-## DVD-related (incl. subtitles)
+## DVD-related
+
+Convert unencrypted VOBs to h265:
+
+```sh
+# Before converting, inspect the audio and if it's 192kb, decide if copy or compress it (see comment).
+# On a test movie, 192kb ac3 was 148 MB, aac (q3, 44 kHz) 70 MB
+#
+ffprobe VTS_01_1.VOB
+
+# See [libx265 quality test](#libx265-test) for a reference.
+# See [Scaling](#scaling-resizing) and [Deinterlacing](#deinterlacing) for the video filtering option;
+# Scaling 576 to 540 can be very hard to notice; deinterlacing significantly improves compression.
+#
+dar_wh=4/3
+deint_flt= # "yadif=mode=0,"
+
+dar_hw=${dar_wh##*/}/${dar_wh%%/*}
+ffmpeg \
+  -i "concat:$(ls -1 *.VOB | tr $'\n' '|')" \
+  -ac 2 -ar 44100 -c:a libfdk_aac -vbr 3 `# -c:a copy` \
+  -vf "${deint_flt}scale='min(iw,ih*"$dar_wh")':'min(ih,iw*$dar_hw)'" `# deinterlace and make pixels square` \
+  -c:v libx265 -crf 25 -preset slower \
+  -pix_fmt yuv420p10le -x265-params asm=avx512 \
+  dest.mkv
+
+# In order to compress in parallel, can use the snippets:
+ls -1 *.VOB \
+  | perl -pe 's/.VOB$//' \
+  | xargs -P 5 -I {} ffmpeg -i "{}.VOB" \
+  `# ...` \
+  "{}.mkv"
+```
 
 Subs:
 
@@ -384,10 +482,31 @@ ffprobe -probesize 1G -analyzeduration 1G -i 'concat:video_ts/vts_01_1.vob|...'
 # It's not possible to logically concatenate multiple VOB input files.
 # In order to store multiple subs into a pair of VobSub files, need to use `mkvmerge`.
 # It's not clear how to set the language of the VobSub (IDX) file; `-slang` doesn't do it.
-#
-lsdvd -s video_ts # most reliable
+
+# most reliable
+lsdvd -s video_ts
+# creates $subfile.idx and $subfile.idx.sub; the generated id (language) is `xx`
 mencoder $vob_file -nosound -oac copy -ovc copy -o /dev/null -vobsubout $subfile -sid 0x20
+# lang example: `en`
 SUB_LANG=$lang_short perl -0777 -i -pe 's/^id: \K\w+/$ENV{SUB_LANG}/m' "$sub_file".idx
+```
+
+Chapters:
+
+```sh
+# ffmpeg doesn't support extracting chapter markers from VOBs (IFOs, more precisely; CGPT answers don't
+# take this into account), so first, they must be extracted by another tool.
+#
+# WATCH OUT!!:
+# - the DVD IFO file is required, in addition to the VOB's
+# - the chapters file path (e.g. `./`) is required!
+#
+mkvmerge -o temp-with-chapters.mkv --chapters ./VTS_01_0.IFO VTS_01_1.VOB
+
+# ffmpeg will copy the chapter informations automatically; for more complex cases, see:
+#
+# - `-map_chapters 0`: copy the first chapter stream
+# - `-map 0`:          copy all streams, including chapters
 ```
 
 ## Other A/V operations
@@ -414,7 +533,7 @@ Rip Youtube video:
 
 ```sh
 yt-dlp -F     $link # display formats
-yt-dlp -f $id $link # donwload the given video id (see -F)
+yt-dlp -f $id $link # download the given video id (see -F)
 ```
 
 Display spectrogram:

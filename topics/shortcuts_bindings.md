@@ -20,6 +20,7 @@
     - [vimdiff](#vimdiff)
     - [modeline](#modeline)
   - [Other program shortcuts](#other-program-shortcuts)
+  - [Laptops](#laptops)
 
 ## Notes
 
@@ -249,6 +250,11 @@ Firefox:
 - `Ctrl+Shift+O`            Bookmarks editor
 - `Ctrl+., <number>`        Containers extension: display menu, and open new tab with given container
 
+Google meet:
+
+- `Ctrl+Alt+H`              Raise hand
+- `Ctrl+D`                  Dis/Enable microphone
+
 htop:
 
 - `h`: help
@@ -289,3 +295,17 @@ VMWare:
 Thunderbird:
 
 `Ctrl+Shift+C`             Add CC when composing an email
+
+## Laptops
+
+| Laptop                | BIOS  | Boot  |
+| --------------------- | :---: | :---: |
+| Yoga 7 Gen 7 AMD      |  F2   |  F12  |
+| Chuwi Miniboox X N100 |  F2   |   ?   |
+
+Couldn't find the boot key.
+
+Disable the entry from the NVME-specific priorities list:
+
+- the machine prioritizes booting from the disk regardless of the settings
+- even with the priority disabled, it still boots if no flash key is connected

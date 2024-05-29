@@ -77,6 +77,9 @@ resp = client.start_instances({
 Find all the target group arns:
 
 ```rb
+# See https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ElasticLoadBalancingV2/Client.html#describe_target_groups-instance_method
+# As of Jan/2024, filtering options are very limited (LB/TG ARN, TG name)
+
 target_groups_data, next_page = @lb_client.describe_target_groups
 
 raise "Next page found while calling :describe_target_groups" if next_page

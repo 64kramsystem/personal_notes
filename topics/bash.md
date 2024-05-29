@@ -33,7 +33,7 @@
   - [Associative arrays](#associative-arrays)
   - [Shellcheck](#shellcheck)
   - [Script operational concepts/Useful scripts](#script-operational-conceptsuseful-scripts)
-    - [Split a string (single/multi-char delimiter)](#split-a-string-singlemulti-char-delimiter)
+    - [Split a string (single/multi-char delimiter) into an array](#split-a-string-singlemulti-char-delimiter-into-an-array)
     - [Ask for input (keypress)](#ask-for-input-keypress)
     - [Error handling](#error-handling)
       - [Simulating error bubbling (unexpected `set -o errexit` behavior)](#simulating-error-bubbling-unexpected-set--o-errexit-behavior)
@@ -147,11 +147,10 @@ local myvar1 myvar2                 # declare multiple local variables in one st
 ((var+=1))                          # increment variable value
 ((var++)) || true                   # increment variable value. WATCH OUT!!! `|| true` is required if var=0 before the increment/decrement!!!!
 
-# Indirect variable referencing
+# Indirect variable referencing; works also with associative arrays!!
 #
-declare -n myvar=var_name_ref       # bash only; watch out! `unset` will unset also the source var!
-echo ${!var_name_ref}               # bash only
-eval local myvar2=\$$var_name_ref   # works both on bash/zsh; this shows how to use local modifier
+declare -n var_ref=var              # bash only; `-n` creates a reference; WATCH OUT! `unset` will unset also the source var!
+eval local var_ref=\$$var           # works both on bash/zsh; this shows how to use local modifier
 
 myvar=$(nonexiting_command 2>&1)    # the assignment value is stdout's output; for stderr we need redirection (eg. see whiptail)
 
@@ -318,16 +317,12 @@ if { $commands; } || { $commands; }     # conditional with commands (for simple 
 if (( lhs < rhs ))                      # arithmetic comparison (dollars are not required)
 ```
 
-WATCH OUT!! Compact conditionals effectively exit with error, when they evaluate to false:
+WATCH OUT!! In "compact conditional statements", the conditional itself doesn't cause an exit (because it's a conditional), but dependent commands can:
 
 ```sh
-# They can be used when there is an OR condition:
-#
-[[ -n $v_smt_on ]] && echo 2 || echo 1 # never exits
-#
-# But not without:
-#
-[[ -n $v_smt_on ]] && echo 2           # exits on false evaluation
+set -o errexit
+[[ $var == foo ]] && true                    # never cause an exit
+[[ $var == foo ]] && echo "$bar" | grep baz  # can exit, due to grep !!!
 ```
 
 Note that the left side of a condition (or the only one on prefix operators) doesn't need to be escaped.
@@ -645,12 +640,14 @@ ${str%foo*}bar${str##*foo}        # replace last occurrence; WATCH OUT! The sear
 Fun tricks/other stuff:
 
 ```sh
-printf '<SAV>%.0s' {1..10}        # repeat a string
-echo "  ab  " | xargs             # strip/trim leading and trailing whitespace; compresses spaces; !! adds a newline !!
-echo "  a  b  c  " | tr -s ' '    # squeeze (compress) consecutive sequences of the given char
-echo $'a \n'  | perl -pe chomp    # (`a `) strip one trailing whitespace,
+printf '<SAV>%.0s' {1..10}            # repeat a string
 
-printf "%05d\n" $n                # add leading zeros; this is a standard printf, so the standard functionalities apply
+... | xargs                           # strip/trim leading and trailing whitespace; compresses spaces; !! adds a newline !!
+... | tr -s ' '                       # squeeze (compress) consecutive sequences of the given char
+... | perl -pe chomp                  # strip one trailing whitespace,
+... | perl -0777 -pe 's/^\s+|\s+$//g' # trim leading and trailing whitespace
+
+printf "%05d\n" $n                    # add leading zeros; this is a standard printf, so the standard functionalities apply
 ```
 
 ### Examples
@@ -807,13 +804,15 @@ If it isn't, and readers must be killed before receiving EOF, and a complex (and
 
 Note that arrays in zsh work in slightly different ways, so scripts involving them should be shell-specific.
 
-WATCH OUT!! Arrays [can't be exported](https://stackoverflow.com/a/21941473/210029)!!
+WATCH OUT!!: Arrays can't be directly exported; there are [workarounds](https://stackoverflow.com/a/21941473/210029)!!
 
-Creation:
+Declaration:
 
 ```sh
-declare -a $array_name              # create an empty array; local by default
-myarray=(                           # create a filled array; space/newline is separator
+declare -a $myarray                 # declare an empty array; scope is the innermost (e.g. local if in a function)
+local -a $myarray                   # declare a local empty array
+
+[local] myarray=(                   # define a local/global filled array; space/newline is separator
   "entry 1" # comment allowed!
   entry2
 )
@@ -871,7 +870,7 @@ echo "${@[1]}"        # NOT SUPPORTED!
 echo "${@:1:1}"       # Use this to access a single entry
 echo "${@:-1}"        # Use this to access the last entry
 echo "${@}"           # DAFUQ!!! Doesn't include $0
-echo "${@:0}"         # Includes $0 (Ruby [0..])
+echo "${@:0}"         # Includes $0 (Ruby [0..]); WATCH OUT! $0 is the program name
 echo "${@:1:${#@}-1}" # DAFUQ!!! $#@ doesn't count $0, so must account when accessing by a length expression
 echo ${*:${#@}}       # Last element
 
@@ -918,38 +917,43 @@ mapfile -td$'\n' sorted_arr < <(printf $'%s\n' "${my_arr[@]}" | sort -k 2)
 Iterate a multiple lines output, assigning it to an array:
 
 ```sh
-# `IFS=` prevents leading/trailing line whitespace to be trimmed
+binlogs=$(mysql -u"$my_user" -p"$my_pwd" -h"$my_host" -BNe 'SHOW BINARY LOGS')
+
 # `-r` prevents interpreting the escape character (`\`)
 # `-a` splits the tokens (by space) into an array; not supported by Zsh.
 #
-binlogs=$(mysql -u"$my_user" -p"$my_pwd" -h"$my_host" -BNe 'SHOW BINARY LOGS')
-
 # WATCH OUT!
 #
-# - If $binlogs has a trailing newline, a cycle with a blank value will be executed; for this
-#   case, use `< <(echo -n ...)` or similar
+# - Line surrounding whitespace is trimmed (if `IFS= ` is used, each whole line will be stored
+#   in binlog[0])
+# - If the last line doesn't have a newline, it's not yielded (!); if it's an empty line, an empty
+#   value is yielded. Therefore, consider both the input and the effect of `<<<`; in order not
+#   to append a newline, use `< <(echo -n ...)`.
 # - If the output program reads from stdin (e.g. ffmpeg), append '< /dev/null' (or use specific
 #   program options); see https://www.shellcheck.net/wiki/SC2095
 #
-while IFS= read -r -a binlog; do
+while read -r -a binlog; do
   echo Filename: "${binlog[0]}", Position: "${binlog[1]}"
 done <<< "$binlogs"
 
 # Version with process substitution (and without array splitting)
+# `IFS=` prevents surrounding whitespace trimming
 #
 while IFS= read -r myvar; do myprocess "$myvar"; done < <(mycommand)
 ```
 
 ## Associative arrays
 
+See array notes in the [related section](#arrays).
+
 See https://www.artificialworlds.net/blog/2012/10/17/bash-associative-array-examples.
 
-WATCH OUT!! Arrays [can't be exported](https://stackoverflow.com/a/21941473/210029)!!
-
 ```sh
-declare -A MYHASH                    # explicit creation
-declare -A MYHASH=([foo]=1 [bar]=2)  # explicit creation with multiple values (it's possible to quote both keys and values)
-MYHASH[foo bar]=baz                  # implicit creation; quotes not required inside the brackets
+# Quotes inside the brackets are optional
+
+declare -A MYHASH                    # explicit declaration; scope is the innermost (e.g. local if in a function)
+declare -A MYHASH=([foo]=1 [bar]=2)  # explicit definition with multiple values
+[local] MYHASH[foo bar]=baz          # implicit local/global definition (single value only)
 unset MYHASH                         # destruction
 MYHASH=()                            # empty the hash
 
@@ -967,10 +971,15 @@ echo ${!MYHASH[@]}                   # keys
 echo ${#MYHASH[@]}                   # size
 declare -p MYHASH                    # print the AA (in declaration form)
 
-# Iterate.
-# in order to iterate the sorted keys, use `mapfile` as in the Arrays section
+# Iterate; in order to safely iterate the sorted keys, use `mapfile` as in the Arrays section.
 #
-for key in "${!MYHASH[@]}"; do val=${MYHASH[$key]}; echo "$key=$val"; done
+for key in "${!MYHASH[@]}"; do
+  val=${MYHASH[$key]}
+done
+
+# Unsafe sorted keys iteration.
+#
+for key in $(printf "%s\n" "${!MYHASH[@]}" | sort); do :; done
 
 # Test if a variable is an associate array (!!)
 # `declare -p` prints the declaration; writes to stderr if the variable doesn't exist
@@ -1011,7 +1020,7 @@ run shellcheck with the options:
 
 ## Script operational concepts/Useful scripts
 
-### Split a string (single/multi-char delimiter)
+### Split a string (single/multi-char delimiter) into an array
 
 Reference: https://stackoverflow.com/a/45201229.
 

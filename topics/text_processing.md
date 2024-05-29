@@ -831,6 +831,28 @@ JSON
 # ]
 ```
 
+Conversion of a Bash associative array to a JSON hash:
+
+```sh
+# Generalized
+
+jq_args=(-n)
+jq_template={
+for key in "${!myhash[@]}"; do
+  jq_args+=("--arg" "$key" "${myhash[$key]}")
+  jq_template+="\"$key\": \$$key, "
+done
+jq_template="${jq_template::-2}}" # replaces trailing comma/space with closing brace
+
+jq "${jq_args[@]}" "$jq_template"
+
+# Fixed
+
+jq -n \
+  --arg title "$2" --arg text "$3" --arg color "$4" \
+  '{"color": $color, "title": $title, "text": $text}'
+```
+
 ### Arrays
 
 Array iteration/filtering:
