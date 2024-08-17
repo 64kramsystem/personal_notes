@@ -151,7 +151,7 @@ Convenient template:
 #
 ffmpeg \
   -i source.mp4 \
-  -an `# -ar 44100 -c:a libfdk_aac -vbr 3` \
+  -an `# -ar 44100 -c:a libfdk_aac -vbr 3` `# -c:a copy` \
   -filter:v scale=-2:540 \
   -c:v libx265 -crf 25 -preset slower \
   -pix_fmt yuv420p10le -x265-params asm=avx512 \
@@ -210,7 +210,9 @@ ffmpeg -i $input -vn -map 0:a:1 -c copy $audio_output
 
 #### Lossless split (trim) m4a
 
-See http://uber-rob.co.uk/2014/02/splittingcutting-an-m4a-file.
+Can use: github.com/mifi/lossless-cut/releases.
+
+See uber-rob.co.uk/2014/02/splittingcutting-an-m4a-file.
 
 ```sh
 # Add `-vn` if there is video

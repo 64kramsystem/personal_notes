@@ -1,10 +1,26 @@
+## Sat 17/Aug/2024
+
+- Btrfs studies
+  - [x] Review and expand basics
+  - [x] Massive fight with snapshots
+
+## Tue 04/Jun/2024
+
+- Project: Openscripts
+  - `build_kernel`
+    - [x] build_kernel: Check destination directory
+    - [x] build_kernel: Fix bug in find_latest_kernel_version()
+    - [x] build_kernel: Add support for RCs
+
 ## Wed 29/May/2024
 
 - Project: Openscripts
-  - upgrade_bluez_from_source
-  - [x] Update only if the current version is not the latest.
-  - [x] Always uninstall the current version
-  - [x] Use local tags when finding the latest version
+  - `upgrade_bluez_from_source`
+    - [x] Always uninstall the current version
+    - [x] Update only if the current version is not the latest.
+    - [x] Attempt to perform a shallow repository clone
+    - [x] Cosmetic cleanups
+    - [x] Cache sudo
 
 ## Mon 29/Apr/2024
 

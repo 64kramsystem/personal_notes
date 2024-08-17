@@ -73,9 +73,12 @@ It's possible to create a cache directory (`vendor/cache`), but it's all-or-noth
 When one wants to run outside of the bundler context:
 
 ```rb
-# Seems not to have (full) effect inside a Rails context.
+# Watch out! It's the *environment*, that is, any subshell, not the Ruby context.
+#
 Bundler.with_unbundled_env { `passenger-status` }
 ```
+
+If one wants to run without Bundler, it's best to invoke `ruby` without Bundler, and if one really needs it at some point, can use `require "bundler/setup"`, which will activate Bundler.
 
 ## Gem
 

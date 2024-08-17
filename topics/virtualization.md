@@ -14,6 +14,7 @@
       - [Modules compilation/install](#modules-compilationinstall)
       - [General issues/tweaks](#general-issuestweaks)
       - [Network fix](#network-fix)
+      - [Commandline Management](#commandline-management)
     - [VirtualBox](#virtualbox)
     - [QEMU](#qemu)
       - [Usermode](#usermode)
@@ -174,7 +175,9 @@ Easy way, via libguestfs-tools:
 ```sh
 # $block_device is /dev/sdaN; typically a partition, but can be the entire disk (e.g. busybear image).
 #
-sudo guestmount -a $image -m $block_device $mountpoint
+# - `-r|--ro`: readonly
+#
+sudo guestmount -a $image -m $block_device [-r|--ro] $mountpoint
 
 # WATCH OUT!
 #
@@ -300,6 +303,12 @@ index 2c5a24a..c98178b 100644
 +
     userIf = (VNetUserIF *)port->jack.private;
     hubJack = port->jack.peer;
+```
+
+#### Commandline Management
+
+```sh
+vmrun stop /path/to/vmname.vmx  # poweroff
 ```
 
 ### VirtualBox

@@ -334,7 +334,7 @@ Prefix Operators:
 - `-z $string`          string is empty
 - `-n $string`          string is not empty
 
-- `-v var_no_dollar`    for scalars: test if variable has been declared; WATCH OUT: don't prefix with the dollar!
+- `-v var_no_dollar`    for scalars: test if variable has been declared/defined; WATCH OUT: don't prefix with the dollar!
                         interpolation is allowed (`-v $indirect_var`), to test a var whose name is stored in another
 
 - `-e $filename`        file/directory/symlink exists; symlink is followed before checking!
@@ -345,7 +345,7 @@ Prefix Operators:
 - `-L $filename`        file/directory is a symlink
 - `-b $filename`        file is a block device
 
-- `! -s $filename`      file is empty (or doesn't exit); any character makes the file not empty
+- `-s $filename`        file exists and it has any char in it; negate to test empty/nonexisting file
 
 - `-t 0`                input is terminal (false if stdin)
 
@@ -964,7 +964,7 @@ eval declare -A MYHASH=\("$content"\)
 echo ${MYHASH[foo]}                  # access an entry
 echo ${MYHASH[foo]:-bar}             # empty var substitution works!
 unset MYHASH[foo]                    # remove an entry
-[[ -v MYHASH[foo] ]]                 # test if a key exists
+[[ -v MYHASH[foo] ]]                 # test if a key exists (is defined)
 
 echo ${MYHASH[@]}                    # values (!!!)
 echo ${!MYHASH[@]}                   # keys
@@ -1139,9 +1139,11 @@ function remove_lockfile {
 
 trap remove_lockfile EXIT
 
-# It's possible to nest functions (!). But WATCH OUT!! The hooked function can't access local variables when it's invoked!
+# It's possible to nest functions (!); WATCH OUT!! The hooked function can't access local variables when it's invoked!
 #
 function register_exit_hook {
+  # don't make it local, otherwise it won't be available to _exit_hook()!!!
+  LOCKFILE="/tmp/mylockfile"
   function _exit_hook { rm -f "$LOCKFILE"; }
   trap _exit_hook EXIT
 }
@@ -1150,16 +1152,23 @@ function register_exit_hook {
 ### Log a script output/Enable debugging (log)
 
 ```sh
-# stdout/stderr log (can share the file with the debugging log below).
+# Send stdout/stderr also to a logfile.
+# `-i`: don't terminate immediately tee in case of interrupt signal (tee will regardless terminate when
+# the script exits).
+# WATCH OUT! Without `-a` (append), in at least one case, a part (the top) of the log was missing.
 #
-exec > >(tee -i "$logfile")
-exec 2>&1
+rm -f "$logfile"
+exec > >(tee -ai "$logfile") 2>&1
 
-# Debugging log (doesn't include stdout/stderr!)
+# Debugging log; includes stdout/stderr content (see above).
 #
-exec 5> "$logfile"
-BASH_XTRACEFD="5"
-set -x
+function setup_logging {
+  exec 5> "$logfile"
+  BASH_XTRACEFD=5
+  rm -f "$logfile"
+  exec > >(tee -ai "$logfile") 2>&1
+  set -x
+}
 
 # Make debugging log more informative.
 export PS4='+ ${BASH_SOURCE:-}:${FUNCNAME[0]:-}:L${LINENO:-}:   '
@@ -1238,6 +1247,11 @@ Switch to root user inside a script; this is not possible, but there is a workar
 function prepare_sudo {
   if [[ $(id -u) -ne 0 ]]; then
     # Avoids having to call `sudo`.
+    #
+    # WATCH OUT! Doesn't export the environment. Use `-E` if needed (and supported).
+    # `sudo env K=V...` can't be used, unless /usr/bin/env is in the sudoers
+    # Another workaround is to dump the variables into a temp file and source it.
+    #
     sudo "$0" "$@"
     exit $?
   else
