@@ -49,16 +49,18 @@ The VIM section requires some cleanup.
 - `Ctrl+(↓/↑)`                 Scroll the viewport without moving the cursor
 - `F8`                        Show next warning/error
 - `Ctrl+@`                    Open link in browser (custom)
+
 - `Ctrl+K, F`                 Go to parent fold (parent of current level) (custom)
 - `Ctrl+K, G`                 Go to next folding range (next sibling of current level) (custom)
+- `Ctrl+Shift` + `[`/`]`      Fold/unfold
+- `Ctrl+K, Ctrl+0`            Fold all
+- `Ctrl+K, Ctrl+J`            Unfold all (expand)
 
 - `Alt+Shift+(↓/↑)`           Column (box) selection
 - `Alt+C`                     Search box: Match case
 - `Alt+R`                     Search box: Regex
 - `Alt+L`                     Search box: Switch to replace inside selection (after `Ctrl+H`); it doesn't support block selection↵
                               See option `Auto Find in Selection` (can be annoying).
-- `Ctrl+Shift+[`              Fold
-- `Ctrl+K, Ctrl+J`            Unfold all (expand)
 - `Alt+Shift+f`               Search in selected directory
 - `Ctrl+Shift+f`              Search in workspace
 
@@ -302,6 +304,8 @@ Thunderbird:
 | --------------------- | :---: | :---: |
 | Yoga 7 Gen 7 AMD      |  F2   |  F12  |
 | Chuwi Miniboox X N100 |  F2   |   ?   |
+
+Minibook:
 
 Couldn't find the boot key.
 

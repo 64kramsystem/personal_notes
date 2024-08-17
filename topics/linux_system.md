@@ -1090,10 +1090,13 @@ nvme0n1p3_crypt UUID=foo none luks,discard
 
 ## sysctl
 
+`/etc/sysctl.d` files are read in lexicographic order; in order to go past `99-`, use `99a-` and similar, NOT `100-`.
+
 ```sh
-sudo sysctl -a                                                                   # list all values
-sysctl -w kernel.perf_event_paranoid=1                                           # set a value
-echo "kernel.perf_event_paranoid = 1" > /etc/sysctl.d/50-allow-perf-nonroot.conf # make a value permanent
+sysctl -a                                             # list all values
+sysctl -w kernel.perf_event_paranoid=1                # set a value
+echo "my.value = 1" > /etc/sysctl.d/50-mysetting.conf # make a value permanent
+sysctl --system                                       # reload values from sys dirs; also lists the load order!
 ```
 
 ## Modules

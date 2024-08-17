@@ -241,8 +241,12 @@ Environment="DISPLAY=:0" "XAUTHORITY=/home/myuser/.Xauthority"
 #
 # WATCH OUT! The PATH needs to be absolute; `WorkingDirectory` does not make relative paths work.
 #
+# WATCH OUT! For similar reasons, redirection is not possible! Use `Standard*`.
+#
 ExecStart=/usr/bin/bundle exec my_command
 ExecReload=/bin/kill -HUP $MAINPID
+StandardOutput=append:/var/log/bundler.log
+StandardError=append:/var/log/bundler.log
 
 # Execute a command before the killing procedure.
 # See https://www.freedesktop.org/software/systemd/man/systemd.service.html and https://www.freedesktop.org/software/systemd/man/systemd.kill.html.

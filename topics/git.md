@@ -690,6 +690,9 @@ gitk --all $(git fsck --no-reflog | awk '/dangling commit/ {print $3}')
 git show $(git fsck --unreachable | git cat-file --batch-check | awk '/commit/ { print $3 }')
 ```
 
+WATCH OUT!! `revert` is inconsistent: if the commit has already been applied, it exits with error, but outputs to stdout; additionally, it will cause `revert --abort` to fail (which in turn, outputs to stderr instead). 🤷
+
+
 ### Find/set the default branch
 
 The rev-parse strategy works only for cloned repositories (see https://stackoverflow.com/q/17639383/210029), so if it's not present, we add it.
