@@ -270,13 +270,13 @@ $ (cd /path && tar cf *.xml)
 ```sh
 # Include only some files, in the current dir. The slice suffix (.<n>.dar) can't be avoided.
 #
-dar -c archive.dar \
-  -g zeus.json \
-  -g Gemfile
-
-# Use zstd (level 3) (don't put a space), 4 threads (can't use for streaming)
+# -vt -vs : progress, only included/excluded files
+# -z -G   : use zstd (level 3) (don't put a space), 4 threads (can't use for streaming)
 #
-dar -c archive.dar -zzstd:3 -G 4
+dar -vt -vs \
+  -c archive.dar \
+  -zzstd:3 -G 4 \
+  -g zeus.json -g Gemfile
 
 # Set root dir; exclude files
 #
@@ -284,6 +284,16 @@ dar -c archive.dar \
   -R / \
   -P "etc/netplan/01-network-manager-all.yaml"                  --alter=delete \
   -P "saverio/.local/share/data/Mega Limited/MEGAsync/*.socket" --alter=delete
+
+# Extract archive.
+# IMPORTANT! dar restores the intermediate directories original owner, differently from tar.
+#
+sudo dar -x archive.dar
+
+# Create an archive with (par2) error recovery.
+# The recovery data is added separetely, so it's not efficient.
+#
+dar -c archive.dar `#blah...` par2
 
 # List contents
 #

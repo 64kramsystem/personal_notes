@@ -54,10 +54,15 @@ UUID=$btrfs_uuid /home btrfs defaults,subvol=@home 0 2
 
 ### Mount options
 
-- `defaults`       : is good enough (it includes `rw` and `relatime`); set `0 0` as `dump`/`pass`
-- `space_cache=v2` : default; no need to set it
-- `degraded`       : useful, otherwise a broken device will prevent boot
-- `discard=async`  : don't use; daily (or even less frequent) trim is sufficient, so there's no need for optimization
+- `defaults`        : good enough (it includes `rw` and `relatime`); set `0 0` as `dump`/`pass`
+- `compress=zstd:1` : fast enough to be worth including
+- `degraded`        : useful, otherwise a broken device will prevent boot
+- `nodiscard`       : Ubuntu's daily job is sufficient
+
+- `noatime`         : supported, but think before using it
+
+- `space_cache=v2`  : unnecessary (default)
+- `discard=async`   : unnecessary (see `nodiscard`)
 
 ## Mirroring
 
