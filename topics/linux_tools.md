@@ -337,7 +337,7 @@ echo "<$(cat /tmp/fifo)>"
 
 ```sh
 mktemp --suffix="${filename##*.}"            # Create a temporary file (using the extension of $filename)
-mktemp [-d] "${TMPDIR:-/tmp}/myprefix-XXXXX" # Mac-compatible (opt. dir), without using `--suffix`
+mktemp [-d] "${TMPDIR:-/tmp}/myprefix-XXXXX" # Mac-compatible (opt. dir), without using `--suffix`; WATCH OUT!! the X's must not be followed by any char!!
 stat $filename --format='%s'                 # Get file size
 ```
 
