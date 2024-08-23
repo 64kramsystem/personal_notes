@@ -440,6 +440,8 @@ expr substr $input $position_1_based $length
 Most standard way to test if a binary/executable is in PATH/exists (dash-compatible):
 
 ```sh
+# Bash can just use `! command -v $binary > /dev/null`.
+#
 if ! [ -x $(command -v $binary) ]; then error...
 ```
 
