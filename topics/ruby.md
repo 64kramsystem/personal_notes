@@ -563,7 +563,7 @@ end
 collection.none?(pattern)               # supports String, Regex and Proc. DON'T USE FOR HASHES, it's confusing
 collection.sort_by { |v| }              # Hash returns a [K, V] array
 
-# WATCH OUT! When invoking on a Hash, call `.map(&:to_h)`, because two arrays are returned.
+# WATCH OUT! When invoking on a Hash, call `.map(&:to_h)`, because arrays are produced.
 #
 accepted, rejected = collection.partition { |entry| fx(entry)}
 ```
