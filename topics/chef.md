@@ -314,8 +314,9 @@ There is currently no way of installing a local deb package, and pull the depend
 
 ```ruby
 package 'package_name' do
-  action :install                       # :purge, ...
-  version '1.3.4-2'                     # optional
+  action :install                         # :purge, ...
+  version '1.3.4-2'                       # optional; ignores hold status, so requires the option below
+  options  "--allow-change-held-packages" # without this, upgrading a held package will cause an error
 end
 
 # Version with multiple packages; it installs them faster, and has a more compact output.
