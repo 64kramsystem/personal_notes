@@ -213,8 +213,11 @@ ConditionPathExists=!/path/to/file
 #
 Type=oneshot
 
-# Outputs are overwritten, unless the `append` file mode is used (e.g. `append:/path/to/my-service.log`);
-# this is available from v240, though (Bionic provides v237).
+# StandardOutput/Error have three file modes:
+#
+# - `file:`     writes to a temp file, then replaces the destination
+# - `append:`   appends to the destination
+# - `truncate:` overwrites the destination
 #
 StandardOutput=syslog        # default: journal
 StandardError=syslog         # ^^
