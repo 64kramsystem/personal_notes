@@ -573,8 +573,9 @@ Informations:
 apt show $package
 dpkg --list $package
 
-# Check if a package is installed, in the most standard way possible.
+# Check if a package is installed, in the most standard way possible. Runs fast
 # States found: `install`, `hold`, `deinstall`; the last seems only cfg installed.
+# `dpkg` exits with success even if the package is not found.
 #
 if dpkg --get-selections trash-cli | grep -qP '\s+(install|hold)$'; then echo installed; fi
 
