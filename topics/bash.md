@@ -1246,7 +1246,7 @@ fi
 Switch to root user inside a script; this is not possible, but there is a workaround. This is convenient especially when the file is in the sudoers:
 
 ```sh
-function prepare_sudo {
+function ensure_sudo_invocation {
   if [[ $(id -u) -ne 0 ]]; then
     # Avoids having to call `sudo`.
     #
@@ -1262,7 +1262,7 @@ function prepare_sudo {
   fi
 }
 
-prepare_sudo "$@"
+ensure_sudo_invocation "$@"
 ```
 
 Graphical sudo:
