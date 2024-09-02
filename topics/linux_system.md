@@ -1125,8 +1125,10 @@ It seems that pseudo-grub hooks are possible; see [here](https://samwhelp.github
 
 ```sh
 sudo su
-mount -o subvol=@ /dev/sda1 /mnt  # use '-o subvol=@' for btrfs
-mount /dev/sda1 /mnt/boot          # only if there is a separate boot partition
+mount -o subvol=@ /dev/sda3 /mnt # use '-o subvol=@' for btrfs
+mount /dev/sda2 /mnt/boot        # assumes a boot partition
+mount /dev/sda1 /mnt/boot/efi    # efi partition
+
 # If /run is not mounted, must manually add the nameserver to /etc/resolv.conf, since it's
 # linked to /run/systemd/resolve/stub-resolv.conf.
 for vdev in dev sys proc run; do mount --bind /$vdev /mnt/$vdev; done
