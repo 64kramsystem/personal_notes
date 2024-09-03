@@ -1,13 +1,24 @@
 ## Table of contents
 
 - [Table of contents](#table-of-contents)
+- [General information](#general-information)
 - [Creation/subvolumes](#creationsubvolumes)
-  - [Mount options](#mount-options)
+  - [Mount options (flags)](#mount-options-flags)
 - [Mirroring](#mirroring)
 - [Filesystem info](#filesystem-info)
 - [Snapshots](#snapshots)
 - [Sanity](#sanity)
 - [Other operations/concepts](#other-operationsconcepts)
+
+## General information
+
+WATCH OUT!!! When operating on subvolumes, must mount the parent first (either another SV or the FS).
+
+For example, if a root subvolume `.snapshots` has a child `.snapshots/root`, must mount `.snapshot` first, in order to delete the child. In turn, in order to delete `.snapshots`, must mount the filesystem.
+
+If accidentally operating on paths of subvolumes, when the parent FS is not mounted, one will get the confusing message `ERROR: Could not statfs: No such file or directory`.
+
+This is not a problem, though: even if a filesystem's subvolumes are mounted, the filesystem itself can still be mounted somewhere else.
 
 ## Creation/subvolumes
 
@@ -23,7 +34,6 @@ mkfs.btrfs /dev/ubuntu-vg/btest
 mount /dev/ubuntu-vg/btest /mnt
 
 # Create subvolumes `@` and `@home`.
-# If a snapshots SV is going to be created, it's best to do it now.
 #
 btrfs subvolume create /mnt/@
 btrfs subvolume create /mnt/@home
@@ -52,17 +62,23 @@ UUID=$btrfs_uuid /     btrfs defaults,subvol=@     0 1
 UUID=$btrfs_uuid /home btrfs defaults,subvol=@home 0 2
 ```
 
-### Mount options
+### Mount options (flags)
+
+Suggested:
 
 - `defaults`        : good enough (it includes `rw` and `relatime`); set `0 0` as `dump`/`pass`
-- `compress=zstd:1` : fast enough to be worth including
+- `compress=zstd`   : levels 1-3 are realtime (format: `zstd:3`)
 - `degraded`        : useful, otherwise a broken device will prevent boot
 - `nodiscard`       : Ubuntu's daily job is sufficient
 
+Use-case dependent:
+
 - `noatime`         : supported, but think before using it
 
-- `space_cache=v2`  : unnecessary (default)
-- `discard=async`   : unnecessary (see `nodiscard`)
+Unnecessary
+
+- `space_cache=v2`  : default
+- `discard=async`   : default; see `nodiscard`
 
 ## Mirroring
 
