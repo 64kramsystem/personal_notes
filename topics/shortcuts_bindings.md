@@ -300,14 +300,11 @@ Thunderbird:
 
 ## Laptops
 
-| Laptop                | BIOS  | Boot  |
-| --------------------- | :---: | :---: |
-| Yoga 7 Gen 7 AMD      |  F2   |  F12  |
-| Chuwi Miniboox X N100 |  F2   |   ?   |
-
-Minibook:
-
-Couldn't find the boot key.
+| Laptop                | BIOS  |       Boot        |
+| --------------------- | :---: | :---------------: |
+| Yoga 7 Gen 7 AMD      |  F2   |        F12        |
+| Chuwi Miniboox X N100 |  F2   |         ?         |
+| Odroid H2             |   ?   | ? (^ F12/F11/F12) |
 
 Disable the entry from the NVME-specific priorities list:
 
