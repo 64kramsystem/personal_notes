@@ -107,13 +107,23 @@ btrfs balance start -dconvert=raid1 -mconvert=raid1 -v --background $mount
 #
 watch -n 1 btrfs balance status $mount
 
-# Convert RAID1 to single devices; doesn't show the status
+# Convert RAID1 to single profiles (no RAID, uses the total devices space); no progress is displayed
+# (see monitoring above).
+# SLOOOOOOOOOOOOOOOOOOOW!!!!
+#
+# WATCH OUT!!:
+#
+# - the two devices are still part of the array; need to remove one of the if want to convert to a
+#   single drive - in such case, the removed drive won't contain data
+# - if the objective is to convert to a single profile, it's simpler to unmount, overwrite one of
+#   the devices, mount in degraded mode, and run the conversion
 #
 btrfs balance start -v --force -mconvert=single -dconvert=single $mount
 
-# Remove a device [from a mirror] (does rebalancing if required)
+# Remove a device [from a mirror] (does rebalancing if required).
+# Use `missing` as $device, if the device is not functional.
 #
-btrfs device device delete $device $mount
+btrfs device remove $device $mount
 
 # Replace a failed drive. At the end, add a device as specified above
 #
@@ -198,7 +208,7 @@ mount -o recovery /dev/sdb $mount
 #
 findmnt -nt btrfs | awk '{print $1}'
 
-# Detailed data stats
+# Detailed data stats (including mirroring info)
 #
 btrfs fi df [-h] $mount
 
