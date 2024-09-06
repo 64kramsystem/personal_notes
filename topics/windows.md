@@ -7,6 +7,7 @@
   - [Screen Capture](#screen-capture)
   - [Exit on Windows 11 first boot installation (OOBE)](#exit-on-windows-11-first-boot-installation-oobe)
   - [Workaround account login requirement on first setup / Wifi requirement](#workaround-account-login-requirement-on-first-setup--wifi-requirement)
+  - [WSL](#wsl)
 
 ## Licensing
 
@@ -61,3 +62,11 @@ If wifi was setup by accident, run the following in the command prompt, then per
 
     netsh wlan show profiles
     netsh wlan delete profile name="ProfileName"
+
+## WSL
+
+```sh
+# Mount a drive connected to Windows (not done automatically).
+#
+mount -o drvfs $letter: $path
+```

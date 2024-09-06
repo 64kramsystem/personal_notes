@@ -1131,7 +1131,7 @@ mount /dev/sda1 /mnt/boot/efi    # efi partition
 
 # If /run is not mounted, must manually add the nameserver to /etc/resolv.conf, since it's
 # linked to /run/systemd/resolve/stub-resolv.conf.
-for vdev in dev sys proc run; do mount --bind /$vdev /mnt/$vdev; done
+for vdev in dev proc run sys; do mount --bind /$vdev /mnt/$vdev; done
 chroot /mnt
 grub-install /dev/sda
 exit
@@ -1139,7 +1139,7 @@ exit
 #
 #   for vdev in run proc sys dev; do umount --recursive --force --lazy /mnt/$vdev; done
 #
-umount --recursive /target
+umount --recursive /mnt
 ```
 
 ### Add a Windows entry

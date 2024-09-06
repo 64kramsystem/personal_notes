@@ -21,7 +21,8 @@
     - [Waits on condvar](#waits-on-condvar)
     - [Sleep times](#sleep-times)
   - [GNU Screen](#gnu-screen)
-  - [Partclone/Clonezilla](#partcloneclonezilla)
+  - [Partclone](#partclone)
+  - [Clonezilla](#clonezilla)
   - [Dump CDs (safely)](#dump-cds-safely)
   - [Sleep](#sleep)
   - [Watch](#watch)
@@ -241,7 +242,7 @@ cat /proc/self/environ | xargs -0 -L 1        # print the env vars (null-termina
 
 ## tar
 
-WATCH OUT!! When compressing as sudo files owned by other users, use `--no-recursion`, otherwise on extraction, intermediate dirs may be [owned by root](https://superuser.com/q/1175794); however, if doing so, all the directories must be specified (check: if may be possible to mix `--recursion` and `--no-recursion`).
+WATCH OUT!! When extracting files whose parent directories were not explicitly specified during archival, the owner will be root (see example at the bottom).
 
 ```sh
 tar -C /tmp xvz                                        # Extract to a different directory
@@ -265,39 +266,82 @@ echo -n | tar c --files-from -
 $ (cd /path && tar cf *.xml)
 ```
 
+Intermediate directories ownership problem. There isn't any trivial solution; the simplest way is to split into multiple archives by owner.
+
+```sh
+mkdir -p foo/bar
+sudo tar c foo/bar > /tmp/foo.tar
+sudo tar -x -C /tmp -f /tmp/foo.tar
+ls -ld /tmp/foo # root!
+```
+
 ## dar
+
+**WATCH OUT** dar is much slower than tar, in any case:
+
+- without compression
+- with compression
+  - additionally, CPU usage is poor compared to `tar | zstd -T0`
+- in WSL, extracting an archive with lots of files from a flash drive, caused a long delay at the beginning
 
 ```sh
 # Include only some files, in the current dir. The slice suffix (.<n>.dar) can't be avoided.
 #
 # -vt -vs : progress, only included/excluded files
-# -z -G   : use zstd (level 3) (don't put a space), 4 threads (can't use for streaming)
+# -w      : don't warn on overwrite
+# -z -G   : use zstd (level 3) (don't put a space), 32 threads (can't use for streaming)
 #
-dar -vt -vs \
-  -c archive.dar \
-  -zzstd:3 -G 4 \
+# WATCH OUT! If interrupted, dar leaves a partial archive.
+#
+dar \
+  -vt -vs -w \
+  -zzstd:3 -G 32 \
+  -c archive \
   -g zeus.json -g Gemfile
 
-# Set root dir; exclude files
+# Set root dir; exclude files with different logic.
 #
-dar -c archive.dar \
+dar -c archive \
   -R / \
-  -P "etc/netplan/01-network-manager-all.yaml"                  --alter=delete \
-  -P "saverio/.local/share/data/Mega Limited/MEGAsync/*.socket" --alter=delete
+  -P "etc/netplan/01-network-manager-all.yaml" \
+  -P "saverio/.local/share/data/Mega Limited/MEGAsync/*.socket" \
+  -P "**/target"
+
+# Display progress (!!).
+# Ordering of the find options is meaningful; don't change.
+#
+files_count=$(
+  find /source/projects /source/other_projects \
+    \( -path "/source/projects/linux-*" -o -path "*/target" \) -prune \
+    -o -print \
+  | wc -l
+)
+dar -vt \
+  -c /dest/myprojects \
+  -R /source \
+  -g projects -g other_projects \
+  -P "projects/linux-*" -P "**/target" \
+| grep "^Adding file to archive" \
+| pv -l -s "$files_count" > /dev/null
 
 # Extract archive.
+#
+# -vt      : progress (not default)
+#
+# In order to display progress, use (`| grep "Restoring file's data" | pv ...`).
+#
 # IMPORTANT! dar restores the intermediate directories original owner, differently from tar.
 #
-sudo dar -x archive.dar
+sudo dar -vt -x archive -R /path/to/dest
 
 # Create an archive with (par2) error recovery.
 # The recovery data is added separetely, so it's not efficient.
 #
-dar -c archive.dar `#blah...` par2
+dar -c archive `#blah...` par2
 
 # List contents
 #
-dar -l archive.dar.1.dar
+dar -l archive
 ```
 
 ## cp/mv
@@ -619,9 +663,7 @@ screen bash -c 'mycommand -foo; read -rsn1'
 
 In some workflows, it's convenient to set `IGNOREEOF`, in order to prevent accidental exits from the screen session.
 
-## Partclone/Clonezilla
-
-Partclone:
+## Partclone
 
 ```sh
 # Backup
@@ -631,7 +673,7 @@ partclone -c -s /dev/sdX | pzstd > /path/to/dumpfile
 zstd -d /path/to/dumpfile | partclone -r -o /dev/sdX
 ```
 
-Partclone (TO REVIEW):
+TO REVIEW:
 
 ```sh
 # Dump a single partition ######################################################
@@ -653,7 +695,9 @@ partclone.vfat -c -d -s /dev/sdc1 -o - | pixz -2 > sdc1.vfat-ptcl-img.xz.aa
 gunzip -c pizza.gz.a* | partclone.restore -d -s - -o /dev/sdc1
 ```
 
-Clonezilla:
+## Clonezilla
+
+Setup:
 
 ```sh
 # Setup, from 20.04.4 live CD. The package is a complete distaster; dependencies are not installed:
@@ -666,9 +710,11 @@ Clonezilla:
 #
 apt install -y clonezilla zstd smartmontools
 ln -s $images_parent_dir /home/partimag
+```
 
-# Backup whole device.
-#
+Backup whole device:
+
+```sh
 # WATCH OUT!! The dev path is the basename!!
 # If snapshotting a Windows live O/S, schedule a disk check via `chkdsk /f` (and reboot) before starting the backup.
 #
@@ -687,16 +733,20 @@ ln -s $images_parent_dir /home/partimag
 #
 ocs-sr -j2 -q2 -z9p -i 1000000 -sfsck -scs -senc -p command --rm-win-swap-hib savedisk $image_dir_name $dev_basename
 chown -R $SUDO_USER: /home/partimag/$image_dir_name
+```
 
-# Backup a single partition (discard the rest of the files)
-#
+Backup a single partition (discard the rest of the files):
+
+```sh
 ocs-sr     -q2 -z9p -i 1000000 -sfsck -scs -senc -p command --rm-win-swap-hib saveparts tempdir $part_dev_basename
 chown $SUDO_USER: /home/partimag/tempdir/$part_image_file
 mv /home/partimag/$part_image_file .
 rm -rf /home/partimag/tempdir
+```
 
-# Restore a whole device.
-#
+Restore a whole device:
+
+```sh
 # `-g`              : grub install
 # `-p`              : postaction
 # `-scr`            : skip check restorable
@@ -708,8 +758,11 @@ rm -rf /home/partimag/tempdir
 #   sed -i.bak '/^sector-size:/ s/^/# /' /home/partimag/$image_dir_name/*.sf
 #
 ocs-sr -g auto -e1 auto -e2 -r -j2 -scr -p command restoredisk $image_dir_name $dev_basename
+```
 
-# Restore a single partition.
+Restore a single partition:
+
+```sh
 # MAKE SURE THAT THE DESTINATION IS THE EXPECTED ONE!!
 #
 # `-d`     : debug

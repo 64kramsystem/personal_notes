@@ -9,6 +9,7 @@
 - [Snapshots](#snapshots)
 - [Sanity](#sanity)
 - [Other operations/concepts](#other-operationsconcepts)
+  - [Swapfile on Btrfs](#swapfile-on-btrfs)
 
 ## General information
 
@@ -89,45 +90,53 @@ Unnecessary
 #
 mkfs.btrfs -d raid1 $device1 $device2
 
+# => Now mount (see [Creation/subvolumes](#creationsubvolumes)).
+
 # (mount; CHECK IF JUST MOUNT DEVICE1!)
 
-# Add device (mirror); WATCH OUT! The balancing default is striping (for data).
-# Also converts a single device to mirror.
-#
-# - `-f`                               : overwrite the destination FS, if there is any
-# - `--bg`|`--background`
-# - `-dconvert=raid1 -mconvert=raid1`  : convert data and metadata to RAID1
-# - `--full-balance`                   : skip pause and warning; not meaningful with `--balance` set
-# - `-v`                               : verbose; not meaningful with `--balance` set
+# Add a device to a filesystem, but does not initiate any filesystem change.
 #
 btrfs device add [-f] $device3 $mount
-btrfs balance start -dconvert=raid1 -mconvert=raid1 -v --background $mount
+
+# Converts a single profile to RAID-1.
+# WATCH OUT! If the conversions are not specified, the default is striping (for data).
+#
+# - `-v`                               : verbose (global option)
+# - `-f|--force`                       : overwrite the destination FS, if there is any
+# - `-dconvert=raid1 -mconvert=raid1`  : convert data and metadata to RAID1
+# - `--bg|--background`
+# - `--full-balance`                   : skip pause and warning
+#
+btrfs -v balance start --force -dconvert=raid1 -mconvert=raid1 --background $mount
 
 # Monitor rebalance status (no built-in monitoring)
 #
 watch -n 1 btrfs balance status $mount
 
+# => In order to observe that a FS is in RAID-1, see [Filesystem info](#filesystem-info).
+
 # Convert RAID1 to single profiles (no RAID, uses the total devices space); no progress is displayed
 # (see monitoring above).
-# SLOOOOOOOOOOOOOOOOOOOW!!!!
 #
 # WATCH OUT!!:
 #
+# - SLOOOOOOOOOOOOOOOOOOOW!!!!
 # - the two devices are still part of the array; need to remove one of the if want to convert to a
 #   single drive - in such case, the removed drive won't contain data
 # - if the objective is to convert to a single profile, it's simpler to unmount, overwrite one of
 #   the devices, mount in degraded mode, and run the conversion
+#   - if ultimately moving the data to a new mirror, just keep the filesystem degraded
 #
-btrfs balance start -v --force -mconvert=single -dconvert=single $mount
+btrfs -v balance start --force -mconvert=single -dconvert=single --background $mount
 
 # Remove a device [from a mirror] (does rebalancing if required).
 # Use `missing` as $device, if the device is not functional.
 #
 btrfs device remove $device $mount
 
-# Replace a failed drive. At the end, add a device as specified above
+# If a drive fails and the system is rebooted and the degraded option is not in the default mount,
+# will need to mount with such option.
 #
-umount $mount
 mount -o degraded /dev/sdb $mount
 ```
 
@@ -139,7 +148,7 @@ mount -o degraded /dev/sdb $mount
 #
 btrfs filesystem show [$device|$mount]
 
-# Mirror can be observed from `RAID1` descriptions:
+# RAID-1 (mirror) info can be inferred from `RAID1` descriptions:
 #
 #   Data,RAID1: Size:8.00GiB, Used:7.16GiB (89.56%)
 #   Metadata,RAID1: Size:1.00GiB, Used:230.91MiB (22.55%)
@@ -223,4 +232,14 @@ btrfs filesystem defrag $mount
 #
 btrfs fi resize -2g $mount
 btrfs fi resize max $mount
+```
+
+### Swapfile on Btrfs
+
+By default, swap files can't be used on a Btrfs filesystem. Need to disable compression:
+
+```sh
+mkdir /swapdir
+chattr +C /swapdir
+# ... now move the swap file, and update fstab
 ```

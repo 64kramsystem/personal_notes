@@ -6,7 +6,7 @@
     - [Basic concepts](#basic-concepts)
     - [Subscribe/notify](#subscribenotify)
     - [Available variables](#available-variables)
-    - [Lazy loading](#lazy-loading)
+    - [Lazy resource attribute loading](#lazy-resource-attribute-loading)
   - [Resources](#resources)
     - [`execute`](#execute)
       - [Execute as alternate user](#execute-as-alternate-user)
@@ -124,7 +124,7 @@ end
 Chef::Config[:cookbook_path]      # Cookbook path, usable in recipes
 ```
 
-### Lazy loading
+### Lazy resource attribute loading
 
 Force a block to be evaluated during the execution stage; very useful to gather values of resources created by chef.
 
