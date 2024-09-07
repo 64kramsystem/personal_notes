@@ -323,7 +323,8 @@ See [overrides](#overrides) for overriding notes.
 Example:
 
 ```sh
-SYSTEMD_EDITOR=tee systemctl edit --full myservice.timer << UNIT
+# The quotes are optional, but they're good Bash practice.
+SYSTEMD_EDITOR="tee" systemctl edit --full myservice.timer << UNIT
 [Unit]
 Description=myservice timer
 

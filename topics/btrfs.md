@@ -13,13 +13,14 @@
 
 ## General information
 
-WATCH OUT!!! When operating on subvolumes, must mount the parent first (either another SV or the FS).
+WATCH OUT!:
 
-For example, if a root subvolume `.snapshots` has a child `.snapshots/root`, must mount `.snapshot` first, in order to delete the child. In turn, in order to delete `.snapshots`, must mount the filesystem.
-
-If accidentally operating on paths of subvolumes, when the parent FS is not mounted, one will get the confusing message `ERROR: Could not statfs: No such file or directory`.
-
-This is not a problem, though: even if a filesystem's subvolumes are mounted, the filesystem itself can still be mounted somewhere else.
+- **When operating on subvolumes, must mount the parent first** (either another SV or the FS).
+  For example, if a root subvolume `.snapshots` has a child `.snapshots/root`, must mount `.snapshot` first, in order to delete the child. In turn, in order to delete `.snapshots`, must mount the filesystem.
+  If accidentally operating on paths of subvolumes, when the parent FS is not mounted, one will get the confusing message `ERROR: Could not statfs: No such file or directory`.
+  This is not a problem, though: even if a filesystem's subvolumes are mounted, the filesystem itself can still be mounted somewhere else.
+- **Some error messages are not reported in the console**, but in the kernel ring buffer
+  Use `dmesg | grep -i btrfs` to see the messages
 
 ## Creation/subvolumes
 
@@ -83,6 +84,14 @@ Unnecessary
 
 ## Mirroring
 
+**WATCH OUT!!!!!!!!!**: If the underlying partitions are not of the exact same size, the filesystem usage will be confusing, as the non-mirrored data size will be higher than the difference between the partition sizes (in this case, ~1.5GB):
+
+    Data, single: total=5.00GiB, used=4.65GiB
+    Data, RAID1: total=97.00GiB, used=95.49GiB
+    [...]
+    WARNING: Multiple block group profiles detected, see 'man btrfs(5)'
+    WARNING:    Data: single, raid1
+
 ```sh
 # Create a mirror
 #
@@ -117,6 +126,8 @@ watch -n 1 btrfs balance status $mount
 
 # Convert RAID1 to single profiles (no RAID, uses the total devices space); no progress is displayed
 # (see monitoring above).
+#
+# - `--force`                          : without, btrfs complains that metadata redundancy is reduced
 #
 # WATCH OUT!!:
 #
