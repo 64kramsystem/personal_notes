@@ -38,8 +38,6 @@ systemctl reload-or-restart $service  # if reload is not defined (or has no effe
 systemctl status $service
 systemctl cat $service                # print unit file
 systemctl edit --full $service        # edit unit file (--full: edit the service, instead of creating an override)
-                                      # in order to create, add `--force`
-                                      # in order to programmatically edit, workaround by setting `SYSTEMD_EDITOR=tee [-a]` and piping the content.
 systemctl mask $service               # "mask": disable a service, by symlinking it to /dev/null; WATCH OUT! doesn't fail if the service doesn't exist
 # it seems that deletion must be performed manually
 
@@ -50,6 +48,11 @@ systemctl list-units                  # active loaded units
 systemctl list-unit-files [$pattern]  # all units, with their states; glob pattern
 systemctl [--user] list-timers        # list timers
 systemctl --failed                    # show units that failed to start
+
+# Programmatically create a unit.
+# Avoids specifying the path, and automatically reloads the Systemd config.
+#
+SYSTEMD_EDITOR="tee" systemctl edit --full --force $service <<< ...
 
 # Query the status of a unit; prints the status.
 # The exit status is not usable; force it to true and use the output.
