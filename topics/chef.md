@@ -325,6 +325,7 @@ end
 package %w(package1 package2)
 
 # Install a deb package from a local file.
+# Ignores the hold status.
 # Can't install from HTTP (as of Sep/2024, documentation is ambiguous in a place).
 #
 # WATCH OUT! Passing multiple package names+versions to it is supported, but it seems it doesn't work

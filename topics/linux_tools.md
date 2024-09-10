@@ -270,9 +270,11 @@ Intermediate directories ownership problem. There isn't any trivial solution; th
 
 ```sh
 mkdir -p foo/bar
-sudo tar c foo/bar > /tmp/foo.tar
-sudo tar -x -C /tmp -f /tmp/foo.tar
-ls -ld /tmp/foo # root!
+sudo tar c foo/bar > foo.tar  # sudo dar -c foo -g foo/bar
+rm -rf foo
+sudo tar -x -f foo.tar        # sudo dar -x foo
+# root!
+ls -ld foo
 ```
 
 ## dar
