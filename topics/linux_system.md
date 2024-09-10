@@ -573,11 +573,19 @@ Informations:
 apt show $package
 dpkg --list $package
 
-# Check if a package is installed, in the most standard way possible. Runs fast
+# Check if a package is installed/held, in the most standard way possible. Runs fast.
 # States found: `install`, `hold`, `deinstall`; the last seems only cfg installed.
 # `dpkg` exits with success even if the package is not found.
 #
-if dpkg --get-selections trash-cli | grep -qP '\s+(install|hold)$'; then echo installed; fi
+if dpkg --get-selections $package | grep -qP '\b(install|hold)$'; then echo installed; fi
+
+# Fast version to get a package installed version.
+#
+# WATCH OUT!! Still displays information if the packages has been uninstalled, but the config is left.
+# If this is a problem, use the second version (or check first via `dpkg --get-selections`.
+#
+dpkg -s $package 2> /dev/null | perl -ne 'print $1 if /^Version: (.+)/' || true
+dpkg -s $package 2> /dev/null | perl -0777 -ne 'print $1 if /^Status: install ok.+^Version: (.+?)$/sm' || true
 
 # Advanced filtering with aptitude.
 #
@@ -664,13 +672,13 @@ dpkg-deb -c $package.deb
 dpkg-deb --fsys-tarfile $package.deb | tar xv # extract the data file; can pass /dev/stdin as input
 ar -vx $package.deb                           # this extract the deb files (debian-binary, control, data)
 
-# Find which package a file in the filesystem belongs to
+# Find which package a file in the filesystem belongs to.
 #
 dpkg -S $file
 
 # Display package info, including dependencies.
 #
-dpkg -I $file
+dpkg -I $file             # fast; WATCH OUT! Field names are preceded by a space.
 apt show $package
 aptitude show $package
 

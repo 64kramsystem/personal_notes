@@ -323,11 +323,44 @@ end
 # The `version` attributes takes an Array, in this case.
 #
 package %w(package1 package2)
-```
 
-```ruby
+# Install a deb package from a local file.
+# Can't install from HTTP (as of Sep/2024, documentation is ambiguous in a place).
+#
+# WATCH OUT! Passing multiple package names+versions to it is supported, but it seems it doesn't work
+# as intended - in one case, it invoked `dpkg -i` for a package, even if unnecessary (see below).
+#
 dpkg_package 'package_name' do
   source '/path/to/local_filename.deb'
+end
+
+# Conditionally hold a package.
+#
+execute "hold #{name}" do
+  command    "apt-mark hold #{name}"
+  not_if     { !!`dpkg --get-selections #{name}`[/\bhold$/] }
+end
+```
+
+Working replacement of multipackage dpkg_package resource:
+
+```rb
+packages_to_install = -> do
+  package_filenames                      # hash name => filename
+    .filter_map do |name, filename|
+      deb_version = `dpkg -I #{filename}`[/^ Version: (\S+)/, 1] || raise("Version not found for .deb #{filename}")
+      # We need to be reasonably fast here, but dpkg's status needs to be inspected carefully.
+      installed_version = `dpkg -s #{name} 2> /dev/null`[/^Status: [^\n]+ installed$.+^Version: ([^\n]+)/m, 1]
+
+      [name, filename] if deb_version != installed_version
+    end
+    .to_h
+end
+
+dpkg_package package_filenames.keys do
+  package_name lazy { packages_to_install[].keys }
+  source lazy { packages_to_install[].values }
+  not_if { packages_to_install[].empty? }
 end
 ```
 
