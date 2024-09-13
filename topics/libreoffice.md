@@ -1,24 +1,27 @@
 # Libreoffice Basic
 
 - [Libreoffice Basic](#libreoffice-basic)
-  - [Basic concepts](#basic-concepts)
-  - [Record macros](#record-macros)
-  - [Simple example](#simple-example)
-    - [Invoke Python](#invoke-python)
+  - [Basic](#basic)
+    - [Basic concepts](#basic-concepts)
+    - [Record macros](#record-macros)
+    - [Simple example](#simple-example)
+      - [Invoke Python](#invoke-python)
 
-## Basic concepts
+## Basic
+
+### Basic concepts
 
 Documents include "modules", which are groups of macros.
 
 Macros recorded without defining modules etc. are global, and they're stored under `$HOME/.config/libreoffice/4/user/basic/Standard/Module1.xba`.
 
-## Record macros
+### Record macros
 
 Enable recording: `Tools -> Options -> LibreOffice -> Advanced -> Enable macro recording`.
 
 Record: `Tools -> Macros -> Record Macro`
 
-## Simple example
+### Simple example
 
 From `Tools -> Macros -> Edit Macros`:
 
@@ -68,7 +71,7 @@ dispatcher.executeDispatch(document, ".uno:StyleApply", "", 0, formatArgs())
 end sub
 ```
 
-### Invoke Python
+#### Invoke Python
 
 System preparation:
 
