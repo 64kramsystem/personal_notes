@@ -173,7 +173,7 @@ chage -I 0 $user                        # expire password
 chage -E -1 $user                       # disable account expiry
 ```
 
-Rename user/group/home:
+User operations:
 
 ```sh
 usermod -l $new_user $old_user
@@ -181,6 +181,9 @@ groupmod -n $new_user $old_user
 usermod -d $new_home -m $user
 
 usermod -a -G $group $user              # add user to group
+
+deluser --remove-home $user # delete user and home
+deluser --group $user       # doesn't delete if other users are in the group
 ```
 
 User name/home/sudo:
