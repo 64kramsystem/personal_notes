@@ -182,8 +182,9 @@ usermod -d $new_home -m $user
 
 usermod -a -G $group $user              # add user to group
 
-deluser --remove-home $user # delete user and home
-deluser --group $user       # doesn't delete if other users are in the group
+# delete user and home; also the group, if there are no more memebers and `USERGROUPS_ENAB` is `yes`
+# in /etc/login.defs (it is in Ubuntu 22.04 server).
+userdel -r $user
 ```
 
 User name/home/sudo:
