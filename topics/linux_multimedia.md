@@ -452,9 +452,8 @@ dar_hw=${dar_wh##*/}/${dar_wh%%/*}
 ffmpeg \
   -i "concat:$(ls -1 *.VOB | tr $'\n' '|')" \
   -ac 2 -ar 44100 -c:a libfdk_aac -vbr 3 `# -c:a copy` \
-  -vf "${deint_flt}scale='min(iw,ih*"$dar_wh")':'min(ih,iw*$dar_hw)'" `# deinterlace and make pixels square` \
-  -c:v libx265 -crf 25 -preset slower \
-  -pix_fmt yuv420p10le -x265-params asm=avx512 \
+  -vf "${deint_flt}scale='min(iw,ih*$dar_wh)':'min(ih,iw*$dar_hw)'" `# deinterlace and make pixels square` \
+  -c:v libx265 -crf 25 -preset slower -pix_fmt yuv420p10le -x265-params asm=avx512 \
   dest.mkv
 
 # In order to compress in parallel, can use the snippets:
