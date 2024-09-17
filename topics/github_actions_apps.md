@@ -19,6 +19,7 @@
     - [Dynamically generate a matrix](#dynamically-generate-a-matrix)
       - [Perform jobs on for directories that have been changed](#perform-jobs-on-for-directories-that-have-been-changed)
     - [Ruby generic tasks](#ruby-generic-tasks)
+    - [Run a job conditional to changes to certain files](#run-a-job-conditional-to-changes-to-certain-files)
     - [Rust Cargo Clippy on multiple targets](#rust-cargo-clippy-on-multiple-targets)
   - [Preset CIs](#preset-cis)
     - [Ruby](#ruby)
@@ -437,6 +438,28 @@ For caching, use the specific action:
   with:
     ruby-version: ...
     bundler-cache: true
+```
+
+### Run a job conditional to changes to certain files
+
+```yml
+check-default-gems:
+  runs-on: ubuntu-22.04
+  permissions:
+    contents: read            # may be necessary only on private repos
+    pull-requests: read
+  steps:
+  - uses: actions/checkout@v4
+  - uses: dorny/paths-filter@v3
+    id: changes
+    with:
+      filters: |
+        gem_changes:
+          - '.ruby-version'
+          - 'Gemfile.lock'
+  - name: Run Default Gems Check
+    run: script/ci/run_${{ github.job }}.rb
+    if: steps.changes.outputs.gem_changes == 'true' # format: "steps.<id>.outputs.<filter>"
 ```
 
 ### Rust Cargo Clippy on multiple targets
