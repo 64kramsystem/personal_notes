@@ -10,6 +10,7 @@
   - [DynamoDB](#dynamodb)
     - [Permissions](#permissions-1)
     - [TTL](#ttl)
+  - [WAF](#waf)
 
 ## IAM
 
@@ -124,3 +125,11 @@ WATCH OUT!:
 - it can take up to 48 hours for an expired item to be deleted; in the meanwhile, searches must explicitly add a condition
 
 There is a TTL preview in the console, but didn't yield any value when tried it.
+
+## WAF
+
+The simplest way to configure a "log mode", is to allow non-matching rules, and enable the Cloudfront logging, then, cloud in Log Insights:
+
+    stats count() as requestCount by httpRequest.uri
+    | filter terminatingRuleId = "Default_Action"
+    | sort requestCount desc
