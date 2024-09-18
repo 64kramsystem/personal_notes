@@ -695,6 +695,10 @@ apt-file search $filename
 Useful generic snippets:
 
 ```sh
+# Choose the default on interactions (don't the `none` setting!!).
+#
+DEBIAN_FRONTEND=noninteractive apt -y upgrade
+
 # Refresh keys (updates expired).
 #
 apt-key adv --refresh-keys --keyserver keyserver.ubuntu.com
