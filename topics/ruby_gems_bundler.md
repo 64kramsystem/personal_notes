@@ -96,9 +96,16 @@ Gem::Specification.find_by_name('passenger').gem_dir
 Gem.bin_path("passenger-enterprise-server", "passenger-status"[, <version])
 Gem.activate_bin_path(...)
 
-# Find a gem version
+# Find a gem version.
 # The first way is more practical, as it returns a Gem::Version, and it doesn't require finding the
 # VERSION location.
+#
+# WATCH OUT! Ruby automatically loads the Bundler version corresponding to the Gemfile.lock, if found,
+# so as of the time of writing, it hasn't been possible to find the system default version (including
+# using `Bundler.with_unbundled_env`).
+# If the Gemfile.lock Bundler version is not installed, then the system version will be loaded (but it
+# will cause a corrupted bundler error (!) in some circumstances) (Passenger context; probably, because
+# it doesn't automatically upgrade Bundler when required).
 #
 Gem.loaded_specs['activerecord'].version
 require 'zip/version'; Zip::VERSION

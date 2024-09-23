@@ -383,6 +383,7 @@ myTest "foo" && echo "bar"      # prints `bar`!
 2. Don't quote the regex (use backslahes to escape spaces, or `$(echo -n "...")`)!!
 3. Use a temporary variable (or cmd subsitution) when using metacharacters with backslash (but not `.`);
 4. `^` and `$` refer to the *whole string*, not the line;
+   - the pattern represents a substring
 5. DON'T WRAP with ruby regex slashes!!!
 
 Metacharacters:
