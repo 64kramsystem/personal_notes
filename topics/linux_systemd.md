@@ -398,7 +398,7 @@ Once-off events can be scheduled; mind that they're not second-accurate.
 ```sh
 # Execute after certain interval, with output.
 #
-# `--unit`: optional name; without, a long random name is set
+# `--unit`: optional name; without, a long random name is set (and displayed)
 #
 # WATCH OUT! On some systems, `--on-active` caused, for very mysterious reasons, the timer to fire
 # with a long delay, seemingly because it was resetting. The alternative, in that case, has been to
