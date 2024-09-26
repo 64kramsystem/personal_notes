@@ -695,9 +695,15 @@ apt-file search $filename
 Useful generic snippets:
 
 ```sh
-# Choose the default on interactions (don't the `none` setting!!).
+# Choose the default on interactions. "Noninteractive" chooses the default (like tapping Enter); don't set
+# "None", which has a counterintuitive functionality.
 #
 DEBIAN_FRONTEND=noninteractive apt -y upgrade
+# Generalized.
+#
+echo 'debconf debconf/priority select critical'       | debconf-set-selections # set N.I. for anything less than critical
+echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+
 
 # Refresh keys (updates expired).
 #

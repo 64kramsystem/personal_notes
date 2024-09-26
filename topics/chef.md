@@ -86,8 +86,10 @@ group "application"
 
 ### Subscribe/notify
 
+By default, notifications are `:delayed` (executed at the end of the Chef client run).
+
 WATCH OUT! A subscription depends on the subscribed resource *change*; it won't work as intended for resources that are in a binary state (e.g. packages).  
-When using a package configuration pattern, the subscription must be to the configfile change, not to the package.
+When using a package configuration pattern, subscribe to the configfile change, not the package's.
 
 ```ruby
 file '/etc/nginx/ssl/example.crt' do
@@ -141,6 +143,8 @@ The default attribute values (e.g. `action`) are the ones specified in the examp
 ### `execute`
 
 Execute a single command; don't set multiple `command` properties, otherwise they will be all executed even if one of them fails.
+
+WATCH OUT!! The default shell is dash; using bashisms, e.g. `rm /{foo,bar}`, won't work, and with the mentioned example, no errors were even raised.
 
 ```ruby
 execute 'apache_configtest' do
@@ -556,20 +560,17 @@ end
 Use this workaround:
 
 ```rb
-  ruby_block "Set MAKE env var to CPU threads count" do
-    block    { ENV["MAKE"] = "make -j #{node[:cpu][:total]}" }
-    action   :run
-    notifies :install, "gem_package[mygem]", :immediately
-    notifies :run, "ruby_block[Unset MAKE env var]", :immediately
-  end
+ruby_block "Set MAKE env var to CPU threads count" do
+  block    { ENV["MAKE"] = "make -j #{node[:cpu][:total]}" }
+  action   :nothing
+  notifies :run, "gem_package[mygem]", :before
+end
 
-  gem_package "mygem" do
-    version "1.2.3"
-    action  :nothing
-  end
+gem_package "mygem"
 
-  ruby_block "Unset MAKE env var" do
-    block  { ENV["MAKE"] = nil }
-    action :nothing
-  end
+ruby_block "Unset MAKE env var" do
+  block    { ENV["MAKE"] = nil }
+  action   :nothing
+  notifies :run, "gem_package[mygem]", :immediately
+end
 ```
