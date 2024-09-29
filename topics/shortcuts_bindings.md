@@ -82,7 +82,8 @@ The VIM section requires some cleanup.
 - `F9`                        Toggle breakpoint
 
 - `Ctrl+K, Ctrl+P`            Du(p)licate (copy) selection!! (custom)
-- `Ctrl+Shift+K`              Delete line
+- `Shift+Del`                 Delete line
+- `Ctrl+Bksp`                 Delete last word (opt. with trailing whitespace)
 
 #### Extensions
 
