@@ -274,20 +274,24 @@ Meld:
 - `Alt + ←/→`              Push diff block to the given direction
 - `Alt + Shift + ←/→`      Pull diff block from the opposite of the given direction
 
-Tilix:
+Slack:
 
-- `Ctrl+Shift+I`            Synchronize input
-- `Alt+<direction>`         Move between terminals
-- `Alt+Shift+<direction>`   Resize terminal
+- `→`/`T`                  When on a thread message, open the thread panel
+- `Ctrl+.`                  Open/close the right panel
 
 Telnet:
 
 - `Ctrl+]` => `q`           Terminate session
 
-Slack:
+Thunderbird:
 
-- `→`/`T`                  When on a thread message, open the thread panel
-- `Ctrl+.`                  Open/close the right panel
+`Ctrl+Shift+C`             Add CC when composing an email
+
+Tilix:
+
+- `Ctrl+Shift+I`            Synchronize input
+- `Alt+<direction>`         Move between terminals
+- `Alt+Shift+<direction>`   Resize terminal
 
 VMWare:
 
@@ -295,9 +299,11 @@ VMWare:
 - `Ctrl+J`                 Suspend
 - `Cltr+E`                 Shutdown
 
-Thunderbird:
+Windows Terminal:
 
-`Ctrl+Shift+C`             Add CC when composing an email
+- `Alt + Shift + +`        Split to right
+- `Alt + Shift + -`        Split to bottom
+- `Ctr + Shift + t`        New tab
 
 ## Laptops
 
