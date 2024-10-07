@@ -299,6 +299,13 @@ VMWare:
 - `Ctrl+J`                 Suspend
 - `Cltr+E`                 Shutdown
 
+## Windows
+
+Desktop:
+
+- `Win + Tab`              Window/desktop switcher
+- `Win + Ctrl + ←/→`       Switch desktop
+
 Windows Terminal:
 
 - `Alt + Shift + +`        Split to right
