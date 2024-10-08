@@ -30,8 +30,9 @@ gem "json", "2.4.1" if RUBY_VERSION == "2.0.0"
 gem 'sshkit-sudo', '~> 0.2.0', path: '/path/to/sshkit-sudo'
 
 # Git repository; `branch` is optional; `ref` and `tag` are also supported.
+# `glob` allows installing from a repository subdir.
 #
-gem 'sshkit-sudo', git: 'https://github.com/ticketsolve/sshkit-sudo', branch: 'mytest'
+gem 'sshkit-sudo', git: 'https://github.com/ticketsolve/sshkit-sudo', branch: 'mytest', glob: 'subdir/*.gemspec'
 
 # If there isn't a gemspec: add here the `development` group, with rspec.
 # The rake gem can be excluded unless specifically required.
