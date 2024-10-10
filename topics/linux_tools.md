@@ -710,7 +710,7 @@ Setup:
 #
 # In case of error, disable the GUI to see the underlying message (see https://unix.stackexchange.com/a/589650).
 #
-apt install -y clonezilla zstd smartmontools
+apt install -y clonezilla smartmontools
 ln -s $images_parent_dir /home/partimag
 ```
 
