@@ -634,9 +634,10 @@ Depedency-related:
 #
 aptitude why -v $package
 
-# (Extra tool) Check dependencies of installed package.
+# Examine dependencies
 #
-apt-rdepends $package
+apt-rdepends $package                   # extra tool; prints the whole dependency tree below $package
+apt-cache rdepends $package             # find packages depending on $package
 
 # Produce a package's dependency tree.
 #
