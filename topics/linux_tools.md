@@ -981,7 +981,7 @@ img2pdf -o output.pdf *.jpg
 Other operations:
 
 ```sh
-# Extract pages/remove a page from a PDF doc:
+# Extract pages/remove a page from a PDF doc (lossless):
 #
 pdftk $input.pdf cat 1-29 31-end output $output.pdf
 
