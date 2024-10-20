@@ -120,10 +120,11 @@ For regexes, see the dedicated note file.
 Interpolate an expression via `@{[...]}` (trick):
 
 ```sh
-# Both return 251
+# All return "abc: 251".
 #
+echo "abc: 250" | perl -pe 's/(\d+)/$1 + 1/e'                # remember that the replacement is a Perl expression
 echo "abc: 250" | perl -ne '/(\d+)/ && print "@{[$1 + 1]}"'  # in a string
-echo "abc: 250" | perl -pe 's/(\d+)/@{[$1 + 1]}/'            # also works in substitution, but the `e` switch is better
+echo "abc: 250" | perl -pe 's/(\d+)/@{[$1 + 1]}/'            # also works in substitution
 ```
 
 #### Flip-flop, with examples
