@@ -682,12 +682,21 @@ See: https://sethrobertson.github.io/GitFixUm/fixup.html.
 ```sh
 # Recover dropped stashes
 #
-gitk --all $(git fsck --no-reflog | awk '/dangling commit/ {print $3}')
+gitk --all $(git fsck --no-reflog | perl -lne 'print $1 if /^commit (\w+)/')
+
+# Find orphan commits matching a certain message [Bash]
+#
+git fsck --dangling |
+  while read -r entry; do
+    if [[ $entry =~ ^dangling\ commit\ ([[:xdigit:]]+) ]]; then
+      git show ${BASH_REMATCH[1]} | grep -q "put_item" && echo ${BASH_REMATCH[1]}
+    fi
+  done
 
 # Recover lost commits.
 # If not found in `--unreachable`, try `--lost-found`, which is subtly different.
 #
-git show $(git fsck --unreachable | git cat-file --batch-check | awk '/commit/ { print $3 }')
+git show $(git fsck --unreachable | git cat-file --batch-check | perl -lne 'print $1 if /^commit (\w+)/')
 ```
 
 WATCH OUT!! `revert` is inconsistent: if the commit has already been applied, it exits with error, but outputs to stdout; additionally, it will cause `revert --abort` to fail (which in turn, outputs to stderr instead). 🤷

@@ -302,6 +302,10 @@ done
 #
 for ((job = 1, othervar = 0; job <= MAX_JOBS; job++)); do $command; done
 
+# Implied "$@"
+#
+for val; do echo "$val"; done
+
 # Until loop
 #
 until (( $VGAPT_MEMORY < $(free -m | sed '2q;d' | awk '{print $NF}') )); do $command; done
