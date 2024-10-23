@@ -20,6 +20,7 @@
     - [vimdiff](#vimdiff)
     - [modeline](#modeline)
   - [Other program shortcuts](#other-program-shortcuts)
+  - [Windows](#windows)
   - [Laptops](#laptops)
 
 ## Notes
@@ -320,7 +321,9 @@ Windows Terminal:
 | Chuwi Miniboox X N100 |  F2   |   ?   |
 | Odroid H2             |   ?   |  F7   |
 
-Disable the entry from the NVME-specific priorities list:
+Minibook: disable the entry from the NVME-specific priorities list:
 
 - the machine prioritizes booting from the disk regardless of the settings
 - even with the priority disabled, it still boots if no flash key is connected
+
+Minibook S/N: `ZMinBXHY6H231000191`

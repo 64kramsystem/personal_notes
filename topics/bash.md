@@ -959,7 +959,7 @@ See https://www.artificialworlds.net/blog/2012/10/17/bash-associative-array-exam
 # Quotes inside the brackets are optional
 
 declare -A MYHASH                    # explicit declaration; scope is the innermost (e.g. local if in a function)
-declare -A MYHASH=([foo]=1 [bar]=2)  # explicit definition with multiple values
+declare -A MYHASH=([foo]=1 [bar]=2)  # explicit definition with multiple values; DON'T FORGET `declare -A`!!
 [local] MYHASH[foo bar]=baz          # implicit local/global definition (single value only)
 unset MYHASH                         # destruction
 MYHASH=()                            # empty the hash

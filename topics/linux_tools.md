@@ -722,7 +722,7 @@ Backup whole device:
 #
 # - `-j2`           : clone hidden data (between MBR and part 1; there could be e.g. bootloader code; use on disk dump)
 # - `-q2`           : use partclone
-# - `-z9p`          : parallel zstd (`z5p` = `xz -3`)
+# - `-z9p`          : parallel zstd (5=xz, 9=zstd, 8=lz4 (faster); `p`arallel)
 # - `-p command`    : return to command prompt on completion
 # - `-i 1000000`    : split size (in MB)
 # - `-sfsck`        : don't run fsck
