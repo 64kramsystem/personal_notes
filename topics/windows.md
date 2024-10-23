@@ -3,9 +3,11 @@
 - [Windows](#windows)
   - [Licensing](#licensing)
     - [License operations](#license-operations)
-  - [Installation (OOBE): Open Command Prompt](#installation-oobe-open-command-prompt)
-  - [Exit on Windows 11 first boot installation (OOBE)](#exit-on-windows-11-first-boot-installation-oobe)
-  - [Workaround account login requirement on first setup / Wifi requirement](#workaround-account-login-requirement-on-first-setup--wifi-requirement)
+  - [Installation](#installation)
+    - [OOBE: Open Command Prompt](#oobe-open-command-prompt)
+    - [OOBE: Exit on Windows 11 first boot installation](#oobe-exit-on-windows-11-first-boot-installation)
+    - [Workaround account login requirement on first setup / Wifi requirement](#workaround-account-login-requirement-on-first-setup--wifi-requirement)
+    - [Mass-install drivers from multiple subdirectories](#mass-install-drivers-from-multiple-subdirectories)
   - [WSL](#wsl)
   - [Screen Capture](#screen-capture)
 
@@ -36,17 +38,19 @@ slmgr /ipk  # install key; better done via GUI, which handles more cases
 
 Use a program like ProduKey (not a malware!) to display the key.
 
-## Installation (OOBE): Open Command Prompt
+## Installation
+
+### OOBE: Open Command Prompt
 
 Tap `Shift + F10`.
 
-## Exit on Windows 11 first boot installation (OOBE)
+### OOBE: Exit on Windows 11 first boot installation
 
 Open a command prompt, and execute `shutdown /s /t 0`.
 
 Don't forget to hold the `Fn` key, if they keyboard disables function keys by default!
 
-## Workaround account login requirement on first setup / Wifi requirement
+### Workaround account login requirement on first setup / Wifi requirement
 
 To skip the wifi step, run in the command prompt:
 
@@ -56,6 +60,10 @@ If wifi was setup by accident, run the following in the command prompt, then per
 
     netsh wlan show profiles
     netsh wlan delete profile name="ProfileName"
+
+### Mass-install drivers from multiple subdirectories
+
+Go to the parent directory, and run `pnputil /add-driver *.inf /subdirs /install`.
 
 ## WSL
 
