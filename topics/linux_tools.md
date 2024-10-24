@@ -86,8 +86,10 @@ Note:
                                     # see section below for regex type notes.
 
 -type (f|d)                       # [f]iles, [d]irectories
--L <path> -xtype l                # find symlinks
--L <path> -type l                 # find broken symlinks
+-type l                           # find symlinks, not recursively following
+-L $path -xtype l                 # find symlinks, recursively following
+-L $path -type l                  # find broken symlinks, recursively following
+
 -maxdepth <value>                 # max number of levels to descend; `1` causes not to descend into directories
 -mindepth <value>                 # opposite of `maxdepth`; useful when the root path (eg. `.`) must not be displayed (use `1`)
 -follow                           # [follow] symlinks
@@ -289,9 +291,9 @@ ls -ld foo
 ```sh
 # Include only some files, in the current dir. The slice suffix (.<n>.dar) can't be avoided.
 #
-# -vt -vs : progress, only included/excluded files
-# -w      : don't warn on overwrite
-# -z -G   : use zstd (level 3) (don't put a space), 32 threads (can't use for streaming)
+# -vt -vs      : progress, only included/excluded files
+# -w|--no-warn : don't warn on overwrite
+# -z -G        : use zstd (level 3) (don't put a space), 32 threads (can't use for streaming)
 #
 # WATCH OUT! If interrupted, dar leaves a partial archive.
 #
