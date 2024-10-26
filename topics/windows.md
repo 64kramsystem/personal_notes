@@ -9,7 +9,8 @@
     - [Workaround account login requirement on first setup / Wifi requirement](#workaround-account-login-requirement-on-first-setup--wifi-requirement)
     - [Mass-install drivers from multiple subdirectories](#mass-install-drivers-from-multiple-subdirectories)
   - [WSL](#wsl)
-    - [Symlinks](#symlinks)
+    - [Symlinks/Junctions](#symlinksjunctions)
+      - [Obsolete](#obsolete)
     - [Mount ext4 flash keys](#mount-ext4-flash-keys)
   - [Screen Capture](#screen-capture)
   - [Packages management](#packages-management)
@@ -82,7 +83,13 @@ powershell.exe -Command $mycommand
 mount -o drvfs $letter: $path
 ```
 
-### Symlinks
+### Symlinks/Junctions
+
+WATCH OUT!! Windows Junctions/symlinks must be created via `ln -s` in an Admin WSL session, otherwise, they're created, but work inconsistently (e.g. explorer opens them correctly but displays an error at the same time (!)). The type (file/directory) doesn't matter.
+
+Other programs may create inconsistent ones even as Admin, for example `tar` extractions.
+
+#### Obsolete
 
 WATCH OUT!!
 
