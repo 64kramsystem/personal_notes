@@ -1,3 +1,8 @@
+## Mon 28/Oct/2024
+
+- Project: PM-Spotlight
+  - [x] Make Windows-compatible
+
 ## Sat 17/Aug/2024
 
 - Btrfs studies

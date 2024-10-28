@@ -253,11 +253,13 @@ tar xv -O -f "$tarfile" metadata.gz | gunzip > "$outfile" # Extract a single fil
 
 # Rename destination files while extracting!!
 #
-# - Basic sed regex!!: Not supported (at least): `+`, `\d`, ...
+# - Basic sed regex!!
+#   - Not supported (at least): +, \d, \K, capturing groups
+#   - Supported: ^, $, regex delimiters
 # - The regex applies to the WHOLE name, so be careful when changing dir names
-# - Use --show-transform to display transformed names
+# - Untransformed names are displayed by default
 #
-tar xvz --transform="s/^parsec-3.0/parsec-benchmark/"
+tar xvz --transform="s/^parsec-3.0/parsec-benchmark/" --show-transformed-names
 
 # Create an empty archive
 #

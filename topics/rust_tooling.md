@@ -392,10 +392,10 @@ debug = false
 ### Cross-compilation
 
 ```sh
-# Preparation. Requires Ubuntu package `gcc-mingw-w64-x86-64`
+# Preparation. The mingw package may be required for some projects.
 #
+sudo apt install -y gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64-win32
 rustup target add x86_64-pc-windows-gnu
-rustup toolchain install stable-x86_64-pc-windows-gnu
 
 # Cross-compile. WATCH OUT! Will invalidate other target's build artifacts (!).
 #
