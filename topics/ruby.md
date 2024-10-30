@@ -802,7 +802,7 @@ system({'FOO' => 'BAR'}, 'echo $FOO') # => BAR
 
 Backticks behave like `IO.popen`: The stdout content is captured, stderr content is sent to the terminal.
 
-Use `$CHILD_STATUS` (ENG) to capture errors.
+Use `$CHILD_STATUS` (`.success?`) (ENG) to capture errors.
 
 ### Definitive way of capturing Ctrl+C (trap signals)
 
