@@ -13,6 +13,7 @@
     - [Linking (types)](#linking-types)
     - [Build times (profile/improve)](#build-times-profileimprove)
     - [Cross-compilation](#cross-compilation)
+      - [Windows-specific](#windows-specific)
     - [Cargo doc](#cargo-doc)
   - [Rustfmt](#rustfmt)
     - [Cargo manifest for publication](#cargo-manifest-for-publication)
@@ -411,6 +412,14 @@ target = "riscv64gc-unknown-linux-gnu"
 [target.riscv64gc-unknown-linux-gnu]
 linker = "riscv64-unknown-linux-gnu-gcc"
 TOML
+```
+
+#### Windows-specific
+
+When compiling a GUI Windows program, add this:
+
+```rs
+#![cfg_attr(target_os = "windows", windows_subsystem = "windows")]
 ```
 
 ### Cargo doc
