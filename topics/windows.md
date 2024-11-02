@@ -10,9 +10,11 @@
     - [Mass-install drivers from multiple subdirectories](#mass-install-drivers-from-multiple-subdirectories)
   - [WSL](#wsl)
     - [Symlinks/Junctions](#symlinksjunctions)
-      - [Obsolete](#obsolete)
     - [Mount ext4 flash keys](#mount-ext4-flash-keys)
-  - [Screen Capture](#screen-capture)
+  - [Variables](#variables)
+  - [Security](#security)
+  - [Taskbar pinned items programmatic manipulation](#taskbar-pinned-items-programmatic-manipulation)
+  - [Screen capture](#screen-capture)
   - [Packages management](#packages-management)
 
 ## Licensing
@@ -85,19 +87,9 @@ mount -o drvfs $letter: $path
 
 ### Symlinks/Junctions
 
-WATCH OUT!! Windows Junctions/symlinks must be created via `ln -s` in an Admin WSL session, otherwise, they're created, but work inconsistently (e.g. explorer opens them correctly but displays an error at the same time (!)). The type (file/directory) doesn't matter.
+WATCH OUT!! In order to create Windows junctions in the host from WSL, use `cmd.exe /c mklink` in an Admin WSL session (don't forget to quote!); any other approach fails in inconsistent and confusing ways.
 
-Other programs may create inconsistent ones even as Admin, for example `tar` extractions.
-
-#### Obsolete
-
-WATCH OUT!!
-
-- symlinks are compatible between WSL and Windows, but when creating them in WSL, the session must be run as Admin, otherwise, the created symlinks are "inconsistently invalid", e.g. explorer opens them correctly but displays an error at the same time (!)
-- when creating symlinks, make sure to do it via `ln -s`; other programs may create inconsistently invalid ones even as Admin, for example when un`tar`ring archives
-  - as a consequence, when untarring, test and rebuild all the invalid symlinks (or all)
-
-In order to check if a symlink is valid, run in PowerShell:
+In order to check if a symlink is valid, run in PowerShell (read comment carefully):
 
 ```sh
 # Search the inconsistently invalid symlinks (without recursively following), and replace them with
@@ -155,19 +147,39 @@ Under WSL:
 $ lsblk # will show the disk, which can mount
 ```
 
-## Screen Capture
+## Variables
+
+- Home:            `%USERPROFILE%`
+- AppData\Roaming: `%APPDATA%`
+
+## Security
+
+Check if running as admin (No errors if running as Windows Admin): `net session`
+
+## Taskbar pinned items programmatic manipulation
+
+The files location is `%APPDATA%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar`, however, trying to populate it with pregenerated files, won't work.
+In order to restart the taskbar, use: `PS> Stop-Process -Name explorer`
+
+## Screen capture
 
 - Program: "Snipping tool"
 - Shortcut: `Win + Shift + s`
 
 ## Packages management
 
-Windows has a centralized repository, which can be used via the cmdline program `winget` (it doesn't use the Windows Store):
+Windows has a centralized repository, which can be used via the cmdline program `winget`.
+It doesn't use the Windows Store, but it handles also programs downloaded via it.
 
-```
->winget install $package_name
->winget install --exact --id $package_id # [exact] match; [id] match
+```sh
+winget.exe install $package_name
+winget.exe install --exact --id $package_id # [exact] match; [id] match
 
->winget source update
->winget upgrade --all
+winget.exe source update
+winget.exe upgrade --all
+
+# Winget listing truncates the output based on the console size (🤦).
+# In order to workaround, decrease the font size, and run via PS, **without grepping**.
+
+powershell.exe -command "winget list"
 ```
