@@ -13,6 +13,7 @@
     - [Mount ext4 flash keys](#mount-ext4-flash-keys)
   - [Variables](#variables)
   - [Security](#security)
+    - [Enable PIN to boot](#enable-pin-to-boot)
   - [Taskbar pinned items programmatic manipulation](#taskbar-pinned-items-programmatic-manipulation)
   - [Screen capture](#screen-capture)
   - [Packages management](#packages-management)
@@ -155,6 +156,14 @@ $ lsblk # will show the disk, which can mount
 ## Security
 
 Check if running as admin (No errors if running as Windows Admin): `net session`
+
+### Enable PIN to boot
+
+In order to make the option visible in the Bitlocker management:
+
+- open `gpedit.msc`
+- `Computer Configuration` -> `Administrative Templates` -> `Windows Components` -> `BitLocker Drive Encryption` -> `Operating System Drives`
+- Set `Require additional authentication at startup` (and according options)
 
 ## Taskbar pinned items programmatic manipulation
 
