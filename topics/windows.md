@@ -11,6 +11,7 @@
   - [WSL](#wsl)
     - [Symlinks/Junctions](#symlinksjunctions)
     - [Mount ext4 flash keys](#mount-ext4-flash-keys)
+  - [Clipboard management](#clipboard-management)
   - [Variables](#variables)
   - [Security](#security)
     - [Enable PIN to boot](#enable-pin-to-boot)
@@ -146,6 +147,13 @@ Under WSL:
 
 ```
 $ lsblk # will show the disk, which can mount
+```
+
+## Clipboard management
+
+```sh
+clip.exe                                # Pastes stdin into the clipboard
+powershell.exe -command `Get-Clipboard` # Prints clipboard content to stdout
 ```
 
 ## Variables
