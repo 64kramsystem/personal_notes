@@ -14,6 +14,7 @@
   - [Clipboard management](#clipboard-management)
   - [Variables](#variables)
   - [Security](#security)
+    - [WSL: Cache SSH keys password](#wsl-cache-ssh-keys-password)
     - [Enable PIN to boot](#enable-pin-to-boot)
   - [Taskbar pinned items programmatic manipulation](#taskbar-pinned-items-programmatic-manipulation)
   - [Screen capture](#screen-capture)
@@ -164,6 +165,17 @@ powershell.exe -command `Get-Clipboard` # Prints clipboard content to stdout
 ## Security
 
 Check if running as admin (No errors if running as Windows Admin): `net session`
+
+### WSL: Cache SSH keys password
+
+```sh
+apt install keychain
+
+cat >> $shell_init_script << SH
+/usr/bin/keychain --nogui $keyfile_full_path
+source $HOME/.keychain/$(hostname)-sh
+SH
+```
 
 ### Enable PIN to boot
 

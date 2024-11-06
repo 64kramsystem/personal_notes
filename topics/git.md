@@ -165,7 +165,8 @@ For one level, it's easier:
 ```sh
 --no-commit                     	# doesn't commit for operations that does so by default (e.g. merge)
 
-commit --amend [-m <newMessage>]  # amend the last commit; content of the index are added to the last commit; only [m]essage 
+commit --amend [-m <newMessage>] [--no-edit]  # amend the last commit; content of the index are added to the last commit; only [m]essage
+                                              # [no-edit]: recycle the last message
 
 # Set the message/authorship/timestamp of a commit as another [retain timestamp on squash].
 # Will also copy the message; [-c] prompts for the new message.
