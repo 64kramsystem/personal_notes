@@ -970,7 +970,7 @@ PDF images extraction; WATCH OUT! Some PDFs may be complex, including "soft mask
 #
 pdfimages -list $input
 
-# Extracts all the images (lossless)
+# Extracts all the images (lossless) (package `poppler-utils`)
 #
 # -all:   save all the image types
 # prefix: either the output files prefix, or, if it ends with `/`, a path (which must exist)
