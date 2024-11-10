@@ -227,6 +227,8 @@ Delete files/dirs found via glob:
 # Files are found during compilation.
 #
 Dir[glob].each do |path|
+  # WATCH OUT!!! Symlinks cause an error! Must use :link resource (if needed, test via `File.symlink?`).
+  #
   file path do
     action :delete
   end
