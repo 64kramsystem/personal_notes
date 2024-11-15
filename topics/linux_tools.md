@@ -251,6 +251,10 @@ tar -C /tmp xvz                                        # Extract to a different 
 tar --exclude='parsec-benchmark/.git' parsec-benchmark # Exclude (glob pattern) (also on decompression); if `/` is not prefixed, matches at any level
 tar xv -O -f "$tarfile" metadata.gz | gunzip > "$outfile" # Extract a single file to stdout (and redirect to a file)
 
+# The BSD tar can extract zip files from the pipe!!
+#
+curl http://x.co/bar.zip | bsdtar -xf -
+
 # Rename destination files while extracting!!
 #
 # - Basic sed regex!!
