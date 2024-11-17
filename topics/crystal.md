@@ -38,9 +38,9 @@ false                   # Bool
 :sym                    # Symbol
 (Int32 | Nil)           # Union
 @start..@end            # Range
-Pointer(Void).null      # (Null) Pointer
+Pointer(@type)          # Pointer(type)
 
-false, nil, null_ptr    # Falsey; anything else is truthy
+false, nil, null ptr    # Falsey; anything else is truthy
 ```
 
 Syntax/methods:
@@ -48,6 +48,7 @@ Syntax/methods:
 ```rb
 typeof(@val)            # Parentheses required
 foo : Int32 [ = @val]   # Manually declare a type
+Pointer(Void).null      # Null pointer
 ```
 
 Crystal can detect codepaths where the Nil type is removed from a union, like:
