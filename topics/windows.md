@@ -17,6 +17,7 @@
     - [WSL: Cache SSH keys password](#wsl-cache-ssh-keys-password)
     - [Enable PIN to boot](#enable-pin-to-boot)
   - [Taskbar pinned items programmatic manipulation](#taskbar-pinned-items-programmatic-manipulation)
+  - [Drives](#drives)
   - [Screen capture](#screen-capture)
   - [Packages management](#packages-management)
 
@@ -92,19 +93,37 @@ mount -o drvfs $letter: $path
 
 WATCH OUT!! In order to create Windows junctions in the host from WSL, use `cmd.exe /c mklink` in an Admin WSL session (don't forget to quote!); any other approach fails in inconsistent and confusing ways.
 
-In order to check if a symlink is valid, run in PowerShell (read comment carefully):
+In order rebuild symlinks, run:
 
 ```sh
-# Search the inconsistently invalid symlinks (without recursively following), and replace them with
-# junctions.
+# Should also work with links including relative paths (`../`), but it hasn't been concretely tested.
 #
+# For simplicity, we don't use `find -L . -xtype l`, which is slower.
+#
+find "${config_paths[@]}" -type l \
+  | xargs -I {} bash -c '
+    target=$(
+      readlink "{}" | \
+      perl -pe "s|/mnt/c/Users/Saverio|C:/Users/Saverio|" | \
+      perl -pe "s|/|\\\\|g"
+    )
+    link=$(echo {} | perl -pe "s|/|\\\\|g")
+
+    [[ -d "{}" ]] && dir_option=(/d) || dir_option=()
+    echo "Rebuilding${dir_option[@]} ($link) -> ($target)"
+    rm "{}"
+    cmd.exe /c mklink "${dir_option[@]}" "$link" "$target"
+  '
+```
+
+Formerly, a smarter attempt, detecting invalid symlink, has been made, however there were some problems:
+
+```sh
 # - The PS command prints nothing if symlink is invalid
 #   - WATCH OUT! not fully effective - file symlinks to a dir are invalid, but they pass the test
 #   - the test works as intended also if WSL is running as Admin.
 # - Symlinks with level change (ie. "../foo") actually work fine on Windows, so won't be triggered
 #   by `Get-Item.Target`.
-#
-# For simplicity, we don't use `find -L . -xtype l`, which is slower.
 #
 find . -type l -printf '%P\n' \
   | xargs -I {} bash -c '
@@ -189,6 +208,14 @@ In order to make the option visible in the Bitlocker management:
 
 The files location is `%APPDATA%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar`, however, trying to populate it with pregenerated files, won't work.
 In order to restart the taskbar, use: `PS> Stop-Process -Name explorer`
+
+## Drives
+
+Unmount a drive:
+
+```sh
+powershell.exe -Command 'Dismount-Volume -DriveLetter D -Confirm:$false'
+```
 
 ## Screen capture
 
