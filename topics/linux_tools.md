@@ -458,10 +458,14 @@ parallel echo vmsav{1} ::: A B        # in parallel: (echo vmsavA) (echo vmsavB)
 Examples:
 
 ```sh
+# Placeholder manipulation, e.g. to change the output path!
+#
+find /path/to -type f | parallel "ffmpeg -i {} /path/new/{/}"
+
 # Multiple commands for each job
 # Redirections are supported.
 #
-ls -1 | parallel "avconv -i {} {}.wav && neroAacEnc -q 0.5 -if {}.wav -of {}.m4a"
+ls -1 | parallel "ffmpeg -i {} {}.wav && neroAacEnc -q 0.5 -if {}.wav -of {}.m4a"
 
 # Receive multiple arguments per process.
 # `--plus` activates many features, including positional parameters.
@@ -497,6 +501,10 @@ ls -1 *.txt | perl -pe 's/\.txt//' | xargs -P 4 -I {} mysql -e 'LOAD DATA INFILE
 # Double quotes needs to be escaped! Additionally, must escape the backslash, otherwise it's interpreted by Perl.
 #
 ls -1 *.txt | perl -pe 's/(.*)/\\"$1\\"/' | xargs -P 0 -I {} echo {}
+
+# Placeholder manipulation is not directly supported, but can use shell functionalities.
+#
+find /path/to -type f | xargs -I {} sh -c 'ffmpeg -i "$1" "/path/new/$(basename "$1")"' _ {}
 ```
 
 Ignore failing commands:

@@ -359,8 +359,9 @@ Video (`-vf scale=`):
 - `-2:540`                                           : Keep one dimension proportional and multiple of n (width,2); use -1 for
                                                        simple scaling
 - `w=800:h=600:force_original_aspect_ratio=decrease` : Fit into the specified dimensions, keeping the AR (1280x720 -> 800*450)
-- `scale='min(iw,ih*4/3)':'floor(min(ih,iw*3/4)/2)*2'`: Scale one (automatically chosen) axis, to match the given AR (4/3), with
-                                                       square pixels; rounding is necessary in some cases.
+- `scale='min(iw,ih*4/3)':'round(min(ih,iw*3/4)/2)*2'`: Scale one (automatically chosen) axis, to match the given AR (4/3), with
+                                                        square pixels; rounding is necessary in some cases.
+- `setsar=1`                                         : **WATCH OUT!** Add this when applying `scale`
 
 WATCH OUT! The end user AR is the "DAR", not the SAR. ffmpeg doesn't make the DAR values available.
 
@@ -457,6 +458,7 @@ ffmpeg \
   dest.mkv
 
 # In order to compress in parallel, can use the snippets:
+# GNU Parallel offers some conveniences, e.g. placeholder manipulation for output path
 ls -1 *.VOB \
   | perl -pe 's/.VOB$//' \
   | xargs -P 5 -I {} ffmpeg -i "{}.VOB" \
