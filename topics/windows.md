@@ -15,7 +15,7 @@
   - [Variables](#variables)
   - [Security](#security)
     - [WSL: Cache SSH keys password](#wsl-cache-ssh-keys-password)
-    - [Enable PIN to boot](#enable-pin-to-boot)
+    - [Enable PIN to boot (encrypted disk)](#enable-pin-to-boot-encrypted-disk)
   - [Taskbar pinned items programmatic manipulation](#taskbar-pinned-items-programmatic-manipulation)
   - [Drives](#drives)
   - [Screen capture](#screen-capture)
@@ -196,13 +196,16 @@ source $HOME/.keychain/$(hostname)-sh
 SH
 ```
 
-### Enable PIN to boot
+### Enable PIN to boot (encrypted disk)
 
 In order to make the option visible in the Bitlocker management:
 
-- open `gpedit.msc`
-- `Computer Configuration` -> `Administrative Templates` -> `Windows Components` -> `BitLocker Drive Encryption` -> `Operating System Drives`
-- Set `Require additional authentication at startup` (and according options)
+- `gpedit.msc`
+  - `Computer Configuration` -> `Administrative Templates` -> `Windows Components` -> `BitLocker Drive Encryption` -> `Operating System Drives`
+  - open `Require additional authentication at startup` (and according options)
+    - Enable
+    - `Configure TPM startup PIN:` -> `Require startup PIN with TPM`
+    - Disallow the other options
 
 ## Taskbar pinned items programmatic manipulation
 

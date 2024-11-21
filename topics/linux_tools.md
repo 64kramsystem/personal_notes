@@ -432,7 +432,7 @@ Run multiple instances:
 ```sh
 # [c]ursor, [N]ame
 #
-pv -cN input foo | gzip | pv -cN output > bar
+pv -cN in foo | gzip | pv -cN out > bar
 ```
 
 ## Parallel execution
