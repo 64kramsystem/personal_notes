@@ -192,12 +192,14 @@ This will yield a valid gem source 😳
 ### Gem commands
 
 ```sh
-gem unpack $gemfile           # Unpack gem
-gem build $gemname.gemspec    # Build gem
-gem push $gemname-*.gem       # Publish a built gem
-gem fetch $gemname            # Download a gem
-gem install $gemname:$version # Install the specific version of a gem
-gem install $gemname -- --build-flags... # Install a gem, with build flags
+gem unpack $gemfile                  # Unpack gem
+gem build $gem.gemspec               # Build gem
+gem push $gem-*.gem                  # Publish a built gem
+gem fetch $gem                       # Download a gem
+gem install $gem:$version            # Install the specific version of a gem
+gem install $gem -- --build-flags... # Install a gem, with build flags
+gem uninstall -ax $gem               # Uninstall, without versions/binaries prompt
+gem dependency $gem                  # List dependencies
 
 # Format for operations (`fetch`, `list -r`...) on remote authenticated repositories.
 # `-s` appends a source; --clear-sources clears the preceding sources.
