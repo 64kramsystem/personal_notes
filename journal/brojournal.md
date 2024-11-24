@@ -1,3 +1,8 @@
+## Sun 24/Nov/2024
+
+- Project: Geet
+  - [x] Add support for WSL to browser opening
+
 ## Mon 28/Oct/2024
 
 - Project: PM-Spotlight

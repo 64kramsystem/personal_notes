@@ -84,6 +84,14 @@ Go to the parent directory, and run `pnputil /add-driver *.inf /subdirs /install
 cmd.exe /d $mycommand
 powershell.exe -Command $mycommand
 
+# Open file with Windows related program (wslu package)
+#
+wslview $file
+
+# Convert path to/from Windows
+#
+wslpath $from_path $to_path
+
 # Mount a drive connected to Windows (not done automatically).
 #
 mount -o drvfs $letter: $path
