@@ -13,6 +13,7 @@
     - [Mount ext4 flash keys](#mount-ext4-flash-keys)
   - [Clipboard management](#clipboard-management)
   - [Variables](#variables)
+  - [Processes](#processes)
   - [Security](#security)
     - [WSL: Cache SSH keys password](#wsl-cache-ssh-keys-password)
     - [Enable PIN to boot (encrypted disk)](#enable-pin-to-boot-encrypted-disk)
@@ -88,7 +89,11 @@ powershell.exe -Command $mycommand
 #
 wslview $file
 
-# Convert path to/from Windows
+# Convert path to/from Windows.
+#
+# WATCH OUT! As of Nov/2024, it resolves symlinks, so if one wants to keep the them, it must convert manually:
+#
+#     echo "$path" | perl -pe 's|/mnt/c/Users/([^/]+)|C:/Users/\1|' | perl -pe 's|/|\\|g'
 #
 wslpath $from_path $to_path
 
@@ -111,9 +116,9 @@ In order rebuild symlinks, run:
 find "${config_paths[@]}" -type l \
   | xargs -I {} bash -c '
     target=$(
-      readlink "{}" | \
-      perl -pe "s|/mnt/c/Users/Saverio|C:/Users/Saverio|" | \
-      perl -pe "s|/|\\\\|g"
+      readlink "{}" \
+      | perl -pe "s|/mnt/c/Users/([^/]+)|C:/Users/\\1|" \
+      | perl -pe "s|/|\\\\|g"
     )
     link=$(echo {} | perl -pe "s|/|\\\\|g")
 
@@ -135,17 +140,21 @@ Formerly, a smarter attempt, detecting invalid symlink, has been made, however t
 #
 find . -type l -printf '%P\n' \
   | xargs -I {} bash -c '
-    if [[ -z $(powershell.exe -Command "(Get-Item \"{}\").Target") ]]; then
-      target=$(readlink "{}" | perl -pe "s|/home/myuser|C:\\\\Users\\\\Myuser|g" | perl -pe "s|/|\\\\|g")
-      link=$(echo {} | perl -pe "s|/|\\\\|g")
+      if [[ -z $(powershell.exe -Command "(Get-Item \"{}\").Target") ]]; then
+        target=$(
+          readlink "{}" \
+          | perl -pe "s|/mnt/c/Users/([^/]+)|C:/Users/\\1|" \
+          | perl -pe "s|/|\\\\|g"
+        )
+        link=$(echo {} | perl -pe "s|/|\\\\|g")
 
-      [[ -d "{}" ]] && dir_option=(/d) || dir_option=()
-      rm "{}"
-      cmd.exe /c mklink "${dir_option[@]}" "$link" "$target"
+        [[ -d "{}" ]] && dir_option=(/d) || dir_option=()
+        rm "{}"
+        cmd.exe /c mklink "${dir_option[@]}" "$link" "$target"
 
-      [[ -z $(powershell.exe -Command "(Get-Item \"{}\").Target") ]] && echo "Link $link is still invalid!"
-    fi
-  '
+        [[ -z $(powershell.exe -Command "(Get-Item \"{}\").Target") ]] && echo "Link $link is still invalid!"
+      fi
+    '
 ```
 
 ### Mount ext4 flash keys
@@ -188,6 +197,16 @@ powershell.exe -command `Get-Clipboard` # Prints clipboard content to stdout
 
 - Home:            `%USERPROFILE%`
 - AppData\Roaming: `%APPDATA%`
+
+## Processes
+
+Kill processes programmatically:
+
+```sh
+# Returns 0 if the process was found; 1 otherwise.
+#
+tasklist | findstr thunderbird.exe && taskkill /IM thunderbird.exe /F
+```
 
 ## Security
 
