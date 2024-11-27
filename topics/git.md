@@ -11,7 +11,7 @@
   - [Log/Blame/Tree comparison](#logblametree-comparison)
     - [Formatting/Prettifications](#formattingprettifications)
     - [Pretty formats](#pretty-formats)
-    - [Finding](#finding)
+    - [Finding (merges, commits, branches...)](#finding-merges-commits-branches)
   - [Diffing/Patching/Status](#diffingpatchingstatus)
   - [Metadata](#metadata)
   - [Merging](#merging)
@@ -260,20 +260,23 @@ cherry [-v] $upstream [$head]     # changes against tree (useful for rebasing: c
 - `%h` : abbreviated hash
 - `%s` : subject first line (title)
 
-### Finding
+### Finding (merges, commits, branches...)
 
 ```sh
 merge-base $A $B                                       # find common ancestor
-show :/$regex                                          # show the last commit matching a regex in the message
-branch --contains $commit                              # shows which branches contains the given commit
-rev-parse --verify $branch 2> /dev/null                # test if a branch exists
-name-rev --name-only $commit                           # shows which tag the commit was in. '~N' indicates how many commits (N) before the tag
-log --before="%F %R" $branch                           # show commits before/at given datetime
 log --merges v0.1.8...v0.1.9                           # search merges between two tags
 
+branch --contains $commit                              # shows which branches contains the given commit
+rev-parse --verify $branch 2> /dev/null                # test if a branch exists
 git rev-parse @{-1}                                    # find previously checkout out branch
 git name-rev $(git rev-parse @{-1}) --name-only        # name of previously checkout out branch
-[[ $(git cat-file -t $object 2> /dev/null) ]] && echo exists # check if a branch/commit/etc exists
+git rev-parse --abbrev-ref "$branch@{u}" >/dev/null 2>&1 # test if the branch has a remote (set $branch to blank for the current branch)
+
+show :/$regex                                          # show the last commit matching a regex in the message
+name-rev --name-only $commit                           # shows which tag the commit was in. '~N' indicates how many commits (N) before the tag
+log --before="%F %R" $branch                           # show commits before/at given datetime
+
+$(git cat-file -t $object 2> /dev/null)                # test if a branch/commit/etc exists (boolean)
 ```
 
 ## Diffing/Patching/Status
