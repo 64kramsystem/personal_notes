@@ -55,7 +55,17 @@
   - [Databases](#databases)
     - [SQLite 3](#sqlite-3)
     - [Mysql2](#mysql2)
-    - [Sorbet and related](#sorbet-and-related)
+  - [Sorbet/Gradual Typing](#sorbetgradual-typing)
+    - [General setup procedure](#general-setup-procedure)
+    - [Fixing code/dependencies](#fixing-codedependencies)
+      - [Require Sorbet runtime](#require-sorbet-runtime)
+      - [`Struct.new`-subtyped classes](#structnew-subtyped-classes)
+      - [Superclass redefinition](#superclass-redefinition)
+    - [Sorbet issues](#sorbet-issues)
+      - [Broken VSC multiroot/non-`.` dir](#broken-vsc-multirootnon--dir)
+      - [`--dir` option](#--dir-option)
+      - [`tapioca init` fails with certain gem versions](#tapioca-init-fails-with-certain-gem-versions)
+      - ["Unable to resolve constant" error](#unable-to-resolve-constant-error)
 
 ## APIs/Stdlib
 
@@ -1378,27 +1388,182 @@ result = @client.query(sql, stream: true, cache_rows: false)
 result.free
 ```
 
-### Sorbet and related
+## Sorbet/Gradual Typing
+
+- [Sorbet/Gradual Typing](#sorbetgradual-typing)
+  - [General setup procedure](#general-setup-procedure)
+  - [Add `typed` directive and start correction](#add-typed-directive-and-start-correction)
+  - [Fixing code/dependencies](#fixing-codedependencies)
+    - [Require Sorbet runtime](#require-sorbet-runtime)
+    - [`Struct.new`-subtyped classes](#structnew-subtyped-classes)
+    - [Superclass redefinition](#superclass-redefinition)
+  - [Sorbet issues](#sorbet-issues)
+    - [Broken VSC multiroot/non-`.` dir](#broken-vsc-multirootnon--dir)
+    - [`--dir` option](#--dir-option)
+    - [`tapioca init` fails with certain gem versions](#tapioca-init-fails-with-certain-gem-versions)
+    - ["Unable to resolve constant" error](#unable-to-resolve-constant-error)
+
+### General setup procedure
+
+Add Sorbet and Tapioca (tooling for Sobert) to the Gemfile:
 
 ```sh
-cat >> Gemfile << RUBY
+## Assumes that there is no distinction between dev and production.
 
+cat >> Gemfile << RUBY
+gem 'sorbet'
 gem 'sorbet-runtime'
-gem 'sorbet',  group: :development
-gem 'tapioca', group: :development, require: false
-gem 'spoom',   group: :development, require: false
+gem "tapioca", require: false
 RUBY
 
 bundle install
+```
 
-# Generates the rbi for the gems
+Configure Sorbet:
+
+```sh
+mkdir sorbet
+
+## Watchman is used to monitor files changed not from VSC; if this is required, remove the option, and
+## install the watchman package (not gem!).
+##
+## See [`--dir` option](#--dir-option) and [Superclass redefinition](#superclass-redefinition) for the
+## related options.
+##
+cat > sorbet/config << SH
+--dir=.
+--disable-watchman
+--suppress-payload-superclass-redefinition-for=Reline::ANSI
+--ignore=chef/
+--ignore=lib/
+--ignore=terraform/
+SH
+```
+
+Init Tapioca:
+
+```sh
+## See [`tapioca init` fails with certain gem versions](#tapioca-init-fails-with-certain-gem-versions)
+## to handle certain failures.
+##
 tapioca init
 
-# Typecheck; if the files are not set to typed, nothing will be checked
-bundle exec srb tc
-
-perl -i -0777 -pe 's/^/# typed: true/' **/*.rb
-
-# Add signatures to your methods with sig. To learn how, read: https://sorbet.org/docs/sigs
-# Even without signatures, some errors may pop up.
+## We don't need this.
+##
+rm bin/tapioca
 ```
+
+Install the VSC extension, and if the project is multiroot, ensure that the Ruby project is the top one (see [Broken VSC multiroot/non-`.` dir](#broken-vsc-multirootnon--dir)).
+
+If now want to set strict typing, and autocorrect what's possible:
+
+```sh
+# Add the `typed` directive:
+
+sed -i '1i # typed: strict\n' **/*.rb
+ag '#!.+ruby' -l | grep -v .rb | xargs sed -i '3i # typed: strict\n' # 3rd line is generally ok, but possibly not always
+
+git commit -m "Add 'typed' directive to Ruby files"
+
+# Run autocorrection:
+
+srb tc --autocorrect
+```
+
+### Fixing code/dependencies
+
+#### Require Sorbet runtime
+
+Don't forget to add `require "sorbet-runtime"` where necessary!
+
+#### `Struct.new`-subtyped classes
+
+`Struct.new`-subtyped classes are not supported; they need to be converted:
+
+```rb
+class InstanceData < Struct.new(:id, :name)
+  include DataStructuresHelper
+
+  # Any reference to :to_a needs to be removed, since it's not supported by T::Struct, although in TS
+  # we undefine it.
+  #
+  undef_method :to_a
+end
+
+## Instantiation is supported only via keyword args, so it needs to be converted.
+##
+instance = InstanceData.new("foo")
+
+## WATCH OUT!! This yields false when using T::Struct, so it needs to be handled (e.g. by comparing a
+## specific argument).
+##
+instance == InstanceData.new("foo")
+
+class InstanceData < T::Struct
+  const :id, String                 # immutable, not nullable
+  prop  :name, T.nilable(String)    # mutable, nullable
+
+  include DataStructuresHelper
+
+  # Best to add this for debugging purposes (see above note about this method)!
+  #
+  def ==(other)
+    raise "T::Struct#==() doesn't work like Struct!"
+  end
+end
+
+instance = InstanceData.new(id: "foo")
+
+## If required, must consider the nil case.
+##
+instance&.id == InstanceData.new("foo")
+```
+
+#### Superclass redefinition
+
+Sorbet doesn't support redefining superclasses at runtime:
+
+```
+sorbet/rbi/gems/reline@0.5.10.rbi:32: Parent of class Reline::ANSI redefined from Object to Reline::IO https://srb.help/5012
+    32 |class Reline::ANSI < ::Reline::IO
+                             ^^^^^^^^^^^^
+  Note:
+    Pass --suppress-payload-superclass-redefinition-for=Reline::ANSI at the command line or in the sorbet/config file to silence this error.
+    Only use this to work around Ruby or gem upgrade incompatibilities.
+```
+
+Fix this by ignoring the warning (assuming this is in a gem):
+
+```sh
+echo '--suppress-payload-superclass-redefinition-for=Reline::ANSI' >> sorbet/config
+```
+
+### Sorbet issues
+
+#### Broken VSC multiroot/non-`.` dir
+
+The whole framework (Tapioca/Sorbet/VSC extension) break in multiple ways when `--dir` is not set as `.` (with the related changes, e.g. the Gemfile won't be in the current dir); multiple workarounds have been attempted, and all failed.
+
+Therefore, Sorbet must be placed at the top level (use `--ignore` to ignore other directories), and when running VSC in multiroot, **set the target project as the top**.
+
+#### `--dir` option
+
+Tapioca sets `dir\n.` in the Sorbet config file, however, this seems not to be interpreted the same way as `--dir=.`; for example, the VSC extension output will display:
+
+    Watchman support currently only works when Sorbet is run with a single input directory. If Watchman is not needed, run Sorbet with `--disable-watchman`.
+
+For this reason, it's better to use the format `--dir=.`.
+
+#### `tapioca init` fails with certain gem versions
+
+`tapioca init` fails when the `aws-sdk-s3` version `1.169.0` is used; use `1.151.0`:
+
+```
+Requiring all gems to prepare for compiling... /home/saverio/.rvm/gems/ruby-3.3.4/gems/rexml-3.3.8/lib/rexml/undefinednamespaceexception.rb:4:in `<module:REXML>': uninitialized constant REXML::ParseException (NameError)
+
+  class UndefinedNamespaceException < ParseException
+```
+
+#### "Unable to resolve constant" error
+
+If this error occurs when everything seems to be correct, make sure to adhere to the indications in [Broken VSC multiroot/non-`.` dir](#broken-vsc-multirootnon--dir), as broken setups can cause very confusing errors related to constant resolution.
