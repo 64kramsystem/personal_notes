@@ -51,7 +51,8 @@ before_action :method
 query.ids                   # pluck the ids!
 query.pluck(:column)        # select only the single column, without constructing AR instances
 query.pick(:column)         # limit(1).pluck(:column)
-arel.table                  # name of the main AREL query table
+arel.table                  # name of the base AREL query table
+arel.model                  # name of the base AREL model
 
 # OR operator.
 # If in the MyTable scope, where second where doesn't need qualification.
