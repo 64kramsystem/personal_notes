@@ -792,6 +792,16 @@ Restore a single partition:
 pv nvme1n1p4.ntfs-ptcl-img.zst.aa | zstd -d | partclone.restore -d -s - -o /dev/nvme0n1p4
 ```
 
+Clone a disk:
+
+```sh
+# `-b`    : batch (no keypresses)
+# `-icds` : skip check destination s8ize
+# `-r`    : resize partition
+#
+ocs-onthefly -b -icds -r -j2 -p a -f /dev/sdc -d /dev/sda
+```
+
 ## Dump CDs (safely)
 
 DVDisaster will check the data while dumping:

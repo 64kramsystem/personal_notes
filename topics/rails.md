@@ -7,7 +7,8 @@
     - [Filters](#filters)
   - [ActiveRecord](#activerecord)
     - [Querying](#querying)
-    - [Batching](#batching)
+      - [Batching](#batching)
+      - [Metadata](#metadata-1)
     - [Updating](#updating)
     - [Manual AREL query build](#manual-arel-query-build)
     - [Migrations](#migrations)
@@ -51,7 +52,7 @@ before_action :method
 query.ids                   # pluck the ids!
 query.pluck(:column)        # select only the single column, without constructing AR instances
 query.pick(:column)         # limit(1).pluck(:column)
-arel.table                  # name of the base AREL query table
+arel.table_name             # name of the base AREL query table
 arel.model                  # name of the base AREL model
 
 # OR operator.
@@ -101,9 +102,13 @@ Group by/having (aggregates):
 customers.join(:orders).group('customers.id').having('count(*) > 10')
 ```
 
-### Batching
+#### Batching
 
 Both `:find_each` and `:find_in_batches` have a default batch size of 1000.
+
+#### Metadata
+
+- `AREL#select_values()`: find out if `:select` was called
 
 ### Updating
 
