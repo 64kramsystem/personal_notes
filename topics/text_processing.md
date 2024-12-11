@@ -52,7 +52,7 @@
   - [Silver searcher (ag)](#silver-searcher-ag)
   - [Generic snippets](#generic-snippets)
     - [Stop tail when a string matches](#stop-tail-when-a-string-matches)
-    - [Compare/sort versions](#comparesort-versions)
+    - [Version comparison/sort](#version-comparisonsort)
     - [Sum/average/etc. values extracted from a textfile](#sumaverageetc-values-extracted-from-a-textfile)
 
 ## Grep
@@ -1026,7 +1026,7 @@ ag -G '_spec.rb$' $pattern [$directory]
 sh -c "tail --pid=\$\$ -f $(printf "%q" "$filename") | { sed -n $(printf "%q" "/$pattern/ q") && kill \$\$; }" || true
 ```
 
-### Compare/sort versions
+### Version comparison/sort
 
 Options:
 

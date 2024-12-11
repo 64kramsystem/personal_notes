@@ -48,9 +48,8 @@
       - [Telnet](#telnet)
       - [SMTP](#smtp)
       - [Ping (ICMP)](#ping-icmp)
-      - [Convert curl request to Ruby](#convert-curl-request-to-ruby)
       - [TCP Server](#tcp-server)
-  - [Solargraph](#solargraph)
+      - [Other](#other)
   - [DnsMadeEasy (`dnsmadeeasy-rest-api`)](#dnsmadeeasy-dnsmadeeasy-rest-api)
   - [Databases](#databases)
     - [SQLite 3](#sqlite-3)
@@ -752,10 +751,10 @@ while true
 end
 ```
 
-Thread-local variables:
 
 ```rb
-Thread.current[:pending_inputs]
+mythread.value                    # Joins the thread, and returns the return value
+Thread.current[:pending_inputs]   # Thread-local variables
 ```
 
 #### Mutex
@@ -1220,10 +1219,6 @@ send_email(SENDER_EMAIL, RECIPIENT_EMAILS, email_text, password, cc: CC_EMAILS, 
 
 `net/ping` has been removed from the stdlib anymore. Must use a gem or the `ping` unix tool, since the solution proposed on [StackOverflow](https://stackoverflow.com/a/7520485) has inconsistent results.
 
-#### Convert curl request to Ruby
-
-See https://jhawthorn.github.io/curl-to-ruby.
-
 #### TCP Server
 
 ```rb
@@ -1239,18 +1234,10 @@ loop do
 end
 ```
 
-## Solargraph
+#### Other
 
-Base configuration (`.solargraph.yml` in project root):
-
-```yaml
----
-include:
-- "**/*.rb"
-exclude:
-- lib/tenderjit/ruby/**/*
-- test/**/*
-```
+- Convert curl request to Ruby: see https://jhawthorn.github.io/curl-to-ruby.
+- Get hostname: `Socket.gethostname`.
 
 ## DnsMadeEasy (`dnsmadeeasy-rest-api`)
 

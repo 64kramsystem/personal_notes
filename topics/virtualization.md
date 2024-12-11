@@ -19,7 +19,7 @@
     - [QEMU](#qemu)
       - [Usermode](#usermode)
       - [RISC-V](#risc-v)
-  - [VFIO](#vfio)
+  - [3D Acceleration/VFIO](#3d-accelerationvfio)
     - [Cards consumption](#cards-consumption)
     - [nvidia-smi](#nvidia-smi)
   - [Vagrant](#vagrant)
@@ -380,7 +380,7 @@ qemu-riscv64 -L /path/to/riscv-gnu-toolchain/build/sysroot pigz
 
 See https://risc-v-getting-started-guide.readthedocs.io/en/latest/linux-qemu.html.
 
-## VFIO
+## 3D Acceleration/VFIO
 
 Lots of interesting stuff on the [Arch Wiki](https://wiki.archlinux.org/title/PCI_passthrough_via_OVMF).
 
@@ -401,6 +401,8 @@ AMD reset problem discussion: https://www.reddit.com/r/VFIO/comments/gq0emj/amd_
 
 With `AutoAddGPU = false`, there is no process running on the card 1 (there is, without it), but still, unbinding hangs.
 
+VirtIO GPU Vulkan Support: https://gist.github.com/peppergrayxyz/fdc9042760273d137dddd3e97034385f
+
 ### Cards consumption
 
 - 6600 XT
@@ -416,6 +418,7 @@ See: https://wiki.archlinux.org/title/AMDGPU#Power_profiles.
 
 ### nvidia-smi
 
+See [`nv-switch` program](https://github.com/64kramsystem/openscripts/blob/master/nv-switch).
 `persistenced` reference: https://docs.nvidia.com/deploy/driver-persistence/index.html#persistence-daemon
 
 ```sh
@@ -427,14 +430,14 @@ nvidia-smi -i 1 --format=csv --query-supported-clocks=gr
 
 nvidia-smi -i 1 --format=csv,noheader -l 1 --query-gpu=pstate,power.draw,clocks.mem,clocks.gr # P8, 13.54 W, 405 MHz, 300 MHz
 
-## Power state can't be set.
-## This is the clocks, but it seems it can't be set.
-##
+# Power state can't be set.
+# This is the clocks, but it seems it can't be set.
+#
 nvidia-smi -i 1 -ac 405,300 # mem/gr; not supported!
 
-## Power limits can be set, but the minimum may be too high.
-## Setting an invliad
-##
+# Power limits can be set, but the minimum may be too high.
+# Setting an invalid
+#
 nvidia-smi -i 1 --format=csv --query-gpu=power.power.min_limit,power.max_limit
 sudo nvidia-smi -i 1 -pl 16.66
 ```

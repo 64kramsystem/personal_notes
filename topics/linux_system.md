@@ -593,24 +593,27 @@ dpkg -s $package 2> /dev/null | perl -0777 -ne 'print $1 if /^Status: install ok
 
 # Advanced filtering with aptitude.
 #
-# In order to filter out i386 packages, use the suffix `~rnative`.
+# In order to apply multiple filters in conjuction, use a single string and concatenate them (for
+# clarity, can also separate them with spaces).
 # The option `-F %p` prints only the package name.
 #
 # Aptitude uses regexes by default, but it doesn't support all the patterns; tested metachars:
 #
 # - ^,$ : supported
 # - \b  : supported
+# - +   : supported
 # - ?   : supported, but not for groups
 # - |   : supported
+# - \d  : not supported; use [[:digit:]] or [0-9]
 #
-# Prefixes:
+# Search terms (see https://www.debian.org/doc/manuals/aptitude/ch02s04s05.en.html):
 #
 # - ~n : package name
-# - ~r : arch
+# - ~r : arch (special values: `native` and `foreign`)
 #
 # Search terms reference: https://www.debian.org/doc/manuals/aptitude/ch02s04s05.en.html
 #
-aptitude search -F %p '~nxserver-xorg-video-nvidia-[[:digit:]]+$~ramd64'
+aptitude search -F %p '~nxserver-xorg-video-nvidia-[[:digit:]]+$ ~rnative'
 
 # Better use this than `apt search`; the latter is undocumented and has an atrocious output.
 #
