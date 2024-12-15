@@ -138,10 +138,18 @@ Booleans:
 ### Time stuff
 
 ```python
-# Get the current time as a zone-aware object
+# Get the current time as a zone-aware object.
 #
 from datetime import datetime, timezone
 now = datetime.now(timezone.utc)
+
+# Get the time zone abbreviation in any O/S (Windows doesn't have a native way!!).
+#
+from datetime import datetime
+from tzlocal import get_localzone
+import pytz
+# Includes the abbrev.TZ
+now = pytz.timezone(str(get_localzone())).localize(datetime.now())
 ```
 
 ## APIs/Stdlib

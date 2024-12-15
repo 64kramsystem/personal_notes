@@ -81,14 +81,21 @@ sudo aptitude install -y libreoffice-script-provider-python
 mkdir -p ~/.config/libreoffice/4/user/Scripts/python
 ```
 
+If third party libraries are provided, manually install pip and the libraries:
+
+```batch
+curl https://bootstrap.pypa.io/get-pip.py | "C:\Program Files\LibreOffice\program\python.exe"
+"C:\Program Files\LibreOffice\program\python.exe" -m pip install tzlocal pytz
+```
+
 Script (create as `~/.config/libreoffice/4/user/Scripts/python/GetTimeZone.py`):
 
 ```py
-import datetime
+from datetime import datetime
 
 def get_timezone_name():
     # Reference: https://stackoverflow.com/a/51296984/210029
-    return datetime.datetime.now().astimezone().tzname()
+    return datetime.now().astimezone().tzname()
 ```
 
 Invocation:
