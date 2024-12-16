@@ -861,25 +861,26 @@ echo ${#coordinates[@]}              # size (length)
 #
 # - indexes are zero-based
 # - only the first can be negative (WATCH OUT! PREFIX WITH SPACE, due to disambiguation with `${var:-val}`)
-# - the first can be blank
-# - the interval is left-closed, right-open
+# - the first can be blank (defaults to 0)
 # - spaces are accepted, and interpolation, too
 #
 slice=("${coordinates[@]:2}")                           # Ruby Interval [2..]
+slice=("${coordinates[@]: -2}")                         # Ruby Interval [-2..]
 slice=("${coordinates[@]:2:3}")                         # Ruby Interval [2, 3]
-slice=("${coordinates[@]: -2:3}")                       # Ruby Interval [-2, 3]; WATCH OUT! NOTE THE SPACE
-slice=("${coordinates[@]:2: ${#coordinates[@]} -2-1 }") # Ruby Interval [2, len - 3] = [2..-1]
+slice=("${coordinates[@]: -2:3}")                       # Ruby Interval [-2, 3]
+slice=("${coordinates[@]:2:${#coordinates[@]}-2+1 }")   # Ruby Interval [2, len - start + 1] = [2..-1]
 echo "${coordinates[@]:2}"                              # When printing a slice, don't use the round brackets
 
 # WATCH OUT! $@ is insane!! (same applies to $*)
 #
 echo "${@[1]}"        # NOT SUPPORTED!
 echo "${@:1:1}"       # Use this to access a single entry
-echo "${@:-1}"        # Use this to access the last entry
+echo "${@: -1}"       # Use this to access the last entry
 echo "${@}"           # DAFUQ!!! Doesn't include $0
 echo "${@:0}"         # Includes $0 (Ruby [0..]); WATCH OUT! $0 is the program name
+echo "${@::3}"        # WATCH OUT! Includes $0 (Ruby [0, 3])
 echo "${@:1:${#@}-1}" # DAFUQ!!! $#@ doesn't count $0, so must account when accessing by a length expression
-echo ${*:${#@}}       # Last element
+echo "${*:${#@}}"     # Last element (as string); use `(${@...)` for array
 
 # Simple inclusion tests (there is no direct way)
 #
