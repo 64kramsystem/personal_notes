@@ -1,3 +1,8 @@
+## Wed 25/Dec/2024
+
+- Project: Schedule manager
+  - [x] Add support for "month/day" format
+
 ## Sun 24/Nov/2024
 
 - Project: Geet

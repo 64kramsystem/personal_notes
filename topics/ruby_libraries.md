@@ -226,7 +226,8 @@ General APIs/operations:
 ```ruby
 @time + seconds
 
-@date >> @months; @date << @months                        # Adds/subtracts months to a date (!!)
+@date >> @months; @date << @months                        # Adds/subtracts whole months (not days) to a date
+@date >> 12 * @months                                     # Use to add/subtract whole years (not days) to a date
 @date.next_month(@months=1), @date.prev_month(@months=1)  # More readable; also supports `day`, `year`
 
 @date_time.to_time.to_i                                   # DateTime to Unix time (epoch)
