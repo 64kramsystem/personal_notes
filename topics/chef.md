@@ -34,6 +34,8 @@
 
 ### Attributes precedence/merging
 
+WATCH OUT! It's necessary to specify `depends` in the cookbook metadata, in order to have the depending cookbook's attributes available.
+
 Lower to higher:
 
 - A default attribute located in a cookbook attribute file
