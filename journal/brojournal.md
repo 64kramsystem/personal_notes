@@ -1,3 +1,22 @@
+## Sun 29/Dec/2024
+
+- Tools
+  - [x] `ag`: Make non-/TTY outputs same
+  - [x] `fpp`: Make key binding WSL-compatible
+- Project: Internal scripts
+  - Projects synchronizer
+    - [x] Attempt (discarded) at fixing parallel execution, via timeout
+    - [x] Fixed bug: `errexit` was not set in push/pull script
+    - [x] Fixed bug: pull could result into interaction, which hung the procedure
+      - Hopefully fixes the parallel execution
+  - `xi`
+    - [x] Simplify logic
+    - [x] Finally print output via stdout, instead of TTY
+      - Fixes git aliases in WSL
+    - [x] Move to `openscripts`
+  - `git`-related
+    - [x] Add support for params (`--ff`) to merge delete alias/script
+
 ## Wed 25/Dec/2024
 
 - Project: Schedule manager
