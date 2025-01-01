@@ -16,10 +16,12 @@
     - [Disconnect and power off a device](#disconnect-and-power-off-a-device)
     - [Reset a USB device](#reset-a-usb-device)
   - [Power Management](#power-management)
-  - [Graphic cards/drivers (Vulkan)](#graphic-cardsdrivers-vulkan)
+  - [Graphic cards/drivers](#graphic-cardsdrivers)
+    - [Vulkan](#vulkan)
   - [Screen](#screen)
     - [HiDPI possible solution (fractional scaling)](#hidpi-possible-solution-fractional-scaling)
     - [HiDPI legacy solution (add new resolution)](#hidpi-legacy-solution-add-new-resolution)
+    - [iGPU memory size](#igpu-memory-size)
   - [Audio](#audio)
 
 ## Hardware info
@@ -202,7 +204,9 @@ Useful references:
 - https://wiki.archlinux.org/title/Power_management/Suspend_and_hibernate
 - https://community.frame.work/t/waking-immediately-from-suspend-or-hibernate-how-i-fixed-it-for-me/19763/6
 
-## Graphic cards/drivers (Vulkan)
+## Graphic cards/drivers
+
+### Vulkan
 
 AMD card can use two Vulkan backends: RADV and AMDVLK; RADV is typically better. Can choose them via:
 
@@ -274,6 +278,19 @@ Add the resolution to the device:
 Now it can be chosen in the `Displays` desktop environment settings.
 
 For setting it at startup, create a shell script $HOME/.xprofile, and assign executable permissions.
+
+### iGPU memory size
+
+To find the amount used:
+
+```sh
+lspci -k | grep -EA3 'VGA|3D|Display'                      # find the the PCI bus id
+sudo cat /sys/kernel/debug/dri/0000:0f:00.0/amdgpu_vram_mm # check 'usage'
+```
+
+On the Nov/2024 system, watching a YT video uses ~500 MB (local = less).
+
+The amount set by the `Auto` setting of the current mobo is static, not dynamically allocated during O/S usage.
 
 ## Audio
 

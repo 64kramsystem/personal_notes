@@ -38,6 +38,8 @@ The VIM section requires some cleanup.
 - ``Ctrl+` ``                 Show/hide terminal
 - `Ctrl+Shift+V`              Open file preview in tab
 - `Ctrl+K, V`                 Show file preview (side-by-side)
+- `Ctrl+K, R`                 Open file directory in system file manager ("[R]eveal")
+- `Ctrl+K, T`                 Open file directory in file explorer (custom)
 - `Ctrl+\`                    Split editor vertically
 - `Ctrl+K, Ctrl+\`            Split editor horizontally
 

@@ -214,6 +214,10 @@ btrfs device stats $mount
 btrfs scrub start [-B] $mount
 btrfs scrub status -d $mount
 
+# Detect corrupted files (path is relative to the mount)
+#
+dmesg | perl -lne 'print $1 if /checksum error.+\(path: (.+)\)/' | uniq
+
 # Recovery
 #
 mount -o recovery /dev/sdb $mount
