@@ -248,20 +248,15 @@ directory '/etc/apache2' do
   action    :create       # :delete (don't forget :recursive=true!)
 end
 
-# Progressively create a directory.
-# Using each_with_object() + concat() is an option, but requires dup() in each function that uses the
-# current path, which is very error-prone.
+# Create a directory tree, owned by the given user.
 #
-"/foo/bar/baz".split("/")[1..].inject("") do |current_path, entry|
-  current_path += "/#{entry}"
-
-  directory current_path do
-    owner  'app'
-    group  'app'
-    not_if { ::Dir.exist?(current_path) }
+Pathname.new(full_path).descend do |path|
+  directory path do
+    owner     "myuser"
+    group     "myuser"
+    # WATCH OUT! May want to skip the existing paths, if they'as they're owned by root.
+    not_if { Dir.exist?(path) }
   end
-
-  current_path
 end
 ```
 
