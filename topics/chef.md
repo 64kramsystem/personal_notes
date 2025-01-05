@@ -1,6 +1,7 @@
 # Chef
 
 - [Chef](#chef)
+  - [Client](#client)
   - [Resource concepts](#resource-concepts)
     - [Attributes precedence/merging](#attributes-precedencemerging)
     - [Basic concepts](#basic-concepts)
@@ -29,6 +30,15 @@
   - [Useful stuff](#useful-stuff)
     - [Define resource dynamically](#define-resource-dynamically)
     - [Setting env vars when not supported](#setting-env-vars-when-not-supported)
+
+## Client
+
+```sh
+# --why-run        : dry run
+# --format minimal : display reduced output, with changes summarized at the bottom (but no content changes)
+#
+chef-client --why-run --format minimal
+```
 
 ## Resource concepts
 
@@ -397,6 +407,8 @@ The resource can be specified without content, useful for example to enable the 
 WATCH OUT!! Just because a unit is enabled by the vendor, it doesn't mean that it will actually be enabled!!
 
 ```ruby
+# WATCH OUT! The `.service` suffix is necessary.
+#
 systemd_unit 'nmon.service' do
   # WATCH OUT!! This does *not* create a user unit; as of May/2023, it seems that user units must be
   # manually created.
