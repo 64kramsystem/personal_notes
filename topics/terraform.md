@@ -234,13 +234,29 @@ for_each = var.project
 name     = "web-server-sg-${each.key}-${each.value.environment}"
 
 # Example with dynamic block, and source list of numbers.
-#.
+#
 dynamic "notification" {
   for_each = toset(formatlist("%s", local.billing_alarm_thresholds))
 
   content {
     threshold = notification.value
   }
+
+# The above can be used to generate multiple blocks with (mutually exclusive) conditions
+#
+dynamic "default_action" {
+  for_each = length(var.my_list) == 0 ? [1] : []
+  content {
+    # ...
+  }
+}
+
+dynamic "default_action" {
+  for_each = length(var.my_list) == 0 ? [] : [1]
+  content {
+    # ...
+  }
+}
 ```
 
 ## State/general operations

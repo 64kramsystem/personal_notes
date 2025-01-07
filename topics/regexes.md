@@ -18,6 +18,7 @@
 |   Class   | Extended form |
 | :-------: | :-----------: |
 | `:alnum:` |  `a-zA-Z0-9`  |
+| `:alpha:` |   `a-zA-Z`    |
 | `:blank:` |     ` \t`     |
 
 ## Quantifiers (including `*`/`+`)
