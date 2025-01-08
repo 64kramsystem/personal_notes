@@ -160,7 +160,7 @@ WATCH OUT!! The default shell is dash; using bashisms, e.g. `rm /{foo,bar}`, won
 
 ```ruby
 execute 'apache_configtest' do
-  command '/usr/sbin/apachectl configtest'
+  command '/usr/sbin/apachectl configtest' # default: resource name
   action  :run
   login   true # Run as login shell; see subsection below.
 end
