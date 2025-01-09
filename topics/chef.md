@@ -488,16 +488,18 @@ Date.new(1970, 1, 1) + pass_meta.sp_lstchg   # expiry date
 Execute code on nodes from the commandline:
 
 ```sh
+# Generally speaking, it's good practice to print the node name, as it's easy to miss them in the search
+# and not notice.
+#
 # `exec` can also receive a string, using the `-E` option, but heredoc is clearer.
 # Including recipes doesn't work.
 
 knife exec << 'RUBY'
-  # transform() finds nodes, and saves a node if the block returns a truthy value; it's undocumented,
-  # and located at `chef-X.Y.Z/lib/chef/shell/model_wrapper.rb`.
-  # The method search() doesn't save.
   # Can pass :all to match all the nodes.
+  # transform() is often used, but it's undocumented (it's located at `chef-X.Y.Z/lib/chef/shell/model_wrapper.rb`);
+  # a node is saved depending on the truthiness of the value returned by the block.
   #
-  nodes.transform('name:web*') do |node|
+  nodes.search('name:web*') do |node|
     # Chef::Node [documentation](rubydoc.info/gems/chef/Chef/Node).
     #
     puts "- #{node.name}: #{node.run_list}"
@@ -506,9 +508,17 @@ knife exec << 'RUBY'
     #
     node.run_list.reset!('role[app_server]')
 
-    true
+    node.save
   end
 RUBY
+```
+
+Manipulate a node attribute:
+
+```sh
+# There is no command for attributes manipulation, so we use the strategy above.
+#
+knife exec --exec 'nodes.search("name:vmhannesbenson.ts.int") { |n| n.normal_attrs.delete("system_base"); n.save(); puts "- [√] #{node.name}" }'
 ```
 
 Other commands:

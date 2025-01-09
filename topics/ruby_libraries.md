@@ -972,7 +972,7 @@ $lock_file.flock(File::LOCK_EX | File::LOCK_NB)
 
 ```ruby
 Etc.getpwuid.name             # Get current user name
-Etc.getlogin                  # Current LOGGED IN user (not necessarily the current!)
+Etc.getlogin                  # Current LOGGED IN user; WATCH OUT!: not necessarily the current
 Etc.getpwuid.dir              # Get current user home dir. For generic users, use `Dir.home`
 ```
 

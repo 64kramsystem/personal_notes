@@ -143,6 +143,10 @@ Booleans:
 from datetime import datetime, timezone
 now = datetime.now(timezone.utc)
 
+# Timestamp with timezone (Linux, not Windows)
+#
+datetime.now().astimezone()
+
 # Get the time zone abbreviation in any O/S (Windows doesn't have a native way!!).
 #
 from datetime import datetime
