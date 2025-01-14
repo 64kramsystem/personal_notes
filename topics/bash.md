@@ -381,6 +381,8 @@ myTest "foo" && echo "bar"      # prints `bar`!
 
 ### Regular expressions
 
+For non-trivial expressions, better use `grep -qP`!
+
 !! WATCH OUT !!
 
 1. They're not PCRE;
@@ -397,7 +399,7 @@ Metacharacters:
 - `\d`         : not supported; use `[0-9]` or `[:digit:]`
 - `[:alpha:]`  : supported
 - `\S`         : not supported
-- `\b`         : supported
+- `\b`         : not supported; use `[:<:]` and `[:>:]`
 - `\s`         : `[:space:]`
 - `[:xdigit:]` : hexadecimal!
 - `[^…]`       : supported

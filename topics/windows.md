@@ -12,6 +12,7 @@
     - [Symlinks/Junctions](#symlinksjunctions)
     - [Mount ext4 flash keys](#mount-ext4-flash-keys)
   - [Clipboard management](#clipboard-management)
+  - [GUI/Notifications](#guinotifications)
   - [Variables](#variables)
   - [Processes](#processes)
   - [Security](#security)
@@ -192,6 +193,10 @@ $ lsblk # will show the disk, which can mount
 clip.exe                                # Pastes stdin into the clipboard
 powershell.exe -command `Get-Clipboard` # Prints clipboard content to stdout
 ```
+
+## GUI/Notifications
+
+Display a dialog: `msg * "This is your notification message"`
 
 ## Variables
 
