@@ -135,6 +135,7 @@ Substituting/matching:
 str[/regex/, idx]                                     # same as `str.match(/regex/)[idx]`
 "saverio".scan(/(ver(io))/)                           # [["verio", "io"]]
 "saverio".scan(/cusumano/)                            # []
+File.fnmatch(@pattern, @string)                       # use this API in order to perform glob matching!
 
 # The non-capturing group is: included in the match;     replaced; not captured.
 # The lookahead is            included in the match; not replaced; not captured.

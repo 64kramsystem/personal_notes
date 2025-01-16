@@ -10,8 +10,7 @@
       - [Video to animated GIF/PNG](#video-to-animated-gifpng)
     - [Stream/file operations](#streamfile-operations)
       - [De/mux](#demux)
-      - [Lossless split (trim) m4a](#lossless-split-trim-m4a)
-      - [Extract segment](#extract-segment)
+      - [Stream extraction/lossless splitting](#stream-extractionlossless-splitting)
       - [Split by duration, starting on a keyframe](#split-by-duration-starting-on-a-keyframe)
       - [Concatenate videos](#concatenate-videos)
       - [Deinterlacing](#deinterlacing)
@@ -208,29 +207,20 @@ ffmpeg -i $input -vn -c:a copy $output
 ffmpeg -i $input -vn -map 0:a:1 -c copy $audio_output
 ```
 
-#### Lossless split (trim) m4a
+#### Stream extraction/lossless splitting
 
-Can use: github.com/mifi/lossless-cut/releases.
+For lossless splitting/trimming, it's best to use [LosslessCut](https://github.com/mifi/lossless-cut); see next section for ffmpeg details.
 
-See uber-rob.co.uk/2014/02/splittingcutting-an-m4a-file.
+In order to extract segments, use `-ss` after `-i`:
 
 ```sh
-# Add `-vn` if there is video
-# `-t` is the length
+# Timestamps are in `hh:mm:ss[.sss]` format.
 #
-ffmpeg -ss 0:00:42 -i in.m4a -c copy -t 1:00:00 out.m4a
+ffmpeg -i $source -ss $start -t $duration -vcodec copy -acodec copy
+ffmpeg -i $source -ss $start -to $end -vcodec copy -acodec copy
 ```
 
-#### Extract segment
-
-WATCH OUT! In at least some cases, video copying will cause the destination to start at the nearest keyframe; when so, one needs to reencode.
-
-```sh
-# `ss`: start
-# `t` : duration
-
-ffmpeg -ss hh:mm:ss -i $source -t hh:mm:ss -vcodec copy -acodec copy
-```
+For keyframe-based segmentation, see https://superuser.com/a/825289.
 
 #### Split by duration, starting on a keyframe
 

@@ -51,6 +51,7 @@
     - [RDS](#rds)
     - [EFS](#efs)
     - [Billing (budgets)](#billing-budgets)
+    - [WAF/ACLs](#wafacls)
 
 ## Base configuration
 
@@ -222,9 +223,13 @@ coalesce(["", "v2"]...)  # unpack operator
 
 ### Control flow/dynamic blocks
 
+Ternary operator (must be either on one line or surrounded by round bracked; condition must be bool); use for conditionals (if/then/else):
+
 ```tf
-condition ? true_block : false_block # ternary operator (must be on one line; condition must be bool); use for conditionals (if/then/else)
+condition ? true_block : false_block
 ```
+
+Foreach/dynamic blocks:
 
 ```tf
 # Inside a resource/module; the variable is a map. `for_each` is a bit picky; it requires a map or set
@@ -255,6 +260,25 @@ dynamic "default_action" {
   for_each = length(var.my_list) == 0 ? [] : [1]
   content {
     # ...
+  }
+}
+```
+
+Foreach doesn't expose the index of the current iteration; workaround are requird:
+
+```tf
+# For dynamic blocks, must manually generate a zipped map:
+locals {
+  # Must use the index as key, both because complex objects are not supported, and because the values
+  # could be non-unique.
+  indexed_rules = zipmap(range(length(local.rules)), local.rules)
+  rules = []
+}
+
+dynamic "rule" {
+  for_each = local.indexed_rules
+  content {
+    priority = rule.key
   }
 }
 ```
@@ -1808,6 +1832,112 @@ resource "aws_budgets_budget" "infrastructure" {
       threshold                  = notification.value
       threshold_type             = "PERCENTAGE"
       subscriber_sns_topic_arns  = [aws_sns_topic.budgets.arn]
+    }
+  }
+}
+```
+
+### WAF/ACLs
+
+DRYest way to define rules (in particular, avoid hardcoding the priority):
+
+```tf
+locals {
+  indexed_rules = zipmap(range(length(local.rules)), local.rules)
+  rules = [
+      {
+        name           = "AllowFoo"
+        action         = "allow"
+        match_type     = "EXACTLY" # or `STARTS_WITH`, `REGEX` or `SUBDOMAINS_ONLY`
+        pattern        = "/Foo"    # list of subdomains in case of `SUBDOMAINS_ONLY`
+      },
+  ]
+}
+
+resource "aws_wafv2_web_acl" "application" {
+  name  = "Application"
+  scope = "REGIONAL"
+
+  default_action {
+    block {}
+  }
+
+  visibility_config {
+    cloudwatch_metrics_enabled = true
+    sampled_requests_enabled   = false
+    metric_name                = "ApplicationWebACL"
+  }
+
+  dynamic "rule" {
+    for_each = local.indexed_rules
+
+    content {
+      name     = rule.value.name
+      priority = rule.key
+      action {
+        allow {}
+      }
+
+      dynamic "statement" {
+        for_each = contains(["EXACTLY", "STARTS_WITH"], rule.value.match_type) ? [1] : []
+        content {
+          byte_match_statement {
+            positional_constraint = rule.value.match_type
+            search_string         = rule.value.pattern
+            field_to_match {
+              uri_path {}
+            }
+            text_transformation {
+              priority = 0
+              type     = "NONE"
+            }
+          }
+        }
+      }
+
+      dynamic "statement" {
+        for_each = rule.value.match_type == "REGEX" ? [1] : []
+        content {
+          regex_match_statement {
+            regex_string = rule.value.pattern
+            field_to_match {
+              uri_path {}
+            }
+            text_transformation {
+              priority = 0
+              type     = "NONE"
+            }
+          }
+        }
+      }
+
+      dynamic "statement" {
+        for_each = rule.value.match_type == "ONLY_SUBDOMAINS" ? [1] : []
+        content {
+          not_statement {
+            statement {
+              regex_match_statement {
+                regex_string = "\\b(${join("|", rule.value.pattern)})\\.mydomain\\.com$"
+                field_to_match {
+                  single_header {
+                    name = "host"
+                  }
+                }
+                text_transformation {
+                  priority = 0
+                  type     = "NONE"
+                }
+              }
+            }
+          }
+        }
+      }
+
+      visibility_config {
+        metric_name                = rule.value.name
+        cloudwatch_metrics_enabled = false
+        sampled_requests_enabled   = false
+      }
     }
   }
 }

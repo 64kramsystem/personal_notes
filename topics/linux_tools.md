@@ -439,6 +439,8 @@ pv -cN in foo | gzip | pv -cN out > bar
 
 ### Using GNU Parallel
 
+In general, GNU Parallel has some convenient functionalities, compared to xargs.
+
 The number of jobs is automatically limited to the number of cores.
 Quoting is not required. The shell used when running a string is the current one.
 The output is displayed serialized, but the execution is parallel!
@@ -451,8 +453,9 @@ ls -1 | parallel zip -m {1}.zip {1}   # parameterized; can also use `{}`
 Using the `:::` commands separator:
 
 ```
-parallel echo ::: A B                 # in parallel: (echo A) (echo B)
-parallel echo vmsav{1} ::: A B        # in parallel: (echo vmsavA) (echo vmsavB)
+parallel echo ::: A B                                              # in parallel: (echo A) (echo B)
+parallel echo vmsav{1} ::: A B                                     # in parallel: (echo vmsavA) (echo vmsavB)
+parallel --xapply echo "{1} {2}" ::: "${arr1[@]}" ::: "${arr2[@]}" # zip two arrays (`--xapply`)
 ```
 
 Examples:
