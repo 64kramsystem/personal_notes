@@ -196,7 +196,17 @@ powershell.exe -command `Get-Clipboard` # Prints clipboard content to stdout
 
 ## GUI/Notifications
 
-Display a dialog: `msg * "This is your notification message"`
+Display a dialog:
+
+```
+# From WSL
+message=${message//\'/''}
+title=${title//\'/''}
+powershell.exe -Command "
+  [void][System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms');
+  [System.Windows.Forms.MessageBox]::Show(\"$message\", \"$title\")
+"
+```
 
 ## Variables
 
