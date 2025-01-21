@@ -7,6 +7,7 @@
     - [Fileshare/Permissions](#filesharepermissions)
   - [RDS](#rds)
     - [Support stored procedures](#support-stored-procedures)
+    - ["Create Read Replica" greyed out](#create-read-replica-greyed-out)
   - [DynamoDB](#dynamodb)
     - [Permissions](#permissions-1)
     - [TTL](#ttl)
@@ -80,6 +81,10 @@ WHERE routine_type = 'PROCEDURE'
 -- | ...                               |
 -- +-----------------------------------+
 ```
+
+### "Create Read Replica" greyed out
+
+Enable backups.
 
 ## DynamoDB
 
