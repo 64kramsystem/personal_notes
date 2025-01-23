@@ -72,7 +72,8 @@ Merging:
 Commands:
 
 ```rb
-# Idiomatic hash merge
+# Idiomatic hash merge. WATCH OUT! This is a reverse merge, that is, the second hash is treated as
+# "default values".
 #
 default[:attribute] = Chef::Mixin::DeepMerge.deep_merge(node[:myattribute], {foo: :bar})
 
