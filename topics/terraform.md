@@ -286,18 +286,21 @@ dynamic "rule" {
 ## State/general operations
 
 ```sh
-Scope to some resources; supported by a few operations.
+# Scope to some resources; supported by some operations.
 #
 -target=resource_addr -target=resource2_addr...
 
 # List resources
+#
 state list
 
-# Import a resource
+# Import a resource; doesn't support `-target`.
+#
 import $resource_tf_address $resource_identifier
 
 # Remove a resource from the statefile.
 # If the resource includes other resources, the whole tree is removed.
+#
 state rm $resource_tf_address
 
 # Sync (scoped) an individual resource (after manual update/drift).
@@ -307,6 +310,10 @@ refresh -target=resource_addr -target=resource2_addr...
 # Sync the whole state (after manual update/drift)
 #
 apply -refresh-only
+
+# Only one resource at a time.
+#
+taint $resource
 
 # Display all the warnings
 #
