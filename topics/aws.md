@@ -3,6 +3,8 @@
 - [AWS](#aws)
   - [IAM](#iam)
     - [Permissions](#permissions)
+  - [Cloudwatch](#cloudwatch)
+    - [Agent (config)](#agent-config)
   - [S3](#s3)
     - [Fileshare/Permissions](#filesharepermissions)
   - [RDS](#rds)
@@ -26,6 +28,28 @@ Permissions can use variables, for example:
 // See: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_variables.html.
 //
 "Resource": "arn:aws:ec2:eu-west-1:01234567:instance/${ec2-instance-id}"
+```
+
+## Cloudwatch
+
+### Agent (config)
+
+```js
+"cpu": {
+  // Either specify `resources` (reports per-CPU) or `totalcpu` (aggregate).
+  "resources": ["*"],
+  "totalcpu": true
+},
+"disk": {
+  "measurement": ["used_percent"],
+  // Use the mountpoint for this metric
+  "resources": ["/"]
+},
+"diskio": {
+  "measurement": ["io_time"],
+  // Use the device for this metric
+  "resources": ["/dev/nvme0n1p1"]
+},
 ```
 
 ## S3

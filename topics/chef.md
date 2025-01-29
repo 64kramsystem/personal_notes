@@ -101,8 +101,12 @@ group "application"
 
 By default, notifications are `:delayed` (executed at the end of the Chef client run).
 
-WATCH OUT! A subscription depends on the subscribed resource *change*; it won't work as intended for resources that are in a binary state (e.g. packages).  
-When using a package configuration pattern, subscribe to the configfile change, not the package's.
+WATCH OUT!
+
+- A subscription depends on the subscribed resource *change*; it won't work as intended for resources that are in a binary state (e.g. packages).  
+  When using a package configuration pattern, subscribe to the configfile change, not the package's.
+- It's not necessarily correct to subscribe a configuration to the package resource, because if the config is changed when the package is already installed, the change will be missed  
+  See example below for package testing.
 
 ```ruby
 file '/etc/nginx/ssl/example.crt' do
@@ -130,6 +134,14 @@ end
 template '/path/to/myconfig.json' do
   # An error is raised if the notified resource doesn't exist.
   notifies :restart, "service[myservice]", :immediately
+end
+```
+
+Correct way to structure a configuration resource for a package:
+
+```rb
+cookbook_file "/path/to//amazon-cloudwatch-agent.json" do
+  only_if    { `dpkg --get-selections amazon-cloudwatch-agent` =~ /\b(install|hold)$/ }
 end
 ```
 
