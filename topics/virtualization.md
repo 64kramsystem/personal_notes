@@ -405,6 +405,8 @@ VirtIO GPU Vulkan Support: https://gist.github.com/peppergrayxyz/fdc9042760273d1
 
 ### Cards consumption
 
+Unknown kernel version, from ca. Sep/2022.
+
 - 6600 XT
   - 1'  : 58/59W
   - ~30': 47/48 (!!)
