@@ -6,6 +6,7 @@
   - [Events](#events)
   - [General optimization topics](#general-optimization-topics)
     - [Dirty pages](#dirty-pages)
+  - [Instance warmup](#instance-warmup)
   - [Replication](#replication)
     - [Logging/monitors](#loggingmonitors)
     - [Non-blocking schema changes](#non-blocking-schema-changes)
@@ -91,6 +92,17 @@ SELECT
     )
   , 2) `dirty_pct`
 ;
+```
+
+## Instance warmup
+
+The settings `innodb_buffer_pool_dump_at_shutdown` and `innodb_buffer_pool_load_at_startup` should always be enabled.
+
+In cases where they can't have a valid effect (e.g. new instance), then manual warmup should be applied. Useful queries are:
+
+```sql
+SELECT COUNT(*) FROM mytable USE INDEX();          # Force a full table scan
+SELECT COUNT(*) FROM mytable FORCE INDEX(myindex); # Force reading an index, also needed!
 ```
 
 ## Replication
