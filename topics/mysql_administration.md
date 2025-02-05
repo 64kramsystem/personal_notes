@@ -96,7 +96,8 @@ SELECT
 
 ## Instance warmup
 
-The settings `innodb_buffer_pool_dump_at_shutdown` and `innodb_buffer_pool_load_at_startup` should always be enabled.
+The settings `innodb_buffer_pool_dump_at_shutdown` and `innodb_buffer_pool_load_at_startup` should always be enabled.  
+Also make sure to set `innodb_buffer_pool_dump_pct` to an optimal value: the default 25% may be too low, but higher value slow down shutdown/startup and infrequently used pages may be dumped.
 
 In cases where they can't have a valid effect (e.g. new instance), then manual warmup should be applied. Useful queries are:
 

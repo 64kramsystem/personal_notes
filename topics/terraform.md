@@ -1854,7 +1854,6 @@ locals {
   rules = [
       {
         name           = "AllowFoo"
-        action         = "allow"
         match_type     = "EXACTLY" # or `STARTS_WITH`, `REGEX` or `SUBDOMAINS_ONLY`
         pattern        = "/Foo"    # list of subdomains in case of `SUBDOMAINS_ONLY`
       },
