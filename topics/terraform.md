@@ -51,6 +51,7 @@
     - [RDS](#rds)
     - [EFS](#efs)
     - [Billing (budgets)](#billing-budgets)
+    - [Load balancers](#load-balancers)
     - [WAF/ACLs](#wafacls)
 
 ## Base configuration
@@ -1842,6 +1843,15 @@ resource "aws_budgets_budget" "infrastructure" {
     }
   }
 }
+```
+
+### Load balancers
+
+```tf
+# Find all the LBs.
+# Cycle ARNs using `for_each = toset(data.aws_lbs.all.arns)`
+#
+data "aws_lbs" "all" {}
 ```
 
 ### WAF/ACLs
