@@ -1035,6 +1035,8 @@ Options:
   - there are alternative operators, e.g `ge-nl`, that treat "empty versions" (e.g. `5.8` <> `5.8.0`) differently
 - `sort -V`
   - see [sort](#sort) section
+  - clever O/S independent version for simple tests:
+    - `[[ $(printf '%s\n' "6.3" "$my_version" | sort -V | tail -n 1) != "$my_version" ]] && echo "My version is not >= 6.3"`
 
 Dpkg:
 
