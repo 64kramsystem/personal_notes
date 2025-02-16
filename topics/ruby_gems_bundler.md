@@ -86,6 +86,10 @@ If one wants to run without Bundler, it's best to invoke `ruby` without Bundler,
 ### Programmatic APIs
 
 ```rb
+# Gems dir.
+#
+Gem::RUBYGEMS_DIR
+
 # Easiest way to find a gem path.
 # Apparently, there's no direct way to find this via gem (bundler can)
 #
