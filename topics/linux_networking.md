@@ -67,14 +67,16 @@ curl "$URL"
 # `-d` implies `-X POST`.
 # In this case, the data format must be specified.
 #
+json_data=$(
+  jq -n \
+    --arg channel "$channel" \
+    --arg text "$text" \
+    '{ channel: $channel, text: $text }'
+)
 curl \
   -H "Authorization: Bearer $token" \
   -H 'Content-type: application/json; charset=utf-8' \
-  -d '
-  {
-    "channel": "'"$channel"'",
-    "text": "test",
-  }' \
+  -d "$json_data" \
   "https://slack.com/api/chat.postMessage"
 
 # Send an HTTP request for a specific format

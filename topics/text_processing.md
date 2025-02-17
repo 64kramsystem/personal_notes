@@ -49,6 +49,7 @@
     - [Arrays](#arrays-1)
       - [More complex filtering](#more-complex-filtering)
     - [Functions](#functions)
+    - [Construct a JSON object from shell ENV vars](#construct-a-json-object-from-shell-env-vars)
   - [Silver searcher (ag)](#silver-searcher-ag)
   - [Generic snippets](#generic-snippets)
     - [Stop tail when a string matches](#stop-tail-when-a-string-matches)
@@ -998,6 +999,16 @@ Note that grep may be more convenient, when applying a filter on a field and the
 
 ```sh
 jq 'length'    # length/size of array/hash
+```
+
+### Construct a JSON object from shell ENV vars
+
+```sh
+# argjson ensures that a numeric value is encoded.
+jq -n \
+  --arg filename "$(basename "$2")" \
+  --argjson length "$(stat -c%s "$2")" \
+  '{ filename: $filename, length: $length }'
 ```
 
 ## Silver searcher (ag)
