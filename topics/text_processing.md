@@ -1004,10 +1004,11 @@ jq 'length'    # length/size of array/hash
 ### Construct a JSON object from shell ENV vars
 
 ```sh
-# argjson ensures that a numeric value is encoded.
+# argjson ensures that a numeric value is encoded as such.
+#
 jq -n \
-  --arg filename "$(basename "$2")" \
-  --argjson length "$(stat -c%s "$2")" \
+  --arg filename "$(basename "$file")" \
+  --argjson length "$(stat -c%s "$file")" \
   '{ filename: $filename, length: $length }'
 ```
 
