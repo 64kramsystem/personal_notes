@@ -1,59 +1,40 @@
 # Crystal libraries
 
 - [Crystal libraries](#crystal-libraries)
-  - [Built-in data types](#built-in-data-types)
-    - [Range](#range)
-    - [Collection-related](#collection-related)
-      - [Array](#array)
-      - [Hash](#hash)
-    - [String](#string)
-  - [Kernel methods](#kernel-methods)
+  - [Stdlib](#stdlib)
+    - [OptionParser](#optionparser)
 
-## Built-in data types
+## Stdlib
 
-### Range
-
-APIs
+### OptionParser
 
 ```cr
-range.(includes|covers|in)? value   # inclusion
-range.each { ... }
-range.sample
-range.sum
-```
+def parse_commandline_arguments
+  exit_with_status = nil
 
-### Collection-related
+  parser = OptionParser.new do |opts|
+    opts.banner = "Usage: #{PROGRAM_NAME} [-h|--help] $log_file $minutes $max_stats"
 
-#### Array
+    opts.on("-h", "--help", "Show this help message") do
+      exit_with_status = 0
+    end
 
-Common methods:
+    opts.invalid_option do |flag|
+      STDERR.puts "Unknown option: #{flag}", ""
+      exit_with_status = 1
+    end
+  end
 
-```rb
-[@i]
-[@i]=
-each(@block)
-delete(@entry)
-includes(@entry)
-shift(@entry)
-pop()
-```
+  if ARGV.size != 3
+    STDERR.puts "Error: Unexpected number of arguments!", ""
+    exit_with_status = 1
+  end
 
-#### Hash
+  if exit_with_status
+    puts parser
+    exit(exit_with_status.not_nil!)
+  end
 
-```rb
-[@key]               # Infallibe
-[@key]?              # Fallible
-has_key?(@key)
-```
-
-### String
-
-```rb
-"str".to_i            # Doesn't support nil
-```
-
-## Kernel methods
-
-```rb
-rand($val)            # can use a Range
+  ARGV
+end
 ```
