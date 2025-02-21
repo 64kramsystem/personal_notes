@@ -68,7 +68,7 @@ column: ..7     # column <= 7
 column: ...7    # column < 7
 column: 1..7    # column BETWEEN 1 AND 7
 
-Hints (6.0+):
+Hints:
 
 Article.joins(:user).optimizer_hints("JOIN_ORDER(articles, users)").to_sql
 # => SELECT /*+ JOIN_ORDER(articles, users) */ `articles`.* FROM `articles` INNER JOIN `users` ON `users`.`id` = `articles`.`user_id`
