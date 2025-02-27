@@ -417,6 +417,8 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+    # WATCH OUT!!! Creates a `vendor` directory, with gems.
+    #
     - name: Setup Ruby ${{ matrix.ruby-version }}
       uses: ruby/setup-ruby@v1
       if: ${{ matrix.suite == 'rspec' }}

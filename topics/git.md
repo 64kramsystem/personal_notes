@@ -45,7 +45,11 @@ The `git` command is implicit in all the examples, except where:
 
 - `Target branch` : git merge $target_branch
 - `First parent`  : (of a merge) the current branch when doing a merge
-- `theirs`/`ours` : target/current branch, during a merge
+
+WATCH OUT!! "Ours" = local, "theirs" = remote, but it's very confusing (see https://stackoverflow.com/a/25576672):
+
+- during merge, "ours" is the current branch
+- during rebase, "theirs" is the current branch
 
 Conventions:
 
@@ -390,13 +394,8 @@ status -b --porcelain
 
 ## Merging
 
-WATCH OUT!! "Ours" = local, "theirs" = remote, but it's very confusing (see https://stackoverflow.com/a/25576672):
-
-- during merge, "ours" is the current branch
-- during rebase, "theirs" is the current branch
-
 ```sh
-checkout (--ours|--theirs) $files   # resolve conflict using ours/theirs version
+checkout (--ours|--theirs) $files   # solve conflict using ours/theirs version (WATCH OUT! doesn't mark as conflict solved)
 (merge|rebase) -X 'ours|theirs'     # solve merge conflicts using ours/theirs version
 revert -m 1 $commit                 # revert a merge
 merge --allow-unrelated-histories   # allow merging histories without a common ancestor!
@@ -413,6 +412,8 @@ git st | awk '/both modified:/ { print $3 }' | xargs sh -c 'git checkout --their
 ## Rebase
 
 ```sh
+checkout (--ours|--theirs) $files                      # solve conflict using ours/theirs version (WATCH OUT! doesn't mark as conflict solved)
+
 rebase -i $parent_commit                               # interactive rebase from parent of given commit
 rebase --onto $dest_branch $feat_branch_parent_commit
 
