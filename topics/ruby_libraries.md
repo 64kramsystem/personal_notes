@@ -691,13 +691,12 @@ end
 Do not use tempfile for references that stick around!! Tempfile instances are always deleted on garbage collection.
 
 ```ruby
-file = Tempfile.new('prefix')
+# @naming can be either "prefix" or ["prefix", ".extension"]
+
+file = Tempfile.new(@naming)
 filename = file.path
 file.close
 File.unlink(file)  # optional
-
-# @naming can be either "prefix" or ["prefix", ".extension"]
-file = Tempfile.new(@naming)
 
 Tempfile.open(@naming) { |f| operation(f) }    # Creates, operates, but doesn't immediately delete
 Tempfile.create(@naming)                       # Creates and closes, but doesn't immediately delete
