@@ -22,6 +22,7 @@
   - [Drives](#drives)
   - [Screen capture](#screen-capture)
   - [Packages management](#packages-management)
+  - [Power management](#power-management)
 
 ## Licensing
 
@@ -283,4 +284,12 @@ winget.exe upgrade --all
 # In order to workaround, decrease the font size, and run via PS, **without grepping**.
 
 powershell.exe -command "winget list"
+```
+
+## Power management
+
+Display remaining battery charge:
+
+```
+WMIC PATH Win32_Battery Get EstimatedChargeRemaining
 ```
