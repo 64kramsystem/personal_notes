@@ -19,16 +19,17 @@
     - [QEMU](#qemu)
       - [Usermode](#usermode)
       - [RISC-V](#risc-v)
+    - [Vagrant](#vagrant)
+    - [WINE](#wine)
+    - [DOSBox(-X)](#dosbox-x)
+      - [Key bindings](#key-bindings)
+      - [Floppy](#floppy)
+      - [Tools](#tools)
+      - [Basic configuration](#basic-configuration)
+    - [Docker (compose)](#docker-compose)
   - [3D Acceleration/VFIO](#3d-accelerationvfio)
     - [Cards consumption](#cards-consumption)
     - [nvidia-smi](#nvidia-smi)
-  - [Vagrant](#vagrant)
-  - [WINE](#wine)
-  - [DOSBox(-X)](#dosbox-x)
-    - [Key bindings](#key-bindings)
-    - [Floppy](#floppy)
-    - [Tools](#tools)
-    - [Basic configuration](#basic-configuration)
 
 ## Virtual disks
 
@@ -380,6 +381,86 @@ qemu-riscv64 -L /path/to/riscv-gnu-toolchain/build/sysroot pigz
 
 See https://risc-v-getting-started-guide.readthedocs.io/en/latest/linux-qemu.html.
 
+### Vagrant
+
+Find SSH key:
+
+```sh
+vagrant ssh-config $host | awk '/IdentityFile/ {print $NF}'
+```
+
+### WINE
+
+If fonts are not rendering correctly, install the core fonts: `winetricks corefonts`.
+
+### DOSBox(-X)
+
+#### Key bindings
+
+- `F12 + C`: for the configuration GUI
+- `F12 + O`: swap floppy (unclear if there is a GUI option)
+
+#### Floppy
+
+WATCH OUT! When installing a program from multiple floppies, try to copy all of their content to a single dir, and install from there; some installers support this.
+
+IMGs can be mounted via `IMGMOUNT` command; multiple images can be mounted (only via command), and swapped via key binding:
+
+```sh
+# See bindings for swapping.
+#
+IMGMOUNT A ms_c-cpp_compiler_19920818/*.IMG
+```
+
+#### Tools
+
+There is a bundled DPMI host (`CWSDPMI`), but it's not very robust. A better one is [HX](https://github.com/Baron-von-Riedesel/HX); run `C:\HX_PATH\BIN\HDPMI32` (`/r` make it resident).
+
+Under `Z:\TEXTUTILS` there are tools to change the text mode (e.g. to `80x50`), but beware that they may interfere with programs.
+
+#### Basic configuration
+
+Full config reference: https://github.com/joncampbell123/dosbox-x/blob/master/dosbox-x.reference.full.conf.
+
+```conf
+[sdl]
+maximize = true
+
+[dosbox]
+fastbioslogo = true
+startbanner = false
+quit warning = false
+
+[render]
+aspect = true
+
+[cpu]
+# 486DX at 33MHz (https://dosbox-x.com/wiki/Guide%3ACPU-settings-in-DOSBox%E2%80%90X#_cycles)
+# PII/300 = 200000
+cycles = 12019
+# Enable for fastest CPU speed. WATCH OUT! This is disabled automatically after a keypress; see
+# https://dosbox-x.com/wiki/Guide%3AInstalling-Windows-3.x.
+turbo = false
+
+# [fdc, primary]
+# Enable for fastest floppy speed; it's not clear how faster it is, and if `enabled = true` is necessary.
+# instant mode = false
+
+[autoexec]
+# By default, the free size is whole disk; it's not clear if GBs of free size may cause programs to
+# crash, so better restrict it. Size is in MB.
+MOUNT C . -freesize 128
+C:
+```
+
+### Docker (compose)
+
+```sh
+# Tear down disks
+#
+docker compose -f $cfg_file down --volumes
+```
+
 ## 3D Acceleration/VFIO
 
 Lots of interesting stuff on the [Arch Wiki](https://wiki.archlinux.org/title/PCI_passthrough_via_OVMF).
@@ -442,76 +523,4 @@ nvidia-smi -i 1 -ac 405,300 # mem/gr; not supported!
 #
 nvidia-smi -i 1 --format=csv --query-gpu=power.power.min_limit,power.max_limit
 sudo nvidia-smi -i 1 -pl 16.66
-```
-
-## Vagrant
-
-Find SSH key:
-
-```sh
-vagrant ssh-config $host | awk '/IdentityFile/ {print $NF}'
-```
-
-## WINE
-
-If fonts are not rendering correctly, install the core fonts: `winetricks corefonts`.
-
-## DOSBox(-X)
-
-### Key bindings
-
-- `F12 + C`: for the configuration GUI
-- `F12 + O`: swap floppy (unclear if there is a GUI option)
-
-### Floppy
-
-WATCH OUT! When installing a program from multiple floppies, try to copy all of their content to a single dir, and install from there; some installers support this.
-
-IMGs can be mounted via `IMGMOUNT` command; multiple images can be mounted (only via command), and swapped via key binding:
-
-```sh
-# See bindings for swapping.
-#
-IMGMOUNT A ms_c-cpp_compiler_19920818/*.IMG
-```
-
-### Tools
-
-There is a bundled DPMI host (`CWSDPMI`), but it's not very robust. A better one is [HX](https://github.com/Baron-von-Riedesel/HX); run `C:\HX_PATH\BIN\HDPMI32` (`/r` make it resident).
-
-Under `Z:\TEXTUTILS` there are tools to change the text mode (e.g. to `80x50`), but beware that they may interfere with programs.
-
-### Basic configuration
-
-Full config reference: https://github.com/joncampbell123/dosbox-x/blob/master/dosbox-x.reference.full.conf.
-
-```conf
-[sdl]
-maximize = true
-
-[dosbox]
-fastbioslogo = true
-startbanner = false
-quit warning = false
-
-[render]
-aspect = true
-
-[cpu]
-# 486DX at 33MHz (https://dosbox-x.com/wiki/Guide%3ACPU-settings-in-DOSBox%E2%80%90X#_cycles)
-# PII/300 = 200000
-cycles = 12019
-# Enable for fastest CPU speed. WATCH OUT! This is disabled automatically after a keypress; see
-# https://dosbox-x.com/wiki/Guide%3AInstalling-Windows-3.x.
-turbo = false
-
-# [fdc, primary]
-# Enable for fastest floppy speed; it's not clear how faster it is, and if `enabled = true` is necessary.
-# instant mode = false
-
-[autoexec]
-# By default, the free size is whole disk; it's not clear if GBs of free size may cause programs to
-# crash, so better restrict it. Size is in MB.
-MOUNT C . -freesize 128
-C:
 ```
