@@ -31,8 +31,9 @@ gem 'sshkit-sudo', '~> 0.2.0', path: '/path/to/sshkit-sudo'
 
 # Git repository; `branch` is optional; `ref` and `tag` are also supported.
 # `glob` allows installing from a repository subdir.
+# WATCH OUT! The SSH protocol may be faster than the HTTPS.
 #
-gem 'sshkit-sudo', git: 'https://github.com/ticketsolve/sshkit-sudo', branch: 'mytest', glob: 'subdir/*.gemspec'
+gem 'sshkit-sudo', git: 'git@github.com/ticketsolve/sshkit-sudo', branch: 'mytest', glob: 'subdir/*.gemspec'
 
 # If there isn't a gemspec: add here the `development` group, with rspec.
 # The rake gem can be excluded unless specifically required.
