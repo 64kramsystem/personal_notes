@@ -53,6 +53,7 @@
     - [Billing (budgets)](#billing-budgets)
     - [Load balancers](#load-balancers)
     - [WAF/ACLs](#wafacls)
+  - [External data sources (scripted)](#external-data-sources-scripted)
 
 ## Base configuration
 
@@ -1956,5 +1957,45 @@ resource "aws_wafv2_web_acl" "application" {
       }
     }
   }
+}
+```
+
+## External data sources (scripted)
+
+Scripts invoked by TF to do scripted operations. As example, set of load balancers can't be queried, so we use a script:
+
+```rb
+#!/usr/bin/env ruby
+
+require 'json'
+require 'aws-sdk-elasticloadbalancingv2'
+
+input = JSON.parse(STDIN.read)
+
+name_filter = input.fetch("name_filter")
+region, access_key_id, secret_access_key = input.fetch_values("region", "access_key_id", "secret_access_key")
+
+names = Aws::ElasticLoadBalancingV2::Client
+  .new(region:, access_key_id:, secret_access_key:)
+  .describe_load_balancers
+  .load_balancers
+  .filter_map { |lb| lb.load_balancer_name[/#{name_filter}/, 1] }
+
+puts({ names: }.to_json)
+```
+
+```tf
+data "external" "load_balancer_names" {
+  program = ["${path.module}/scripts/discover_load_balancer_names.rb"]
+  query = {
+    name_filter = "^foo-(\\d+)$"
+    region = var.aws_region
+    access_key_id = var.access_key_id
+    secret_access_key = var.secret_access_key
+  }
+}
+
+locals {
+  lb_names = join(",", data.external.load_balancer_names.result.names)
 }
 ```
