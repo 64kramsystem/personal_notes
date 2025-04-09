@@ -120,6 +120,7 @@ Substituting/matching:
 
 ```ruby
 'foobar'.gsub(/(ba.)/, '\1\1')                        # 'foobarbar'; WATCH OUT!: the replacement string can't be manipulated, e.g. `upcase()`
+                                                      # also, sub applies to the whole pattern, not just the capturing group
 'foobar'.gsub(/(b)(a)/) { |match| $2.upcase + $1 }    # 'fooaBr'; `match` is a String
 "Saverio <a@b.c>".match(/<(.*)>/)                     # returns MatchData object; [0] = entire match; [1..] = matching groups
 str[/regex/, idx]                                     # same as `str.match(/regex/)[idx]`
@@ -140,6 +141,14 @@ File.fnmatch(@pattern, @string)                       # use this API in order to
 
   "z:#{$1.to_i + 1}:"
 end # => "z:4:a"
+
+# Need to use this strategy in order to detect if (g)sub matched.
+#
+subdomain_matched = false
+host = host.sub(HOST_MATCHER) do |source_stack|
+  subdomain_matched = true
+  dest_stack
+end
 
 # Linux tool `tr`.
 #
