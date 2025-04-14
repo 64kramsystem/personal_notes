@@ -258,8 +258,8 @@ curl http://x.co/bar.zip | bsdtar -xf -
 # Rename destination files while extracting!!
 #
 # - Basic sed regex!!
-#   - Not supported (at least): +, \d, \K, capturing groups
-#   - Supported: ^, $, regex delimiters
+#   - Not supported (at least): +, \d, \K, capturing groups, ? (greedy)
+#   - Supported: ^, $, regex delimiters, []
 # - The regex applies to the WHOLE name, so be careful when changing dir names
 # - Untransformed names are displayed by default
 #

@@ -202,6 +202,7 @@ replace(string, from, to)     # if `from` is wrapped in slashes, it's a regex, o
 regex(pattern, string)        # array of matches; WATCH OUT! `pattern` is a string; don't wrap in slashes
                               # ^ backslashes must be escaped (`\\`)
                               # ^ see: https://www.terraform.io/language/functions/regex
+format(pattern, arg...)       # convenient for complex concatenation, e.g. ("%s.%s", ...)
 substr(string, ofs, len)      # substring via plain string; len=-1 -> until end of string
 trimspace(string)             # remove leading/trailing whitespace
 
@@ -225,10 +226,14 @@ coalesce(["", "v2"]...)  # unpack operator
 
 ### Control flow/dynamic blocks
 
-Ternary operator (must be either on one line or surrounded by round bracked; condition must be bool); use for conditionals (if/then/else):
+Ternary operator; use for conditionals (if/then/else):
 
 ```tf
-condition ? true_block : false_block
+# If on multiple lines, must use round brackets.
+(condition ?
+  true_block :
+  false_block
+)
 ```
 
 Foreach/dynamic blocks:
