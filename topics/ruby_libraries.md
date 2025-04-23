@@ -226,8 +226,10 @@ General APIs/operations:
 ```ruby
 @time + seconds
 
+# These are not available to Time
+#
 @date >> @months; @date << @months                        # Adds/subtracts whole months (not days) to a date
-@date >> 12 * @months                                     # Use to add/subtract whole years (not days) to a date
+@date >> 12 * @months                                     # Use to add/subtract whole months/years (not days) to a date
 @date.next_month(@months=1), @date.prev_month(@months=1)  # More readable; also supports `day`, `year`
 
 @date_time.to_time.to_i                                   # DateTime to Unix time (epoch)
@@ -237,9 +239,12 @@ Time.at(time_i)                                           # Unix time to Time
 @date.wday                                                # Sun=0 .. Sat=6
 ```
 
-There is no simple way to subtract an year. leap day should be taken into account, and even when considering this, is an year 365 or 366 days? If an year less is the same date but on the previous yes, a simple solution is to print and reparse the timestamp; alternatively, the more complicated way can be achieved using `Date.new(datetime.year - 1, 1, 1).leap?`, which is not suggested because it's very easy to make a mistake.
+In order to substract/add an year/month, while keeping the smaller units (ie. day/month for year), use `(prev|next)_(year|month)`. The date 29/Feb is converted to 28/Feb.
 
-In order to parse a freeform time, use DateTime (required `time`), but mind the offset:
+`DateTime` (require `time` or `date`) supports calendar operations, but not timezones (only offsets).
+If one needs to do calendar operations but print the timezone, use `DateTime`, but print the zone using something like `Time.now.zone`.
+
+In order to parse a freeform time, use `DateTime`, but mind the offset:
 
 ```ruby
 # If the offset is not specified, it's assumed to be UTC.

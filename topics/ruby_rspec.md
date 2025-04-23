@@ -10,6 +10,7 @@
   - [Available variables](#available-variables)
   - [Mocks](#mocks)
     - [Matchers](#matchers)
+      - [Stdout handling](#stdout-handling)
     - [Matching arguments](#matching-arguments)
     - [Receive counts](#receive-counts)
     - [Responses](#responses)
@@ -189,6 +190,28 @@ See [reference](https://relishapp.com/rspec/rspec-expectations/v/3-10/docs/built
  | Stdout/err   | `output("message").to_stdout`                        | Captures `$stdout`/`$stderr`; `to_*` is necessary |
 
 - `dynamic_value` can be anything, like `instance.attribute` or `Class.count`
+
+#### Stdout handling
+
+As of Apr/2025, it seems that there is no way to capture stdout without assertions; therefore, replace `$stdout` if needed:
+
+```rb
+original_stdout, $stdout = $stdout, StringIO.new
+expect(foo).to bar
+puts $stdout.string
+$stdout = original_stdout
+```
+
+If one wants to optionally test stdout, use a pattern like this:
+
+```rb
+expected_output ||= //
+
+expect {
+  result = subject.execute
+  expect(result).to include("bar")
+}.to output(expected_stdout).to_stdout
+```
 
 ### Matching arguments
 
