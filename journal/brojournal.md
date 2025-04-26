@@ -1,3 +1,19 @@
+## Fri 25/Apr/2025
+
+- Personal scripts
+  - [x] Write script to add an entry to the gym file
+    - Wasted almost 2 hours on regexes
+
+## Fri 25/Apr/2025
+
+- Openscripts
+  - `texerak`: Add output to JPEG functionality
+
+## Thu 24/Apr/2025
+
+- Openscripts
+  - [x] `texerak`: Improve temporary files handling
+
 ## Wed 23/Apr/2025
 
 - Schedule manager
