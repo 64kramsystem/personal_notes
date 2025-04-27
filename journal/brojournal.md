@@ -1,3 +1,10 @@
+## Sun 27/Apr/2025
+
+- Schedule manager
+  - [x] Fix build failure
+- Personal scripts
+  - [x] `encode_swing_video`: Ensure that the temp file is deleted (if left over)
+
 ## Fri 25/Apr/2025
 
 - Personal scripts
