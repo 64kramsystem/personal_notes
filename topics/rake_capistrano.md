@@ -9,6 +9,8 @@
     - [Tasks/Actions](#tasksactions)
     - [Target hosts](#target-hosts)
       - [Hooks](#hooks)
+    - [Useful stuff](#useful-stuff)
+      - [Reboot servers](#reboot-servers)
 
 ## Rake
 
@@ -134,3 +136,13 @@ end
 - `after  "deploy:reverted"`      : after the deploy has been rolled back
 
 - `before/after "deploy:migrate"` : If you need to run tasks before or after the database migrations
+
+### Useful stuff
+
+#### Reboot servers
+
+Can't use a straight reboot, because when a connection fails on a host (due to shutdown), Capistrano may not invoke the command on the other hosts.
+
+```sh
+capistrano_shell $servers <<< `systemd-run --on-active=2s /bin/systemctl reboot`
+```
