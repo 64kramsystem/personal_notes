@@ -8,6 +8,7 @@
     - [OOBE: Exit on Windows 11 first boot installation](#oobe-exit-on-windows-11-first-boot-installation)
     - [Workaround account login requirement on first setup / Wifi requirement](#workaround-account-login-requirement-on-first-setup--wifi-requirement)
     - [Mass-install drivers from multiple subdirectories](#mass-install-drivers-from-multiple-subdirectories)
+  - [Setting locations](#setting-locations)
   - [WSL](#wsl)
     - [Symlinks/Junctions](#symlinksjunctions)
     - [Mount ext4 flash keys](#mount-ext4-flash-keys)
@@ -26,15 +27,15 @@
 
 ## Licensing
 
-WATCH OUT!!! Can't (officially) use an OEM license key to upgrade Windows (11) from Home to Pro
+WATCH OUT!!! Can't (officially) use a license key to upgrade Windows (11) from Home to Pro
 
 Windows 11 Home to Pro upgrade:
 
-- Remove the license
+- Remove the license (`slmgr /upk` and `slmgr /cpky`)
 - Disconnect from internet
 - Set the Pro generic key: `VK7JG-NPHTM-C97JM-9MPGT-3V66T`
 - Wait for upgrade to complete, and reconnect to internet
-- Set the OEM key
+- Set the key
 
 ### License operations
 
@@ -77,6 +78,10 @@ If wifi was setup by accident, run the following in the command prompt, then per
 ### Mass-install drivers from multiple subdirectories
 
 Go to the parent directory, and run `pnputil /add-driver *.inf /subdirs /install`.
+
+## Setting locations
+
+- `Change what closing the lid does`: From `Control Panel` -> `Hardware …` -> `Power options`
 
 ## WSL
 
@@ -257,10 +262,10 @@ In order to restart the taskbar, use: `PS> Stop-Process -Name explorer`
 
 ## Drives
 
-Unmount a drive:
+Unmount a drive (**must run as admin**):
 
 ```sh
-powershell.exe -Command 'Dismount-Volume -DriveLetter D -Confirm:$false'
+cmd.exe /c "mountvol D: /D"
 ```
 
 ## Screen capture
