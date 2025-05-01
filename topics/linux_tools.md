@@ -259,11 +259,16 @@ curl http://x.co/bar.zip | bsdtar -xf -
 #
 # - Basic sed regex!!
 #   - Not supported (at least): +, \d, \K, capturing groups, ? (greedy)
-#   - Supported: ^, $, regex delimiters, []
+#   - Supported: ^, $, \b, [], regex delimiters
 # - The regex applies to the WHOLE name, so be careful when changing dir names
+# - WATCH OUT!! Directory names should not have a trailing slash, otherwise the files are transformed,
+#   but not the root dir; in order to avoid ambiguity with dirs sharing the same prefix, a solution is
+#   to use `\b` where applicable.
+#   - Interestingly, when transforming a dir, if the trailing slash is used, the target dir is displayed
+#     (with --show-transformed-names) with the trailing slash, but it's not transformed
 # - Untransformed names are displayed by default
 #
-tar xvz --transform="s/^parsec-3.0/parsec-benchmark/" --show-transformed-names
+tar xvz --transform="s|^parsec-3.0|parsec-benchmark|" --show-transformed-names
 
 # Create an empty archive
 #
