@@ -1,3 +1,13 @@
+## Tue 13/May/2025
+
+- Personal scripts
+  - Personal repos sync
+    - [x] Improve reporting
+    - [x] (Hopefully) fix the issue with hanging sync processes
+- Schedule manager
+  - [x] Reworker: Simplified LPIM_GENERATOR string interpolation
+  - [x] Reworker: Add day of week to lpim generated string
+
 ## Sun 27/Apr/2025
 
 - Schedule manager
