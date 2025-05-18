@@ -25,6 +25,7 @@
     - [File/Dir/FileUtils/Pathname](#filedirfileutilspathname)
     - [Tempfile, Tmpdir](#tempfile-tmpdir)
     - [Concurrency](#concurrency)
+      - [Threads exception handling](#threads-exception-handling)
       - [Variables vs threads](#variables-vs-threads)
       - [Mutex](#mutex)
       - [Thread-safe data structures (Queue)](#thread-safe-data-structures-queue)
@@ -734,6 +735,15 @@ Dir.tmpdir
 ```
 
 ### Concurrency
+
+#### Threads exception handling
+
+If one wants threads error to be raised in the main thread:
+
+- either set `Thread.abort_on_exception = true`
+- or it will be raised on `Thread#join` (or `#value`)
+
+`abort_on_exception` can be set on a per-instance basis; from the thread block: `Thread.current.abort_on_exception = true`
 
 #### Variables vs threads
 
