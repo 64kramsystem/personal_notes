@@ -144,11 +144,12 @@ File.fnmatch(@pattern, @string)                       # use this API in order to
 end # => "z:4:a"
 
 # Need to use this strategy in order to detect if (g)sub matched.
+# If this pattern doesn't fit, e.g. not in a function, use an outer boolean.
+# WATCH OUT! Make sure that the use case logic can't be simplified instead of using sub() this way.
 #
-subdomain_matched = false
-host = host.sub(HOST_MATCHER) do |source_stack|
-  subdomain_matched = true
-  dest_stack
+def find_match
+  host.sub(HOST_MATCHER) { |stack| return "#{stack}#{$1}" }
+  raise "Not found"
 end
 
 # Linux tool `tr`.
