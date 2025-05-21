@@ -1,3 +1,8 @@
+## Wed 21/May/2025
+
+- Personal scripts
+  - [x] Upgrade system script: Fix Linux Python programs installation
+
 ## Tue 13/May/2025
 
 - Personal scripts

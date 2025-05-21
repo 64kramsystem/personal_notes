@@ -22,6 +22,7 @@
   - [Snippets](#snippets)
     - [Read a CSV from stdin, and compute averages](#read-a-csv-from-stdin-and-compute-averages)
     - [Leetcode imports](#leetcode-imports)
+    - [`error: externally-managed-environment`](#error-externally-managed-environment)
 
 ## General syntax
 
@@ -239,4 +240,14 @@ for threads, run_times in sorted(all_run_times.items()):
 from typing import List
 import collections
 import bisect
+```
+
+### `error: externally-managed-environment`
+
+Happens when running pip as sudo; to workaround, activate the user's venv:
+
+```sh
+source /home/"$SUDO_USER"/.config/python-venv/bin/activate
+# ...
+deactivate
 ```
