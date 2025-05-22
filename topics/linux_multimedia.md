@@ -384,6 +384,10 @@ ffmpeg -f x11grab -s 1920x1080 -r 10 -i :0.0 -vf scale=1280x800 -c:v libx264 -pr
 # Check FFmpeg linked binaries
 #
 ldd $(which ffmpeg)
+
+# Check library version FFmpeg is using (e.g. libx265)
+#
+ffmpeg -hide_banner -f lavfi -i testsrc=duration=1 -c:v libx265  -f null - 2>&1 | grep -A 1 HEVC
 ```
 
 #### Build FFmpeg with libfdk-aac support
