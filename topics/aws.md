@@ -1,6 +1,7 @@
 # AWS
 
 - [AWS](#aws)
+  - [EC2](#ec2)
   - [IAM](#iam)
     - [Permissions](#permissions)
   - [Cloudwatch](#cloudwatch)
@@ -14,6 +15,10 @@
     - [Permissions](#permissions-1)
     - [TTL](#ttl)
   - [WAF](#waf)
+
+## EC2
+
+vCPU threads/cores info: https://docs.aws.amazon.com/ec2/latest/instancetypes/gp.html#gp_hardware
 
 ## IAM
 

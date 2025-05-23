@@ -6,6 +6,7 @@
     - [Conversion](#conversion)
       - [Convenient snippets](#convenient-snippets)
       - [libfdk-aac test](#libfdk-aac-test)
+      - [AV1 encoders summary (May/2025)](#av1-encoders-summary-may2025)
       - [libx265 test](#libx265-test)
       - [Video to animated GIF/PNG](#video-to-animated-gifpng)
     - [Stream/file operations](#streamfile-operations)
@@ -99,6 +100,15 @@ Tested on 4 albums of different genre; kbps/khz ~cutoff:
 - 1: 102/13 (!!)
 
 Downsampling from 48Khz to 44Khz saved around 3% on a test DVD.
+
+#### AV1 encoders summary (May/2025)
+
+| Library | Latest | Ubuntu? | Notes                                        |
+| ------- | :----: | :-----: | -------------------------------------------- |
+| libaom  |  3.12  |    ×    | Best quality at low speed, but opinions vary |
+| SVT-AV1 |  3.0   |    ×    | Most speed-efficient                         |
+| rav1e   |  0.7   |    √    | May be too young                             |
+| libx265 |  4.1   |    √    |                                              |
 
 #### libx265 test
 
@@ -381,50 +391,18 @@ ffprobe $filename
 #
 ffmpeg -f x11grab -s 1920x1080 -r 10 -i :0.0 -vf scale=1280x800 -c:v libx264 -preset slower -crf 32 $HOME/Desktop/desktop_recording.mp4
 
-# Check FFmpeg linked binaries
+# Check FFmpeg linked libraries (useful to find encoder versions)
 #
-ldd $(which ffmpeg)
+ldd $(which ffmpeg) | grep -P 'fdk|x265'
 
-# Check library version FFmpeg is using (e.g. libx265)
+# Find encoder version from metadata. Works only for some encoders (e.g. libx265, not libfdk-aac)
 #
-ffmpeg -hide_banner -f lavfi -i testsrc=duration=1 -c:v libx265  -f null - 2>&1 | grep -A 1 HEVC
+ffmpeg -f lavfi -i testsrc=duration=1 -c:v libx265    -f null - 2>&1 | grep -A 1 HEVC
 ```
 
 #### Build FFmpeg with libfdk-aac support
 
-```sh
-sudo apt install \
-  libfdk-aac-dev libx264-dev frei0r-plugins-dev libgnutls28-dev libaom-dev libass-dev libmp3lame-dev \
-  libopenjp2-7-dev libvorbis-dev libvpx-dev libwebp-dev libx265-dev ocl-icd-opencl-dev libdrm-dev
-
-git clone https://github.com/FFmpeg/FFmpeg.git
-
-cd FFmpeg
-
-latest_release=$(git branch -r | perl -lne 'print $1 if /origin\/release\/([\d.]+)/' | sort -V | tail -n 1)
-git checkout release/"$latest_release"
-
-# Compile minimal version, with some options taken from Ubuntu:
-#
-# `-lpthread`: include pthread library
-# `-lm`: include standard C math library `libm` (see https://stackoverflow.com/q/1033898)
-# --enable-gpl --enable-nonfree: required in order to include also GPL-licensed stuff
-#
-# In order to check how an ffmpeg binary was compiled, run `ffmpeg -version`; switches can be listed via `./configure --help`.
-#
-# Notes:
-#
-# - Not availabile anymore on 5.0: `--disable-filter=resample`.
-# - Not sure if needed: `--extra-libs="-lpthread -lm"`
-#
-./configure \
-  --enable-gpl --enable-nonfree --enable-libfdk-aac --enable-libx264 \
-  --prefix=/usr --toolchain=hardened --libdir=/usr/lib/x86_64-linux-gnu --incdir=/usr/include/x86_64-linux-gnu --arch=amd64 \
-  --enable-libmp3lame --enable-libopenjpeg --enable-opencl --enable-opengl --enable-sdl2 --enable-gnutls --enable-libaom --enable-libass \
-  --enable-libvorbis --enable-libvpx --enable-libwebp --enable-libx265 --enable-libdrm --enable-libx264 --enable-shared
-
-make -j $(nproc)
-```
+See system installer (`install_ffmpeg()`).
 
 ## DVD-related
 
