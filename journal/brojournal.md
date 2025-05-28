@@ -1,3 +1,39 @@
+## Tue 27/May/2025
+
+- Openscripts
+  - MySQL tools
+    - [x] mystart: Minor refactorings
+    - [x] mystop: Refactoring
+    - [x] mystop: Improve process killing logic
+    - [x] mystart/mystop: Directly use the MySQL configuration to gather the directories
+
+## Mon 26/May/2025
+
+- Schedule manager
+  - [x] Reworker: Add UT for case when the insertion point is not found
+  - [x] Replanner: Implement pending UT
+- Personal scripts
+  - [x] `add_brogramming`: Don't add day entry, if it already exists
+- System installer
+  - [x] Send local FFmpeg on a diet
+  - [x] Optimize FFmpeg
+  - [x] Move built FFmpeg to local binaries
+  - [x] Add helper to prepare a git repo with the latest tag checked out
+  - [ ] Build and integrate into ffmpeg: libaom and SVT-AV1
+    - https://trac.ffmpeg.org/wiki/CompilationGuide/Ubuntu#libaom
+    - https://trac.ffmpeg.org/wiki/CompilationGuide/Ubuntu#libsvtav1
+- Openscripts
+  - [x] `git_merge_file_commits`: Add non-interactive mode
+
+## Fri 23/May/2025
+
+- Packaging
+  - [x] (Failed) attempt to build `libaom3` deb package on Noble, from the Questing official Launchpad project
+  - [x] Build libaom from source
+  - [x] Build SVT-AV1 from source
+- Personal scripts
+  - [ ] Integrate libadom + SVT-AV1 in ffmpeg build
+
 ## Wed 21/May/2025
 
 - Personal scripts

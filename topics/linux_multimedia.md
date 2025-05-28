@@ -395,9 +395,11 @@ ffmpeg -f x11grab -s 1920x1080 -r 10 -i :0.0 -vf scale=1280x800 -c:v libx264 -pr
 #
 ldd $(which ffmpeg) | grep -P 'fdk|x265'
 
-# Find encoder version from metadata. Works only for some encoders (e.g. libx265, not libfdk-aac)
+# Find encoder version from metadata. Works only for some encoders (e.g. not libfdk-aac)
 #
-ffmpeg -f lavfi -i testsrc=duration=1 -c:v libx265    -f null - 2>&1 | grep -A 1 HEVC
+ffmpeg -f lavfi -i testsrc=duration=1 -c:v libx265    -f null - 2>&1 | grep 'HEVC encoder'
+ffmpeg -f lavfi -i testsrc=duration=1 -c:v libaom-av1 -f null - 2>&1 | grep '\[libaom-av1.*] v'
+ffmpeg -f lavfi -i testsrc=duration=1 -c:v libsvtav1  -f null - 2>&1 | grep 'SVT-AV1 Encoder Lib'
 ```
 
 #### Build FFmpeg with libfdk-aac support
