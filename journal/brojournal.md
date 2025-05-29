@@ -1,3 +1,8 @@
+## Wed 28/May/2025
+
+- [x] Build FFmpeg with latest AV1 encoders
+- [ ] FFmpeg+AV1 encoders optimization
+
 ## Tue 27/May/2025
 
 - Openscripts
