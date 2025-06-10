@@ -20,6 +20,7 @@
     - [WSL: Cache SSH keys password](#wsl-cache-ssh-keys-password)
     - [Enable PIN to boot (encrypted disk)](#enable-pin-to-boot-encrypted-disk)
   - [Taskbar pinned items programmatic manipulation](#taskbar-pinned-items-programmatic-manipulation)
+  - [Services](#services)
   - [Drives](#drives)
   - [Screen capture](#screen-capture)
   - [Packages management](#packages-management)
@@ -259,6 +260,26 @@ In order to make the option visible in the Bitlocker management:
 
 The files location is `%APPDATA%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar`, however, trying to populate it with pregenerated files, won't work.
 In order to restart the taskbar, use: `PS> Stop-Process -Name explorer`
+
+## Services
+
+```powershell
+# List running services:
+
+Get-Service |
+  Where-Object { $_.Status -eq 'Running' } |
+  Format-Table Name,DisplayName -AutoSize -Wrap
+
+# Disable list of services:
+
+$disable = @('Browser', '...')
+
+foreach ($svc in $disable) {
+  Stop-Service $svc -ErrorAction SilentlyContinue -Force
+  Set-Service  $svc -StartupType Disabled
+  Write-Host "$svc disabled"
+}
+```
 
 ## Drives
 
