@@ -1,3 +1,8 @@
+## Fri 13/Jun/2025
+
+- [x] add_comic: Handle evaluations starting with `-`
+- [x] add_brogramming: Open file with `code -a` instead of `xo`
+
 ## Wed 28/May/2025
 
 - [x] Build FFmpeg with latest AV1 encoders
