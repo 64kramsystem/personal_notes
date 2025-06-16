@@ -300,6 +300,8 @@ Windows has a centralized repository, which can be used via the cmdline program 
 It doesn't use the Windows Store, but it handles also programs downloaded via it.
 
 ```sh
+winget.exe search $pattern$ # case insensitive subpattern
+
 winget.exe install $package_name
 winget.exe install --exact --id $package_id # [exact] match; [id] match
 
