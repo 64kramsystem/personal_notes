@@ -395,6 +395,8 @@ Wed..Sat,Tue 12-10-15 1:2:3 → Tue..Sat 2012-10-15 01:02:03
 
 Once-off events can be scheduled; mind that they're not second-accurate.
 
+WATCH OUT!! This needs to be updated, as it seems that there are subtleties (`--timer-property=AccuracySec=1s`, for second-granularity, and `--timer-property=RemainAfterElapse=yes`, to avoid automatic re-running).
+
 ```sh
 # Execute after certain interval, with output.
 #

@@ -141,8 +141,13 @@ end
 
 #### Reboot servers
 
-Can't use a straight reboot, because when a connection fails on a host (due to shutdown), Capistrano may not invoke the command on the other hosts.
+Can't use a straight reboot/poweroff, because when a connection fails on a host (due to shutdown), Capistrano may not invoke the command on the other hosts.
 
 ```sh
-capistrano_shell $servers <<< `systemd-run --on-active=2s /bin/systemctl reboot`
+# Use `poweroff` to shutdown.
+#
+# Without `AccuracySec`, interval is 1 minute
+# Without `RemainAfterElapse`, the unit is automatically re-runs
+#
+capistrano_shell $servers <<< `systemd-run --on-active=5s --timer-property=AccuracySec=1s --timer-property=RemainAfterElapse=yes /bin/systemctl reboot`
 ```
