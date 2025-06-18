@@ -1,3 +1,9 @@
+## Wed 18/Jun/2025
+
+- Schedule manager
+  - [x] Remover: Improve an error message
+  - [x] Remover: Add UT to document bug
+
 ## Fri 13/Jun/2025
 
 - [x] add_comic: Handle evaluations starting with `-`
