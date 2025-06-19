@@ -112,7 +112,10 @@ mount -o drvfs $letter: $path
 
 ### Symlinks/Junctions
 
-WATCH OUT!! In order to create Windows junctions in the host from WSL, use `cmd.exe /c mklink` in an Admin WSL session (don't forget to quote!); any other approach fails in inconsistent and confusing ways.
+WATCH OUT!!:
+
+- In order to create Windows junctions in the host from WSL, use `cmd.exe /c mklink` in an Admin WSL session (don't forget to quote!); any other approach fails in inconsistent and confusing ways.
+- `mklink.exe` doesn't exist; `mklink` is a built-in command!!
 
 In order rebuild symlinks, run:
 
@@ -156,7 +159,7 @@ find . -type l -printf '%P\n' \
         )
         link=$(echo {} | perl -pe "s|/|\\\\|g")
 
-        [[ -d "{}" ]] && dir_option=(/d) || dir_option=()
+        [[ -d "{}" ]] && dir_option=(/D) || dir_option=()
         rm "{}"
         cmd.exe /c mklink "${dir_option[@]}" "$link" "$target"
 
