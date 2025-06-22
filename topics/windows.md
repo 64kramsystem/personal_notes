@@ -112,61 +112,44 @@ mount -o drvfs $letter: $path
 
 ### Symlinks/Junctions
 
-WATCH OUT!!:
+- Directory symlinks can be of two types: dirs (`/D`) and junctions (`/J`); the latter are more compatible, but the have minor restrictions.
+- In order to create Windows junctions in the host from WSL, use `cmd.exe /c mklink` (don't forget to quote).
+- symlink targets are always absolute, so if a relative one is passed to `mklink`, it's converted to absolute
+- `mlink` interprets relative targets as relative to the current directory, not the target one
+  - for this reason, in scripts, it's much easier to `cd` into the target directory
+- WATCH OUT!!
+  - Must run the terminal/prompt in an Admin WSL session; any other approach fails in inconsistent and confusing ways.
+  - `mklink.exe` doesn't exist; `mklink` is a built-in command!!
 
-- In order to create Windows junctions in the host from WSL, use `cmd.exe /c mklink` in an Admin WSL session (don't forget to quote!); any other approach fails in inconsistent and confusing ways.
-- `mklink.exe` doesn't exist; `mklink` is a built-in command!!
-
-In order rebuild symlinks, run:
-
-```sh
-# Should also work with links including relative paths (`../`), but it hasn't been concretely tested.
-#
-# For simplicity, we don't use `find -L . -xtype l`, which is slower.
-#
-find "${config_paths[@]}" -type l \
-  | xargs -I {} bash -c '
-    target=$(
-      readlink "{}" \
-      | perl -pe "s|/mnt/c/Users/([^/]+)|C:/Users/\\1|" \
-      | perl -pe "s|/|\\\\|g"
-    )
-    link=$(echo {} | perl -pe "s|/|\\\\|g")
-
-    [[ -d "{}" ]] && dir_option=(/d) || dir_option=()
-    echo "Rebuilding${dir_option[@]} ($link) -> ($target)"
-    rm "{}"
-    cmd.exe /c mklink "${dir_option[@]}" "$link" "$target"
-  '
-```
-
-Formerly, a smarter attempt, detecting invalid symlink, has been made, however there were some problems:
+In order rebuild symlinks, use this script (takes link as `$1`):
 
 ```sh
-# - The PS command prints nothing if symlink is invalid
-#   - WATCH OUT! not fully effective - file symlinks to a dir are invalid, but they pass the test
-#   - the test works as intended also if WSL is running as Admin.
-# - Symlinks with level change (ie. "../foo") actually work fine on Windows, so won't be triggered
-#   by `Get-Item.Target`.
-#
-find . -type l -printf '%P\n' \
-  | xargs -I {} bash -c '
-      if [[ -z $(powershell.exe -Command "(Get-Item \"{}\").Target") ]]; then
-        target=$(
-          readlink "{}" \
-          | perl -pe "s|/mnt/c/Users/([^/]+)|C:/Users/\\1|" \
-          | perl -pe "s|/|\\\\|g"
-        )
-        link=$(echo {} | perl -pe "s|/|\\\\|g")
+#!/bin/bash
 
-        [[ -d "{}" ]] && dir_option=(/D) || dir_option=()
-        rm "{}"
-        cmd.exe /c mklink "${dir_option[@]}" "$link" "$target"
+link_with_path=$1
+# Need to change the Unix link path, since we've changed the current directory.
+# As advantage, we don't need to keep separate copies for Windows and Unix, since there is no path.
+link=$(basename "$link_with_path")
 
-        [[ -z $(powershell.exe -Command "(Get-Item \"{}\").Target") ]] && echo "Link $link is still invalid!"
-      fi
-    '
+cd "$(dirname "$link_with_path")"
+
+# Don't use `wslpath`, which resolves the symlink; additionally, we want to maintain symlinks in
+# intermediate paths.
+new_target=$(
+  readlink "$link" \
+  | perl -pe 's|^/mnt/([a-z]+)|\U\1:|' \
+  | perl -pe 's|/|\\\\|g'
+)
+
+[[ -d "$link" ]] && mklink_opt=(/J) || mklink_opt=()
+echo "Rebuilding${mklink_opt[*]} ($link_with_path) -> ($new_target)"
+
+rm "$link"
+# Ignore the double backslashes in the output, it's just a `cmd.exe` quirk.
+cmd.exe /c mklink "${mklink_opt[@]}" "$link" "$new_target"
 ```
+
+Formerly, a smarter attempt, detecting invalid symlinks, has been made, however there were some problems (see history).
 
 ### Mount ext4 flash keys
 
