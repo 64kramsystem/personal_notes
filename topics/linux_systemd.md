@@ -395,7 +395,10 @@ Wed..Sat,Tue 12-10-15 1:2:3 → Tue..Sat 2012-10-15 01:02:03
 
 Once-off events can be scheduled; mind that they're not second-accurate.
 
-WATCH OUT!! This needs to be updated, as it seems that there are subtleties (`--timer-property=AccuracySec=1s`, for second-granularity).
+WATCH OUT!!:
+
+- This needs to be updated, as it seems that there are subtleties (`--timer-property=AccuracySec=1s`, for second-granularity)
+- Don't use a transient unit for a delayed poweroff/reboot, as it will cause conflicts (see below)
 
 ```sh
 # Execute after certain interval, with output.
@@ -417,6 +420,14 @@ $ systemd-run --on-calendar=09:12 /bin/systemctl suspend
 # Cancel. Don't forget the `.timer`!!!!
 #
 $ systemctl --user stop test-example.timer
+```
+
+Workflow for delayed poweroff/reboot (delayed transient unit causes `Failed to start transient service unit: Transaction … is destructive`):
+
+```sh
+
+
+
 ```
 
 ## Event triggers (execute program on resume, etc.)

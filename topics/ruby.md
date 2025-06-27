@@ -438,6 +438,7 @@ $=  $IGNORECASE                     # [ENG] obsolete: case-insensitivity flag
 ```ruby
 RUBY_PATCHLEVEL                     # patch level (Integer)
 RUBY_VERSION                        # e.g. "2.7.0"
+__FILE__                            # current file
 __dir__                             # directory of current file
 ```
 
