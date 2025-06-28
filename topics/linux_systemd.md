@@ -422,12 +422,11 @@ $ systemd-run --on-calendar=09:12 /bin/systemctl suspend
 $ systemctl --user stop test-example.timer
 ```
 
-Workflow for delayed poweroff/reboot (delayed transient unit causes `Failed to start transient service unit: Transaction … is destructive`):
+Script for delayed poweroff/reboot (delayed transients unit cause `Failed to start transient service unit: Transaction … is destructive`), which also works on a non-interactive SSH session:
 
 ```sh
-
-
-
+#!/bin/sh
+(sleep 5 && systemctl poweroff) &
 ```
 
 ## Event triggers (execute program on resume, etc.)
