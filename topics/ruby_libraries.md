@@ -709,14 +709,19 @@ Do not use tempfile for references that stick around!! Tempfile instances are al
 ```ruby
 # @naming can be either "prefix" or ["prefix", ".extension"]
 
-file = Tempfile.new(@naming)
-filename = file.path
-file.close
+file = Tempfile.create(@naming)                # Creates, closes, doesn't delete
+file.print content
+puts file.path
+file.close                                     # WATCH OUT!! Don't forget!!
 File.unlink(file)  # optional
 
-Tempfile.open(@naming) { |f| operation(f) }    # Creates, operates, but doesn't immediately delete
-Tempfile.create(@naming)                       # Creates and closes, but doesn't immediately delete
-Tempfile.create(@naming) { |f| operation(f) }  # Creates, operates, and deletes
+file = Tempfile.create(@naming).path           # Easiest: path + IO.write
+IO.write(file, content )
+File.unlink(file)                              # optional
+
+Tempfile.create(@naming) { |f| operation(f) }  # Creates, operates, deletes
+Tempfile.new(@naming)                          # Same as `.create`; don't use
+Tempfile.open(@naming) { |f| operation(f) }    # Deprecated for most usages; don't use
 
 # Generates a temporary filename with `a`/`.png` prefix/extension, in the system temporary directory.
 # !!This is the best API for tempfiles that need to stick around!! Note that no file is created.
