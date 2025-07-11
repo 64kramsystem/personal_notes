@@ -1375,37 +1375,19 @@ SELECT /*+ MAX_EXECUTION_TIME(5000) */ COUNT(*) FROM ...;
 Query optimizer trace; includes in-depth details about the query execution (plan):
 
 ```sql
+-- Erases all the previous traces
 SET optimizer_trace = "enabled=on";
 /* ... now execute the query ... */
 SET optimizer_trace = "enabled=off";
 SELECT * FROM information_schema.optimizer_trace\G
 ```
 
-General profiler (deprecated; see https://dev.mysql.com/doc/refman/8.0/en/performance-schema-query-profiling.html and http://www.unofficialmysqlguide.com/profiling.html):
+The former profiler, now deprecated (see https://dev.mysql.com/doc/refman/8.0/en/performance-schema-query-profiling.html and http://www.unofficialmysqlguide.com/profiling.html), is enabled with `SET PROFILING=1`.
+
+Analyze a query by actually running it:
 
 ```sql
-SET PROFILING=1;
-
-# execute query
-
-SHOW PROFILES;
-SHOW PROFILE FOR QUERY @query_id;
-
-SELECT
-  STATE,
-  SUM(DURATION)            `Total_R`,
-  ROUND(
-    100 * SUM(DURATION) / (
-      SELECT SUM(DURATION)
-      FROM INFORMATION_SCHEMA.PROFILING
-      WHERE QUERY_ID = @query_id
-    ) , 2) `Pct_R`,
-  COUNT(*)                 `Calls`,
-  SUM(DURATION) / COUNT(*) `R/Call`
-FROM INFORMATION_SCHEMA.PROFILING
-WHERE QUERY_ID = @query_id
-GROUP BY STATE
-ORDER BY Total_R DESC;
+EXPLAIN ANALYZE SELECT …\G
 ```
 
 Digest slow query log, using Maatkit:
