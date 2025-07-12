@@ -10,31 +10,31 @@
 
 ```cr
 def parse_commandline_arguments
-  exit_with_status = nil
+  myopt: String? = nil
 
-  parser = OptionParser.new do |opts|
-    opts.banner = "Usage: #{PROGRAM_NAME} [-h|--help] $log_file $minutes $max_stats"
+  parser = OptionParser.new do |parser|
+    parser.banner = "Usage: #{PROGRAM_NAME} [-h|--help] $log_file $minutes"
 
-    opts.on("-h", "--help", "Show this help message") do
-      exit_with_status = 0
+    parser.on("-h", "--help", "Show this help message") do
+      puts parser
+      exit
     end
 
-    opts.invalid_option do |flag|
-      STDERR.puts "Unknown option: #{flag}", ""
-      exit_with_status = 1
+    parser.on("-o MYOPT", "--myopt=MYOPT", "My option") do |myopt|
+      myopt = myopt
+    end
+
+    parser.invalid_option do |flag|
+      STDERR.puts "Unknown option: #{flag}", parser
+      abort
     end
   end
 
-  if ARGV.size != 3
-    STDERR.puts "Error: Unexpected number of arguments!", ""
-    exit_with_status = 1
+  if ARGV.size != 2
+    STDERR.puts "Error: Unexpected number of arguments!", parser
+    abort
   end
 
-  if exit_with_status
-    puts parser
-    exit(exit_with_status.not_nil!)
-  end
-
-  ARGV
+  [myopt, *ARGV]
 end
 ```

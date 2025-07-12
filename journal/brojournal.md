@@ -1,3 +1,9 @@
+## Fri 11/Jul/2025
+
+- [x] Internal Email client API: Fix Windows process detection
+- Openscripts
+  - [ ] Convert `download_ubuntu_packages` to Crystal
+
 ## Wed 18/Jun/2025
 
 - Schedule manager

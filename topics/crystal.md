@@ -1,6 +1,7 @@
  Crystal
 
 - [Compiler basics](#compiler-basics)
+- [Managing a project](#managing-a-project)
 - [Debugging-related](#debugging-related)
 - [Types](#types)
   - [Built-in types](#built-in-types)
@@ -33,6 +34,39 @@
 crystal [run] $file                              # Run
 crystal b[uild] [--release] [--no-codegen] $file # Build; `--no-codegen` doesn't generate a file
 crustal i[nteractive]                            # REPL
+```
+
+## Managing a project
+
+```sh
+crystal init (app|lib) $dir
+# … edit shard.yml (see below) …
+shards install
+shards build
+shards run [-- $binary_params…]
+```
+
+`shard.yml` example:
+
+```yml
+name: openscripts
+version: 0.1.0
+license: GPL3
+
+authors:
+  - Saverio Miroddi <saverio.pub2@gmail.com>
+
+targets:
+  ../download_ubuntu_packages:          # binary path (relative to `bin/`!)
+    main: src/download_ubuntu_packages.cr
+
+crystal: '>= 1.16.3'
+
+dependencies:
+  progress_bar:
+    github: mgomes/progress_bar
+    # version: ~> 0.4.0
+    branch: master
 ```
 
 ## Debugging-related
@@ -86,8 +120,8 @@ typeof(@val)             # Parentheses required; accepts any expression (see bel
 @val.as(OtherType)       # Checked runtime typecast; raises error if invalid
 @val.as?(OtherType)      # Safe runtime typecast; returns nil if invalid
 
-foo : Int32 [ = @val]    # Manually declare a type
-foo : Int32?             # Nilable type
+foo : Int32 [= @val]    # Manually declare a type
+foo : Int32? [= nil]    # Nilable type declaration
 [1, 2] of Int32 | String # Literal and type can be defined together
 
 Pointer(Void).null       # Null pointer
@@ -165,7 +199,7 @@ map {}.to_a.reverse         # WATCH OUT! reverse() doesn't exist for map iterato
 Syntax:
 
 ```cr
-{foo: 1}, {"foo" => 2}      # Syntaxes can't be mixed in a single hash
+{:foo => 2}                 # WATCH OUT!!! Hashes use `=>`.
 {} of String => Int32
 Hash(String, Int32).new     # Can pass a default (value or block)
 ```
@@ -188,9 +222,10 @@ Syntax:
 ```cr
 t = {:foo, 1, "bar"}
 nt = {foo: 2, bar: 3}
+NamedTuple.new                           # empty NT declaration
+NamedTuple(foo: Int32).from({:foo => 1}) # convert Hash to NT; tuples must match
 
 # Named tuples can be unpacked using values(), but it doesn't automatically match by variable name
-#
 foo, bar = nt.values
 ```
 
@@ -198,6 +233,8 @@ APIs:
 
 ```cr
 nt[:foo]           # infallible; fetch() doesn't exist
+nt[:bar]?          # fallible
+nt.merge(foo: 1)   # "build" named tuples
 ```
 
 #### Other ones
@@ -243,6 +280,14 @@ range.sum
 
 ```cr
 "str".to_i              # Doesn't support nil
+
+# Heredoc format.
+# Leading whitespace is removed until the `-` (can't be earlier!).
+str =
+  <<-STRING # => "Hello\n  world"
+    Hello
+      world
+    STRING
 ```
 
 ### Regex
@@ -361,7 +406,8 @@ rand($val)                    # Also accepts Range
 ## Special variables/constants
 
 ```cr
-PROGRAM_NAME                  # Invoked program name
+PROGRAM_NAME                  # Invoked program name (binary)
+__FILE__                      # WATCH OUT! Source file, not binary!
 $LAST_MATCH_INFO              # Doesn't exist; see Regex
 ```
 
