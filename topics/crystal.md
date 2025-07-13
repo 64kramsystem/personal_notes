@@ -7,6 +7,7 @@
   - [Built-in types](#built-in-types)
   - [Numeric](#numeric)
   - [Collections](#collections)
+    - [Enumerable](#enumerable)
     - [Array](#array)
     - [Hash](#hash)
     - [(Named)Tuple](#namedtuple)
@@ -165,8 +166,13 @@ Math.max(@a, @b)            # Find min/max between two numbers
 
 ### Collections
 
+#### Enumerable
+
 ```cr
 reduce { |accumulator, entry| }   # inject() doesn't exist
+min; max
+min_by { |e| }; max_by { |e| }
+min_of { |e| }; max_of { |e| }    # like max_by, but returns the block retval
 ```
 
 #### Array
@@ -329,6 +335,8 @@ foo, bar = 0, 1     # Multiple assignment (can also exchange variables)
 
 foo ? bar : baz     # Ternary operator is supported
 (a) .. (b)          # Flip-flop operator is NOT supported
+
+var.try { |v| … }   # Safe navigation operator
 ```
 
 Simulate a flip-flop operator:

@@ -1,3 +1,12 @@
+## Sat 12/Jul/2025
+
+- Openscripts: `encode_to_h265`
+  - [x] Move input files to a temp dir before encoding
+  - [x] Remove "force" functionality, and clean output files in case of premature exit instead
+  - [x] Support custom extension
+- Internal scripts
+  - [x] Simplifications based on `encode_to_h265` updates
+
 ## Fri 11/Jul/2025
 
 - [x] Internal Email client API: Fix Windows process detection
