@@ -628,8 +628,10 @@ Operations on numbered lines (1-based):
 Operations with matches:
 
 - delete: `/<pattern>/ d`
-- insert (add before): `/<pattern>/ i newstring` (in order to add leading spaces, must escape the first)
+- insert (add before): `/<pattern>/ i newstring`
 - add (add after): `/<pattern>/ a newstring`
+
+In order to add leading spaces, must escape the first.
 
 ### Special characters
 
