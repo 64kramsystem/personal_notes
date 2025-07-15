@@ -1128,11 +1128,17 @@ echo reaches_here
 
 #### Trapping errors (hooks)
 
-Execute a (explicit) command on exit; generally convenient to trap `ERR` + `INT`, or `EXIT`.
+Execute a (explicit) command on exit.
 
 `EXIT` will trap everything (which can be fine), so don't use it with `ERR`/`INT`, otherwise the handler will be invoked once for each signal.
 
-!! Can't register multiple handlers for the same signal; the last will override the preceding !! However, each subshell (script) has their own handlers.
+WATCH OUT!
+
+- Trapping `EXIT` and `ERR`/`INT` will cause multiple traps
+- Can't register multiple handlers for the same signal; the last will override the preceding
+  - However, each subshell (script) has their own handlers.
+- If both `ERR` and `INT` are trapped, in some cases, both will trigger!
+  - If want to trap exits with error, use `trap '[[ $? -ne 0 ]] && _error_exit_hook' EXIT`
 
 ```sh
 LOCKFILE=/var/lock/makewhatis.lock
