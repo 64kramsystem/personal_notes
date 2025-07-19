@@ -1,3 +1,9 @@
+## Fri 18/Jul/2025
+
+- Schedule manager
+  - [x] Make interpolations more flexible
+  - [x] Add past days interpolation
+
 ## Sat 12/Jul/2025
 
 - Openscripts: `encode_to_h265`
