@@ -784,6 +784,8 @@ This doesn't capture any output (stdout/stderr content is sent to the terminal);
 The exit status can be obtained via return value, or via `$CHILD_STATUS`.
 
 ```ruby
+# Each command entry is escaped individually, so it's simpler to split the command (e.g. "ls", "-l", "foo bar").
+#
 success = system(">&2 echo abc; sleep 2; false", exception: true) # :exception defaults to false
 
 # Use `exception: true` in order to raise an exception instead.

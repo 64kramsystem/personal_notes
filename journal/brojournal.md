@@ -1,3 +1,8 @@
+## Thu 31/Jul/2025
+
+- Openscripts
+  - [x] Add WSL support to `mk_invoice`
+
 ## Fri 18/Jul/2025
 
 - Schedule manager
