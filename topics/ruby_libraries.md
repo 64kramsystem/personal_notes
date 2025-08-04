@@ -50,6 +50,7 @@
       - [SMTP](#smtp)
       - [Ping (ICMP)](#ping-icmp)
       - [TCP Server](#tcp-server)
+      - [SSH](#ssh)
       - [Other](#other)
   - [DnsMadeEasy (`dnsmadeeasy-rest-api`)](#dnsmadeeasy-dnsmadeeasy-rest-api)
   - [Databases](#databases)
@@ -1253,6 +1254,14 @@ loop do
   client.puts "Response!"
   client.close
 end
+```
+
+#### SSH
+
+```rb
+# Use `use_agent` to force using the agent (useful on non-interactive sessions).
+#
+Net::SSH.start(@host, @user, use_agent: true)
 ```
 
 #### Other

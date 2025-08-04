@@ -294,6 +294,7 @@ dynamic "rule" {
 
 ```sh
 # Scope to some resources; supported by some operations.
+# It's also possible to specify a module, and target will scope to its resources.
 #
 -target=resource_addr -target=resource2_addr...
 
