@@ -1,3 +1,10 @@
+## Mon 04/Aug/2025
+
+- Openscripts
+  - [x] Kernel-related scripts
+    - [x] Fix issue when comparing versions with and without ongoing release
+    - [x] KernelVersion: Add support for optional kernel type to UNAME_VERSION_REGEX
+
 ## Thu 31/Jul/2025
 
 - Openscripts
