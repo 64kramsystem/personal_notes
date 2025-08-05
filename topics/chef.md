@@ -126,6 +126,9 @@ service 'nginx' do
   # This is rare, but a package may actually not enable the service; in this case, depending on the
   # package (not to the config) is appropriate.
   #
+  # WATCH OUT!!!! If `dpkg_package` is set to use multiple packages in a single resource, subscribers
+  # of a single package won't be notified!!!
+  #
   subscribes :enable, 'dpkg_packge[nginx]', :immediately
 end
 
@@ -348,12 +351,16 @@ end
 # Version with multiple packages; it installs them faster, and has a more compact output.
 # The `version` attributes takes an Array, in this case.
 #
+# WATCH OUT!!!! If set to use multiple packages in a single resource, subscribers of a single package
+# won't be notified!!!
+#
 package %w(package1 package2)
 
 # Install a deb package from a local file.
 # Ignores the hold status.
 # Can't install from HTTP (as of Sep/2024, documentation is ambiguous in a place).
 #
+# WATCH OUT! The package will be installed independently of which version is installed.
 # WATCH OUT! Passing multiple package names+versions to it is supported, but it seems it doesn't work
 # as intended - in one case, it invoked `dpkg -i` for a package, even if unnecessary (see below).
 #
