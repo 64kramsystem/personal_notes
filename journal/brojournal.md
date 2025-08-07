@@ -1,3 +1,8 @@
+## Wed 06/Aug/2025
+
+- lpim
+  - [x] Final fix to locking issue under WSL/Windows
+
 ## Mon 04/Aug/2025
 
 - Openscripts

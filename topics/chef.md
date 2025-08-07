@@ -357,15 +357,25 @@ end
 package %w(package1 package2)
 
 # Install a deb package from a local file.
-# Ignores the hold status.
 # Can't install from HTTP (as of Sep/2024, documentation is ambiguous in a place).
 #
-# WATCH OUT! The package will be installed independently of which version is installed.
-# WATCH OUT! Passing multiple package names+versions to it is supported, but it seems it doesn't work
-# as intended - in one case, it invoked `dpkg -i` for a package, even if unnecessary (see below).
+# WATCH OUT!:
+# - Passing multiple package names+versions to it is supported, but it seems it doesn't work
+#   as intended - in one case, it invoked `dpkg -i` for a package, even if unnecessary (see below).
+# - The hold status is ignored.
 #
 dpkg_package 'package_name' do
   source '/path/to/local_filename.deb'
+
+  # WATCH OUT! The package will be installed independently of which version is installed; this is a
+  # workaround.
+  #
+  only_if do
+    deb_version = `dpkg -I #{filename}`[/^ Version: (\S+)/, 1] || raise("Version not found for #{filename}")
+    # We need to be reasonably fast here, but dpkg's status needs to be inspected carefully.
+    installed_version = `dpkg -s #{name} 2> /dev/null`[/^Status: [^\n]+ installed$.+^Version: ([^\n]+)/m, 1]
+    deb_version != installed_version
+  end
 end
 
 # Conditionally hold a package.
