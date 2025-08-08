@@ -1,3 +1,8 @@
+## Thu 07/Aug/2025
+
+- Internal scripts
+  - [x] Swing videos encoder: Add output dir functionality
+
 ## Wed 06/Aug/2025
 
 - lpim
