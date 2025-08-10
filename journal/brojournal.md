@@ -1,3 +1,8 @@
+## Sat 09/Aug/2025
+
+- Scripts
+  - [x] Add `--english` to `whisperc`
+
 ## Thu 07/Aug/2025
 
 - Internal scripts
