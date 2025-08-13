@@ -227,6 +227,15 @@ The `alter table (flush)` stage empirically took from 10% to 100% of the total t
 
 Only the last stage `log apply table` causes contention; on the longest occurrence, it took ≈2.4% of the total time (44/1858").
 
+A quick way to observe an INSERT (into an empty table) is to use `INFORMATION_SCHEMA.TABLES`:
+
+```sql
+SELECT (
+  (SELECT TABLE_ROWS FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = "dest") /
+  (SELECT TABLE_ROWS FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = "source")
+) `approx_frac_done`;
+```
+
 ## Views
 
 List all the views:
