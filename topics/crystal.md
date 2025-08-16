@@ -33,7 +33,7 @@
 
 ```sh
 crystal [run] $file                              # Run
-crystal b[uild] [--release] [--no-codegen] $file # Build; `--no-codegen` doesn't generate a file
+crystal b[uild] [--release] [--no-codegen] $file # Build (see below for projects); `--no-codegen` only checks
 crustal i[nteractive]                            # REPL
 ```
 
@@ -43,7 +43,7 @@ crustal i[nteractive]                            # REPL
 crystal init (app|lib) $dir
 # … edit shard.yml (see below) …
 shards install
-shards build
+shards build [--release]
 shards run [-- $binary_params…]
 ```
 
@@ -299,7 +299,9 @@ str =
 ### Regex
 
 ```cr
+"\x61\x0A\x62" =~ /a$/m                               # WATCH OUT!!!! /$/ doesn't match a line end unless the regex is in multiline mode
 val = match[0] if match = /bar/.match("foo")          # Workaround lack of $LAST_MATCH_INFO
+Regex.escape(str)                                     # Equivalent of `Regexp.escape`
 ```
 
 ### Floats
@@ -368,6 +370,22 @@ when Int32
 when 1..3
 else
 end
+
+# WATCH OUT!! Crystal has no retry
+#
+retries = 0
+while true
+  begin
+    my_code
+  rescue ex
+    raise ex if retries == MAX_RETRIES
+    retries += 1
+  end
+end
+
+# The variables are not scoped on inline conditionals; this doesn't work:
+#
+return match[0] if match = str.match(regex)
 ```
 
 ### Blocks
@@ -409,6 +427,7 @@ end
 
 ```cr
 rand($val)                    # Also accepts Range
+sleep(1.second)               # Integer args are deprecated (see Time::Span)
 ```
 
 ## Special variables/constants
