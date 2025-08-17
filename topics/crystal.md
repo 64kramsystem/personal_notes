@@ -433,7 +433,7 @@ sleep(1.second)               # Integer args are deprecated (see Time::Span)
 ## Special variables/constants
 
 ```cr
-PROGRAM_NAME                  # Invoked program name (binary)
+PROGRAM_NAME                  # Invoked program name (binary; !! includes path !!)
 __FILE__                      # WATCH OUT! Source file, not binary!
 $LAST_MATCH_INFO              # Doesn't exist; see Regex
 ```

@@ -27,22 +27,26 @@ def parse_commandline_arguments
     myopt: "foo" # set this to the default defined in the invoked method
   }
 
-  parser = OptionParser.new do |parser|
-    parser.banner = "Usage: #{PROGRAM_NAME} [-h|--help] $myarg"
+  # Don't use OptionParser.new!
+  parser = OptionParser.parse do |parser|
+    parser.banner = <<-HELP
+      Usage: #{File.basename(PROGRAM_NAME)} [-h|--help] [-o|--myopt MYOPT] $myarg
 
-    parser.on("-h", "--help", "Show this help message") do
-      puts parser
-      exit
-    end
+      HELP
 
     parser.on("-o MYOPT", "--myopt=MYOPT", "My option") do |value|
       # Variable is replaced with another of the same type.
       opt_args = opt_args.merge(myopt: value)
     end
 
+    parser.on("-h", "--help", "Show this help message") do
+      puts parser
+      exit
+    end
+
     parser.invalid_option do |flag|
-      STDERR.puts "Unknown option: #{flag}", parser
-      abort
+      STDERR.puts "Unknown option: #{flag}", "", parser
+      exit 1
     end
   end
 
@@ -50,16 +54,18 @@ def parse_commandline_arguments
   when 1
     pos_arg = ARGV[0]
   else
-    STDERR.puts "Error: Only one argument is accepted!", parser
-    abort
+    STDERR.puts "Error: Only one argument is accepted!", "", parser
+    exit 1
   end
 
-  [opt_args, pos_arg]
+  {pos_arg, opt_args}
 end
 
+# Keep parse_commandline_arguments()'s defaults in sync with these.
+#
 def meth(pos_arg, myopt : String = "default"); end
 
-opt_args, pos_arg = parse_commandline_arguments
+pos_arg, opt_args = parse_commandline_arguments
 meth(pos_arg, **opt_args)
 ```
 
@@ -78,6 +84,45 @@ resp = HTTP::Client.head(addr)         # same
 resp.status.success?
 resp.status.redirection?
 resp.success?                          # shortcut
+```
+
+URI-like module:
+
+```cr
+module HttpGetFollow
+  private def http_get_follow(url : String, max_redirects : Int32 = 10) : String
+    current = url
+
+    max_redirects.times do
+      HTTP::Client.get(current) do |response|
+        if response.status.redirection?
+          loc = response.headers["Location"]?
+          raise "Redirect without Location header (#{response.status.code})" unless loc
+          current = resolve_url(current, loc)
+          next
+        else
+          return response.body_io.gets_to_end
+        end
+      end
+    end
+
+    raise "Too many redirects while fetching #{url}"
+  end
+
+  # Simplistic.
+  private def resolve_url(base_url : String, location : String) : String
+    loc_uri = URI.parse(location)
+
+    case location
+    when loc_uri.scheme # absolute
+      location
+    else if !location.starts_with?("/")
+      raise "Unsupported redirect format: #{location}"
+    else
+      "#{base.scheme}://#{base.host}#{location}"
+    end
+  end
+end
 ```
 
 ## Shards
