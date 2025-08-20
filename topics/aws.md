@@ -15,6 +15,7 @@
     - [Permissions](#permissions-1)
     - [TTL](#ttl)
   - [WAF](#waf)
+  - [Lambda](#lambda)
 
 ## EC2
 
@@ -167,3 +168,14 @@ The simplest way to configure a "log mode", is to allow non-matching rules, and 
     stats count() as requestCount by httpRequest.uri
     | filter terminatingRuleId = "Default_Action"
     | sort requestCount desc
+
+## Lambda
+
+```sh
+aws lambda invoke \
+  --function-name my_lambda \
+  --payload '{}' \
+  /dev/stdout &!
+
+aws logs tail /aws/lambda/my_lambda --follow
+```

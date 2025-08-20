@@ -1228,7 +1228,8 @@ fi
 ### Check if a script is `source`d
 
 ```sh
-[[ ${BASH_SOURCE[0]} != "$0" ]] # true if script is sourced
+# true if script is sourced (BASH_SOURCE is the file including the statement)
+[[ ${BASH_SOURCE[0]} != "$0" ]]
 ```
 
 ### Sudo-related tasks

@@ -1,3 +1,10 @@
+## Tue 19/Aug/2025
+
+- Scripts
+  - [x] Update calls to `download_ubuntu_packages` (now a binary)
+  - [x] Stab at creating a library for adder scripts
+  - [x] Create game adder
+
 ## Sat 09/Aug/2025
 
 - Scripts
