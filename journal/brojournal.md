@@ -1,3 +1,8 @@
+## Wed 20/Aug/2025
+
+- Scripts
+  - [x] Modernize comics adder
+
 ## Tue 19/Aug/2025
 
 - Scripts

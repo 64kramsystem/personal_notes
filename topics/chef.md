@@ -66,14 +66,15 @@ Lower to higher:
 
 Merging:
 
-- An environment default Array attribute will merge the values with a recipe default one
-- An environment overrider Array attribute will replace the values of a recipe default one
+- An environment `default` Array attribute will merge the values with a recipe default one
+- An environment `override` Array attribute will replace the values of a recipe default one
 
 Commands:
 
 ```rb
 # Idiomatic hash merge. WATCH OUT! This is a reverse merge, that is, the second hash is treated as
 # "default values".
+# If one just needs to override a single value, just use leaf assignments.
 #
 default[:attribute] = Chef::Mixin::DeepMerge.deep_merge(node[:myattribute], {foo: :bar})
 
