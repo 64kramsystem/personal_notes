@@ -4,7 +4,7 @@
   - [Searches](#searches)
   - [Access tokens](#access-tokens)
   - [Coauthorship (multiple authors)](#coauthorship-multiple-authors)
-  - [README.md](#readmemd)
+  - [README.md/Docs](#readmemddocs)
     - [Relative link references](#relative-link-references)
       - [Images](#images)
   - [Releases](#releases)
@@ -29,7 +29,15 @@ Reference: https://docs.github.com/en/authentication/keeping-your-account-and-da
 
 Github's specification for coauthorship is to add each additional author in the commit message, in the format `Co-authored-by: Name <email>`. This is supported also by Gitlab.
 
-## README.md
+## README.md/Docs
+
+Collapsible text:
+
+```md
+<details><summary>TITLE</summary>
+MARKDOWN_BODY
+</details>
+```
 
 ### Relative link references
 
