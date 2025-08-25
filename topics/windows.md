@@ -17,6 +17,7 @@
   - [Variables](#variables)
   - [Processes](#processes)
   - [Security](#security)
+    - [Run an elevated command from non-elevated WSL](#run-an-elevated-command-from-non-elevated-wsl)
     - [WSL: Cache SSH keys password](#wsl-cache-ssh-keys-password)
     - [Enable PIN to boot (encrypted disk)](#enable-pin-to-boot-encrypted-disk)
   - [Taskbar pinned items programmatic manipulation](#taskbar-pinned-items-programmatic-manipulation)
@@ -118,7 +119,8 @@ mount -o drvfs $letter: $path
 - `mlink` interprets relative targets as relative to the current directory, not the target one
   - for this reason, in scripts, it's much easier to `cd` into the target directory
 - WATCH OUT!!
-  - Must run the terminal/prompt in an Admin WSL session; any other approach fails in inconsistent and confusing ways.
+  - Must run the terminal/prompt in an Admin WSL session (otherwise, in the past, it'd fail in inconsistent and confusing ways)
+    - See [Run an elevated command from non-elevated WSL](#run-an-elevated-command-from-non-elevated-wsl)
   - `mklink.exe` doesn't exist; `mklink` is a built-in command!!
 
 In order rebuild symlinks, use this script (takes link as `$1`):
@@ -219,6 +221,14 @@ tasklist | findstr thunderbird.exe && taskkill /IM thunderbird.exe /F
 ## Security
 
 Check if running as admin (No errors if running as Windows Admin): `net session`
+
+### Run an elevated command from non-elevated WSL
+
+```sh
+# Don't forget the link full path, otherwise, the current dir is System32.
+#
+powershell.exe -Command "Start-Process cmd.exe -ArgumentList '/c mklink $(wslpath -w .)\\link.txt X:\\path\\to\\foo.txt' -Verb RunAs"
+```
 
 ### WSL: Cache SSH keys password
 
