@@ -1,3 +1,12 @@
+## Wed 27/Aug/2025
+
+- Scripts
+  - [x] Fix FFmpeg build gcc/g++ (version) use
+  - [x] Build FFmpeg using mold
+  - [x] Purchases script
+    - [x] Refactor
+    - [x] Add date functionality
+
 ## Wed 20/Aug/2025
 
 - Scripts
