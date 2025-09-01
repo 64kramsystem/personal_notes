@@ -3,8 +3,8 @@
 - [Ruby](#ruby)
   - [General syntax/concepts](#general-syntaxconcepts)
     - [Variables](#variables)
-    - [Array literals](#array-literals)
     - [Equality/inclusion testing](#equalityinclusion-testing)
+    - [Blocks/rescue/retry](#blocksrescueretry)
     - [Block-oriented processing methods](#block-oriented-processing-methods)
     - [Operators](#operators)
       - [Ampersand prefix operator `&<object>`](#ampersand-prefix-operator-object)
@@ -61,12 +61,6 @@ instance_variable_get(:my_var)    # 2
 remove_instance_variable :@my_var if instance_variable_defined?(:@my_var)
 ```
 
-### Array literals
-
-```ruby
-%i(foo bar)           # array of symbols
-```
-
 ### Equality/inclusion testing
 
 Equality methods:
@@ -87,6 +81,16 @@ Object.==()
 #
 Object.eql?()
 Object.hash()
+```
+
+### Blocks/rescue/retry
+
+```ruby
+5.times do |i|
+  # …
+rescue # defaults to StandardError; supported in `do` blocks
+  $stdin.getch == "y" ? (puts; retry) : raise # getch requires "io/console"
+end
 ```
 
 ### Block-oriented processing methods
@@ -119,6 +123,10 @@ The closed range operator is inconsistent:
 - `(6...7).map(&:to_i)` -> `[6]` (doesn't include the last)
 
 - `(1..)` and `(1...)` have the same elements (both include Float::INFINITY), but they're not equal
+
+Array operators:
+
+- `%i(foo bar)`           # array of symbols
 
 #### Ampersand prefix operator `&<object>`
 
