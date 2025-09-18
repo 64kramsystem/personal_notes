@@ -2,6 +2,8 @@
 
 - [MySQL Administration](#mysql-administration)
   - [Privileges](#privileges)
+  - [MySQL Components](#mysql-components)
+    - [Passwords complexity](#passwords-complexity)
   - [(Status) Variables](#status-variables)
   - [Events](#events)
   - [General optimization topics](#general-optimization-topics)
@@ -48,6 +50,22 @@ SHOW GRANTS for @user\G
 -- Must specify host pattern, if the user has it.
 --
 DROP USER @user;
+```
+
+## MySQL Components
+
+Use `SELECT * FROM mysql.component` to display them.
+
+### Passwords complexity
+
+Reference (see subsections): https://dev.mysql.com/doc/refman/en/validate-password.html.
+
+```sql
+INSTALL COMPONENT 'file://component_validate_password';
+
+-- Other vars available as `validate_password.%`.
+--
+SET GLOBAL validate_password.length = 12;
 ```
 
 ## (Status) Variables
