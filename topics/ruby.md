@@ -649,8 +649,7 @@ Hash.new {|h, k| h[k] = default_value}    # same as previous, but generates new 
 Hash.new { |h, k| h[k] = Hash.new(&h.default_proc) } # same as previous, but supports default nested hashes!
 
 [[:a, 1], [:b, 2]].to_h                   # => {a: 1, b: 2} # !!! convert an array to hash !!!
-Hash[:a, 1, :b, 2]                        # => {a: 1, b: 2} # !!! convert an array to hash !!!
-Hash[*flat_array]                         # => same as previous
+Hash[:a, 1, :b, 2]                        # => {a: 1, b: 2} # !!! convert an array to hash !!!; above preferred
 
 hash.symbolize_keys
 hash.transform_keys(&block)
