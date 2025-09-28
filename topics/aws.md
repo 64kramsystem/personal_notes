@@ -101,7 +101,7 @@ WHERE routine_type = 'PROCEDURE'
 -- | rds_rotate_general_log            |
 -- | rds_rotate_global_status_history  |
 -- | rds_rotate_slow_log               |
--- | rds_set_configuration             |
+-- | rds_set_configuration             | # Set RDS config value; get via `rds_show_configuration()`
 -- | rds_set_fk_checks_off             |
 -- | rds_set_fk_checks_on              |
 -- | rds_show_configuration            |
