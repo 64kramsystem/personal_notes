@@ -627,6 +627,7 @@ File.extname(fname)                             # Extract the (last) extension, 
 File.size(fname)
 File.mtime(fname)
 File.lstat(fname).mtime                         # For symlinks; see note above.
+File.stat(fname)                                # Stats; includes permissions (:mode), uid…
 File.symlink(target, link)
 File.utime(atime, mtime, fname)                 # Update a/mtime
 `system("touch -h -m -t #{atime.strftime('%Y%m%d%H%M.%S')} #{fname.shellescape}")` # For symlinks (!) (mtime)

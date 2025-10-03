@@ -26,6 +26,8 @@
   - [Screen capture](#screen-capture)
   - [Packages management](#packages-management)
   - [Power management](#power-management)
+  - [Other fixes](#other-fixes)
+    - [Steam icons not loading the game](#steam-icons-not-loading-the-game)
 
 ## Licensing
 
@@ -317,3 +319,9 @@ Display remaining battery charge:
 ```
 WMIC PATH Win32_Battery Get EstimatedChargeRemaining
 ```
+
+## Other fixes
+
+### Steam icons not loading the game
+
+Setting: `Choose defaults by file type` → Set `.URL` to `Internet Browser`
