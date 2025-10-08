@@ -746,6 +746,14 @@ else
 end
 ```
 
+Nice compact form:
+
+```rb
+IO.popen(command, &:read).tap do
+  exit $CHILD_STATUS.exitstatus if !$CHILD_STATUS.success?
+end
+```
+
 A non-block form exists, which returns the `IO` object.
 
 ### Using `Open3`

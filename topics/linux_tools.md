@@ -133,6 +133,13 @@ Regexp types:
 
 ### Examples
 
+Exit with success if anything is found (funny workaround):
+
+```sh
+# Find always exits with success, independently of whether it found something or not.
+find /foo -name bar | grep -q .
+```
+
 Simplest find files + execute command (with quoting):
 
 ```sh
