@@ -405,6 +405,8 @@ jobs:
       matrix: # optional
         os: [ubuntu, macos]
         ruby-version: [head, 3.0, 2.9, 2.8, 2.7, 2.6, 2.5]
+    # Optional (allowed to fail) job.
+    # For simple jobs, just set to true.
     # `debug` is only to show the functionality - it's not included above.
     #
     continue-on-error: ${{ endsWith(matrix.ruby, 'head') || matrix.ruby == 'debug' }}
