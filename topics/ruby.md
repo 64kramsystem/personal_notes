@@ -89,6 +89,7 @@ Object.hash()
 5.times do |i|
   # …
 rescue # defaults to StandardError; supported in `do` blocks
+  # Base `raise` reraises the last error, even if specified via `rescue StandardError => e`
   $stdin.getch == "y" ? (puts; retry) : raise # getch requires "io/console"
 end
 ```

@@ -171,11 +171,11 @@ The simplest way to configure a "log mode", is to allow non-matching rules, and 
 
 ## Lambda
 
-```sh
-aws lambda invoke \
-  --function-name my_lambda \
-  --payload '{}' \
-  /dev/stdout &!
+Actions below raise an error if the Lambda name is not correct.
 
+```sh
+# Manually invoke a Lambda, then follow its logs.
+#
+aws lambda invoke --function-name my_lambda --payload '{}' /dev/stdout &!
 aws logs tail /aws/lambda/my_lambda --follow
 ```
