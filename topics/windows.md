@@ -298,10 +298,16 @@ Windows has a centralized repository, which can be used via the cmdline program 
 It doesn't use the Windows Store, but it handles also programs downloaded via it.
 
 ```sh
+winget.exe list | findstr.exe /i libreoffice # list installed packages (and filter one)
+
 winget.exe search $pattern$ # case insensitive subpattern
 
+# `--id` must be followed by the package id
+#
 winget.exe install $package_name
 winget.exe install --exact --id $package_id # [exact] match; [id] match
+
+winget.exe pin add --exact --id $package_id # prevent upgrades
 
 winget.exe source update
 winget.exe upgrade --all

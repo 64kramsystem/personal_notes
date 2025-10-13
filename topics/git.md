@@ -271,10 +271,12 @@ merge-base $A $B                                       # find common ancestor
 log --merges v0.1.8...v0.1.9                           # search merges between two tags
 
 branch --contains $commit                              # shows which branches contains the given commit
+rev-parse $branch                                      # show the commit for a branch
 rev-parse --verify $branch 2> /dev/null                # test if a branch exists
-git rev-parse @{-1}                                    # find previously checkout out branch
-git name-rev $(git rev-parse @{-1}) --name-only        # name of previously checkout out branch
-git rev-parse --abbrev-ref "$branch@{u}" >/dev/null 2>&1 # test if the branch has a remote (set $branch to blank for the current branch)
+rev-parse @{-1}                                        # find previously checkout out branch
+name-rev $(git rev-parse @{-1}) --name-only            # name of previously checkout out branch
+rev-parse --abbrev-ref "$branch@{u}" >/dev/null 2>&1   # test if the branch has a remote (set $branch to blank for the current branch)
+
 
 show :/$regex                                          # show the last commit matching a regex in the message
 name-rev --name-only $commit                           # shows which tag the commit was in. '~N' indicates how many commits (N) before the tag
