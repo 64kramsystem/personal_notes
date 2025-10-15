@@ -214,13 +214,58 @@ btrfs device stats $mount
 btrfs scrub start [-B] $mount
 btrfs scrub status -d $mount
 
-# Detect corrupted files (path is relative to the mount)
+# Reset error count
 #
-dmesg | perl -lne 'print $1 if /checksum error.+\(path: (.+)\)/' | uniq
+sudo btrfs device stats -z /
 
-# Recovery
+# Mount corrupted filesystems.
 #
 mount -o recovery /dev/sdb $mount
+```
+
+Error detection procedures:
+
+```sh
+#####################################################################################################
+# Simple methods
+#####################################################################################################
+
+# Detect corrupted files (not metadata corruptions!); path is relative to the mount).
+dmesg | perl -lne 'print $1 if /checksum error.+\(path: (.+)\)/' | uniq
+# More general errors.
+# Can also grep ` /var/log/kern.log*` while scrubbing
+journalctl -k | grep -iP btrfs.+error
+
+# (Try to) map the logical address to file(s)
+for addr in $(journalctl -k | perl -lne 'print $1 if /btrfs.*error at logical (\d+)/i'); do
+  btrfs inspect-internal logical-resolve $addr /home
+done
+
+#####################################################################################################
+# METHOD 1: May work, but if the corruption is in the free blocks or similar, this won't
+# list anything.
+# Doesn't work on mounted filesystems.
+#####################################################################################################
+
+btrfs restore -vi --dry-run /dev/mapper/vgubuntu--mate-root /tmp/btrfs-test \
+  |& tee /tmp/btrfs-restore.log \
+  | grep -Ei '(checksum|csum).*fail|read error|corrupt' \
+  | sed -E 's/.*path: //; s/.*file: //; s/\r$//' \
+  | awk 'NF' \
+  | sort -u \
+  | tee /tmp/btrfs-corrupted-files.txt
+
+#####################################################################################################
+# METHOD 2: Also scans free blocks etc.
+#####################################################################################################
+
+btrfs check --check-data-csum /dev/mapper/vgubuntu--mate-root \
+ | tee /tmp/errors.log
+# mirror 1 bytenr 1078566862848 csum 0x6eb5b6b2 expected csum 0xc1173e8c…
+
+mount /dev/mapper/vgubuntu--mate-root /mnt
+
+awk '/expected csum/ {print $4}' /tmp/errors.log | while read b; do btrfs inspect-internal logical-resolve $b /mnt; echo; done
 ```
 
 ## Other operations/concepts
@@ -234,7 +279,7 @@ findmnt -nt btrfs | awk '{print $1}'
 
 # Detailed data stats (including mirroring info)
 #
-btrfs fi df [-h] $mount
+btrfs filesystem df [-h] $mount
 
 # Defragment
 #
@@ -245,8 +290,8 @@ btrfs filesystem defrag $mount
 
 # Resize
 #
-btrfs fi resize -2g $mount
-btrfs fi resize max $mount
+btrfs filesystem resize -2g $mount
+btrfs filesystem resize max $mount
 ```
 
 ### Swapfile on Btrfs
