@@ -35,7 +35,7 @@
 
 ```sh
 # --why-run        : dry run
-# --format minimal : display reduced output, with changes summarized at the bottom (but no content changes)
+# --format minimal : display reduced output, with changes summarized at the bottom (w/o content diff)
 #
 chef-client --why-run --format minimal
 ```

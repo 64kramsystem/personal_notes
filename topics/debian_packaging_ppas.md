@@ -19,6 +19,7 @@
     - [Issues](#issues)
   - [References](#references)
   - [Simplest way to build a package from source code](#simplest-way-to-build-a-package-from-source-code)
+  - [Change the dependencies of a `.deb` package](#change-the-dependencies-of-a-deb-package)
 
 ## Versioning
 
@@ -231,3 +232,12 @@ Useful links:
 ## Simplest way to build a package from source code
 
 If the requirement is just to create a package, use `checkinstall`.
+
+## Change the dependencies of a `.deb` package
+
+```sh
+mkdir tempdir
+dpkg-deb -R yourpackage.deb tempdir/
+vim tempdir/DEBIAN/control # change `Depends:`
+dpkg-deb -b tempdir/ fixed-package.deb
+```
