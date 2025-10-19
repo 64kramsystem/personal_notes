@@ -1,3 +1,12 @@
+## Sun 19/Oct/2025
+
+- Openscripts
+  - `encode_to_h265`
+    - [x] Add rotation handling
+    - [x] Improve scale factor
+- Scripts
+  - `add_swing`: Full `to` functionality
+
 ## Wed 27/Aug/2025
 
 - Scripts

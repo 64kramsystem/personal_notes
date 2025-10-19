@@ -10,6 +10,7 @@
     - [Capturing sequences of N characters](#capturing-sequences-of-n-characters)
     - [Negative matches](#negative-matches)
     - [Matching a pattern when it's not at the beginning](#matching-a-pattern-when-its-not-at-the-beginning)
+    - [Regex to match an HTML section](#regex-to-match-an-html-section)
   - [Language incompatibilities](#language-incompatibilities)
     - [Javascript](#javascript)
 
@@ -113,6 +114,14 @@ Use a negative lookahead with the beginning-of-input metacharacter, as it's supp
 ```
 
 The lookbehind version (`/(?<!^)Re: /`) is semantically more precise, however, it's not supported in all JS versions.
+
+### Regex to match an HTML section
+
+Good enough, in Ruby:
+
+    %r<^## Title.*?\n(?=^##|\Z)>m
+
+avoids comments inside code fences.
 
 ## Language incompatibilities
 

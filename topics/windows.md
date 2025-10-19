@@ -96,7 +96,9 @@ Go to the parent directory, and run `pnputil /add-driver *.inf /subdirs /install
 cmd.exe /d $mycommand
 powershell.exe -Command $mycommand
 
-# Open file with Windows related program (wslu package)
+# Open file with Windows related program (wslu package).
+# On the current system, it causes "interop disabled" errors, but it still works, and since it's very
+# confusing to debug, one can just filter stderr out.
 #
 wslview $file
 
