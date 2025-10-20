@@ -639,8 +639,9 @@ enu.filter_map { |n| n**2 if n.even? }  # yay! (falsey values are discarded)
 enu.each_cons(n)                        # each overlapping subarray of `n` items; WATCH OUT!! if an array has size < window, it's *not* included
 enu.each_slice(n)                       # each non overlapping subarray of `n` items; last windows, if smaller, *is* included
 
-enum.each_with_index.drop(1).each {}    # skip the first N values of an iterator; WATCH OUT! not lazy (use lazy() if needed)
-enum.inject { |acc, entry| ... }        # without initial value, on the first cycle, (acc, entry) are the first and second entries
+enum.drop(1).each { … }                 # skip the first N values of an iterator; WATCH OUT! not lazy (use lazy() if needed)
+enum.inject { |acc, entry|  … }         # without initial value, on the first cycle, (acc, entry) are the first and second entries
+enum.reject { it == :val }              # convenient pattern to remove an entry via functional composition
 ```
 
 ### Hash

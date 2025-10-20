@@ -16,9 +16,10 @@ Many APIs return a [PageableResponse](https://docs.aws.amazon.com/sdk-for-ruby/v
 
 ```rb
 # Automatic (use #flat_map where necessary)
-# Note sure if #each is required, as #map is _not_ overwritten 
+# Note sure if #each is required, as #map is _not_ overwritten.
 
-result = response.each.map { |page| page.data.my_field }
+response.each.map { |page| page.data.my_field }
+response.flat_map(&:items).filter_map { it["MyField"] } # DDB example
 
 # Manual
 

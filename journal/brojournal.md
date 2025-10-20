@@ -1,3 +1,8 @@
+## Mon 20/Oct/2025
+
+- Openscripts
+  - `xi`: Add support for passing a string (via args)
+
 ## Sun 19/Oct/2025
 
 - Openscripts
