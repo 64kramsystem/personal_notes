@@ -883,7 +883,8 @@ echo "${@: -1}"       # Use this to access the last entry
 echo "${@}"           # DAFUQ!!! Doesn't include $0
 echo "${@:0}"         # Includes $0 (Ruby [0..]); WATCH OUT! $0 is the program name
 echo "${@::3}"        # WATCH OUT! Includes $0 (Ruby [0, 3])
-echo "${@:1:${#@}-1}" # DAFUQ!!! $#@ doesn't count $0, so must account when accessing by a length expression
+echo "${@:1}"         # Ruby [1..]
+echo "${@:1:${#@}-2}" # Ruby [1..-2] DAFUQ!!! $#@ doesn't count $0, so must account when accessing by a length expression
 echo "${*:${#@}}"     # Last element (as string); use `(${@...)` for array
 
 # Simple inclusion tests (there is no direct way)

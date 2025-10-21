@@ -11,8 +11,6 @@
   - [Control flow](#control-flow)
   - [Tables](#tables)
     - [ALTER TABLE](#alter-table)
-      - [Performance](#performance)
-      - [Observe progress](#observe-progress)
   - [Views](#views)
   - [Indexes](#indexes)
   - [Virtual columns](#virtual-columns)
@@ -36,7 +34,7 @@
     - [Stopwords](#stopwords)
     - [Symbols handling](#symbols-handling)
     - [Manipulate search relevance for multiple columns (boosting)](#manipulate-search-relevance-for-multiple-columns-boosting)
-    - [Performance](#performance-1)
+    - [Performance](#performance)
     - [Maintenance](#maintenance)
   - [XPath](#xpath)
   - [CSV Import/Export](#csv-importexport)
@@ -56,6 +54,7 @@
     - [Cursors (with example procedure)](#cursors-with-example-procedure)
   - [Performance/Optimization](#performanceoptimization)
     - [General optimization topics](#general-optimization-topics)
+    - [Monitor query progress](#monitor-query-progress)
     - [Locking](#locking)
     - [Query hints](#query-hints)
     - [Profiling](#profiling)
@@ -195,46 +194,9 @@ ALTER TABLE t TRUNCATE PARTITION p1, p3;  # truncate named (not HASH/KEY) partit
 
 ### ALTER TABLE
 
-As of 8.0.25, the `INSTANT` algorithm doesn't work if there are MVI indexes on the table.
-
-#### Performance
+As of 8.0.25, the `INSTANT` algorithm doesn't work if there are MVI/FT indexes on the table.
 
 Adding/dropping an index to a table, even if very large, didn't have any impact when the table was not actively used.
-
-#### Observe progress
-
-Reference: https://dev.mysql.com/doc/refman/8.0/en/monitor-alter-table-performance-schema.html
-
-Example of ALTER TABLE monitoring, at different stages; test estimation is updated (increased) between stages:
-
-```sql
-SELECT EVENT_NAME, WORK_COMPLETED, WORK_ESTIMATED FROM performance_schema.events_stages_current;
-
--- +------------------------------------------------------+----------------+----------------+
--- | EVENT_NAME                                           | WORK_COMPLETED | WORK_ESTIMATED |
--- +------------------------------------------------------+----------------+----------------+
--- | stage/innodb/alter table (read PK and internal sort) |         155094 |        7904880 |
--- +------------------------------------------------------+----------------+----------------+
-
--- +----------------------------------+----------------+----------------+
--- | EVENT_NAME                       | WORK_COMPLETED | WORK_ESTIMATED |
--- +----------------------------------+----------------+----------------+
--- | stage/innodb/alter table (flush) |        7054880 |        7901111 |
--- +----------------------------------+----------------+----------------+
-```
-
-The `alter table (flush)` stage empirically took from 10% to 100% of the total time before that stage.
-
-Only the last stage `log apply table` causes contention; on the longest occurrence, it took ≈2.4% of the total time (44/1858").
-
-A quick way to observe an INSERT (into an empty table) is to use `INFORMATION_SCHEMA.TABLES`:
-
-```sql
-SELECT (
-  (SELECT TABLE_ROWS FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = "dest") /
-  (SELECT TABLE_ROWS FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = "source")
-) `approx_frac_done`;
-```
 
 ## Views
 
@@ -1330,6 +1292,41 @@ Docs:
 
 - [Subquery materialization](https://dev.mysql.com/doc/refman/8.0/en/subquery-materialization.html)
 - [Derived tables/Views/CTEs materialization](https://dev.mysql.com/doc/refman/8.0/en/derived-table-optimization.html)
+
+### Monitor query progress
+
+Reference: https://dev.mysql.com/doc/refman/8.0/en/monitor-alter-table-performance-schema.html
+
+Example of ALTER TABLE monitoring, at different stages; test estimation is updated (increased) between stages:
+
+```sql
+SELECT EVENT_NAME, WORK_COMPLETED, WORK_ESTIMATED FROM performance_schema.events_stages_current;
+
+-- +------------------------------------------------------+----------------+----------------+
+-- | EVENT_NAME                                           | WORK_COMPLETED | WORK_ESTIMATED |
+-- +------------------------------------------------------+----------------+----------------+
+-- | stage/innodb/alter table (read PK and internal sort) |         155094 |        7904880 |
+-- +------------------------------------------------------+----------------+----------------+
+
+-- +----------------------------------+----------------+----------------+
+-- | EVENT_NAME                       | WORK_COMPLETED | WORK_ESTIMATED |
+-- +----------------------------------+----------------+----------------+
+-- | stage/innodb/alter table (flush) |        7054880 |        7901111 |
+-- +----------------------------------+----------------+----------------+
+```
+
+The `alter table (flush)` stage empirically took from 10% to 100% of the total time before that stage.
+
+Only the last stage `log apply table` causes contention; on the longest occurrence, it took ≈2.4% of the total time (44/1858").
+
+A quick way to observe an INSERT (into an empty table) is to use `INFORMATION_SCHEMA.TABLES`:
+
+```sql
+SELECT (
+  (SELECT TABLE_ROWS FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = "dest") /
+  (SELECT TABLE_ROWS FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = "source")
+) `approx_frac_done`;
+```
 
 ### Locking
 

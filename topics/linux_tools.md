@@ -458,6 +458,8 @@ pv -cN in foo | gzip | pv -cN out > bar
 
 ## Parallel execution
 
+WATCH OUT! If the executor runs in a script, vars/functions aren’t available because tasks run in subshells; See GNU Parallel export solution.
+
 ### Using GNU Parallel
 
 In general, GNU Parallel has some convenient functionalities, compared to xargs.
@@ -505,6 +507,16 @@ Other options:
 - `-P|--max-procs <N>[%]` : max procs; `%` (optional) accepts decimal; watch out! uses the ceiling (e.g.13% of 32 yields 5)
 
 In order to programmatically confirm the citation, must run as `echo "will cite" | parallel --citation || true`.
+
+Exporting functions/vars to task subshells:
+
+```sh
+# Put both at the top of the script
+source "$(command -v env_parallel.bash)"
+PARALLEL_IGNORED_NAMES="" env_parallel --session
+# Invoke this way
+env_parallel "my_func {}" ::: "${my_vars[@]}"
+```
 
 ### Using xargs
 
