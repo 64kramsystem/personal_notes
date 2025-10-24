@@ -1,3 +1,8 @@
+## Thu 23/Oct/2025
+
+- Scripts
+  - `encode_swing_videos`: Change target height when a video is less than the default (720p)
+
 ## Mon 20/Oct/2025
 
 - Openscripts

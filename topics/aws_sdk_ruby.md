@@ -15,7 +15,7 @@
 Many APIs return a [PageableResponse](https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/PageableResponse.html); the options to iterate are:
 
 ```rb
-# Automatic (use #flat_map where necessary)
+# Automatic (typically, flat_map(&:collection) is used)
 # Note sure if #each is required, as #map is _not_ overwritten.
 
 response.each.map { |page| page.data.my_field }
