@@ -451,14 +451,25 @@ cat /dev/null > /proc/$pid/fd/$fd  # truncate a deleted open file!!
 Run multiple instances:
 
 ```sh
-# [c]ursor, [N]ame
+# [c]ursor positioning (necessary!), [N]ame
 #
 pv -cN in foo | gzip | pv -cN out > bar
 ```
 
+Make compatible with GNU Parallel:
+
+```sh
+# Without `--tty -j`, Parallel buffers each job's output, delaying pv's progress display until jobs finish
+# sequentially.
+
+env_parallel --tty -j"${#stacks[@]}" \
+  "dump_schema {} | pv -s$c_dump_size -cN {} > structure.{}.sql" \
+  ::: "${stacks[@]}"
+```
+
 ## Parallel execution
 
-WATCH OUT! If the executor runs in a script, vars/functions aren’t available because tasks run in subshells; See GNU Parallel export solution.
+WATCH OUT! If the executor runs in a script, vars/functions aren't available because tasks run in subshells; See GNU Parallel export solution.
 
 ### Using GNU Parallel
 
@@ -512,6 +523,7 @@ Exporting functions/vars to task subshells:
 
 ```sh
 # Put both at the top of the script
+# shellcheck source=/usr/bin/env_parallel.bash
 source "$(command -v env_parallel.bash)"
 PARALLEL_IGNORED_NAMES="" env_parallel --session
 # Invoke this way

@@ -250,7 +250,7 @@ If one needs to do calendar operations but print the timezone, use `DateTime`, b
 In order to parse a freeform time, use `DateTime`, but mind the offset:
 
 ```ruby
-# If the offset is not specified, it's assumed to be UTC.
+# If the offset is not specified, it's assumed to be UTC, so we need to make the timezone explicit.
 #
 DateTime.parse("10:40 #{Time.now.strftime("%z")}")     # => #<DateTime: 2020-10-27T10:40:00+01:00 ...>
 
