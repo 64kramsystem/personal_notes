@@ -239,7 +239,8 @@ General APIs/operations:
 @time.subset                                              # Fractional part of a time (rational)
 Time.at(time_i)                                           # Unix time to Time
 
-@date.wday                                                # Sun=0 .. Sat=6
+@date.wday                                                # Sun=0 … Sat=6
+(@date.wday - 1) % 7                                      # Mon=0 … Sun=6
 ```
 
 In order to substract/add an year/month, while keeping the smaller units (ie. day/month for year), use `(prev|next)_(year|month)`. The date 29/Feb is converted to 28/Feb.

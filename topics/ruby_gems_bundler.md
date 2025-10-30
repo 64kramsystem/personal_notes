@@ -206,6 +206,7 @@ gem install $gem -- --build-flags... # Install a gem, with build flags
 gem uninstall -ax $gem               # Uninstall, without versions/binaries prompt
 gem dependency $gem                  # List dependencies
 gem outdated [$gem]                  # Show new version information (if there is any)
+gem signin                           # Login, to push gems (creates ~/.gem/credentials)
 
 # Format for operations (`fetch`, `list -r`...) on remote authenticated repositories.
 # `-s` appends a source; --clear-sources clears the preceding sources.

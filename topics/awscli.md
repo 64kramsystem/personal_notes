@@ -2,6 +2,7 @@
 
 - [AWS CLI](#aws-cli)
   - [Tool configuration](#tool-configuration)
+  - [Output](#output)
   - [General JSON parameters format](#general-json-parameters-format)
   - [Resources](#resources)
     - [EC2](#ec2)
@@ -26,6 +27,13 @@ aws configure
 ```
 
 The region can be specified either via `--region $region` or `$AWS_DEFAULT_REGION`.
+
+## Output
+
+```sh
+# TSV outptu
+--output text --no-cli-pager
+```
 
 ## General JSON parameters format
 

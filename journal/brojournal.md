@@ -1,3 +1,15 @@
+## Wed 29/Oct/2025
+
+- Geet
+  - [x] Release v0.23.0
+  - [x] Update GPL license id
+  - [x] Add CI (test suite) (#215)
+  - [x] Increase minimum required Ruby version (3.2)
+  - [x] Configure Sorbet
+  - [x] Add dependencies required for (more) recent Ruby versions
+  - [x] Add basic Sorbet annotations, starting from CreatePr (`typed: true`)
+  - [x] Add Sorbet to CI
+
 ## Thu 23/Oct/2025
 
 - Scripts

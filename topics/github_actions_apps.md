@@ -409,7 +409,7 @@ jobs:
     # For simple jobs, just set to true.
     # `debug` is only to show the functionality - it's not included above.
     #
-    continue-on-error: ${{ endsWith(matrix.ruby, 'head') || matrix.ruby == 'debug' }}
+    continue-on-error: ${{ endsWith(matrix['ruby-version'], 'head') || matrix['ruby-version'] == 'debug' }}
     # Conditionals can also be at step level.
     # When expressions are in an `if` key, curly braces are optional.
     #
