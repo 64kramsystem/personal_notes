@@ -31,7 +31,7 @@ The region can be specified either via `--region $region` or `$AWS_DEFAULT_REGIO
 ## Output
 
 ```sh
-# TSV outptu
+# TSV output
 --output text --no-cli-pager
 ```
 
