@@ -7,6 +7,7 @@
     - [Madness references](#madness-references)
   - [Special variables](#special-variables)
   - [Variables](#variables)
+    - [Pseudo pass by reference](#pseudo-pass-by-reference)
   - [Strings](#strings)
   - [Herestrings/Heredocs (+stdin handling)](#herestringsheredocs-stdin-handling)
   - [Special functions](#special-functions)
@@ -156,6 +157,21 @@ myvar=$(nonexiting_command 2>&1)    # the assignment value is stdout's output; f
 
 declare -g                          # declare variable as global (eg. from a function); without, the scope is the current one (local)
 declare -x                          # export; can add to `-g`
+```
+
+### Pseudo pass by reference
+
+Using references, it's possible to pseudo-return values:
+
+```sh
+pass_by_ref out foo
+
+function pass_by_ref {
+  local -n checked_set_out=$1      # since the name is passed, not the refer, use a unique name, otherwise circular references are created
+  checked_set_out=$2
+}
+
+echo "$out"
 ```
 
 ## Strings
