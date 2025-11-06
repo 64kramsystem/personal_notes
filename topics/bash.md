@@ -164,14 +164,15 @@ declare -x                          # export; can add to `-g`
 Using references, it's possible to pseudo-return values:
 
 ```sh
-pass_by_ref out foo
-
 function pass_by_ref {
   local -n checked_set_out=$1      # since the name is passed, not the refer, use a unique name, otherwise circular references are created
+  # shellcheck disable=2034        # v0.11 doesn't support this pattern
   checked_set_out=$2
 }
 
-echo "$out"
+local out=
+pass_by_ref out foo               # WATCH OUT! Pass the variable name here.
+echo "$out"         # foo
 ```
 
 ## Strings
