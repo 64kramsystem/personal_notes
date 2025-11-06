@@ -23,6 +23,7 @@
     - [Rust Cargo Clippy on multiple targets](#rust-cargo-clippy-on-multiple-targets)
   - [Preset CIs](#preset-cis)
     - [Ruby](#ruby)
+    - [Sorbet](#sorbet)
     - [Rust](#rust)
   - [Apps](#apps)
     - [Kodiak](#kodiak)
@@ -535,6 +536,78 @@ jobs:
 ```
 
 Manual Ruby Bundler caching is discouraged (as it's not trivial); see the [Ruby example](#ruby-generic-tasks).
+
+### Sorbet
+
+Sorbet check:
+
+```yaml
+  sorbet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install Sorbet-related packages
+        run: sudo apt install -y libreadline-dev
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: Run Sorbet
+        id: sorbet
+        run: bundle exec srb typecheck
+        continue-on-error: true
+      - name: Custom error message
+        if: steps.sorbet.outcome == 'failure'
+        run: echo "::warning::Sorbet type checking failed (can be ignored)."
+```
+
+Check Sorbet sigil on new files:
+
+```yaml
+  check-sorbet-sigil:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v5
+      - name: 'Ensure new Ruby files have "# typed: "'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require('fs');
+            const { owner, repo } = context.repo;
+            const pull_number = context.payload.pull_request.number;
+
+            const files = await github.paginate(
+              github.rest.pulls.listFiles,
+              { owner, repo, pull_number, per_page: 100 }
+            );
+
+            const addedRb = files
+              .filter(
+                f => f.status === 'added' &&
+                f.filename.endsWith('.rb') &&
+                !f.filename.startsWith('db/migrate/')
+              )
+              .map(f => f.filename);
+
+            const missing = [];
+
+            for (const file of addedRb) {
+              const content = fs.readFileSync(file, 'utf8');
+              const hasSigil = content
+                .split(/\r?\n/)
+                .some(line => /^# typed: /.test(line));
+              if (!hasSigil) missing.push(file);
+            }
+
+            if (missing.length) {
+              core.setFailed(
+                `One or more added files are missing the Sorbet sigil "# typed: ignore"`
+              );
+            }
+```
 
 ### Rust
 
