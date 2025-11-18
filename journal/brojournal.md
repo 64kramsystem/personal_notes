@@ -1,3 +1,9 @@
+## Mon 17/Nov/2025
+
+- Schedule manager
+  - [x] Replanner: Print interpolations (to stdout)
+  - [x] Replanner: Minor refactoring to interpolations
+
 ## Wed 29/Oct/2025
 
 - Geet
