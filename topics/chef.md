@@ -248,6 +248,12 @@ cookbook_file '/etc/systemd/system.conf' do
   source    'etc/systemd/system.conf'
   mode      '0644'        # best to always specify; the default (not in all case) is 0777 + umask -> typically 0755.
 end
+
+# Inline file content.
+#
+file "/root/.npmrc" do
+  content "update-notifier=false\n"
+end
 ```
 
 Delete files/dirs found via glob:

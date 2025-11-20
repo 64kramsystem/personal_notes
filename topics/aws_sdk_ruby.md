@@ -216,10 +216,21 @@ Upload a file:
 ```rb
 # Higher level (e.g. large files handling); use this.
 #
-# :source:  String, IO and others
 # :options: other options, including progress callback and threading
 #
-Aws::S3::Object.new.upload_file(source, options={})
+Aws::S3::TransferManager.new(client:)
+  .upload_file(
+    filename,             # File or similar class
+    bucket:,
+    key:,
+    acl:,
+    **options             # other options for :put_object
+  )
+
+# Streaming upload
+#
+Aws::S3::TransferManager.new(client:)
+  .upload_stream(**args) { |stream| stream << "foo" }
 
 # Use this only if lower-level control is required.
 #
