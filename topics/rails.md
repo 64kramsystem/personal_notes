@@ -67,6 +67,7 @@ column: 1...    # column >= 1 (!)
 column: ..7     # column <= 7
 column: ...7    # column < 7
 column: 1..7    # column BETWEEN 1 AND 7
+column: 1...7   # 1 <= column && column < 7
 
 Hints:
 
