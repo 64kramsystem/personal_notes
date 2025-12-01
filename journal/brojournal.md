@@ -1,3 +1,15 @@
+## Sun 30/Nov/2025
+
+- Openscripts
+  - `encode_to_h265`
+    - [x] Preparatory refactorings
+    - [x] Add 180° rotation
+    - [x] Append extension to source files, instead of using a temporary directory
+    - [x] Add option to keep input files
+  - [x] internal encoding script
+    - [x] Add `--preset`
+    - [x] Add `--keep-input-files`
+
 ## Mon 17/Nov/2025
 
 - Schedule manager

@@ -476,7 +476,15 @@ systemd_unit 'nmon.service' do
   #
   verify false
 
-  action [:create, :enable, :reload_or_restart] # Can also :delete (systemd reload is triggered as usual)
+  action [:create, :enable] # Can also :delete (systemd reload is triggered as usual)
+end
+
+# This is the proper strategy to handle changes; we can't :restart in the unit resource, otherwise
+# a restart will always be performed.
+#
+service "nmon" do
+  action :start
+  subscribes :restart, "systemd_unit[nmon.service]"
 end
 ```
 
