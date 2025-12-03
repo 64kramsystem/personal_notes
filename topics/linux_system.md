@@ -57,7 +57,6 @@
   - [LVM](#lvm)
   - [Encryption](#encryption)
     - [Unmount LUKS encrypted partitions](#unmount-luks-encrypted-partitions)
-    - [Mount encrypted (.ecryptfs) home](#mount-encrypted-ecryptfs-home)
     - [Setup hibernation on Ubuntu-setup LUKS volume](#setup-hibernation-on-ubuntu-setup-luks-volume)
   - [Benchmarking system](#benchmarking-system)
 
@@ -1473,16 +1472,6 @@ lsblk -n -o NAME,TYPE,MOUNTPOINT,UUID $device  # find the given device tree prop
 blkid -s UUID -o value $device                 # when requiring the UUID of one device, this is a better choice (always returns only one entry)
 udisksctl unmount -b /dev/mapper/$luks_device  # unmount the encrypted partition(s)
 udisksctl lock -b /dev/$luks_device            # lock the LUKS device
-```
-
-### Mount encrypted (.ecryptfs) home
-
-Obsolete, but kept for reference. Requires `ecryptfs-utils` package.
-
-```sh
-ecryptfs-unwrap-passphrase /mnt/home/.ecryptfs/saverio/.ecryptfs/wrapped-passphrase # mount passphrase
-ecryptfs-add-passphrase --fnek                                                      # use mount PP; store the second signature
-mount -t ecryptfs /mnt/home/.ecryptfs/saverio/.Private /mnt                         # use mount PP; enable filename encryption; use signature
 ```
 
 ### Setup hibernation on Ubuntu-setup LUKS volume
