@@ -1156,13 +1156,16 @@ mount /dev/sda1 /mnt/boot/efi    # efi partition
 
 # If /run is not mounted, must manually add the nameserver to /etc/resolv.conf, since it's
 # linked to /run/systemd/resolve/stub-resolv.conf.
-for vdev in dev proc run sys; do mount --bind /$vdev /mnt/$vdev; done
+for sysdir in dev proc sys run; do
+  mount --rbind /$sysdir /mnt/new/$sysdir
+  mount --make-rslave /mnt/new/$sysdir
+done
 chroot /mnt
 grub-install /dev/sda
 exit
 # This may not work; if that's the case, use (but makes the system unstable):
 #
-#   for vdev in run proc sys dev; do umount --recursive --force --lazy /mnt/$vdev; done
+#   for sysdir in run sys proc dev; do umount --recursive --force --lazy /mnt/$sysdir; done
 #
 umount --recursive /mnt
 ```
