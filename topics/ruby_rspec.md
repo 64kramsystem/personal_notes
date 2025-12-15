@@ -223,6 +223,12 @@ See [reference](https://relishapp.com/rspec/rspec-mocks/docs/setting-constraints
 | Instance of specific class | `instance_of(klazz)` |                                           |
 | Anything                   | `anything()`         | Any positional argument                   |
 
+Multiple matchers can be used:
+
+```rb
+with(be_a(Integer).and(eq(4)))
+```
+
 ### Receive counts
 
 See [reference](https://relishapp.com/rspec/rspec-mocks/v/3-10/docs/setting-constraints/receive-counts).
