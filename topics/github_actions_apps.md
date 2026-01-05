@@ -543,7 +543,9 @@ Sorbet check:
 
 ```yaml
   sorbet:
+    name: Sorbet (allowed to fail)
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v5
       - name: Install Sorbet-related packages
@@ -554,10 +556,6 @@ Sorbet check:
       - name: Run Sorbet
         id: sorbet
         run: bundle exec srb typecheck
-        continue-on-error: true
-      - name: Custom error message
-        if: steps.sorbet.outcome == 'failure'
-        run: echo "::warning::Sorbet type checking failed (can be ignored)."
 ```
 
 Check Sorbet sigil on new files:

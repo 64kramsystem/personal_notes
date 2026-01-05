@@ -7,7 +7,7 @@
     - [Madness references](#madness-references)
   - [Special variables](#special-variables)
   - [Variables](#variables)
-    - [Pseudo pass by reference](#pseudo-pass-by-reference)
+    - [Output parameters via namerefs (pass by reference)](#output-parameters-via-namerefs-pass-by-reference)
   - [Strings](#strings)
   - [Herestrings/Heredocs (+stdin handling)](#herestringsheredocs-stdin-handling)
   - [Special functions](#special-functions)
@@ -159,20 +159,22 @@ declare -g                          # declare variable as global (eg. from a fun
 declare -x                          # export; can add to `-g`
 ```
 
-### Pseudo pass by reference
+### Output parameters via namerefs (pass by reference)
 
 Using references, it's possible to pseudo-return values:
 
 ```sh
+# When passing array refs, Shellcheck reports a false positive:
+# shellcheck disable=2178
+
 function pass_by_ref {
-  local -n checked_set_out=$1      # since the name is passed, not the refer, use a unique name, otherwise circular references are created
-  # shellcheck disable=2034        # v0.11 doesn't support this pattern
-  checked_set_out=$2
+  local -n my_var_out=$1           # WATCH OUT! use a unique name, otherwise circular references are created, because the name is passed (not a reference)
+  my_var_out=new_val
 }
 
-local out=
-pass_by_ref out foo               # WATCH OUT! Pass the variable name here.
-echo "$out"         # foo
+local myvar=
+pass_by_ref myvar                  # WATCH OUT! Pass the variable name literal (`myvar`), without `$`
+echo "$myvar"                      # "new_val"
 ```
 
 ## Strings
