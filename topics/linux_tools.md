@@ -410,10 +410,9 @@ echo "<$(cat /tmp/fifo)>"
 ## Files
 
 ```sh
-mktemp --suffix="${filename##*.}"            # Create a temporary file, using the extension of $filename
+mktemp [-d] --suffix="${filename##*.}"       # Create a temporary file, using the extension of $filename; create [d]irectory
 mktemp --tmpdir=$parent_dir                  # Use $parent_dir as parent (doesn't create it); WATCH OUT!! `=` is required after `--tmpdir`
-mktemp [-d] "${TMPDIR:-/tmp}/myprefix-XXXXX" # Mac-compatible (opt. dir), without using `--suffix`; WATCH OUT!! the X's must not be followed by any char
-                                             # WATCH OUT!! don't append anything after `-XXXXX`
+mktemp "${TMPDIR:-/tmp}/myprefix-XXXXX"      # Old MacOS-compatible, without using `--suffix`; WATCH OUT!! the X's must not be followed by any char
 stat $filename --format='%s'                 # Get file size
 ```
 
