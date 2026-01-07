@@ -32,6 +32,7 @@
   - [Dates](#dates)
     - [Formatting](#formatting)
     - [Operations](#operations)
+      - [Convenient operations](#convenient-operations)
     - [Calendar](#calendar)
   - [PDF/Images handling](#pdfimages-handling)
     - [Imagemagick (convert)](#imagemagick-convert)
@@ -972,6 +973,8 @@ date --date='2 years ago'
 date --date='2 days'                # now plus days
 date --date='next tue'
 date --date='@1'                    # epoch time
+date --date='monday this week'      # DON'T USE "this/next week"!!! They base their interpretation on the current day.
+                                    # ^ see [convenient ops.](#convenient-operations)
 ```
 
 The option `--debug` shows the logic applied.
@@ -1022,6 +1025,10 @@ data_start_secs=$(date -d "$data_start" +"%s")
 highlight_start_secs=$(date -d "$highlight_start" +"%s")
 expr $highlight_start_secs - $data_start_secs
 ```
+
+#### Convenient operations
+
+Last monday: `date -u -d "today -$(($(date -u +%u) + 6)) days"`.
 
 ### Calendar
 
