@@ -434,6 +434,19 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
       run: bundle exec rspec
+  # Ruby summary job, for branch protection rules
+  # Head ruby failures are ignored due to continue-on-error in the test job.
+  all-tests:
+    name: Ruby (non-head) tests passed
+    runs-on: ubuntu-latest
+    needs: [test]
+    if: always()
+    steps:
+      - name: Check test results
+        run: |
+          if [ "${{ needs.test.result }}" != "success" ]; then
+            exit 1
+          fi
 ```
 
 For caching, use the specific action:

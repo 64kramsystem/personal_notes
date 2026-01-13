@@ -80,7 +80,7 @@ perl -i -pe 's/^(ident_file = .*)/#${1}/'
 
 These are Perl; PCRE may have slightly different details:
 
-- `/m`: multiline mode: on 0777, match `^`/`$` on every line
+- `/m`: multiline mode: on 0777, match `^`/`$` on every line (`\z` etc can still be used!)
 - `/s`: single-line mode: match newlines with `.`
 - `/x`: ignore whitespace/comments (in the search expression, not replace!)
 

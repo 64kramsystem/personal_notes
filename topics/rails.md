@@ -89,12 +89,17 @@ class Event
     where(tag: name)
   end
 end
+
+# Invert/negate/opposite a scope:
+#
+scope :without_missing_coins, -> { merge(klass).with_missing_coins.invert_where }
+
+# In order to use scope in joins, use `merge()`:
+#
+Show.joins(:events).merge(Event.tagged('fun'))
 ```
 
-In order to use scope in joins, use `merge()`:
-
 ```rb
-Show.joins(:events).merge(Event.tagged('fun'))
 ```
 
 Group by/having (aggregates):

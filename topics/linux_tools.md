@@ -13,6 +13,7 @@
   - [Files](#files)
     - [lsof](#lsof)
     - [Find/restore deleted but open files](#findrestore-deleted-but-open-files)
+  - [inotify](#inotify)
   - [PV (Pipe Viewer)](#pv-pipe-viewer)
   - [Parallel execution](#parallel-execution)
     - [Using GNU Parallel](#using-gnu-parallel)
@@ -444,6 +445,12 @@ lsof -s | grep deleted
 lsof | grep fileName					     # get the process id (col 2) and the file descriptor (col 4, remove the letter)
 cp /proc/$pid/fd/$fd $dest         # recover the file
 cat /dev/null > /proc/$pid/fd/$fd  # truncate a deleted open file!!
+```
+
+## inotify
+
+```sh
+while true; do inotifywait -e modify foo*.log; bar_program; done
 ```
 
 ## PV (Pipe Viewer)

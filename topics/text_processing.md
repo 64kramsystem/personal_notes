@@ -1045,7 +1045,7 @@ sh -c "tail --pid=\$\$ -f $(printf "%q" "$filename") | { sed -n $(printf "%q" "/
 Options:
 
 - `dpkg --compare-versions $v1 $op $v2`
-  - operators: `lt`, `ge`, etc
+  - operators: `lt`, `ge`, etc (NO MINUS PREFIX!!)
   - there are alternative operators, e.g `ge-nl`, that treat "empty versions" (e.g. `5.8` <> `5.8.0`) differently
 - `sort -V`
   - see [sort](#sort) section

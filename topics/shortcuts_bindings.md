@@ -34,8 +34,8 @@ The VIM section requires some cleanup.
 ### Bindings
 
 - `Ctrl+B`				            Show/hide sidebar
-- `Ctrl+J`				            Show/hide console
-- ``Ctrl+` ``                 Show/hide terminal
+- `Ctrl+J`				            Show/hide panel (terminal, output, …)
+- ``Ctrl+` ``                 Un/toggle terminal
 - `Ctrl+Shift+V`              Open file preview in tab
 - `Ctrl+K, V`                 Show file preview (side-by-side)
 - `Ctrl+K, R`                 Open file directory in system file manager ("[R]eveal")
