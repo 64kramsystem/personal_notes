@@ -60,6 +60,11 @@ arel.model                  # name of the base AREL model
 #
 MyTable.where(cond1).or(MyTable.where(cond2))
 
+# Strategies to chain an optional condition.
+#
+MyTable.where(({foo:bar} if baz))            # where(nil) → ignored
+MyTable.tap { it.where!(foo: bar) if baz }   # where!     → wow!
+
 # Ranges (don't support `>`)
 #
 column: 1..     # column >= 1

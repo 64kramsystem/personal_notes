@@ -5,7 +5,7 @@
     - [Useful operations](#useful-operations)
     - [Signals/exit codes/suspension](#signalsexit-codessuspension)
     - [Process tree display](#process-tree-display)
-    - [Locking (via flock)](#locking-via-flock)
+    - [Locking (via flock/mkdir)](#locking-via-flockmkdir)
   - [Memory (measurement)](#memory-measurement)
   - [Security (Permissions)](#security-permissions)
     - [Sudo](#sudo)
@@ -134,7 +134,7 @@ top -Hb -n1 -p $(pgrep -f qemu-sys)
 echo q | htop -p $(pgrep -f qemu-sys) | aha --black --line-fix > /tmp/htop.html
 ```
 
-### Locking (via flock)
+### Locking (via flock/mkdir)
 
 Exclusive locking:
 
@@ -144,10 +144,20 @@ Exclusive locking:
 # Script-wise, the simplest thing is not to delete the lockfile on exit/error.
 #
 exec 200>/run/mylockfile.lock
-flock -n 200 || {
+if !flock -n 200; then
   >&2 echo 'error!'
   exit 1
-}
+fi
+```
+
+WATCH OUT!! If the script runs an asynchronous operation, the lock will be released on exit, leaving a window for race conditions before the child operation starts.
+In order to solve this problem, use `mkdir` instead:
+
+```sh
+if !mkdir /run/mylockdir.lock 2> /dev/null; then
+  >&2 echo 'error!'
+  exit 1
+fi
 ```
 
 ## Memory (measurement)

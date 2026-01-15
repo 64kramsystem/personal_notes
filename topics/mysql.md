@@ -54,6 +54,7 @@
     - [Cursors (with example procedure)](#cursors-with-example-procedure)
   - [Performance/Optimization](#performanceoptimization)
     - [General optimization topics](#general-optimization-topics)
+    - [Batched update](#batched-update)
     - [Monitor query progress](#monitor-query-progress)
     - [Locking](#locking)
     - [Query hints](#query-hints)
@@ -1292,6 +1293,27 @@ Docs:
 
 - [Subquery materialization](https://dev.mysql.com/doc/refman/8.0/en/subquery-materialization.html)
 - [Derived tables/Views/CTEs materialization](https://dev.mysql.com/doc/refman/8.0/en/derived-table-optimization.html)
+
+### Batched update
+
+It's not possible to execute this:
+
+```sql
+UPDATE mytable t JOIN new_values nv USING (id)
+SET t.value = nv.new_value, nv.updated = TRUE
+WHERE NOT nv.updated
+LIMIT 100;
+```
+
+so this workaround can be used:
+
+```sql
+UPDATE
+  mytable t
+  JOIN new_values nv USING (id)
+  JOIN (SELECT id FROM new_values WHERE NOT updated LIMIT 100) sub USING (id)
+SET t.value = nv.new_value, nv.updated = TRUE;
+```
 
 ### Monitor query progress
 

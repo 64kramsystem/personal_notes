@@ -167,6 +167,8 @@ Using references, it's possible to pseudo-return values:
 # When passing array refs, Shellcheck reports a false positive:
 # shellcheck disable=2178
 
+# Shellcheck reports the variable as unused
+# shellcheck disable=2034
 function pass_by_ref {
   local -n my_var_out=$1           # WATCH OUT! use a unique name, otherwise circular references are created, because the name is passed (not a reference)
   my_var_out=new_val
