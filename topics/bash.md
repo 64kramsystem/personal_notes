@@ -675,6 +675,7 @@ Fun tricks/other stuff:
 printf '<SAV>%.0s' {1..10}            # repeat a string
 
 ... | xargs                           # strip/trim leading and trailing whitespace; compresses spaces; !! adds a newline !!
+                                      # WATCH OUT! fails if he string includes swingle quotes.
 ... | tr -s ' '                       # squeeze (compress) consecutive sequences of the given char
 ... | perl -pe chomp                  # strip one trailing whitespace,
 ... | perl -0777 -pe 's/^\s+|\s+$//g' # trim leading and trailing whitespace

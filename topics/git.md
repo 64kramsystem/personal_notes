@@ -504,6 +504,10 @@ stash (pop|apply)             # restore with/out clearing the entry
 stash list
 stash clear
 stash show -p $stash_entry    # shows a stash entry content
+
+stash push -- path/to/file1…` # stashes passed files; WATCH OUT! a file is staged, it will be both kept changed
+                              # and stashed (!)
+stash push --staged           # stashes staged content
 ```
 
 ## Bisect

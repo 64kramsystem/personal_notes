@@ -11,7 +11,7 @@
     - [Caching](#caching)
     - [Labels/conditional jobs run](#labelsconditional-jobs-run)
   - [Examples](#examples)
-    - [Cancel existing actions for the same PR (branch)](#cancel-existing-actions-for-the-same-pr-branch)
+    - [Cancel in progress workflow runs for the same ref (PR/branch)](#cancel-in-progress-workflow-runs-for-the-same-ref-prbranch)
     - [Block autosquash commits](#block-autosquash-commits)
     - [tmate debugging!](#tmate-debugging)
     - [Conditional jobs run](#conditional-jobs-run)
@@ -167,22 +167,12 @@ There are a couple of solutions:
 
 ## Examples
 
-### Cancel existing actions for the same PR (branch)
-
-Use [this](https://github.com/marketplace/actions/cancel-workflow-action):
+### Cancel in progress workflow runs for the same ref (PR/branch)
 
 ```yml
-jobs:
-  cancel-previous-runs:
-    runs-on: ubuntu-latest
-    if: github.ref != 'refs/heads/master'
-    steps:
-    - name: Cancel Previous Runs
-      uses: styfle/cancel-workflow-action@0.12.1
-      with:
-        access_token: ${{ github.token }}
-  other-jobs:
-#   ...
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 ```
 
 ### Block autosquash commits
