@@ -43,6 +43,7 @@
       - [Version comparisons](#version-comparisons)
     - [ERB templates](#erb-templates)
     - [Rubocop](#rubocop)
+      - [Base configuration](#base-configuration)
     - [GC (garbage collection)](#gc-garbage-collection)
     - [Networking](#networking)
       - [HTTP](#http)
@@ -1111,6 +1112,10 @@ puts 123
 # rubocop:todo Foo/Bar
 puts 123
 ```
+
+#### Base configuration
+
+See [`geet` project](https://github.com/ticketsolve/servers-management/blob/master/.rubocop.yml).
 
 ### GC (garbage collection)
 
