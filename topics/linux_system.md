@@ -642,6 +642,10 @@ Depedency-related:
 ```sh
 # Basic package dependencies are included in the package info (see commands above)
 
+# Use this if there are intra-dependencies - `dpkg -i` does not resolve them!
+#
+apt install *.deb
+
 # Show why a package was installed
 #
 aptitude why -v $package

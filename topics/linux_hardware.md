@@ -16,6 +16,7 @@
     - [Disconnect and power off a device](#disconnect-and-power-off-a-device)
     - [Reset a USB device](#reset-a-usb-device)
   - [Power Management](#power-management)
+    - [Former workaround for ACPI wakeups on B650 mobo](#former-workaround-for-acpi-wakeups-on-b650-mobo)
   - [Graphic cards/drivers](#graphic-cardsdrivers)
     - [Vulkan](#vulkan)
   - [Screen](#screen)
@@ -203,6 +204,38 @@ Useful references:
 
 - https://wiki.archlinux.org/title/Power_management/Suspend_and_hibernate
 - https://community.frame.work/t/waking-immediately-from-suspend-or-hibernate-how-i-fixed-it-for-me/19763/6
+
+### Former workaround for ACPI wakeups on B650 mobo
+
+```sh
+cat >> /usr/local/sbin/disable-acpi-wakeups.sh << 'BASH'
+#!/usr/bin/env bash
+
+for dev in $(awk '/enabled/ {print $1}' /proc/acpi/wakeup); do
+  echo "$dev" > /proc/acpi/wakeup
+done
+BASH
+
+chmod +x /usr/local/sbin/disable-acpi-wakeups.sh
+
+cat >> /etc/systemd/system/disable-acpi-wakeups.service << 'UNIT'
+[Unit]
+Description=Disable ACPI wake‑up sources at boot
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/disable-acpi-wakeups.sh
+# stay “active (exited)” so systemd remembers it ran
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+UNIT
+
+sudo systemctl daemon-reload
+sudo systemctl enable --now disable-acpi-wakeups.service
+systemctl status disable-acpi-wakeups.service
+```
 
 ## Graphic cards/drivers
 

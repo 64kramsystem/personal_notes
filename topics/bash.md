@@ -674,11 +674,11 @@ Fun tricks/other stuff:
 ```sh
 printf '<SAV>%.0s' {1..10}            # repeat a string
 
-... | xargs                           # strip/trim leading and trailing whitespace; compresses spaces; !! adds a newline !!
-                                      # WATCH OUT! fails if he string includes swingle quotes.
+... | perl -0777 -pe 's/^\s+|\s+$//g' # trim leading and trailing whitespace
 ... | tr -s ' '                       # squeeze (compress) consecutive sequences of the given char
 ... | perl -pe chomp                  # strip one trailing whitespace,
-... | perl -0777 -pe 's/^\s+|\s+$//g' # trim leading and trailing whitespace
+... | xargs                           # strip/trim leading and trailing whitespace; compresses spaces; !! adds a newline !!
+                                      # WATCH OUT! fails if he string includes swingle quotes.
 
 printf "%05d\n" $n                    # add leading zeros; this is a standard printf, so the standard functionalities apply
 ```

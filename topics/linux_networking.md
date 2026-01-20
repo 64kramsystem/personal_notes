@@ -111,13 +111,14 @@ curl -H 'Accept: application/halo+json' "$URL"
 `--link-dest=$old_bkup_dir` : create dest_dir as hard linked copy of $old_bkup_dir, then apply the changes to the modified files dereferencing them
 
 ```sh
-# Copy the the structure of a relative path. Use `--relative`, and place a dot path `./`:
+# Copy the the structure of a relative path:
 #
-rsync -av --relative "/target/run/./systemd/resolve" "/mnt/run"
+rsync --relative mp3/swing   my_desktop:     # will be synced with my_desktop:mp3/swing
+rsync --relative mp3/./swing my_desktop:mp3  # more granular! for this example, effect same as above
 
 # "Move-merge" a directory into another (mv doesn't allow this)
 #
-rsync -av --remove-source-files $from $to
+rsync --remove-source-files $from $to
 
 # Resume partial files (and after, checks that they're the same).
 # When syncing with a server, it must have rsync installed.
