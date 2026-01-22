@@ -644,6 +644,12 @@ enum.inject { |acc, entry|  … }         # without initial value, on the first 
 enum.reject { it == :val }              # convenient pattern to remove an entry via functional composition
 ```
 
+Convenient patterns:
+
+```rb
+entries.filter_map.with_index { |entry, i| i if condition(entry) }  # extra index of entries matching a condition
+```
+
 ### Hash
 
 ```ruby

@@ -2,6 +2,7 @@
 
 - [RubyGems/Bundler](#rubygemsbundler)
   - [Bundler](#bundler)
+    - [Speed up gems compilation](#speed-up-gems-compilation)
     - [Gemfile](#gemfile)
     - [Cache directory](#cache-directory)
     - [Commands](#commands)
@@ -13,6 +14,10 @@
     - [Gem commands](#gem-commands)
 
 ## Bundler
+
+### Speed up gems compilation
+
+Set `export MAKEFLAGS=-j$(($(nproc) + 1))`.
 
 ### Gemfile
 

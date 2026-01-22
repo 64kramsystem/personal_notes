@@ -34,10 +34,11 @@
 ## Client
 
 ```sh
+# flock…           : prevents blowup do to apt running in background
 # --why-run        : dry run
 # --format minimal : display reduced output, with changes summarized at the bottom (w/o content diff)
 #
-chef-client --why-run --format minimal
+flock /var/lib/apt/daily_lock chef-client --why-run --format minimal
 ```
 
 ## Resource concepts
@@ -626,16 +627,16 @@ end
 Use this workaround:
 
 ```rb
-ruby_block "Set MAKE env var to CPU threads count" do
-  block    { ENV["MAKE"] = "make -j #{node[:cpu][:total]}" }
+ruby_block "Set MAKEFLAGS env var to CPU threads count" do
+  block    { ENV["MAKEFLAGS"] = "-j#{node[:cpu][:total]}" }
   action   :nothing
   notifies :run, "gem_package[mygem]", :before
 end
 
 gem_package "mygem"
 
-ruby_block "Unset MAKE env var" do
-  block    { ENV["MAKE"] = nil }
+ruby_block "Unset MAKEFLAGS env var" do
+  block    { ENV["MAKEFLAGS"] = nil }
   action   :nothing
   notifies :run, "gem_package[mygem]", :immediately
 end

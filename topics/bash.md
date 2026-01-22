@@ -161,6 +161,8 @@ declare -x                          # export; can add to `-g`
 
 ### Output parameters via namerefs (pass by reference)
 
+(WATCH OUT! This is not necessary, see second example)
+
 Using references, it's possible to pseudo-return values:
 
 ```sh
@@ -177,6 +179,22 @@ function pass_by_ref {
 local myvar=
 pass_by_ref myvar                  # WATCH OUT! Pass the variable name literal (`myvar`), without `$`
 echo "$myvar"                      # "new_val"
+```
+
+but this is not needed, as variables in the parent scope are fully (R/W) accessible in functions:
+
+```sh
+function sub() {
+  myvar=sub
+}
+
+# Invoking this will print "sub". This also works with arrays, and multiple call levels.
+#
+function main {
+  local myvar=main
+  sub
+  echo $myvar
+}
 ```
 
 ## Strings
