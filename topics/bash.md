@@ -900,6 +900,7 @@ echo ${coordinates[0]}               # access an array; last entry: -1
 unset 'coordinates[1]'               # delete an entry
 coordinates[1]=b                     # set an indexed value
 echo ${#coordinates[@]}              # size (length)
+${files[@]/#/--exclude=}             # string operations can be applied to arrays (!!!!!!!!!!)
 
 # Array slicing (see https://stackoverflow.com/a/1336245):
 #
