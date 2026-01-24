@@ -322,5 +322,3 @@ Windows Terminal:
 | Yoga 7 Gen 7 AMD      |  F2   |  F12  |
 | Chuwi Miniboox X N100 |  F2   |   ?   |
 | Odroid H2             |   ?   |  F7   |
-
-Minibook S/N (old one): `ZMinBXHY6H231000191`
