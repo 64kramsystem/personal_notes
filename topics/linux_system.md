@@ -643,8 +643,10 @@ Depedency-related:
 # Basic package dependencies are included in the package info (see commands above)
 
 # Use this if there are intra-dependencies - `dpkg -i` does not resolve them!
+# The full path (or `./`) is necessary, otherwise apt assumes remote packages.
+# Install from a world readable directory, otherwise apt may fail due to sandboxing.
 #
-apt install *.deb
+apt install /tmp/*.deb
 
 # Show why a package was installed
 #
