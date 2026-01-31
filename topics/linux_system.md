@@ -642,11 +642,15 @@ Depedency-related:
 ```sh
 # Basic package dependencies are included in the package info (see commands above)
 
-# Use this if there are intra-dependencies - `dpkg -i` does not resolve them!
+# Use these if there are intra-dependencies - `dpkg -i` does not resolve them!
 # The full path (or `./`) is necessary, otherwise apt assumes remote packages.
 # Install from a world readable directory, otherwise apt may fail due to sandboxing.
 #
 apt install /tmp/*.deb
+#
+# Or this for a single package
+#
+gdebi --non-interactive package.deb
 
 # Show why a package was installed
 #

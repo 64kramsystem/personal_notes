@@ -1,6 +1,6 @@
-# Editors
+# Shortcuts/Bindings
 
-- [Editors](#editors)
+- [Shortcuts/Bindings](#shortcutsbindings)
   - [Notes](#notes)
   - [Visual Studio Code](#visual-studio-code)
     - [Bindings](#bindings)

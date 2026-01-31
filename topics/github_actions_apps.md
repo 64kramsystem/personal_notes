@@ -572,7 +572,7 @@ Check Sorbet sigil on new files:
       pull-requests: read
     steps:
       - uses: actions/checkout@v5
-      - name: 'Ensure new Ruby files have "# typed: "'
+      - name: 'Ensure new Ruby files have "# typed: strict"'
         uses: actions/github-script@v8
         with:
           script: |
@@ -585,11 +585,17 @@ Check Sorbet sigil on new files:
               { owner, repo, pull_number, per_page: 100 }
             );
 
+            const ignoredDirs = fs
+              .readFileSync('sorbet/config', 'utf8')
+              .split('\n')
+              .filter(line => line.startsWith('--ignore='))
+              .map(line => line.replace('--ignore=', '') + '/');
+
             const addedRb = files
               .filter(
                 f => f.status === 'added' &&
                 f.filename.endsWith('.rb') &&
-                !f.filename.startsWith('db/migrate/')
+                !ignoredDirs.some(dir => f.filename.startsWith(dir))
               )
               .map(f => f.filename);
 
@@ -597,15 +603,15 @@ Check Sorbet sigil on new files:
 
             for (const file of addedRb) {
               const content = fs.readFileSync(file, 'utf8');
-              const hasSigil = content
+              const hasStrictSigil = content
                 .split(/\r?\n/)
-                .some(line => /^# typed: /.test(line));
-              if (!hasSigil) missing.push(file);
+                .some(line => /^# typed: strict/.test(line));
+              if (!hasStrictSigil) missing.push(file);
             }
 
             if (missing.length) {
               core.setFailed(
-                `One or more added files are missing the Sorbet sigil "# typed: ignore"`
+                `One or more added files are missing the Sorbet sigil "# typed: strict":\n${missing.join('\n')}`
               );
             }
 ```
