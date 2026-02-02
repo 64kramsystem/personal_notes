@@ -3,40 +3,35 @@
 - [Shortcus/Bindings Mac](#shortcusbindings-mac)
   - [macOS](#macos)
   - [Rectangle](#rectangle)
-  - [VSC](#vsc)
+  - [Terminal/Zsh](#terminalzsh)
   - [Pseudo-Compose sequences](#pseudo-compose-sequences)
-  - [Zsh](#zsh)
+  - [VSC](#vsc)
+  - [Firefox](#firefox)
 
 ## macOS
 
-- `Cmd+D`                            Dialog: discard
+- `Cmd` + `d`                        Dialog: discard
 - `Return`                           Dialog: save
 
-- `Cmd+Ctrl+Q`                       Lock screen
+- `Cmd` + `Ctrl` + `Q`               Lock screen
 
-- `Cmd+down`                         Execute
+- `Cmd` + `↓`                        Execute
 - `Enter`                            Rename
 
-- `Cmd+Shift+` + `[`/`]`             Tab: Previous/Next
+- `Cmd` + `Shift+` + `[`/`]`         Tab: Previous/Next
 
-- `Cmd+Opt` + `v`                    Move file into (paste and remove the source)
+- `Cmd` + `Opt` + `v`                Move file into (paste and remove the source)
 
 ## Rectangle
 
-- `Ctrl+Opt` + `↵`                   Maximize
-- `Ctrl+Opt` + `←`/`→`               Half to left/right
+- `Ctrl` + `Opt` + `↵`               Maximize
+- `Ctrl` + `Opt` + `←`/`→`           Half to left/right
 
-## VSC
+## Terminal/Zsh
 
-- ?                                  Got to Previous/Next location (history)
+- `Ctrl+E`                           Accept (suggestion)
 
-- ?                                  Move Tab Left/Right
-
-- `Shift` + `Opt` + `Cmd` + `↑`/`↓`  Box selection
-
-- ?                                  Delete current line
-- `Cmd` + (`K`, `P`)                 Duplicate line (*custom*)
-- `Alt` + `↑`/`↓`                    Move line Up/Down
+- `Cmd` + `k`                        Clear scrollback + screen
 
 ## Pseudo-Compose sequences
 
@@ -45,6 +40,27 @@
 - `Caps`, `r`, `r`                   `↵` (`r`eturn)
 - `Caps`, `.`, `.`                   `…`
 
-## Zsh
+## VSC
 
-- `Ctrl+E`                           Accept (suggestion)
+- **change**                          Go Back/Forward (history) (was: `Ctrl` + [`Shift` + ] `-` )
+- `Ctrl` + `PgUp`/`PgDown`            Scroll Up/Down
+
+- `Ctrl` + `Cmd` + `Shift+` + `[`/`]` Move Tab (Editor) to Left/Right (was: `Cmd` + `k`, `Shift` + `Cmd` + `←`/`→`)
+
+- `Opt` + `Shift` + `↑`/`↓`           Box (Column) select (was: `Shift` + `Opt` + `Cmd` + `↑`/`↓`)
+
+- `Shift` + `Del`                     Delete current line (was: `Shift` + `Cmd` + `k`)
+- `Cmd` + (`K`, `P`)                  Duplicate line (was: (no assignment))
+- `Opt` + `↑`/`↓`                     Move line Up/Down
+
+- `Opt` + `w`                         Toggle word wrap (was: `Opt` + `z`)
+
+- **change**                          Upper/Lower case
+
+- **change**                          Search/replace (was: `Opt` + `Cmd` + `f`)
+
+- **check**                           Autocompletion
+
+## Firefox
+
+- **check**                           Move tab to Left/Right

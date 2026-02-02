@@ -409,6 +409,7 @@ JSON5 gems (only parse; use `json` gem to convert to string):
 
 - `json5`: fast to parse, but has no `load_file`
 - `rb_json5`: slow to parse, but has `load_file`
+- **can also YAML!!**
 
 ### XML
 
@@ -530,9 +531,8 @@ Klazz.members # defined members ([:a, :b])
 Klazz.to_a    # values array    (['aval', 'bval'])
 Klazz.to_h    # values hash     ({a: 'aval', b: 'bval'})
 
-# Alternative form, yields `Struct::Klass`.
-#
-Struct.new('Klass', :a, :b)
+Struct.new(:a, :b).new(a: 1)   # Instantiate from args/hash (can be nil)
+Struct.new('Klass', :a, :b)    # Alternative form, yields `Struct::Klass`
 ```
 
 #### Convert Hash/Array to recursive openstruct
