@@ -90,7 +90,7 @@ The VIM section requires some cleanup.
 
 #### Extensions
 
-- `Ctrl+K, Ctrl+(L/U)`	      Change case to Upper/Lower
+- `Ctrl+K, Ctrl+(U/L)`	      Change case to Upper/Lower
 - `Ctrl+K, Ctrl+S`	          Change case to Snake
 
 - `Ctrl+Alt+I`                Increment selection, inside column selection

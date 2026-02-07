@@ -156,7 +156,7 @@ eval local var_ref=\$$var           # works both on bash/zsh; this shows how to 
 myvar=$(nonexiting_command 2>&1)    # the assignment value is stdout's output; for stderr we need redirection (eg. see whiptail)
 
 declare -g                          # declare variable as global (eg. from a function); without, the scope is the current one (local)
-declare -x                          # export; can add to `-g`
+declare -x                          # export; can add to `-g`; WATCH OUT! it's declared but unset until assigned; if already set, it's wiped
 ```
 
 ### Output parameters via namerefs (pass by reference)
@@ -1224,9 +1224,8 @@ exec > >(tee -ai "$logfile") 2>&1
 # Debugging log; includes stdout/stderr content (see above).
 #
 function setup_logging {
-  exec 5> "$logfile"
+  exec 5> "$logfile"  # truncates the file
   BASH_XTRACEFD=5
-  rm -f "$logfile"
   exec > >(tee -ai "$logfile") 2>&1
   set -x
 }

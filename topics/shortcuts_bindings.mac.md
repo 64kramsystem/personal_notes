@@ -17,6 +17,7 @@
 
 - `Cmd` + `↓`                        Execute
 - `Enter`                            Rename
+- `Cmd` + `Del`                      Delete (Finder)
 
 - `Cmd` + `Shift+` + `[`/`]`         Tab: Previous/Next
 
@@ -53,9 +54,9 @@
 - `Cmd` + (`K`, `P`)                  Duplicate line (was: (no assignment))
 - `Opt` + `↑`/`↓`                     Move line Up/Down
 
-- `Opt` + `w`                         Toggle word wrap (was: `Opt` + `z`)
+- `Opt` + `W`                         Toggle word wrap (was: `Opt` + `z`)
 
-- **change**                          Upper/Lower case
+- `Cmd` + (`K`, `U`/`L`)              Upper/Lower case (was: (no assignment))
 
 - **change**                          Search/replace (was: `Opt` + `Cmd` + `f`)
 
