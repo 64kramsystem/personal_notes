@@ -19,7 +19,8 @@
 - `Enter`                            Rename
 - `Cmd` + `Del`                      Delete (Finder)
 
-- `Cmd` + `Shift+` + `[`/`]`         Tab: Previous/Next
+- `Cmd` + `Shift+` + `[`/`]`          Tab: Previous/Next
+- `Ctrl` + `Cmd` + `Shift+` + `[`/`]` Tab: Move to Previous/Next (custom)
 
 - `Cmd` + `Opt` + `v`                Move file into (paste and remove the source)
 
@@ -60,8 +61,10 @@
 
 - **change**                          Search/replace (was: `Opt` + `Cmd` + `f`)
 
+- `Cmd` + `Alt` [+ `Shift`] + `C`     Copy file path relative [absolute] (was: something else; removed conflicting bindings)
+
 - **check**                           Autocompletion
 
 ## Firefox
 
-- **check**                           Move tab to Left/Right
+- `Shift` + `Fn` + `Ctrl` + `←`/`→`   Move tab to Left/Right (conflicts with Mac Tiling)

@@ -624,9 +624,15 @@ dpkg -s $package 2> /dev/null | perl -0777 -ne 'print $1 if /^Status: install ok
 #
 aptitude search -F %p '~nxserver-xorg-video-nvidia-[[:digit:]]+$ ~rnative'
 
-# Better use this than `apt search`; the latter is undocumented and has an atrocious output.
+# Search available packages.
+# Better use this than `apt`, which has an unstable interface.
 #
-apt-cache search '^linux-image-unsigned-5.4.[[:digit:]-]+-generic'
+apt-cache search '^linux-image-unsigned-5.4.[[:digit:]-]+-generic' | awk '{print $1}'
+
+# Search installed packages; quite ugly.
+# `ii` = "install ok installed"
+#
+dpkg -l 'gcc-*' | awk '$1 == "ii" && $2 ~ /^gcc-[[:digit:]]+$/ {print $2}'
 
 # Display the repositories with a given package
 #
