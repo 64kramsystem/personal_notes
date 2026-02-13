@@ -44,6 +44,7 @@
   - [cut](#cut)
   - [tr (translate tokens)](#tr-translate-tokens)
   - [sort](#sort)
+  - [uniq](#uniq)
   - [jq](#jq)
     - [Hash](#hash)
     - [Arrays](#arrays-1)
@@ -55,6 +56,7 @@
     - [Stop tail when a string matches](#stop-tail-when-a-string-matches)
     - [Version comparison/sort](#version-comparisonsort)
     - [Sum/average/etc. values extracted from a textfile](#sumaverageetc-values-extracted-from-a-textfile)
+    - [Real-time line filtering with escape codes](#real-time-line-filtering-with-escape-codes)
 
 ## Grep
 
@@ -74,6 +76,10 @@ grep -Pzo '(?s)void\srb_backtrace\(.*?\n\}' --include="*.c" -r .
 # Use this where grep doesn't support `-P`
 #
 perl -ne 'exit !/pattern/'
+
+# Search in compressed files (zgrep supports gzip, bzip2, xz, etc.)
+#
+zgrep -B 2 linux-headers-6.5.0-1023-aws history*.gz
 ```
 
 ## Perl
@@ -813,6 +819,14 @@ awk '{print $NF,$0}' | sort | cut -f2- -d' '
 perl -e 'print sort { (split "/", $a)[-1] <=> (split "/", $b)[-1] } <>'
 ```
 
+## uniq
+
+Find duplicate lines:
+
+```sh
+uniq --duplicates
+```
+
 ## jq
 
 If one wants to output strings without quotes, use `-r` (see one of the examples below).
@@ -1072,4 +1086,21 @@ Insane version, if all the lines match:
 # bc: is a calculator (!)
 #
 $(perl -lne 'print /WALLTIME:(\S+)/' $file | paste -sd+ | bc)
+```
+
+### Real-time line filtering with escape codes
+
+```sh
+stdbuf -o0 rsync ... |
+  ruby -e '
+    STDIN.each_char.each_with_object("") do |char, current_line|
+      print char
+      if char == "\n"
+        print "\e[A\e[K" if current_line =~ /match/ # go up and clear the line
+        current_line.clear
+      else
+        current_line << char
+      end
+    end
+  '
 ```

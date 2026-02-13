@@ -4,6 +4,7 @@
   - [High-level services](#high-level-services)
     - [wget](#wget)
     - [curl](#curl)
+    - [ngrok](#ngrok)
   - [rsync](#rsync)
     - [Sending emails](#sending-emails)
     - [SSH/utilities](#sshutilities)
@@ -84,6 +85,18 @@ curl \
 curl -H 'Accept: application/halo+json' "$URL"
 ```
 
+### ngrok
+
+Expose local services to the internet with authentication:
+
+```sh
+# OAuth authentication (Google)
+ngrok http 80 --oauth google --oauth-allow-email my-user@gmail.com --oauth-allow-domain example.com
+
+# Basic authentication
+ngrok http http://localhost:8080 --basic-auth 'username:a-very-secure-password'
+```
+
 ## rsync
 
 - `-n|--dry-run`   : test (dry run)
@@ -109,6 +122,12 @@ curl -H 'Accept: application/halo+json' "$URL"
                       `foo/**/bar`  # any file at any level under a `foo`
 
 `--link-dest=$old_bkup_dir` : create dest_dir as hard linked copy of $old_bkup_dir, then apply the changes to the modified files dereferencing them
+
+Safe options:
+
+- `-I`
+- `-c`
+- `-I -c` : safest
 
 ```sh
 # Copy the the structure of a relative path:
@@ -147,6 +166,9 @@ sudo rsync -og --chown=$user:$group $from $to
 # Specify a custom ssh command (e.g. for the port) + auto ssh password
 #
 sshpass -p 'fedora_rocks!' rsync -av -e 'ssh -p 10000' --progress --delete . riscv@localhost:parsec-benchmark/
+
+# Use zstd compression for better performance
+rsync --zc=zstd [other options] source dest
 ```
 
 The destination user is the current user, unless rsync is run as sudo, in which case, ownership is preserved.
@@ -385,6 +407,10 @@ echo HEAD / | openssl s_client -quiet -CAfile /etc/ssl/certs/ca-certificates.crt
 # Find currently used nameserver
 #
 nslookup $address
+
+# Test DNS leak from terminal
+#
+wget -qO- https://git.io/fjjFf | python
 ```
 
 ### Netcat (nc)

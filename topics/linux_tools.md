@@ -8,7 +8,7 @@
   - [xargs](#xargs)
   - [tar](#tar)
   - [dar](#dar)
-  - [cp/mv](#cpmv)
+  - [cp/mv/renaming](#cpmvrenaming)
   - [mkfifo](#mkfifo)
   - [Files](#files)
     - [lsof](#lsof)
@@ -30,6 +30,7 @@
   - [Displaying messages](#displaying-messages)
   - [Nohup](#nohup)
   - [xdotool (X11 automation)](#xdotool-x11-automation)
+  - [Programmatic window management:](#programmatic-window-management)
   - [Dates](#dates)
     - [Formatting](#formatting)
     - [Operations](#operations)
@@ -135,11 +136,23 @@ Regexp types:
 
 ### Examples
 
+Find symlinks and print targets:
+
+```sh
+find . -type l -printf '%p -> %l\n'
+```
+
 Exit with success if anything is found (funny workaround):
 
 ```sh
 # Find always exits with success, independently of whether it found something or not.
 find /foo -name bar | grep -q .
+```
+
+Simplest condition to check if a directory contains certain files:
+
+```sh
+find {} -name '*.jpg' | read
 ```
 
 Simplest find files + execute command (with quoting):
@@ -172,7 +185,7 @@ Note that the -path must be relative to the same path as the search path, and it
 find . -name 1.txt -not -path ./skipdir/* -not -path '*/internal_dir/*'
 ```
 
-Cycle filenames, with whitespace support.
+Cycle filenames, with whitespace support:
 
 ```sh
 # WATCH OUT! "<<<" won't work, because Bash parameter substitution doesn't support null bytes
@@ -306,6 +319,27 @@ sudo tar -x -f foo.tar        # sudo dar -x foo
 ls -ld foo
 ```
 
+Count files for tar with progress bar:
+
+```sh
+# Doesn't support filenames with newlines.
+# Approximate - follows symlinks.
+tar_files_count=$(
+  FILES_LIST=$(IFS=$'\n'; echo "${files[*]}") ruby -r find <<< 'Find.find(*ENV["FILES_LIST"].split("\n")).count'
+)
+tar cv 2> >(pv -l -s "$tar_files_count" > /dev/null) ${files[@]} ...
+```
+
+Alternative tar/pv approaches:
+
+```sh
+# /dev/null is necessary, otherwise its stdout goes into zstd stdin!!
+tar cv -C "$HOME" ticketsolve 2> >(pv -l -s "$files_count" > /dev/null) | zstd -T0 -3 > /path/to/output.tar.zst
+
+# /dev/null is necessary, otherwise filenames are sent to stdout
+tar cv -C "$HOME" -I "zstd -T0 -3" ticketsolve -f /path/to/output.tar.zst | pv -l -s "$files_count" > /dev/null
+```
+
 ## dar
 
 **WATCH OUT** dar is much slower than tar, in any case:
@@ -375,7 +409,7 @@ dar -c archive `#blah...` par2
 dar -l archive
 ```
 
-## cp/mv
+## cp/mv/renaming
 
 In order to copy/move the content of a directory including hidden files, use:
 
@@ -391,6 +425,14 @@ cp -rT /source /dest
 # Alternative: use the `dotglob` shopt.
 #
 mv source/{,.[!.],..?}* dest
+```
+
+Neat rename pattern for nested directories:
+
+```sh
+# Renames files in subdirectories with parent directory name prefix
+# Can't integrate `../` directly in the replace pattern
+for d in *; do cd "$d" && D=$d rename 's/^/..\/$ENV{D} - /' * && cd ..; done
 ```
 
 ## mkfifo
@@ -486,6 +528,8 @@ The number of jobs is automatically limited to the number of cores.
 Quoting is not required. The shell used when running a string is the current one.
 The output is displayed serialized, but the execution is parallel!
 
+GNU Parallel does NOT imply `set -e` behavior - commands that fail will not cause parallel to exit with an error unless explicitly configured.
+
 ```sh
 ls -1 *.tar.* | parallel tar xvf      # if unspecified, the argument is automatically appended
 ls -1 | parallel zip -m {1}.zip {1}   # parameterized; can also use `{}`
@@ -505,6 +549,10 @@ Examples:
 # Placeholder manipulation, e.g. to change the output path!
 #
 find /path/to -type f | parallel "ffmpeg -i {} /path/new/{/}"
+
+# Removing the directory from a parameter. WATCH OUT! If variables are used, be careful with quoting.
+#
+find DVD.*.avi | parallel ffmpeg -i "{}" -vn -c:a copy "$v_destination/{/.}".mp3
 
 # Multiple commands for each job
 # Redirections are supported.
@@ -541,6 +589,7 @@ env_parallel "my_func {}" ::: "${my_vars[@]}"
 
 WATCH OUT! Differently from GNU Parallel, the command can't be quoted - use `bash -c` for that.
 
+- `-r`            : run only if stdin is not empty
 - `-P <processes>`: use 0 for unlimited; based on the manpage, `-n` or `-L` should be used, but they weren't required with the personal use cases.
 
 ```sh
@@ -560,11 +609,9 @@ ls -1 *.txt | perl -pe 's/(.*)/\\"$1\\"/' | xargs -P 0 -I {} echo {}
 # Placeholder manipulation is not directly supported, but can use shell functionalities.
 #
 find /path/to -type f | xargs -I {} sh -c 'ffmpeg -i "$1" "/path/new/$(basename "$1")"' _ {}
-```
 
-Ignore failing commands:
+# Ignore failing commands:
 
-```sh
 seq 4 | xargs -I {} -P 0 sh -c 'aws ec2 delete-snapshot --snapshot-id {} || true'
 ```
 
@@ -941,6 +988,17 @@ xdotool windowactivate "$(< /tmp/activated_window)"
 
 See `browser-common.sh` for a complex example, and [StackOverflow](https://unix.stackexchange.com/q/87831) for discussion.
 
+## Programmatic window management:
+
+```sh
+# Find window for PID and close it
+window_id=$(wmctrl -lp | awk -v pid="$program_pid" '$3 == pid {print $1}')
+
+# Close window (safer than xdotool windowclose in some cases, e.g., Thunderbird)
+# xdotool windowclose can also work, but may cause crashes in some applications
+wmctrl -ic "$window_id"
+```
+
 ## Dates
 
 General format: `date +$format --date=$expression`
@@ -979,6 +1037,7 @@ date --date='2 years ago'
 date --date='2 days'                # now plus days
 date --date='next tue'
 date --date='@1'                    # epoch time
+date --date='@$epoch'               # convert epoch timestamp to human-readable date (e.g., date -d @1609459200)
 date --date='monday this week'      # DON'T USE "this/next week"!!! They base their interpretation on the current day.
                                     # ^ see [convenient ops.](#convenient-operations)
 ```

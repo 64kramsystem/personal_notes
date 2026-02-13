@@ -992,9 +992,7 @@ std::cmp::max(x, u);            // maximum between two numbers
 z = x.rotate_left(y);
 z = x << y;                      // Shift; errors only if y is higher than the number of machine bits.
 
-// Checked, wrapping, saturating and overflowing arithmetic.
-//
-// With standard operators, on overlow, Rust panics in debug, and wraps in release.
+// Checked, wrapping, saturating and overflowing arithmetic (see note below).
 //
 x.checked_add(y);                // returns Option<T>
 x.wrapping_add(y);
@@ -1012,6 +1010,13 @@ x.overflowing_shl(y);            // WATCH OUT! This is not the intuitive 1-bit l
 // Round to specific number of decimals (ugly!!; also see #printing)
 //
 (f * 100.0).round() / 100.0;
+```
+
+With standard operators, on overflow, Rust panics in debug, and wraps in release. To enable overflow checks in release mode, add to Cargo.toml:
+
+```toml
+[profile.release]
+overflow-checks = true
 ```
 
 ## Strings

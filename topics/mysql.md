@@ -44,6 +44,7 @@
     - [Window function aggregates](#window-function-aggregates)
     - [Applications/examples](#applicationsexamples)
       - [Replace spaced coordinates with monotonically increasing values](#replace-spaced-coordinates-with-monotonically-increasing-values)
+      - [Update table IDs to sequential order](#update-table-ids-to-sequential-order)
   - [Stored procedures](#stored-procedures)
     - [Metadata](#metadata)
     - [Base structure](#base-structure)
@@ -1043,6 +1044,19 @@ UPDATE {table} t
         JOIN x_ords xo USING (x)
 SET t.y = yo.y_ord, t.x = xo.x_ord
 WHERE {parent_fk} = ?
+```
+
+#### Update table IDs to sequential order
+
+Useful when IDs have gaps and you want to make them sequential:
+
+```sql
+UPDATE
+  mytable
+  JOIN (
+    SELECT ROW_NUMBER() OVER (ORDER BY id) new_id, id FROM mytable
+  ) new_ids USING (id)
+  SET id = new_id
 ```
 
 ## Stored procedures

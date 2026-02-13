@@ -150,6 +150,12 @@ g cl https://github.com/brendangregg/FlameGraph.git
 ./flamegraph.pl    /tmp/prof.callgrind.out.folded > /tmp/prof.flame.svg
 ```
 
+Use ruby-prof from a non-standard location:
+
+```rb
+$LOAD_PATH.unshift("/home/app/.local/share/gem/ruby/3.2.0/gems/ruby-prof-1.7.0/lib/") # Don't forget `lib`!
+```
+
 ### benchmark/ips
 
 ```rb

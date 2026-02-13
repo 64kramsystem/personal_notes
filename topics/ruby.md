@@ -648,6 +648,12 @@ Convenient patterns:
 
 ```rb
 entries.filter_map.with_index { |entry, i| i if condition(entry) }  # extra index of entries matching a condition
+
+# Prefer `Array#max` over `Array#sort#last` (more efficient)
+[1, 3, 2].max
+
+# There's no `find_map`, but you can use `filter_map.first`
+[1, 2, 3].filter_map { it * 2 if n.even? }.first
 ```
 
 ### Hash
@@ -768,6 +774,8 @@ A non-block form exists, which returns the `IO` object.
 
 ### Using `Open3`
 
+Best to handle return statuses - `$CHILD_STATUS` can be nil in some cases (e.g., with IRB and backticks).
+
 The output is not printed as well, so the same considerations as `IO.popen` apply.
 
 `env_vars` must be strings, not symbols.
@@ -800,6 +808,16 @@ $stdout.puts stdout
 $stderr.puts stderr
 
 exit status.exitstatus if !status.success?
+```
+
+Other `Open3` methods:
+
+```ruby
+# capture2: stderr goes to terminal, only stdout is captured
+stdout, child_status = Open3.capture2("git ls-remote --tags --refs #{KERNEL_REPOSITORY_ADDR.shellescape}")
+
+# capture2e: stderr is merged with stdout
+stdout_and_err, child_status = Open3.capture2e(...)
 ```
 
 ### Live execution, via `Kernel#system`

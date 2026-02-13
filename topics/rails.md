@@ -7,6 +7,7 @@
     - [Filters](#filters)
   - [ActiveRecord](#activerecord)
     - [Querying](#querying)
+      - [Complex AREL query examples](#complex-arel-query-examples)
       - [Batching](#batching)
       - [Metadata](#metadata-1)
     - [Updating](#updating)
@@ -50,7 +51,7 @@ before_action :method
 
 ```ruby
 query.ids                   # pluck the ids!
-query.pluck(:column)        # select only the single column, without constructing AR instances
+query.pluck(:column)        # select only the single column, without constructing AR instances. NOTE: also works with arrays of hashes
 query.pick(:column)         # limit(1).pluck(:column)
 arel.table_name             # name of the base AREL query table
 arel.model                  # name of the base AREL model
@@ -111,6 +112,29 @@ Group by/having (aggregates):
 
 ```rb
 customers.join(:orders).group('customers.id').having('count(*) > 10')
+```
+
+#### Complex AREL query examples
+
+```rb
+# Join with left outer joins and OR conditions
+Cart.
+  distinct.
+  left_joins(:line_items).
+  left_joins(:payments).
+  where(account_id: 1025).
+  where(created_at: Date.new(2024, 1, 30)..).
+  merge(LineItem.where.not(id: nil).or(Payment.where.not(id: nil)))
+
+# Using AREL subqueries with IN operator
+Cart.
+  where(account_id: 1025).
+  where(created_at: Date.new(2024, 1, 30)..).
+  where(
+    # carts.id IN (SELECT cart_id FROM line_items)
+    Cart.arel_table[:id].in(LineItem.arel_table.project(:cart_id)).
+    or(Cart.arel_table[:id].in(Payment.arel_table.project(:cart_id)))
+  )
 ```
 
 #### Batching

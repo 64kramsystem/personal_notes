@@ -11,8 +11,7 @@
       - [Video to animated GIF/PNG](#video-to-animated-gifpng)
     - [Stream/file operations](#streamfile-operations)
       - [De/mux](#demux)
-      - [Stream extraction/lossless splitting](#stream-extractionlossless-splitting)
-      - [Split by duration, starting on a keyframe](#split-by-duration-starting-on-a-keyframe)
+      - [Splitting](#splitting)
       - [Concatenate videos](#concatenate-videos)
       - [Deinterlacing](#deinterlacing)
       - [Deinterlacing via Vapoursynth+QTGMC (+VS install)](#deinterlacing-via-vapoursynthqtgmc-vs-install)
@@ -21,6 +20,7 @@
       - [Snippets](#snippets)
       - [Build FFmpeg with libfdk-aac support](#build-ffmpeg-with-libfdk-aac-support)
   - [DVD-related](#dvd-related)
+  - [CD-related](#cd-related)
   - [Other A/V operations](#other-av-operations)
 
 ## FFmpeg/Avconv
@@ -217,27 +217,31 @@ ffmpeg -i $input -vn -c:a copy $output
 ffmpeg -i $input -vn -map 0:a:1 -c copy $audio_output
 ```
 
-#### Stream extraction/lossless splitting
+#### Splitting
 
-For lossless splitting/trimming, it's best to use [LosslessCut](https://github.com/mifi/lossless-cut); see next section for ffmpeg details.
+Use [LosslessCut](https://github.com/mifi/lossless-cut) for easiest lossless trims/splits.
 
-In order to extract segments, use `-ss` after `-i`:
+Extract a segment (lossless, stream copy):
 
 ```sh
-# Timestamps are in `hh:mm:ss[.sss]` format.
-#
-ffmpeg -i $source -ss $start -t $duration -vcodec copy -acodec copy
-ffmpeg -i $source -ss $start -to $end -vcodec copy -acodec copy
+# Timestamps: hh:mm:ss[.sss]
+ffmpeg -i "$src" -ss "$start" -t  "$dur" -c copy "$out"   # duration
+ffmpeg -i "$src" -ss "$start" -to "$end" -c copy "$out"   # end time
 ```
 
-For keyframe-based segmentation, see https://superuser.com/a/825289.
+Keyframe caveats + segmentation details: https://superuser.com/a/825289.
 
-#### Split by duration, starting on a keyframe
+Split into chunks by duration (cuts land on keyframes / may drift) (see https://unix.stackexchange.com/q/1670):
 
 ```sh
-# Cute but underwhelming results (see https://unix.stackexchange.com/q/1670).
-#
-ffmpeg -i input.mp4 -segment_time 00:10:00 -reset_timestamps 1 -f segment output%02d.avi
+ffmpeg -i input.mp4 -f segment -segment_time 600 -reset_timestamps 1 -c copy out%03d.mp4
+```
+
+Split into two at a time (lossless):
+
+```sh
+ffmpeg -i input.mkv -t  01:00:00 -c copy part1.mkv
+ffmpeg -i input.mkv -ss 01:00:00 -c copy part2.mkv
 ```
 
 #### Concatenate videos
@@ -408,6 +412,21 @@ See system installer (`install_ffmpeg()`).
 
 ## DVD-related
 
+Rip DVD:
+
+```sh
+# Rip a specific title from DVD (doesn't support images - use cdemu for ISO files)
+dvdbackup -i /dev/sr0 -t 15 -o /tmp/MICKEYD1
+
+# Test the ripped DVD with ffmpeg
+cd /tmp/MICKEYD1
+ffmpeg \
+  -i "concat:$(ls -1 *.VOB | tr $'\n' '|')" \
+  -c:a copy \
+  -c:v libx265 -crf 25 -preset ultrafast \
+  test.mkv
+```
+
 Convert unencrypted VOBs to h265:
 
 ```sh
@@ -486,6 +505,26 @@ mkvmerge -o temp-with-chapters.mkv --chapters ./VTS_01_0.IFO VTS_01_1.VOB
 # - `-map 0`:          copy all streams, including chapters
 ```
 
+## CD-related
+
+Emulate CD-ROM:
+
+```sh
+# Start the daemon
+cdemu-daemon &
+
+# Load an ISO/image (mounts to /dev/sr0)
+cdemu load 0 /path/to/dvd.iso
+```
+
+Rip audio CD:
+
+```sh
+# There are no options to add a prefix.
+#
+cdparanoia -vB
+```
+
 ## Other A/V operations
 
 Bind mp3 files:
@@ -496,14 +535,6 @@ Bind mp3 files:
 #
 mp3binder 1.mp3 2.mp3 --output tmp.mp3
 vbrfixc --XingFrameCrcProtectIfCan tmp.mp3 all.mp3 && rm tmp.mp3
-```
-
-Rip audio cD:
-
-```sh
-# There are no options to add a prefix.
-#
-cdparanoia -vB
 ```
 
 Rip Youtube video:

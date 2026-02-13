@@ -11,8 +11,9 @@
     - [Negative matches](#negative-matches)
     - [Matching a pattern when it's not at the beginning](#matching-a-pattern-when-its-not-at-the-beginning)
     - [Regex to match an HTML section](#regex-to-match-an-html-section)
-  - [Language incompatibilities](#language-incompatibilities)
+  - [Language incompatibilities/pitfalls](#language-incompatibilitiespitfalls)
     - [Javascript](#javascript)
+    - [Perl `$` ambiguity](#perl--ambiguity)
 
 ## Character classes
 
@@ -123,8 +124,19 @@ Good enough, in Ruby:
 
 avoids comments inside code fences.
 
-## Language incompatibilities
+## Language incompatibilities/pitfalls
 
 ### Javascript
 
 The negative lookbehind (`?<!`) may not be supported in some Javascript versions. Where possible, use the negative lookahead (`?!`).
+
+### Perl `$` ambiguity
+
+Regex gotcha with `$` in double-quoted strings:
+
+```sh
+# The first is wrong, as `$` is interpreted as the beginning of a variable name (!)
+perl -0777 -lne 'print 1 if /^bar$\nb.z/sm'   <<< $'foo\nbar\nbaz'
+perl -0777 -lne 'print 1 if /^bar($)\nb.z/sm' <<< $'foo\nbar\nbaz'
+perl -0777 -lne 'print 1 if /^bar\nb.z/sm' <<< $'foo\nbar\nbaz'      # best: avoid $ altogether
+```

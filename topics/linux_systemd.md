@@ -61,6 +61,14 @@ SYSTEMD_EDITOR="tee" systemctl edit --full --force $service <<< ...
 #
 systemctl is-(active|enabled|failed) $service
 
+# Simpler alternative: systemctl status returns 0 if service is active & running
+#
+systemctl status servicename && echo "Service is running"
+
+# Show the unit file path. Example output: FragmentPath=/etc/systemd/system/chef-manage-runsvdir-start.service
+#
+systemctl show -p FragmentPath servicename
+
 # Check if a unit exists (.service is required):
 #
 systemctl list-unit-files --user pipewire.service | grep -q '1 unit files listed'

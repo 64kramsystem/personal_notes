@@ -46,6 +46,7 @@
 
 - **change**                          Go Back/Forward (history) (was: `Ctrl` + [`Shift` + ] `-` )
 - `Ctrl` + `PgUp`/`PgDown`            Scroll Up/Down
+- **change**                          Go to line #
 
 - `Ctrl` + `Cmd` + `Shift+` + `[`/`]` Move Tab (Editor) to Left/Right (was: `Cmd` + `k`, `Shift` + `Cmd` + `←`/`→`)
 

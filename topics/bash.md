@@ -27,7 +27,7 @@
     - [Random values](#random-values)
   - [Redirections](#redirections)
   - [Substitutions](#substitutions)
-  - [Pipes error handling](#pipes-error-handling)
+  - [Pipes/Error handling](#pipeserror-handling)
   - [Wildcards/ranges](#wildcardsranges)
   - [Arrays](#arrays)
     - [Snippets](#snippets)
@@ -51,7 +51,6 @@
     - [Variables printing function](#variables-printing-function)
     - [Current shell/OS](#current-shellos)
     - [Convert associative array to JSON](#convert-associative-array-to-json)
-  - [Pitfalls](#pitfalls)
   - [Shell colors](#shell-colors)
 
 ## Shell key bindings
@@ -88,6 +87,7 @@ set -o monitor            # (`-m`) enable job control
 shopt -s nullglob         # IMPORTANT: when globs don't match anything, expand to null string, rather than to themselves
 set -o xtrace             # (`-x`) debugging mode; prints all the statements
 shopt -s nocasematch      # case insensitive matches
+shopt -s globstar         # enable `**` for recursive matching (e.g., `**/*.txt`)
 ```
 
 If the xtrace is set before a backgrounded block (e.g. `{ while ... } &`), it won't be logged.
@@ -685,6 +685,8 @@ ${filename%/*}                    # parent dir of a file; DON'T USE WITH DIRS! i
 
 str=aaa_foo_bbb_foo_ccc
 ${str%foo*}bar${str##*foo}        # replace last occurrence; WATCH OUT! The search string must be present
+
+${string%?}                       # can use wildcards (this strips the last char)
 ```
 
 Fun tricks/other stuff:
@@ -789,6 +791,10 @@ exec 200> "$filename"                                   # associate a file to a 
 # Send stdout/err to two different outputs! See https://stackoverflow.com/a/692407.
 #
 my_command > >(tee -a stdout.log) 2> >(tee -a stderr.log >&2)
+
+# Use process substitution and file descriptor redirection to pipe data through FD 3 (instead of stdin/stdout).
+#
+xargs -r dpkg -i < <(sudo -iu "$SUDO_USER" build_kernel 3>&1 1>&2)
 ```
 
 ## Substitutions
@@ -829,7 +835,7 @@ command < "$filename"
 
 WATCH OUT! See the [background processes section](#background-processesjobs-management) for notes about cmd substitution + background jobs.
 
-## Pipes error handling
+## Pipes/Error handling
 
 Pipes in bash have a very serious issue - in case of write error, a reader only gets an EOF, not an error.
 
@@ -838,6 +844,13 @@ In order to work this around, there are two approaches.
 If it's acceptable for readers cleanup to be performed separately, inspect `PIPESTATUS[@]` (one entry for each pipe command) after the failure and act accordingly.
 
 If it isn't, and readers must be killed before receiving EOF, and a complex (and ugly) approach is required - see [here](https://stackoverflow.com/a/32699218/210029)
+
+Pipes gotcha:
+
+```sh
+git log --oneline | head -n 1                             # fails due to `git` raising an error when the pipe is closed
+awk 'NR <= N { print }'` or `perl -ne 'print if $. <= N'  # can use this
+```
 
 ## Wildcards/ranges
 
@@ -1170,6 +1183,12 @@ foo "$@"
 echo reaches_here
 ```
 
+Oneliner that prevents a failure from terminating the script, when `errexit` is set:
+
+```sh
+(mycommand) && echo success
+```
+
 #### Trapping errors (hooks)
 
 Execute a (explicit) command on exit.
@@ -1207,6 +1226,12 @@ function register_exit_hook {
   LOCKFILE="/tmp/mylockfile"
   function _exit_hook { rm -f "$LOCKFILE"; }
   trap _exit_hook EXIT
+
+  # Alternative: pass variables as parameters to the exit hook.
+  #
+  function _exit_hook { local myvar=$1; rm -f "$myvar"; }
+  # shellcheck disable=SC2064 # False positive
+  trap "_exit_hook $1" EXIT
 }
 ```
 
@@ -1442,6 +1467,12 @@ Convenient extra functionalities:
 # Pass arguments to bash command, when the script is passed from stdin.
 #
 echo 'echo $1' | bash -s 1
+
+# Source a file before running a script via BASH_ENV.
+# Useful for providing functions/variables to a script without modifying it.
+#
+BASH_ENV=sourced.sh bash script.sh
+BASH_ENV=<(echo 'source bar.sh; source baz.sh') bash foo.sh  # workaround to pass multiple files
 ```
 
 ### Variables printing function
@@ -1500,11 +1531,6 @@ done |
 ```
 
 WATCH OUT!!: There is no way to directly support null.
-
-## Pitfalls
-
-- `git log --oneline | head -n 1`: will fail due to `git` raising an error when the pipe is closed
-  - can use `awk 'NR <= N { print }'` or `perl -ne 'print if $. <= N'`
 
 ## Shell colors
 

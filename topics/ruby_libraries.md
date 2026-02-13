@@ -26,9 +26,11 @@
     - [Tempfile, Tmpdir](#tempfile-tmpdir)
     - [Concurrency](#concurrency)
       - [Threads exception handling](#threads-exception-handling)
+      - [Parallel gem](#parallel-gem)
       - [Variables vs threads](#variables-vs-threads)
       - [Mutex](#mutex)
       - [Thread-safe data structures (Queue)](#thread-safe-data-structures-queue)
+        - [Task queue with worker threads](#task-queue-with-worker-threads)
       - [IO.pipe for IPC](#iopipe-for-ipc)
     - [I/O and terminal](#io-and-terminal)
     - [Compression](#compression)
@@ -682,7 +684,7 @@ File.open(@file, 'a') { ... }
 f = File.open(@file, File::CREAT | File::WRONLY | File::APPEND) {... }
 f.close
 
-# Use file modes, e.g. to append. WATCH OUT! They're letters (see https://ruby-doc.org/core-3.1.2/IO.html#method-c-write).
+# Use file modes, e.g. to append (`a`). WATCH OUT! They're letters (see https://ruby-doc.org/core-3.1.2/IO.html#method-c-write).
 #
 IO.write @file, @content, mode: @mode
 ```
@@ -754,6 +756,17 @@ If one wants threads error to be raised in the main thread:
 - or it will be raised on `Thread#join` (or `#value`)
 
 `abort_on_exception` can be set on a per-instance basis; from the thread block: `Thread.current.abort_on_exception = true`
+
+#### Parallel gem
+
+```rb
+# Uses processes by default; for threads, use `map(entries, in_threads: Etc.nprocessors)`.
+#
+result = Parallel
+  .map(entries) { |entry| entry if is_valid?(entry) }
+  .compact
+```
+
 
 #### Variables vs threads
 
@@ -827,6 +840,30 @@ Methods:
 - `push(element)`
 - `pop`
 - there is no peek; must `pop` and `push`
+
+##### Task queue with worker threads
+
+```rb
+task_queue = Queue.new(
+  10.times.map { |i| -> { puts "Task #{i} completed."; sleep 0.5 } }
+)
+
+workers = num_workers.times.map do
+  Thread.new do
+    # In theory, we could check Queue#empty?, but it's essentially useless, since it doesn't lock the
+    # queue.
+    #
+    while true
+      # with blocking (non_block:false) + timeout:0 => returns nil, immediately, if the queue is empty
+      # alternatively, invoke with (true), and rescue from ThreadError
+      #
+      task_queue.pop(false, timeout: 0)&.call || break
+    end
+  end
+end
+
+workers.each(&:join)
+```
 
 #### IO.pipe for IPC
 

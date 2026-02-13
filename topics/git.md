@@ -33,6 +33,7 @@
     - [Revert/recover common mistakes](#revertrecover-common-mistakes)
     - [Find/set the default branch](#findset-the-default-branch)
     - [Checkout a GitHub PR (of a private repository)](#checkout-a-github-pr-of-a-private-repository)
+    - [Git LFS (Large File Storage)](#git-lfs-large-file-storage)
 
 ## Document notes
 
@@ -235,6 +236,10 @@ log -- $path                        # search a deleted file (path is relative)
 # This has the advantage of (besides likely performance) searching only files in the index, which avoids cases like symlinks to unindexed files.
 #
 grep [--line-number] $regex
+
+# Find the first tag reachable from HEAD
+#
+git describe --tags --abbrev=0
 ```
 
 Blaming format:
@@ -747,4 +752,30 @@ A PR request can be checked out locally (even if the source repo is private):
 # This creates a standard branch, linked to the PR.
 #
 git fetch origin pull/$number/head:$local_branch
+```
+
+### Git LFS (Large File Storage)
+
+Setup repo; the Ubuntu is somewhat old, but not considerably less performant:
+
+```sh
+key=/etc/apt/keyrings/github_git-lfs-archive-keyring.gpg
+distro=noble
+
+curl -fsSL https://packagecloud.io/github/git-lfs/gpgkey | gpg --dearmor > "$key"
+
+cat > /etc/apt/sources.list.d/git-lfs.list << TXT
+deb [signed-by=$key] https://packagecloud.io/github/git-lfs/ubuntu $distro main
+deb-src [signed-by=$key] https://packagecloud.io/github/git-lfs/ubuntu $distro main
+TXT
+```
+
+Usage:
+
+```sh
+git lfs track "/extras/*.bundle" "/extras/*.deb" # path refer to the current dir, so be careful
+git add .gitattributes                           # must run for every new tracking
+git commit -m "track *.psd files using Git LFS"  # ^^
+
+git lfs ls-files
 ```

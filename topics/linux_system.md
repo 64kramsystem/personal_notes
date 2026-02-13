@@ -19,6 +19,7 @@
   - [Udev](#udev)
   - [Add swap file](#add-swap-file)
   - [Packages](#packages)
+    - [Disable apt automatic updates](#disable-apt-automatic-updates)
     - [Apt/dpkg installation hooks (`etc/apt/apt.conf.d`)](#aptdpkg-installation-hooks-etcaptaptconfd)
   - [Repositories](#repositories)
     - [Keys handling](#keys-handling)
@@ -180,6 +181,7 @@ chmod -R go-rx .ssh                     # setup SSH permissions
 chage -d $(date +%Y-%m-%d) $user        # set the last changed date to today, and the mandatory change date to (today + max days)
 chage -I 0 $user                        # expire password
 chage -E -1 $user                       # disable account expiry
+chage -M -1 username                    # disables password expiry (`--maxdays -1`)
 ```
 
 User operations:
@@ -762,6 +764,14 @@ apt-cache policy $(dpkg --get-selections | grep -v deinstall$ | awk '{ print $1 
 # Comments out the PPA file content after purging.
 #
 ppa-purge ppa:oibaf/graphics-drivers
+```
+
+### Disable apt automatic updates
+
+Previous attempts failed; this is the proper way (see /usr/lib/apt/apt.systemd.daily'):
+
+```sh
+echo 'APT::Periodic::Enable "0"' >> /etc/apt/apt.conf.d/10periodic
 ```
 
 ### Apt/dpkg installation hooks (`etc/apt/apt.conf.d`)

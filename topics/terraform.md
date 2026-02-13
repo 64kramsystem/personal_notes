@@ -311,6 +311,10 @@ import $resource_tf_address $resource_identifier
 #
 state rm $resource_tf_address
 
+# Move/rename a resource in the statefile (e.g., after refactoring).
+#
+state mv $res1 $res2
+
 # Sync (scoped) an individual resource (after manual update/drift).
 #
 refresh -target=resource_addr -target=resource2_addr...

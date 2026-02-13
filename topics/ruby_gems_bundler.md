@@ -12,6 +12,7 @@
     - [Gemspec](#gemspec)
     - [Packaged gems/YAML gemspec](#packaged-gemsyaml-gemspec)
     - [Gem commands](#gem-commands)
+    - [Find (installed) gem executables](#find-installed-gem-executables)
 
 ## Bundler
 
@@ -74,6 +75,7 @@ It's possible to create a cache directory (`vendor/cache`), but it's all-or-noth
 
 - `bundle $command --gemfile=$gemfile` : specify the gemfile
 - `bundler package`                    : download gems into `vendor/cache`
+- `bundle update --bundler`            : update the BUNDLED WITH section in Gemfile.lock, to match the current Bundler version
 
 ### Context
 
@@ -217,4 +219,22 @@ gem signin                           # Login, to push gems (creates ~/.gem/crede
 # `-s` appends a source; --clear-sources clears the preceding sources.
 #
 gem $operation --clear-sources -s $source $gem1 {$gem2...}
+
+```
+
+### Find (installed) gem executables
+
+Match executables like:
+
+   /usr/lib/x86_64-linux-gnu/ruby/gems/3.2.0/gems/byebug-11.1.3/exe/byebug
+
+Avoid executables like:
+
+   /usr/lib/x86_64-linux-gnu/ruby/3.2.0/lib/bundler/templates/newgem/exe/newgem.tt
+   /usr/lib/x86_64-linux-gnu/ruby/gems/3.2.0/gems/rubygems-update-3.4.22/bundler/exe/bundle
+
+With this strategy though, we still can't avoid matching built-in gems like typeprof.
+
+```sh
+gem list | awk '{print $1}' | xargs -L1 gem contents | perl -ne 'print $1 if m{/gems/(?!rubygems-update)[^/]+/exe/([^/]+)}'
 ```
