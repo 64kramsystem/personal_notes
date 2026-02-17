@@ -982,6 +982,12 @@ my_arr=("entry1 key2" "entry2 key1")
 mapfile -td$'\n' sorted_arr < <(printf $'%s\n' "${my_arr[@]}" | sort -k 2)
 ```
 
+Difference between two arrays (new - old) (!):
+
+```sh
+IFS=$'\n'; grep -Fvx -f <(echo "${old_packages[*]}") <(echo "${new_packages[*]}") || true
+```
+
 Iterate a multiple lines output, assigning it to an array:
 
 ```sh
