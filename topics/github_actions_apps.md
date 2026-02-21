@@ -286,7 +286,7 @@ generate_projects_matrix:
   outputs:
     matrix: ${{ steps.generate-matrix.outputs.matrix }}
   steps:
-  - uses: actions/checkout@v4
+  - uses: actions/checkout@v6
   - id: generate-matrix
     # The script must print a JSON document to stdout. It's not specified if it's JSON5, but trailing
     # commas are allowed.
@@ -303,7 +303,7 @@ check_code_formatting:
   # Important!! Otherwise, an error is raised on empty matrices.
   if: ${{ needs.generate_projects_matrix.outputs.matrix != '[]' }}
   steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - uses: actions-rs/cargo@v2
       with:
         command: fmt
@@ -318,7 +318,7 @@ This can be performed via a convenient action.
 # WATCH OUT! Must include fetch-depth, otherwise the commit is not usable for diffing.
 # Possibly, a depth of 2 (smaller size) works for squash merges.
 #
-- uses: actions/checkout@v4
+- uses: actions/checkout@v6
   with:
     fetch-depth: 0
 
@@ -408,7 +408,7 @@ jobs:
     # See caching section.
     #
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
     # WATCH OUT!!! Creates a `vendor` directory, with gems.
     #
@@ -457,7 +457,7 @@ check-default-gems:
     contents: read            # may be necessary only on private repos
     pull-requests: read
   steps:
-  - uses: actions/checkout@v4
+  - uses: actions/checkout@v6
   - uses: dorny/paths-filter@v3
     id: changes
     with:
@@ -483,7 +483,7 @@ clippy_correctness_checks:
           - { target: 'x86_64-unknown-linux-gnu', target_dir: 'target' }
           - { target: 'wasm32-unknown-unknown', target_dir: 'web-target' }
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Use WASM target for Clippy
         if: matrix.config.target == 'wasm32-unknown-unknown'
         uses: actions-rs/toolchain@v1
@@ -524,7 +524,7 @@ jobs:
     name: Build Ruby cache
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - uses: ruby/setup-ruby@v1
       with:
         bundler-cache: true
@@ -616,6 +616,41 @@ Check Sorbet sigil on new files:
             }
 ```
 
+Check if `tapioca gem` is required:
+
+```yaml
+  sorbet_gem_rbis:
+    name: Sorbet gem RBIs
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check changed files
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            changed:
+              - 'Gemfile.lock'
+              - '.ruby-version'
+      - uses: ruby/setup-ruby@v1
+        if: steps.filter.outputs.changed == 'true'
+        with:
+          bundler-cache: true
+      - name: Run tapioca gem
+        if: steps.filter.outputs.changed == 'true'
+        run: bundle exec tapioca gem
+      - name: Check for uncommitted changes in sorbet/rbi/gems
+        if: steps.filter.outputs.changed == 'true'
+        run: |
+          if ! git diff --quiet sorbet/rbi/gems; then
+            echo "::error::sorbet/rbi/gems is out of date. Please run 'bundle exec tapioca gem' and commit the changes."
+            exit 1
+          fi
+```
+
 ### Rust
 
 Format/Clippy checks (with caching). WATCH OUT! For unclear reasons, this setup causes Clippy to check also dependencies (!).
@@ -639,7 +674,7 @@ jobs:
     steps:
     - name: Install dev packages
       run: sudo apt install libasound2-dev libudev-dev
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - uses: actions/cache@v4
       with:
         path: |
@@ -665,7 +700,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Check code formatting
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions-rs/cargo@v2
         with:
           command: fmt
@@ -676,7 +711,7 @@ jobs:
     steps:
       - name: Install dev libraries
         run: sudo apt install libasound2-dev libudev-dev
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/cache@v4
         with:
           path: |
