@@ -57,6 +57,7 @@
 - `Opt` + `↑`/`↓`                     Move line Up/Down
 
 - `Opt` + `W`                         Toggle word wrap (was: `Opt` + `z`)
+- **change**                          Align Selection
 
 - `Cmd` + (`K`, `U`/`L`)              Upper/Lower case (was: (no assignment))
 
