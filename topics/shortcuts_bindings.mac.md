@@ -44,9 +44,9 @@
 
 ## VSC
 
-- **change**                          Go Back/Forward (history) (was: `Ctrl` + [`Shift` + ] `-` )
+- `Ctrl` + `-`                        Go Back (history)
+- `Ctrl` + `=`                        Go Forward (history) (was: `Ctrl` + `Shift` + `-`)
 - `Ctrl` + `PgUp`/`PgDown`            Scroll Up/Down
-- **change**                          Go to line #
 
 - `Ctrl` + `Cmd` + `Shift+` + `[`/`]` Move Tab (Editor) to Left/Right (was: `Cmd` + `k`, `Shift` + `Cmd` + `←`/`→`)
 
@@ -57,15 +57,18 @@
 - `Opt` + `↑`/`↓`                     Move line Up/Down
 
 - `Opt` + `W`                         Toggle word wrap (was: `Opt` + `z`)
-- **change**                          Align Selection
+- `Cmd` + (`K`, `A`)                  Align Selection (was: `Shift` + `Ctrl` + `a`)
 
 - `Cmd` + (`K`, `U`/`L`)              Upper/Lower case (was: (no assignment))
 
-- **change**                          Search/replace (was: `Opt` + `Cmd` + `f`)
+- `Cmd` + `f`                         Search in editor
+- `Opt` + `Cmd` + `f`                 Replace in editor
+- `Shift` + `Cmd` + `f`               Search in files
+- `Shift` + `Cmd` + `h`               Replace in files
 
-- `Cmd` + `Alt` [+ `Shift`] + `C`     Copy file path relative [absolute] (was: something else; removed conflicting bindings)
+- `Cmd` + `Opt` [+ `Shift`] + `C`     Copy file path relative [absolute] (was: something else; removed conflicting bindings)
 
-- **check**                           Autocompletion
+- `Opt` + `Esc`                       Trigger suggest (Autocompletion) (can't change to `Ctrl` + `Space`)
 
 ## Firefox
 

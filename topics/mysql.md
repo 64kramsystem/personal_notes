@@ -1389,8 +1389,9 @@ FROM t1
 
 # Join order; reference: https://dev.mysql.com/doc/refman/8.0/en/optimizer-hints.html#optimizer-hints-join-order.
 
-SELECT /*+ JOIN_ORDER(t2, t1) */ COUNT(*)
-FROM t1 JOIN t2
+SELECT /*+ JOIN_ORDER(t2, t1) */ COUNT(*) FROM t1 JOIN t2;
+SELECT /*+ JOIN_PREFIX(t2) */    COUNT(*) FROM t1 JOIN t2;
+
 
 # Force CTE materialization; reference: https://dev.mysql.com/doc/refman/8.0/en/optimizer-hints.html#optimizer-hints-table-level
 
