@@ -24,6 +24,8 @@
 
 - `Cmd` + `Opt` + `v`                Move file into (paste and remove the source)
 
+- `Cmd` + `Shift` + `4`              Screenshot
+
 ## Rectangle
 
 - `Ctrl` + `Opt` + `↵`               Maximize
