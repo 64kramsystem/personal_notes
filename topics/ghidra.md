@@ -10,6 +10,7 @@
   - [Flow override (CALL)](#flow-override-call)
   - [Useful operations](#useful-operations)
     - [Operations on memory blocks](#operations-on-memory-blocks)
+      - [Map an extra file to a memory block](#map-an-extra-file-to-a-memory-block)
     - [Create references to statically unknown locations](#create-references-to-statically-unknown-locations)
   - [Scripts (Ruby Dragon)](#scripts-ruby-dragon)
     - [Set label at arbitrary address](#set-label-at-arbitrary-address)
@@ -79,6 +80,11 @@ Many operations can be done on memory blocks; in order to shrink one, split it:
 - Open `Window` → `Memory Map`
 - Click `Split Block`
 - Delete the now unnecessary block
+
+#### Map an extra file to a memory block
+
+- Add the file to the program (**not** import)
+- Check the memory block, and if not appropriate, delete and recreate
 
 ### Create references to statically unknown locations
 
