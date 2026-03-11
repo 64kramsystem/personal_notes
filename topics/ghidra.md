@@ -8,15 +8,13 @@
   - [Data types](#data-types)
   - [Functions](#functions)
   - [Flow override (CALL)](#flow-override-call)
+  - [References workflow](#references-workflow)
   - [Useful operations](#useful-operations)
     - [Operations on memory blocks](#operations-on-memory-blocks)
       - [Map an extra file to a memory block](#map-an-extra-file-to-a-memory-block)
     - [Create references to statically unknown locations](#create-references-to-statically-unknown-locations)
   - [Scripts (Ruby Dragon)](#scripts-ruby-dragon)
-    - [Set label at arbitrary address](#set-label-at-arbitrary-address)
-    - [Remap references in a range, to an equivalent segment](#remap-references-in-a-range-to-an-equivalent-segment)
-    - [Create a data structure](#create-a-data-structure)
-
+    - [Args/Nested script invocation](#argsnested-script-invocation)
 
 ## IDE
 
@@ -71,6 +69,19 @@ Ghidra may assess, both legitimately and not, that a call doesn't return and pla
 
 Right-click → `Modify Instruction Flow` → set `-DEFAULT-`.
 
+## References workflow
+
+To manually generate (missing) references:
+
+- Create the required memory block(s)
+- Manually set the segment register assumption for the involved code region
+  - Ghidra will now be able to compute the target address, but won't necessarily create the reference automatically
+- Manually add the reference (`memory` type):
+  - Ghidra will prefill the target address from the segment assumption
+- Label the target address (if not already named)
+
+**WATCH OUT**: If (auto-)analysis doesn't update refs after the fix, do `Clear code bytes` (`C`) then `Disassemble` (`D`) on the affected instruction(s).
+
 ## Useful operations
 
 ### Operations on memory blocks
@@ -88,25 +99,13 @@ Many operations can be done on memory blocks; in order to shrink one, split it:
 
 ### Create references to statically unknown locations
 
-If Ghidra doesn't know what segment is in DS (or a similar segment register), it can't resolve memory references to the correct memory block.
-
-Fix for direct memory references (e.g., `MOV AX, [0x8002]`):
-
-→ Right-click on the instruction → Set Register Values → Set the value
-
-Fix for immediate loads (e.g., `MOV SI, 0x8002`):
-
-Setting the register value has no effect — Ghidra creates the reference from the immediate value alone, ignoring DS.
-
-→ Right-click on the instruction → References → Add/Edit References → manually add a reference
-
 ## Scripts (Ruby Dragon)
 
 WATCH OUT! Don't add `@runtime Ruby`, or the script will fail with `Script is not supported`.
 
 ```rb
-# @category Malware/DOS          # Script folder
-# @keybinding Ctrl-Shift-V       # Optional
+#@category Malware/DOS          # Script folder
+#@keybinding Ctrl-Shift-V       # Optional
 
 # Both versions work
 currentProgram
@@ -118,105 +117,20 @@ $current_api.toAddr
 
 Ignore warnings about redefined constants.
 
-### Set label at arbitrary address
+### Args/Nested script invocation
+
+Scripts can invoke each other:
 
 ```rb
-java_import 'ghidra.program.model.symbol.SourceType'
-
-symbol_table = currentProgram.getSymbolTable
-namespace    = currentProgram.getGlobalNamespace
-
-address = toAddr("07c0:012A")
-
-symbol_table.createLabel(address, "INT13_ORIGINAL_VECTOR_OFS", namespace, SourceType::USER_DEFINED)
-
-puts "OK: labeled #{address}"
+runScript("ApplyDataType.rb", [NAME, "07c0:0003"].to_java(:string))
 ```
 
-### Remap references in a range, to an equivalent segment
+In order for a script to use default params, a workaround is required:
 
 ```rb
-NEW_SEGMENT = "07c0"
+# `getScriptArgs` is available only from a runScript context.
+args = begin; getScriptArgs; rescue NameError; []; end
 
-tx_id = currentProgram.start_transaction("Remap 0000:8xxx references")
-success = false
-
-begin
-  ref_manager = currentProgram.reference_manager
-  start_addr  = toAddr("0000:8000")
-  end_addr    = toAddr("0000:81ff")
-
-  addr = start_addr
-  while addr <= end_addr
-    refs = ref_manager.get_references_to(addr).to_a   # snapshot to avoid iterator mutation
-    unless refs.empty?
-      # Compute the equivalent address in the virus segment (07c0)
-      target_addr = toAddr("#{NEW_SEGMENT}:#{"%04x" % addr.segment_offset}")
-      refs.each do |ref|
-        # Add new reference pointing to the correct segment
-        ref_manager.add_memory_reference(
-          ref.from_address,
-          target_addr,
-          ref.reference_type,   # preserve original ref type (read/write/data)
-          SourceType::USER_DEFINED,
-          ref.operand_index     # preserve which operand the ref belongs to
-        )
-        ref_manager.delete(ref)
-      end
-      puts "Remapped #{addr} -> #{target_addr} (#{refs.size} ref#{refs.size == 1 ? '' : 's'})"
-    end
-    addr = addr.next   # advance one byte at a time
-  end
-
-  success = true
-ensure
-  # Rollback on exception
-  currentProgram.end_transaction(tx_id, success)
-end
+from_imm_start = (args[0] || "8000").to_i(16)
 ```
 
-### Create a data structure
-
-```rb
-java_import 'ghidra.program.model.data.StructureDataType'
-java_import 'ghidra.program.model.data.ByteDataType'
-java_import 'ghidra.program.model.data.WordDataType'
-java_import 'ghidra.program.model.data.ArrayDataType'
-java_import 'ghidra.program.model.data.CharDataType'
-java_import 'ghidra.program.model.data.DataTypeConflictHandler'
-
-tx_id = currentProgram.startTransaction("Create BPB structure")
-success = false
-
-begin
-  dtm    = currentProgram.dataTypeManager
-  struct = StructureDataType.new("BPB", 0)
-
-  struct.add(ArrayDataType.new(CharDataType::dataType, 8, 1), "oem_name",           "OEM identifier")
-  struct.add(WordDataType::dataType,                          "bytes_per_sector",    "")
-  struct.add(ByteDataType::dataType,                          "sectors_per_cluster", "")
-  struct.add(WordDataType::dataType,                          "reserved_sectors",    "")
-  struct.add(ByteDataType::dataType,                          "fat_count",           "")
-  struct.add(WordDataType::dataType,                          "root_entries",        "")
-  struct.add(WordDataType::dataType,                          "total_sectors",       "")
-  struct.add(ByteDataType::dataType,                          "media_descriptor",    "")
-  struct.add(WordDataType::dataType,                          "sectors_per_fat",     "")
-  struct.add(WordDataType::dataType,                          "sectors_per_track",   "")
-  struct.add(WordDataType::dataType,                          "heads",               "")
-  struct.add(WordDataType::dataType,                          "hidden_sectors",      "")
-
-  # Register the type
-  dt = dtm.addDataType(struct, nil)
-
-  # Clean existing associations, and associate
-  START_ADDR = toAddr("07c0:0003")
-  currentProgram.listing.clearCodeUnits(START_ADDR, START_ADDR.add(struct.length - 1), false)
-  currentProgram.listing.createData(START_ADDR, dt)
-
-  puts "Created data structure"
-
-  success = true
-ensure
-  currentProgram.endTransaction(tx_id, success)
-end
-```
