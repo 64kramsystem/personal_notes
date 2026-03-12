@@ -3,6 +3,9 @@
 - [zinc64 Codebase Guide](#zinc64-codebase-guide)
   - [Workspace layout](#workspace-layout)
   - [Where to start reading](#where-to-start-reading)
+  - [Sav notes](#sav-notes)
+    - [Rust concepts](#rust-concepts)
+    - [Architectural concepts](#architectural-concepts)
   - [Key architectural ideas](#key-architectural-ideas)
   - [Memory map essentials](#memory-map-essentials)
   - [Suggested reading order](#suggested-reading-order)
@@ -18,8 +21,6 @@
 | `zinc64-loader` | File format loaders (PRG, CRT, TAP…)                 |
 | `zinc64-debug`  | Remote debugger support                              |
 
----
-
 ## Where to start reading
 
 1. **`zinc64-system/src/c64.rs`** — the system orchestrator. `build()` shows exactly how all chips are wired together, and `run_frame()` + `step_internal()` show the emulation loop.
@@ -30,7 +31,23 @@
 
 4. **`zinc64-core/src/mem/`** — the PLA (memory mapper). Understand bank switching (5 bits → 32 memory modes) before reading any other component.
 
----
+## Sav notes
+
+### Rust concepts
+
+`Shared<T> = Rc<RefCell<T>>`
+- Rc — reference-counted shared ownership
+- RefCell — runtime-checked borrow rules
+
+`SharedCell<T> = Rc<Cell<T>>`
+- Cell — interior mutability via copy semantics
+
+Cell is for cheap copyable values, RefCell is for larger/non-Copy types where you need actual references into the data.
+
+### Architectural concepts
+
+- Color RAM 1 KB chip mapped at 0xd800-0xdbff, representing the foreground color of each cell with 4 bits.
+- Keyboard is physically wired as an 8×8 matrix (8 rows × 8 columns)
 
 ## Key architectural ideas
 
@@ -52,8 +69,6 @@ This is called on every CPU cycle, keeping everything in sync cycle-accurately.
 
 **Shared state pattern:** `Shared<T> = Rc<RefCell<T>>` everywhere for mutable chip state. Borrow panics at runtime rather than compile time — keep that in mind when tracing bugs.
 
----
-
 ## Memory map essentials
 
 ```
@@ -64,8 +79,6 @@ This is called on every CPU cycle, keeping everything in sync cycle-accurately.
 
 Bank selection is controlled by CPU I/O port `$0001` bits — see `zinc64-core/src/mem/pla.rs`.
 
----
-
 ## Suggested reading order
 
 1. `zinc64-core/src/factory/` — traits (`Chip`, `Cpu`, `Mmu`, `Addressable`)
@@ -75,8 +88,6 @@ Bank selection is controlled by CPU I/O port `$0001` bits — see `zinc64-core/s
 5. `zinc64-core/src/video/vic.rs` — raster video (most complex component)
 6. `zinc64-core/src/io/cia.rs` — timers, keyboard, joystick
 7. `zinc64-core/src/sound/sid.rs` — delegates to `resid-rs` for synthesis
-
----
 
 ## Things to know upfront
 

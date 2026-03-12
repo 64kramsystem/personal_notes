@@ -591,8 +591,8 @@ SELECT COUNT(*) FROM clients WHERE JSON_CONTAINS(client_tags -> '$', '["foo", "b
 --
 SELECT COUNT(*) FROM clients WHERE JSON_OVERLAPS(client_tags -> '$', '["foo", "bax"]'); # 1
 
--- Path search. Doesn't use index, as of v8.0.28, even for prefix searches see
--- https://dev.mysql.com/doc/refman/8.0/en/create-index.html#create-index-multi-valued -> "Using multi-valued Indexes"
+-- Path search. Doesn't use index, as of v8.4.8, even for prefix searches (see
+-- https://dev.mysql.com/doc/refman/8.4/en/create-index.html#create-index-multi-valued -> "Using multi-valued Indexes")
 --
 -- Uses the LIKE-style patterns (`%`, `_`).
 --
