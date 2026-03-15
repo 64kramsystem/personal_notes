@@ -4,6 +4,15 @@
 
 - `java_import 'java.io.File'` shadows Ruby's `File` constant — use `IO.read` / `IO.write` instead of `File.read` / `File.write`
 - `$current_api` is `com.goatshriek.rubydragon.ruby.RubyScript`, NOT `GhidraScript` — methods like `getProject()` don't exist
+- `getScriptArgs` always returns `[]` in child scripts called via `runScript` — args are silently dropped. Use `GhidraState` env vars instead:
+  ```ruby
+  # parent
+  $current_api.state.addEnvironmentVar("MY_VAR", value)
+  $script.runScript("Child.rb")
+  # child
+  value = $current_api.state.getEnvironmentVar("MY_VAR") || default_value
+  ```
+- `java_import` statements must come before any code that references the imported constants (e.g. before constants defined at the top level)
 
 ## Sample values
 
