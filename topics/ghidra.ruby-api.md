@@ -3,6 +3,7 @@
 ## Gotchas
 
 - `java_import 'java.io.File'` shadows Ruby's `File` constant — use `IO.read` / `IO.write` instead of `File.read` / `File.write`
+- bare `println` does not work — Ruby scripts don't extend `GhidraScript`, so top-level calls don't delegate to `$current_api`. Use `puts`, or call `$current_api.println(...)` explicitly
 - `$current_api` is `com.goatshriek.rubydragon.ruby.RubyScript`, NOT `GhidraScript` — methods like `getProject()` don't exist
 - `getScriptArgs` always returns `[]` in child scripts called via `runScript` — args are silently dropped. Use `GhidraState` env vars instead:
   ```ruby
@@ -204,7 +205,7 @@ parseLanguageCompileSpecPair / parse_language_compile_spec_pair
 parseLong / parse_long
 parseProjectFolder / parse_project_folder
 popup
-print / printerr / printf / println
+print / printerr / printf / println  ← call as $current_api.println(...); bare println doesn't work (see Gotchas)
 programFile / program_file
 projectRootFolder / project_root_folder
 removeBookmark / remove_bookmark
