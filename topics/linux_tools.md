@@ -581,7 +581,8 @@ Exporting functions/vars to task subshells:
 # shellcheck source=/usr/bin/env_parallel.bash
 source "$(command -v env_parallel.bash)"
 PARALLEL_IGNORED_NAMES="" env_parallel --session
-# Invoke this way
+# Invoke this way.
+# WATCH OUT!! Don't change IFS in env_parallel's scope, or it will break in a confusing way.
 env_parallel "my_func {}" ::: "${my_vars[@]}"
 ```
 
