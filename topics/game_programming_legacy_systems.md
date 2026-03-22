@@ -20,7 +20,7 @@ Video card memories were very slow.
 Getting input:
 
 - joystick
-  - must be calibrated, because the terminal position values increase with the CPU speed (!), as they're based on counting, not timing
+  - must be calibrated, because the terminal position values increases with the CPU speed (!), as they're based on counting, not timing
   - neutral position is never 0
   - neutral (0,0) value is used to detect that a joystick is not connected
 - keyboard
