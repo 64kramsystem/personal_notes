@@ -1,16 +1,19 @@
-# Assembly 6510
+# Commodore 64: Assembly 6510
 
-- [Assembly 6510](#assembly-6510)
+- [Commodore 64: Assembly 6510](#commodore-64-assembly-6510)
   - [Architecture](#architecture)
   - [Addressing modes](#addressing-modes)
   - [Flags](#flags)
+  - [Conventions](#conventions)
   - [Instructions](#instructions)
-    - [Illegal opcodes](#illegal-opcodes)
-    - [Multiplication](#multiplication)
-  - [Programming patterns](#programming-patterns)
-    - [16-bit operations](#16-bit-operations)
-    - [Table-based switch/case](#table-based-switchcase)
-    - [Arbitrary subtraction](#arbitrary-subtraction)
+  - [Routines](#routines)
+    - [Arithmetic](#arithmetic)
+      - [16-bit operations](#16-bit-operations)
+      - [Multiplication](#multiplication)
+      - [Arbitrary subtraction](#arbitrary-subtraction)
+      - [Random number](#random-number)
+    - [Patterns](#patterns)
+      - [Table-based switch/case](#table-based-switchcase)
 
 ## Architecture
 
@@ -53,6 +56,10 @@ so the stack top is the first available slot ($1FF).
 - `Z`ero
 - `C`array    : WATCH OUT!! This works counterintuitively - see ADC/SBC
 
+## Conventions
+
+- Routines returning a single byte, store it in `A`
+
 ## Instructions
 
 Convenient reference: https://www.pagetable.com/c64ref/6502/?tab=2#
@@ -91,26 +98,15 @@ Convenient reference: https://www.pagetable.com/c64ref/6502/?tab=2#
 
 - `BRK`               : Trigger a non-maskable interrupt; see machine memory map for the IV
 
-### Illegal opcodes
+Illegal opcodes:
 
 - `ANC`: AND + set negative flag
 
-### Multiplication
+## Routines
 
-There is no multiplication. Multiplication needs to be decomposed into shifts and additions; pseudocode:
+### Arithmetic
 
-```
-while A != 0
-  if A & 1 = 1
-    T = T + B
-
-  A = A / 2
-  B = B * 2
-```
-
-## Programming patterns
-
-### 16-bit operations
+#### 16-bit operations
 
 Increment:
 
@@ -142,7 +138,63 @@ Comparison:
 equal:
 ```
 
-### Table-based switch/case
+#### Multiplication
+
+There is no multiplication. Multiplication needs to be decomposed into shifts and additions; pseudocode:
+
+```
+while A != 0
+  if A & 1 = 1
+    T = T + B
+
+  A = A / 2
+  B = B * 2
+```
+
+#### Arbitrary subtraction
+
+In order to perform v1 - v2, we use a 2's complement addition. Since NEG(v) = NOT(v) + 1 = (v XOR 255) + 1, we can do:
+
+```asm
+LDA #v2
+EOR           // v2 XOR 255
+SEC           // + 1
+ADC #v1       // A = v1 + ((v2 XOR 255) + 1) = v1 + NEG(v2)
+```
+
+#### Random number
+
+Source: https://www.atarimagazines.com/compute/issue72/random_numbers.php.
+
+```asm
+preset_rnd:
+        lda #$ff  // maximum frequency value
+        sta $d40e // voice 3 frequency low byte
+        sta $d40f // voice 3 frequency high byte
+        lda #$80  // noise waveform, gate bit off
+        sta $d412 // voice 3 control register
+        rts
+
+// Write a random number to A, without using any other register.
+//
+// At least on a real machine, a new value is generated every 16/17 cycles; see https://youtu.be/-ADjfx79wNg?t=1721.
+// Therefore, a tight routine may just be JSR=6, NOP=2, LDA=4, RTS=6.
+//
+// On VICE [3.4] though, it seems that much more cycles are required, so this routine intentionally
+// wastes a lot of cycles.
+//
+get_rnd:
+        lda #4
+        sec
+!:      sbc #1
+        bcs !-
+        lda $d41b
+        rts
+```
+
+### Patterns
+
+#### Table-based switch/case
 
 ```asm
 // Variable in `A`
@@ -161,15 +213,4 @@ NOP           // padding
 NOP
 
 // ...other cases...
-```
-
-### Arbitrary subtraction
-
-In order to perform v1 - v2, we use a 2's complement addition. Since NEG(v) = NOT(v) + 1 = (v XOR 255) + 1, we can do:
-
-```asm
-LDA #v2
-EOR           // v2 XOR 255
-SEC           // + 1
-ADC #v1       // A = v1 + ((v2 XOR 255) + 1) = v1 + NEG(v2)
 ```

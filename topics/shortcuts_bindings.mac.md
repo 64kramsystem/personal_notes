@@ -22,7 +22,7 @@
 - `Cmd` + `Shift+` + `[`/`]`          Tab: Previous/Next
 - `Ctrl` + `Cmd` + `Shift+` + `[`/`]` Tab: Move to Previous/Next (custom)
 
-- `Cmd` + `Opt` + `v`                Move file into (paste and remove the source)
+- `Cmd` + `Opt` + `v`                Move file into (cut - paste and remove the source)
 
 - `Cmd` + `Shift` + `4`              Screenshot
 
