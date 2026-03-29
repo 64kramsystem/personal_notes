@@ -10,9 +10,8 @@
     - [Arithmetic](#arithmetic)
       - [16-bit operations](#16-bit-operations)
       - [Multiplication](#multiplication)
-      - [Arbitrary subtraction](#arbitrary-subtraction)
       - [Random number](#random-number)
-    - [Patterns](#patterns)
+    - [Programming constructs](#programming-constructs)
       - [Table-based switch/case](#table-based-switchcase)
 
 ## Architecture
@@ -151,17 +150,6 @@ while A != 0
   B = B * 2
 ```
 
-#### Arbitrary subtraction
-
-In order to perform v1 - v2, we use a 2's complement addition. Since NEG(v) = NOT(v) + 1 = (v XOR 255) + 1, we can do:
-
-```asm
-LDA #v2
-EOR           // v2 XOR 255
-SEC           // + 1
-ADC #v1       // A = v1 + ((v2 XOR 255) + 1) = v1 + NEG(v2)
-```
-
 #### Random number
 
 Source: https://www.atarimagazines.com/compute/issue72/random_numbers.php.
@@ -192,7 +180,7 @@ get_rnd:
         rts
 ```
 
-### Patterns
+### Programming constructs
 
 #### Table-based switch/case
 
