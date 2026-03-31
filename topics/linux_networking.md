@@ -31,6 +31,8 @@
       - [iproute2](#iproute2)
       - [Create a TUN/TAP device](#create-a-tuntap-device)
     - [Wi-Fi](#wi-fi)
+  - [Other](#other)
+    - [Find external IP (and infos)](#find-external-ip-and-infos)
 
 ## High-level services
 
@@ -614,4 +616,12 @@ Measure speed:
 ```sh
 iperf -s                 # on the server
 iperf -c $iperf_server   # on the client
+```
+
+## Other
+
+### Find external IP (and infos)
+
+```sh
+curl ipinfo.io
 ```
