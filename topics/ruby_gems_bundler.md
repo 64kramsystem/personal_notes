@@ -2,7 +2,6 @@
 
 - [RubyGems/Bundler](#rubygemsbundler)
   - [Bundler](#bundler)
-    - [Speed up gems compilation](#speed-up-gems-compilation)
     - [Gemfile](#gemfile)
     - [Cache directory](#cache-directory)
     - [Commands](#commands)
@@ -15,10 +14,6 @@
     - [Find (installed) gem executables](#find-installed-gem-executables)
 
 ## Bundler
-
-### Speed up gems compilation
-
-Set `export MAKEFLAGS=-j$(($(nproc) + 1))`.
 
 ### Gemfile
 
@@ -74,8 +69,9 @@ It's possible to create a cache directory (`vendor/cache`), but it's all-or-noth
 ### Commands
 
 - `bundle $command --gemfile=$gemfile` : specify the gemfile
-- `bundler package`                    : download gems into `vendor/cache`
+- `bundle package`                     : download gems into `vendor/cache`
 - `bundle update --bundler`            : update the BUNDLED WITH section in Gemfile.lock, to match the current Bundler version
+- `bundle lock --update=$gem --patch`  : constrained gem update
 
 ### Context
 
