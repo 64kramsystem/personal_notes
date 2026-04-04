@@ -77,7 +77,7 @@ Convenient reference: https://www.pagetable.com/c64ref/6502/?tab=2#
 - `CMP`, `CPX`, `CPY` : CoMPare accumulator/X/Y (imm: 2 cycles, M: 3/6)
                         WATCH OUT!!! Comparison is (reg - mem), but C is (mem - reg)!!!
 - `BEQ`, `BNE`        : Branch if (Not) EQual
-- `BCC`, `BCS`        : Branch if Carry Clear/Set
+- `BCC`, `BCS`        : Branch if Carry Clear/Set; can be used respectively as `A <` / `A ≥`
 - `BMI`, `BPL`        : Branch if result MInus/PLus
 
 - `PHA`, `PLA`     : PusH/PuLl Accumulator (no push X/Y!)
