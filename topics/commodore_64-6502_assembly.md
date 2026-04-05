@@ -20,7 +20,9 @@ The CPU is little endian. 1 page = 256 bytes.
 
 Page 0 has special treatment (addressing, etc.).
 
-The stack is on page 1, and grows downwards. WATCH OUT!! The push/pull sequence is inverted compared to x86:
+The stack is on page 1, and grows downwards, so SP is an offset from 0x100.
+WATCH OUT!! The push/pull sequence is inverted compared to x86:
+WATCH OUT!! JSR does not push the address of the instruction to execute on return, but (addr - 1 = last byte of JSR)
 
 - push: write -> move
 - pull: move -> read

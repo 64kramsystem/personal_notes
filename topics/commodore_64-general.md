@@ -5,6 +5,7 @@
   - [Memory map](#memory-map)
   - [Input handling {input}](#input-handling-input)
   - [Interrupt hooking](#interrupt-hooking)
+  - [CIA Timer 1](#cia-timer-1)
   - [Kernal routines](#kernal-routines)
     - [SCNKEY ($FF9F)](#scnkey-ff9f)
     - [GETIN ($FFE4)](#getin-ffe4)
@@ -30,33 +31,34 @@ Some chapters have tags (in the form "{tag_name}"), which are references to the 
 
 | hex         | dec         | tag        | description                                                                                                                                                                  |
 | :---------- | :---------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| $0024       |             |            | cursor column shadow register; holds the current horizontal cursor position (0-39) and is updated by the Kernal's character output routines                                  |
+| $0024       |             | screen     | cursor column shadow register; holds the current horizontal cursor position (0-39) and is updated by the Kernal's character output routines                                  |
 | $00C5       | 197         | input      | Key currently pressed                                                                                                                                                        |
 | $00C6       | 198         | input      | Length of pressed key buffer                                                                                                                                                 |
-| $00D6       |             |            | cursor row shadow register (0-24)                                                                                                                                            |
+| $00D6       |             | screen     | cursor row shadow register (0-24)                                                                                                                                            |
 | $0277-$0280 | 631-640     | input      | Buffer last keys pressed                                                                                                                                                     |
-| $0314-$0315 | 788-789     |            | Service interrupt vector                                                                                                                                                     |
+| $0314-$0315 | 788-789     | irq        | Service interrupt vector                                                                                                                                                     |
 | $0316-$0317 | 790-791     | debug      | `BRK` interrupt vector                                                                                                                                                       |
 | $0334-$033B | 820-827     |            | empty                                                                                                                                                                        |
-| $033C-03FB  | 828-1019    |            | datasette buffer (usable)                                                                                                                                                    |
+| $033C-03FB  | 828-1019    | datasette  | datasette buffer (usable)                                                                                                                                                    |
 | $03FC-03FF  | 1020-1023   |            | empty                                                                                                                                                                        |
-| $0400-$07E7 | 1024-2023   |            | Screen memory                                                                                                                                                                |
+| $0400-$07E7 | 1024-2023   | screen     | Screen memory                                                                                                                                                                |
 | $07F8-$07FF | 2040-2047   | sprites    | Sprite shape data pointers (loc=n*64)                                                                                                                                        |
-| $0801       | 2049        |            | BASIC listings start                                                                                                                                                         |
+| $0801       | 2049        | basic      | BASIC listings start                                                                                                                                                         |
 | $C000-$CFFF | 49152-53247 |            | Upper RAM                                                                                                                                                                    |
 | $D000-$D001 | 53248-53249 | sprites    | Sprite 0 X/Y                                                                                                                                                                 |
 | $D015       | 53269       | sprites    | Sprites enabled bitmap                                                                                                                                                       |
 | $D01E       | 53278       | sprites    | Sprite-sprite log bitmap                                                                                                                                                     |
 | $D01F       | 53279       | sprites    | Sprite-background log bitmap                                                                                                                                                 |
-| $D021       | 53281       |            | Background color                                                                                                                                                             |
+| $D021       | 53281       | screen     | Background color                                                                                                                                                             |
 | $D027-$D02E | 53287-53294 | sprites    | Sprite colors                                                                                                                                                                |
 | $D400-$D414 | 54272-54292 | sound      | Voice 1/2/3 params (7 bytes each)                                                                                                                                            |
 | $D418       | 54296       | sound      | Volume/filter modes                                                                                                                                                          |
 | $D41B       | 54299       | sound      | Voice 3 waveform output (random!)                                                                                                                                            |
-| $D018       |             |            | VIC-II memory control register. Bits 7-4 select the screen RAM location within the current VIC bank (as a multiple of $0400). Bits 3-1 select the character set base address |
+| $D018       |             | screen     | VIC-II memory control register. Bits 7-4 select the screen RAM location within the current VIC bank (as a multiple of $0400). Bits 3-1 select the character set base address |
 | $DC00-$DC01 | 56320-56321 | input      | Joystick 2/1 ports                                                                                                                                                           |
-| $DD00       |             |            | CIA2 Port A. Bits 0-1 (inverted) select the VIC-II memory bank out of four possible \$4000-sized regions. %00 = bank 3 (\$C000-\$FFFF)                                       |
-| $EA31       | 59953       |            | Default interrupt service routine                                                                                                                                            |
+| $DC0E       |             | cia        | CIA1 Timer A Control Register                                                                                                                                                |
+| $DD00       |             | cia        | CIA2 Port A. Bits 0-1 (inverted) select the VIC-II memory bank out of four possible \$4000-sized regions. %00 = bank 3 (\$C000-\$FFFF)                                       |
+| $EA31       | 59953       | kernal_rom | Default interrupt service routine                                                                                                                                            |
 | $E544       | 58692       | kernal_rom | Clear screen routine                                                                                                                                                         |
 
 ## Input handling {input}
@@ -118,6 +120,10 @@ exit:   jmp $ea31       # or jump to next hook, if there are multiple
 ```
 
 Use `RTI` when not calling the interrupt service.
+
+## CIA Timer 1
+
+CIA1 Timer A drives the IRQ that handles keyboard scanning, cursor blinking, and the system clock. Stopping it disables those IRQs - typically done during time-critical or interrupt-sensitive operations to prevent the IRQ from firing mid-routine and corrupting state.
 
 ## Kernal routines
 
