@@ -1,6 +1,6 @@
-# Commodore 64: Assembly 6510
+# Commodore 64: 6502 Assembly
 
-- [Commodore 64: Assembly 6510](#commodore-64-assembly-6510)
+- [Commodore 64: 6502 Assembly](#commodore-64-6502-assembly)
   - [Architecture](#architecture)
   - [Addressing modes](#addressing-modes)
   - [Flags](#flags)
