@@ -455,7 +455,9 @@ echo "<$(cat /tmp/fifo)>"
 ```sh
 mktemp [-d] --suffix="${filename##*.}"       # Create a temporary file, using the extension of $filename; create [d]irectory
 mktemp --tmpdir=$parent_dir                  # Use $parent_dir as parent (doesn't create it); WATCH OUT!! `=` is required after `--tmpdir`
-mktemp "${TMPDIR:-/tmp}/myprefix-XXXXX"      # Old MacOS-compatible, without using `--suffix`; WATCH OUT!! the X's must not be followed by any char
+mktemp "${TMPDIR:-/tmp}/prefix-XXXXX"        # MacOS-compatible (`--suffix` is not supported); WATCH OUT!! Xs can't be followed by any char;
+                                             # if possible, just use `${TMPDIR:-/tmp}/$(basename "$0")-$$.MYEXT` (the PID is useful for
+                                             # concurrent script runs)
 stat $filename --format='%s'                 # Get file size
 ```
 
