@@ -35,7 +35,7 @@ The VIM section requires some cleanup.
 
 - `Ctrl+B`				            Show/hide sidebar
 - `Ctrl+J`				            Show/hide panel (terminal, output, …)
-- ``Ctrl+` ``                 Un/toggle terminal
+- `Ctrl+Space`                Un/toggle terminal
 - `Ctrl+Shift+V`              Open file preview in tab
 - `Ctrl+K, V`                 Show file preview (side-by-side)
 - `Ctrl+K, R`                 Open file directory in system file manager ("[R]eveal")
@@ -49,7 +49,7 @@ The VIM section requires some cleanup.
 - `Ctrl+Shift+O`              Go to symbol in current file (includes Markdown headers)
 - `Ctrl+T`                    Go to symbol in workspace
 - `Alt+(←/→)`                 Navigate through history
-- `Ctrl+(↓/↑)`                Scroll the viewport without moving the cursor
+- `Ctrl+(↓/↑)`                Scroll the viewport (without moving the cursor)
 - `F8`                        Show next warning/error
 - `Ctrl+@`                    Open link in browser (custom)
 
@@ -105,8 +105,8 @@ The VIM section requires some cleanup.
 ## Meld
 
 `Alt + PgUp/Down`           Switch panel
-`Alt + Shift + ←/→`        Pull change from Left/Right
-`Alt + ←/→`                Pust change to Left/Right
+`Alt + Shift + ←/→`         Pull change from Left/Right
+`Alt + ←/→`                 Pust change to Left/Right
 `Alt + Delete`              Delete
 `Alt + [/]`                 Copy above Left/Right
 

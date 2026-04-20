@@ -39,7 +39,8 @@ Scale rendering: `support/launch.properties` → `VMARGS_LINUX=-Dsun.java2d.uiSc
 - `E`                : set equate (constant)
 - `Ctrl` + `T`       : symbol table
 
-- `Alt` + `←`/`→`       : navigate history
+- `Alt` + `←`/`→`        : navigate history
+- (`Shift +`) `Tab`      : listing: go to (previous) next field (Ghidra has no word skip)
 - `Ctrl` + `Shift` + `F` : show references
 - `Ctrl` + `D`           : add bookmark
 - `G`                    : go to (adress, etc.)

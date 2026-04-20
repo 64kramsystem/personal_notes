@@ -3,7 +3,9 @@
 - [Shortcus/Bindings Mac](#shortcusbindings-mac)
   - [macOS](#macos)
   - [Rectangle](#rectangle)
-  - [Terminal/Zsh](#terminalzsh)
+  - [Zsh](#zsh)
+  - [iTerm](#iterm)
+  - [Terminal](#terminal)
   - [Pseudo-Compose sequences](#pseudo-compose-sequences)
   - [VSC](#vsc)
   - [Firefox](#firefox)
@@ -19,9 +21,6 @@
 - `Enter`                            Rename
 - `Cmd` + `Del`                      Delete (Finder)
 
-- `Cmd` + `Shift+` + `[`/`]`          Tab: Previous/Next
-- `Ctrl` + `Cmd` + `Shift+` + `[`/`]` Tab: Move to Previous/Next (custom)
-
 - `Cmd` + `Opt` + `v`                Move file into (cut - paste and remove the source)
 
 - `Cmd` + `Shift` + `4`              Screenshot
@@ -31,11 +30,24 @@
 - `Ctrl` + `Opt` + `↵`               Maximize
 - `Ctrl` + `Opt` + `←`/`→`           Half to left/right
 
-## Terminal/Zsh
+## Zsh
 
 - `Ctrl+E`                           Accept (suggestion)
 
-- `Cmd` + `k`                        Clear scrollback + screen
+## iTerm
+
+- `Cmd` + `Shift+` + `[`/`]`          Tab: Previous/Next
+- `Ctrl` + `Cmd` + `Shift+` + `[`/`]` Tab: Move to Previous/Next (custom)
+
+- `Shift` + `PgUp`/`PgDown`           Page scrolling
+- `Cmd` + `Home`/`End`                Scroll to top/bottom
+
+- `Ctrl` + `Shift` + `e`/`o`          Split pane to right (v`e`rtically/h`o`rizontally) (custom)
+- `Cmd` + `Shift` + `←`/`→`/`↑`/`↓`   Select split pane on (direction) (custom)
+
+## Terminal
+
+- `Cmd` + `Shift+` + `[`/`]`          Tab: Previous/Next
 
 ## Pseudo-Compose sequences
 
@@ -48,7 +60,7 @@
 
 - `Ctrl` + `-`                        Go Back (history)
 - `Ctrl` + `=`                        Go Forward (history) (was: `Ctrl` + `Shift` + `-`)
-- `Ctrl` + `PgUp`/`PgDown`            Scroll Up/Down
+- `Ctrl+(↓/↑)`                        Scroll the viewport (without moving the cursor) (was: `Ctrl` + `PgUp`/`PgDown`)
 
 - `Ctrl` + `Cmd` + `Shift+` + `[`/`]` Move Tab (Editor) to Left/Right (was: `Cmd` + `k`, `Shift` + `Cmd` + `←`/`→`)
 
