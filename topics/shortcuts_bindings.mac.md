@@ -67,13 +67,14 @@
 - `Opt` + `Shift` + `↑`/`↓`           Box (Column) select (was: `Shift` + `Opt` + `Cmd` + `↑`/`↓`)
 
 - `Shift` + `Del`                     Delete current line (was: `Shift` + `Cmd` + `k`)
-- `Cmd` + (`K`, `P`)                  Duplicate line (was: (no assignment))
+- `Cmd` + (`K`, `P`)                  Duplicate line (was: no assignment)
 - `Opt` + `↑`/`↓`                     Move line Up/Down
+- `F9`                                Sort lines (was: no assignment; tweaked other F9)
 
 - `Opt` + `W`                         Toggle word wrap (was: `Opt` + `z`)
 - `Cmd` + (`K`, `A`)                  Align Selection (was: `Shift` + `Ctrl` + `a`)
 
-- `Cmd` + (`K`, `U`/`L`)              Upper/Lower case (was: (no assignment))
+- `Cmd` + (`K`, `U`/`L`)              Upper/Lower case (was: no assignment)
 
 - `Cmd` + `f`                         Search in editor
 - `Opt` + `Cmd` + `f`                 Replace in editor
