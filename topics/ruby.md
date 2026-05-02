@@ -731,6 +731,8 @@ If the elements are not unique, one can create a struct which includes the value
 Files:
 
 ```rb
+File.readlines(@name, chomp: true)      # chomps each line
+File#readline(chomp: true)              # ^^same, on File instance
 io_obj.readline                         # includes the newline!
 io_obj.readchar                         # reads one char; raises EOFError at the EOF
 ```

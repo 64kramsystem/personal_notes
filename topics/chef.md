@@ -248,6 +248,8 @@ end
 cookbook_file '/etc/systemd/system.conf' do
   source    'etc/systemd/system.conf'
   mode      '0644'        # best to always specify; the default (not in all case) is 0777 + umask -> typically 0755.
+  owner     "root"        # default
+  group     "root"        # default
 end
 
 # Inline file content.

@@ -692,14 +692,21 @@ IO.write @file, @content, mode: @mode
 File locking, via flock:
 
 ```ruby
-# WATCH OUT!! This strategy doesn't play well with forked processes, if the file handle is acquired
-# before forking; in this case, the lock will be acquired on both processes (!).
+# Scoped acquisition, exclusive/blocking
+
+File.open('/tmp/mylock', File::RDWR | File::CREAT) do |f|
+  f.flock(File::LOCK_EX)
+  # … critical area …
+end
+
+# Manual lock acquisition, non-blocking
+# WATCH OUT!! Manual acquisition doesn't play well with forked processes; if the file handle is
+# acquired before forking, the lock will be acquired on both processes (!).
 
 lock_file = File.open('/tmp/mylock', File::RDWR | File::CREAT)
 
-# Exclusive lock, non-blocking
 if lock_file.flock(File::LOCK_EX | File::LOCK_NB)
-  # ... critical area ...
+  # … critical area …
   # Make sure the handle is not GC'ed!
   $lock_file = lock_file
 else
