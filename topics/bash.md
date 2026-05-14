@@ -1253,11 +1253,15 @@ rm -f "$logfile"
 exec > >(tee -ai "$logfile") 2>&1
 
 # Debugging log; includes stdout/stderr content (see above).
+# WATCH OUT! If implementing this logs, credentials must be redacted; alternatives:
+# - Just output stdout/err: `exec > >(tee -ai "$logfile") 2>&1`.
+# - Export secrets before setting up the logging
 #
 function setup_logging {
-  exec 5> "$logfile"  # truncates the file
+  : > "$c_logfile"          # comment if want append mode
+  exec 5>> "$c_logfile"
   BASH_XTRACEFD=5
-  exec > >(tee -ai "$logfile") 2>&1
+  exec > >(tee -ai "$c_logfile") 2>&1
   set -x
 }
 
@@ -1376,7 +1380,7 @@ sleep 0.$(printf '%04d' $((10000 - 10#$(date +%4N))))
 for i in $(seq $((3600 * 4)) -1 1); do echo -ne "\r$i "; sleep 1; done
 ```
 
-When using `time`, must be careful to what is used (built-in vs. `/usr/bin/time`). The builtin has milliseconds accuracy, but setting it is d*cking confusing.  
+When using `time`, must be careful to what is used (built-in vs. `/usr/bin/time`). The builtin has milliseconds accuracy, but setting it is d*cking confusing.
 Technically, `time` is a Bash keyword (!). If a variable is set on the same command, instead of the keyword, `/usr/bin/time` is used:
 
 ```sh
