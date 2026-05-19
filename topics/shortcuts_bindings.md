@@ -42,6 +42,7 @@ The VIM section requires some cleanup.
 - `Ctrl+K, T`                 Open file directory in file explorer (custom)
 - `Ctrl+\`                    Split editor vertically
 - `Ctrl+K, Ctrl+\`            Split editor horizontally
+- `Ctrl+Shift+V`              Toggle Markdown preview in the same pane
 
 - `Ctrl+R`                    Quick switch workspace
 - `Ctrl+K, M`                 Select language mode
