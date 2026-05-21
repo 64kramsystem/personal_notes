@@ -660,6 +660,12 @@ git filter-branch --force --tree-filter 'rm -f terraform/terraform.tfstate' mast
 git filter-branch --force --tree-filter 'ag "def mymethod" -l | xargs -r perl -0777 -i -pe "s/^(\s+)def mymethod.*?^\g1end\n\n//sm"' master..HEAD
 ```
 
+WATCH OUT! If commits are made empty, in order to remove them, use:
+
+```sh
+git rebase --force-rebase --no-keep-empty --empty=drop master
+```
+
 ## Useful operations
 
 ### Aggressive garbage collection
