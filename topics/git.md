@@ -422,6 +422,7 @@ git st | awk '/both modified:/ { print $3 }' | xargs sh -c 'git checkout --their
 checkout (--ours|--theirs) $files                      # solve conflict using ours/theirs version (WATCH OUT! doesn't mark as conflict solved)
 
 rebase -i $parent_commit                               # interactive rebase from parent of given commit
+rebase --edit-todo                                     # edit the remaining rebase plan (can't edit the preceding)
 rebase --onto $dest_branch $feat_branch_parent_commit
 
 # Add a root (initial) commit
