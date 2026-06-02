@@ -425,7 +425,7 @@ For non-trivial expressions, better use `grep -qP`!
 !! WATCH OUT !!
 
 1. They're not PCRE;
-2. Don't quote the regex (use backslahes to escape spaces, or `$(echo -n "...")`)!!
+2. Don't quote the regex (use backslahes to escape spaces, or `$(echo -n "...")`, or better: use a constant)!!
 3. Use a temporary variable (or cmd subsitution) when using metacharacters with backslash (but not `.`);
 4. `^` and `$` refer to the *whole string*, not the line;
    - the pattern represents a substring
@@ -433,18 +433,21 @@ For non-trivial expressions, better use `grep -qP`!
 
 Metacharacters:
 
-- `* + ?`      : supported
-- `\w`         : not supported; use `[:alnum:]`, but *doesn't match underscore*
-- `\d`         : not supported; use `[0-9]` or `[:digit:]`
-- `[:alpha:]`  : supported
-- `\S`         : not supported
-- `\b`         : not supported; use `[:<:]` and `[:>:]`
-- `\s`         : `[:space:]`
-- `[:xdigit:]` : hexadecimal!
-- `[^…]`       : supported
-- `{}`         : supported, also for intervals (also with empty limits)
-- `()`, `|`    : supported
-- `(?:…)`      : not supported
+| char                  | supported? | notes                                                              |
+| --------------------- | ---------- | ------------------------------------------------------------------ |
+| `* + ?`               | ✓          | greedy quantifiers                                                 |
+| `\w`                  | ✗          | matches the literal `w`; use `[[:alnum:]]` (which excludes `_`)    |
+| `\d`                  | ✗          | matches the literal `d`; use `[[:digit:]]` or `[0-9]`              |
+| `\s`                  | ✗          | matches the literal `s`; use `[[:space:]]`                         |
+| `\S`                  | ✗          | matches the literal `S`; no shorthand — use `[^[:space:]]`         |
+| `\b`                  | Linux      |                                                                    |
+| `[[:<:]]` / `[[:>:]]` | Mac        | word boundary; for cross-compat, use Perl                          |
+| `[[:alpha:]]`         | ✓          |                                                                    |
+| `[[:xdigit:]]`        | ✓          | hex digits `0-9 a-f A-F`                                           |
+| `[^…]`                | ✓          | negated bracket expression                                         |
+| `{n,m}`               | ✓          | empty upper `{n,}` ok; empty lower `{,m}` is literal — use `{0,m}` |
+| `()`, `\|`            | ✓          | capture groups available in `$BASH_REMATCH`                        |
+| `(?:…)`               | ✗          | regcomp ERROR (aborts under `set -e`), not a silent literal        |
 
 References:
 
