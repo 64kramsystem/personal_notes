@@ -9,6 +9,7 @@
   - [Pseudo-Compose sequences](#pseudo-compose-sequences)
   - [VSC](#vsc)
   - [Firefox](#firefox)
+  - [Libreofice](#libreofice)
 
 ## macOS
 
@@ -88,3 +89,7 @@
 ## Firefox
 
 - `Shift` + `Fn` + `Ctrl` + `←`/`→`   Move tab to Left/Right (conflicts with Mac Tiling)
+
+## Libreofice
+
+- `Cmd` + `Alt` + `Shift` + `v`       Unformatted paste
