@@ -19,6 +19,7 @@
     - [history](#history)
     - [vimdiff](#vimdiff)
     - [modeline](#modeline)
+  - [Agent CLIs](#agent-clis)
   - [Other program shortcuts](#other-program-shortcuts)
   - [Windows](#windows)
   - [Laptops](#laptops)
@@ -237,6 +238,28 @@ set modelines=5
 Format. put on top, or bottom of file:
 
 `vim: setting=value{:setting=value}+`
+
+## Agent CLIs
+
+Shared:
+
+- `/compact`                             Compact context
+- `/status`                              Stats (incl. tokens)
+
+Claude:
+
+- `/branch`                              Branch a conversation
+
+Codex:
+
+- `/fork`                                Branch a conversation
+
+Codewhale:
+
+- `Shift` + `Tab`                        Change effort
+
+- `/branch`                              Branch a conversation
+- `/config allow_shell true [--save]`    Change a settings per session; `save` = global
 
 ## Other program shortcuts
 
