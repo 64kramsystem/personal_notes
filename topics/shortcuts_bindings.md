@@ -249,10 +249,12 @@ Shared:
 Claude:
 
 - `/branch`                              Branch a conversation
+- `/usage`
 
 Codex:
 
 - `/fork`                                Branch a conversation
+- `/status`                              Usage stats
 
 Codewhale:
 
