@@ -249,6 +249,7 @@ Shared:
 Claude:
 
 - `/branch`                              Branch a conversation
+- `/rewind`                              Go back in time
 - `/usage`
 
 Codex:
