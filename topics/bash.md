@@ -663,6 +663,7 @@ WATCH OUT! Replacements are greedy. Also, after a replacement if performed, Bash
 ```sh
 ${str:-<expr>}                    # default a parameter: set if undefined or blank
 ${str:+<expr>}                    # if the var is set, replace with <expr> (which can include the $param itself!)
+${str:?<expr>}                    # if the var is not set, print the message and return error (!)
 
 ${str//search/replace}            # substitution (!! NOT REGEX !!) ->
 ${str//[a-e]/ }                   # -> but supports at least character classes!

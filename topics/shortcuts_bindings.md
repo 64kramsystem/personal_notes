@@ -249,6 +249,7 @@ Shared:
 Claude:
 
 - `/branch`                              Branch a conversation
+- `/rename`                              Set conversation title
 - `/rewind`                              Go back in time
 - `/usage`
 
