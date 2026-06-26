@@ -24,6 +24,7 @@
     - [`systemd_unit`](#systemd_unit)
       - [User units](#user-units)
     - [User passwords metadata](#user-passwords-metadata)
+  - [Helpers](#helpers)
   - [Tools](#tools)
     - [Knife](#knife)
       - [Installation on machines with Omnitruck-installed Chef](#installation-on-machines-with-omnitruck-installed-chef)
@@ -420,6 +421,8 @@ end
 
 ### `remote_file`
 
+Watch out! Even if the file has already been downloaded, the file will still be redownloaded if the server doesn't honor the conditional headers.
+
 ```ruby
 remote_file local_tarball_filename do
   source node[:mysql_server][:tarball_uri]
@@ -518,15 +521,23 @@ execute 'restart...' # same, with `restart` instead of `enable`.
 
 ### User passwords metadata
 
-In order to get password metadata from the users, the `ruby-shadow-ruby32` gem is required:
+In order to get password metadata from the users, the `gitlab-ruby-shadow` gem is required:
 
 ```rb
-gem_package "ruby-shadow-ruby32" { action :install }
+gem_package "gitlab-ruby-shadow" { action :install }
+
 require 'shadow'
 
 pass_meta = Shadow::Passwd.getspnam(login)
-pass_meta.sp_max                             # password age
-Date.new(1970, 1, 1) + pass_meta.sp_lstchg   # expiry date
+pass_meta.sp_max                             # password age (max, in days)
+Date.new(1970, 1, 1) + pass_meta.sp_lstchg   # last password change date
+```
+
+## Helpers
+
+```rb
+# Returns path of the executable if found, false otherwise.
+which(mxml)
 ```
 
 ## Tools

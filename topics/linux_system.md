@@ -592,7 +592,7 @@ dpkg --list $package
 # States found: `install`, `hold`, `deinstall`; the last seems only cfg installed.
 # `dpkg` exits with success even if the package is not found.
 #
-if dpkg --get-selections $package | grep -qP '\b(install|hold)$'; then echo installed; fi
+dpkg-query -W -f='${db:Status-Abbrev}' $package 2> /dev/null | grep '^.i' && echo installed
 
 # Fast version to get a package installed version.
 #
