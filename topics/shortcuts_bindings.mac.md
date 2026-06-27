@@ -74,7 +74,7 @@
 
 - `Opt` + `W`                         Toggle word wrap (was: `Opt` + `z`)
 - `Cmd` + (`K`, `A`)                  Align Selection (was: `Shift` + `Ctrl` + `a`)
-- `Cmd` + `Alt` + `[`/`]`             Un/fold
+- `Ctrl` + `Shift` + `[`/`]`          Un/fold (was: (other); removed shared binding)
 
 - `Cmd` + (`K`, `U`/`L`)              Upper/Lower case (was: no assignment)
 
