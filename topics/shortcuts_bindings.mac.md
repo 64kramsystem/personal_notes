@@ -79,9 +79,9 @@
 - `Cmd` + (`K`, `U`/`L`)              Upper/Lower case (was: no assignment)
 
 - `Cmd` + `f`                         Search in editor
-- `Opt` + `Cmd` + `f`                 Replace in editor
-- `Shift` + `Cmd` + `f`               Search in files
-- `Shift` + `Cmd` + `h`               Replace in files
+- `Cmd` + `Opt` + `f`                 Replace in editor
+- `Cmd` + `Shift` + `f`               Search in files
+- `Cmd` + `Shift` + `h`               Replace in files
 
 - `Cmd` + `Opt` [+ `Shift`] + `C`     Copy file path relative [absolute] (was: something else; removed conflicting bindings)
 
