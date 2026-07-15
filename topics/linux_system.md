@@ -26,7 +26,7 @@
   - [Debconf](#debconf)
   - [Debian alternatives](#debian-alternatives)
   - [Environment](#environment)
-    - [Available variables](#available-variables)
+    - [Freedesktop env variables](#freedesktop-env-variables)
     - [Shell (initscripts: bashrc, ...)](#shell-initscripts-bashrc-)
       - [Example cases](#example-cases)
       - [sudo -i, login shell test, and bash](#sudo--i-login-shell-test-and-bash)
@@ -894,12 +894,13 @@ sudo update-alternatives --set editor /usr/bin/vim
 
 ## Environment
 
-### Available variables
+### Freedesktop env variables
 
-Current user run dir:
+See [here](https://specifications.freedesktop.org/basedir/latest/#variables).
 
 ```sh
-$XDG_RUNTIME_DIR
+$XDG_RUNTIME_DIR             # User-specific non-essential runtime files and other file objects (such as sockets, named pipes…)
+$XDG_STATE_HOME              # User-specific state files; if not set, use `~/.local/state`
 ```
 
 ### Shell (initscripts: bashrc, ...)
