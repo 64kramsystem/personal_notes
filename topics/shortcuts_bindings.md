@@ -267,6 +267,10 @@ Codewhale:
 
 ## Other program shortcuts
 
+MATE:
+
+- `Alt` + `F9`              Minimize window
+
 Caja:
 
 - `F6`                      Switch between side-to-side panels
