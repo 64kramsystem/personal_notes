@@ -580,6 +580,20 @@ JSON search functions. WATCH OUT!! Searches must be performed on `<column> -> $`
 -- -> Filter: json'"foo"' member of (cast(json_extract(client_tags,_utf8mb4'$') as char(64) array))  (cost=0.35 rows=1)
 --     -> Index lookup on clients using client_tags (cast(json_extract(client_tags,_utf8mb4'$') as char(64) array)=json'"foo"')  (cost=0.35 rows=1)
 --
+-- WATCH OUT!! Bug (unfixed as of v8.4.8/9.4.0; not reported; cause: `RefIterator::Init()` doesn't reset the MVI
+-- unique record filter when the index is already open): if the table is on
+-- the inner side of a nested loop join, and the MVI is used via ref lookup, each matching row is returned once
+-- in total, instead of once per outer row. Example:
+--
+--  SELECT COUNT(*)
+--  FROM other_table o
+--       STRAIGHT_JOIN clients c FORCE INDEX (client_tags)
+--  WHERE 'foo' MEMBER OF (c.client_tags -> '$');
+--
+-- Workarounds: `JSON_OVERLAPS(<column> -> '$', JSON_ARRAY(<value>))`, or ignore the index.
+-- WATCH OUT!! Don't OR JSON_OVERLAPS conditions on two MVIs of the same table: the index merge crashes the server
+-- (https://bugs.mysql.com/bug.php?id=113908).
+--
 SELECT COUNT(*) FROM clients WHERE 'foo' MEMBER OF (client_tags -> '$');
 
 -- Boolean (AND) search of multiple terms.
