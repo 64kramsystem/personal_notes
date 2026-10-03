@@ -273,6 +273,7 @@ sudo vmware-modconfig --console --install-all
 
 General configuration file is `~/.vmware/preferences`; where general is not specified, it doesn't apply.
 
+- **26H1 BTRFS filesystem corruption bug!!** (see https://t.ly/3WjhT): add `mainmem.backing = "swap"\ntmpDirectory = "/dev/shm"` to `~/.vmware/config`
 - AMD GPU virtualization requires [AMDVLK](https://github.com/GPUOpen-Drivers/AMDVLK/releases) to be installed and configured (set `AMD_VULKAN_ICD=AMDVLK` if RADV drivers are installed)
   - don't use `mks.gl.allowUnsupportedDrivers = "TRUE"`!
 - In order to autoattach USB devices, add `usb.autoConnect.device0 = "0xcafe:0xbabe"` to VM cfg
