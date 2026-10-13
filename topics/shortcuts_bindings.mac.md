@@ -39,6 +39,7 @@
 
 - `Cmd` + `Shift+` + `[`/`]`          Tab: Previous/Next
 - `Ctrl` + `Cmd` + `Shift+` + `[`/`]` Tab: Move to Previous/Next (custom)
+- `Cmd` + `Opt` + `Shift` + drag      Drag a pane into a new window
 
 - `Shift` + `PgUp`/`PgDown`           Page scrolling
 - `Cmd` + `Home`/`End`                Scroll to top/bottom
