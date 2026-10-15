@@ -1217,9 +1217,14 @@ In some cases, the standard GRUB procedures (`os-probe`, etc.) may not work; in 
 win_efi_uuid=$(lsblk -n -o UUID /dev/sda2)
 
 cat >> /etc/grub.d/40_custom <<GRUB
-menuentry 'Windows 10' {
+menuentry 'Windows' {
     search --fs-uuid --no-floppy --set=root $win_efi_uuid
     chainloader (\${root})/EFI/Microsoft/Boot/bootmgfw.efi
+}
+
+menuentry 'Windows (adv. startup)' {
+    search --fs-uuid --no-floppy --set=root $win_efi_uuid
+    chainloader (${root})/EFI/Microsoft/Boot/bootmgfw.efi /RecoveryBCD
 }
 GRUB
 

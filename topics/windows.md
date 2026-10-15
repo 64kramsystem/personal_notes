@@ -20,6 +20,7 @@
     - [Run an elevated command from non-elevated WSL](#run-an-elevated-command-from-non-elevated-wsl)
     - [WSL: Cache SSH keys password](#wsl-cache-ssh-keys-password)
     - [Enable PIN to boot (encrypted disk)](#enable-pin-to-boot-encrypted-disk)
+    - [Boot Recovey Environment (and disable DSE)](#boot-recovey-environment-and-disable-dse)
   - [Taskbar pinned items programmatic manipulation](#taskbar-pinned-items-programmatic-manipulation)
   - [Services](#services)
   - [Drives](#drives)
@@ -255,6 +256,18 @@ In order to make the option visible in the Bitlocker management:
     - Enable
     - `Configure TPM startup PIN:` -> `Require startup PIN with TPM`
     - Disallow the other options
+
+### Boot Recovey Environment (and disable DSE)
+
+Open Windows Recovery Environment:
+
+```
+shutdown /r /o /t 0
+```
+
+then `Troubleshoot` → `Advanced options` → `Startup Settings` → `Restart` → Disable DSE.
+
+A GRUB entry [can be added](linux_system.md#add-a-windows-entry) to start this way.
 
 ## Taskbar pinned items programmatic manipulation
 
