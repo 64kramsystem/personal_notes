@@ -110,6 +110,11 @@ version = "0.1.0"
 authors = ["Saverio Miroddi <saverio.etc@etc.com>"]
 edition = "2021"                                           # WATCH OUT! Inappropriate edition may confusingly break projects
 
+[env]
+# Share ccache entries across target dirs and worktrees
+CCACHE_BASEDIR = "/"
+CCACHE_NOHASHDIR = "1"
+
 # Customize the binary target.
 [[bin]]
 name = "play"
