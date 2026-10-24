@@ -12,6 +12,7 @@
     - [Toolchain (Rustup)](#toolchain-rustup)
     - [Linking (types)](#linking-types)
     - [Build times (profile/improve)](#build-times-profileimprove)
+    - [Optimize multiple worktree builds](#optimize-multiple-worktree-builds)
     - [Cross-compilation](#cross-compilation)
       - [Windows-specific](#windows-specific)
     - [Cargo doc](#cargo-doc)
@@ -393,6 +394,68 @@ opt-level = 1
 [profile.dev.package."*"]
 opt-level = 3
 debug = false
+```
+
+### Optimize multiple worktree builds
+
+Requires a (dated) nightly and ccache (`brew install ccache`/`apt install ccache`). Final artefacts stay in each worktree's `target/`.
+
+```toml
+# rust-toolchain.toml. WATCH OUT! The flags below are unstable; verify them when bumping the date.
+[toolchain]
+channel = "nightly-2026-10-20"
+
+# .cargo/config.toml
+[build]
+build-dir = "{cargo-cache-home}/build/myproject" # stable; shared by all the worktrees
+fingerprint = "content"                          # freshness via checksum; with mtime, worktrees reuse each other's stale artefacts
+
+[unstable]
+checksum-freshness = true
+build-dir-new-layout = false # the new layout separates test binaries from their dylibs
+feature-unification = true
+
+# Otherwise features are resolved per command (`-p`): each package selection builds its own copy of the dependencies (a leaf crate feature change rebuilds everything above it)
+[resolver]
+feature-unification = "workspace"
+
+[env]
+CC = "ccache cc"
+CXX = "ccache c++"
+
+# Only for projects shipping dylibs: load them from the worktree, not the build dir.
+[target.'cfg(target_os = "macos")']
+rustflags = ["-Z", "osx-rpath-install-name"]
+
+# Cargo.toml. Build-only uses of runtime dependencies otherwise get their own variant (build-override defaults to no debuginfo), rerunning build scripts and rebuilding dependents; match the `dev` setting.
+[profile.dev.build-override]
+debug = "line-tables-only"
+```
+
+Dev-dependencies enable features only in `test` builds, so `build` and `test` get different variants of the affected crates (and everything above them); enable those features in the normal dependencies (e.g. `egui_kittest` → `toml` → `serde/alloc`).
+
+The code must not embed worktree absolute paths:
+
+- tests: use package-relative paths instead of `env!("CARGO_MANIFEST_DIR")` (tests run from the package dir)
+- build.rs: use relative `rerun-if-changed`/link-arg paths (rustc runs from the workspace root); files written next to `OUT_DIR` end up in the build dir
+
+WATCH OUT!:
+
+- build scripts still use mtime: divergent native sources across worktrees may reuse stale outputs (touch them)
+- builds queue on the build dir lock; `-Zfine-grain-locking` deadlocked
+- `cargo clean` wipes the build dir for all the worktrees; there's no GC, so stale variants (old lockfiles/features/config) accumulate: wipe it after changing feature/profile settings
+- `cargo check` (metadata only) and `build`/`test` artefacts are separate copies, each built once
+- with workspace unification, single-package builds compile the features of all the members (more code; mask undeclared features)
+- don't use sccache (doesn't cache incremental crates; 0% hits across worktrees) or a shared `CARGO_TARGET_DIR` (worktrees overwrite each other's binaries)
+
+Check (most units must be `Fresh`):
+
+```sh
+git worktree add ../myproject-check && cd ../myproject-check
+cargo build -v 2>&1 | grep -cE '^\s+Fresh'
+
+# Find variant sources without compiling: diff the units' features/profile across commands.
+cargo build -p mycrate --unit-graph -Zunstable-options | jq '.units[] | {pkg_id, mode, features, profile}'
 ```
 
 ### Cross-compilation
