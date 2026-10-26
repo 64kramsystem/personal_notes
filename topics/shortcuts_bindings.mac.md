@@ -86,8 +86,6 @@
 
 - `Cmd` + `Opt` [+ `Shift`] + `C`     Copy file path relative [absolute] (was: something else; removed conflicting bindings)
 
-- `Opt` + `Esc`                       Trigger suggest (Autocompletion) (can't change to `Ctrl` + `Space`)
-
 ## Firefox
 
 - `Shift` + `Fn` + `Ctrl` + `←`/`→`   Move tab to Left/Right (conflicts with Mac Tiling)
