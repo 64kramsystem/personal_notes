@@ -11,6 +11,7 @@
   - [Control flow](#control-flow)
   - [Tables](#tables)
     - [ALTER TABLE](#alter-table)
+      - [Add a column while setting a value](#add-a-column-while-setting-a-value)
   - [Views](#views)
   - [Indexes](#indexes)
   - [Virtual columns](#virtual-columns)
@@ -199,6 +200,16 @@ ALTER TABLE t TRUNCATE PARTITION p1, p3;  # truncate named (not HASH/KEY) partit
 As of 8.0.25, the `INSTANT` algorithm doesn't work if there are MVI/FT indexes on the table.
 
 Adding/dropping an index to a table, even if very large, didn't have any impact when the table was not actively used.
+
+#### Add a column while setting a value
+
+```sql
+# Copy value from another column; can also set expressions etc.
+ALTER TABLE mytable ADD COLUMN mycolumn json NULL DEFAULT (my_other_column);
+
+# Immediate
+ALTER TABLE mytable ALTER COLUMN mycolumn DROP DEFAULT;
+```
 
 ## Views
 
