@@ -33,6 +33,7 @@
     - [Wi-Fi](#wi-fi)
   - [Other](#other)
     - [Find external IP (and infos)](#find-external-ip-and-infos)
+    - [Shorten a URL with t.ly from terminal](#shorten-a-url-with-tly-from-terminal)
 
 ## High-level services
 
@@ -85,6 +86,16 @@ curl \
 # Send an HTTP request for a specific format
 #
 curl -H 'Accept: application/halo+json' "$URL"
+```
+
+Shorten a URL with T.LY. Set `TLY_API_TOKEN` to your [T.LY API token](https://t.ly/docs/) first.
+
+```sh
+curl -fsS 'https://api.t.ly/api/v1/link/shorten' \
+  -H "Authorization: Bearer $TLY_API_TOKEN" \
+  -H 'Content-Type: application/json' \
+  --data '{"long_url":"https://example.com/"}' |
+  jq -r '.short_url'
 ```
 
 ### ngrok
@@ -624,4 +635,17 @@ iperf -c $iperf_server   # on the client
 
 ```sh
 curl ipinfo.io
+```
+
+### Shorten a URL with t.ly from terminal
+
+```sh
+curl \
+  --silent --show-error --fail-with-body --max-time 20 \
+  --header 'Accept: application/json' \
+  --header 'Content-Type: application/json;charset=UTF-8' \
+  --header 'Origin: moz-extension://00000000-0000-4000-8000-000000000000' \
+  --data "$(jq -cn --arg url "$v_url" '{long_url: $url, provider: "t.ly"}')" \
+  https://api.t.ly/api/v1/link/shorten \
+  | jq -er '.short_url // empty'
 ```
